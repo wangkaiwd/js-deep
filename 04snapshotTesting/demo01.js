@@ -4,3 +4,10 @@ export const generateConfig = () => {
     port: 8080,
   };
 };
+
+export const anotherGenerateConfig = () => {
+  return {
+    server: 'http://localhost',
+    port: 3002,
+  };
+};

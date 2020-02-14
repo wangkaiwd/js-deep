@@ -1,5 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`test another snapshot 1`] = `
+Object {
+  "port": 3002,
+  "server": "http://localhost",
+}
+`;
+
 exports[`test snapshot 1`] = `
 Object {
   "port": 8080,
