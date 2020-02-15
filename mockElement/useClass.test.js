@@ -1,5 +1,5 @@
 import { Utils } from './demo04';
-
+// 在同级目录中有__mocks__的时候会使用该文件下的同名文件进行manual mock
 jest.mock('./demo04');
 import { useClass } from './useClass';
 
