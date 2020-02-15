@@ -11,3 +11,4 @@
 * `advanceTimersByTimers`: 所有定时器提前传入参数的毫秒数，所有的定时器将在这个时间帧进行执行
 
 ### 模拟`class`
+* 通过`manual mock`来模拟`class`
