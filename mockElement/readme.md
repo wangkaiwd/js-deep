@@ -7,3 +7,4 @@
 * `runOnlyPendingTimers`: 只运行当前处于等待过程的定时器
 * `advanceTimersByTimers`: 所有定时器提前传入参数的毫秒数，所有的定时器将在这个时间帧进行执行
 
+### 模拟`class`
