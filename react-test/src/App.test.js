@@ -11,5 +11,9 @@ test('渲染测试', () => {
   // expect(wrapper.find('div').length).toBe(1);
   // 通过属性选择器，来保证即使代码的class(使用类选择器的话)发生改变，测试用例也可以照常使用
   // expect(wrapper.find('[data-test="app"]').prop('title')).toBe('test title');
-  expect(wrapper.find('[data-test="app"]')).toExist();
+  const container = wrapper.find('[data-test="app"]');
+  expect(container).toExist();
+  expect(container).toHaveProp('title', 'test title');
+  // 只要修改页面内容就会测试失败
+  expect(container).toMatchSnapshot();
 });
