@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from './components/Header';
 
 const TodoList = () => {
+  const [todoList, setTodoList] = useState([]);
   return (
     <div>
       <Header/>
