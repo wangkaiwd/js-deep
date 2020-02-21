@@ -8,6 +8,9 @@ describe('TodoList 组件', () => {
   // 测试state: https://dev.to/theactualgivens/testing-react-hook-state-changes-2oga
   let wrapper;
   const setState = jest.fn();
+  // jest.sypOn(object, methodName):
+  // 创建一个类似于`jest.fn`的模拟函数，但是也追踪object[methodName]的调用，这里是React['useState']。
+  // 返回一个Jest模拟函数
   const useStateSpy = jest.spyOn(React, 'useState');
   useStateSpy.mockImplementation((init) => [init, setState]);
 
