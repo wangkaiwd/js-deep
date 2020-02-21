@@ -3,9 +3,12 @@ import Header from './components/Header';
 
 const TodoList = () => {
   const [todoList, setTodoList] = useState([]);
+  const addItem = () => {
+    console.log('addItem');
+  };
   return (
     <div>
-      <Header/>
+      <Header addItem={addItem}/>
     </div>
   );
 };

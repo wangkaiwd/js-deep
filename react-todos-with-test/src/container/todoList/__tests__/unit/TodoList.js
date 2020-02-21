@@ -27,4 +27,10 @@ describe('TodoList 组件', () => {
     const [init, setState] = useStateSpy([]);
     expect(init).toEqual([]);
   });
+  it('传给 Header 一个增加todoList的方法', () => {
+    const container = shallow(<TodoList/>);
+    const header = container.find('Header');
+    // hooks的相关测试无法进行
+    // expect(header.prop('addItem')).toEqual(container.instance().addItem);
+  });
 });
