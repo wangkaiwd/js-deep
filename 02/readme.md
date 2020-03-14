@@ -1,4 +1,5 @@
 ## 代码运行机制
+> [What is the Execution Context & Stack in JavaScript?](http://davidshariff.com/blog/what-is-the-execution-context-in-javascript/)
 ### 名词解释
 * ECStack: execute context stack
 * EC: execute context
@@ -43,7 +44,7 @@ console.log(a.n);
 
 `null`并没有开辟新的内存，只是将之前的指针指向了一个空指针，取消了之前对某一个堆的引用，从而释放内存
 
-[`null`]((https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/null)的本质是让变量指向一个空的指针，达到对原有被指针指向对象内存的释放和回收
+[`null`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/null)的本质是让变量指向一个空的指针，达到对原有被指针指向对象内存的释放和回收
 
 * `null`: 接下来要赋值，但是暂时不赋值
 * `undefined`: 并不确定变量是否要赋值
