@@ -55,3 +55,43 @@ a = 0 // 占用栈中的内存空间
 a = null // 指向一个空指针，不会占用内存，并且表示一个暂未赋值的变量
 a = undefined // 指向空指针,并且表示一个没有赋值的变量
 ```
+
+```javascript
+// 阿里面试题
+let a = {
+  n: 10,
+};
+
+let b = a;
+
+b.m = b = {
+  n: 20,
+};
+console.log(a);  // { n: 10, m: { n: 20 } }
+console.log(b);  // { n: 20 }
+```
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200315004757.png)
+
+```javascript
+// 360面试题
+let x = [12, 23];
+function fn (y) {
+  y[0] = 100;
+  y = [100];
+  y[1] = 200;
+  console.log(y); // [100, 200]
+}
+
+fn(x);
+console.log(x); // [100,23]
+```
+
+执行过程：
+* `fn(x)`在执行的时候，首先会将`x`对应的复杂堆中存储的复杂对象的地址作为函数的实参传入
+* 函数执行步骤：
+    1. 初始化实参集合: `arguments`(`arguments = {0:AAAFFF000 ...}`)
+    2. 创建形参变量并赋值: `y=AAAFFF000`
+    3. 执行函数中的代码
+* 函数内容执行完毕后，函数内的内存没有被其它元素占用，需要出栈，然后继续执行后边的代码
+
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200315133628.png)
