@@ -1,4 +1,4 @@
-// 阿里面试题
+// 1.阿里面试题
 
 let a = {
   n: 10,
@@ -12,7 +12,7 @@ b.m = b = {
 console.log(a);  // { n: 10, m: { n: 20 } }
 console.log(b);  // { n: 20 }
 
-// 360面试题
+// 2. 360面试题
 
 // let x = [12, 23];
 // function fn (y) {
@@ -24,3 +24,27 @@ console.log(b);  // { n: 20 }
 //
 // fn(x);
 // console.log(x); // [100,23]
+
+// 3.
+// let x = 10;
+//
+// ~function (x) {
+//   console.log(x);
+//   x = x || 20 && 30 || 40;
+//   console.log(x);
+// }();
+//
+// console.log(x);
+
+// 4.
+let x = [1, 2], y = [3, 4];
+~function (x) {
+  x.push('A');
+  x = x.slice(0);
+  x.push('B');
+  x = y;
+  x.push('C');
+  console.log(x, y); // [3, 4, 'C'], [3, 4, 'C']
+}(x);
+
+console.log(x, y); // [1, 2 ,'A'], [3, 4, 'C']

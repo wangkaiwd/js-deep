@@ -95,3 +95,36 @@ console.log(x); // [100,23]
 * 函数内容执行完毕后，函数内的内存没有被其它元素占用，需要出栈，然后继续执行后边的代码
 
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200315133628.png)
+
+```javascript
+let x = 10;
+
+~function (x) {
+  console.log(x);
+  x = x || 20 && 30 || 40;
+  console.log(x);
+}();
+
+console.log(x);
+```
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020031515054749.png)
+
+```javascript
+let x = [1, 2], y = [3, 4];
+~function (x) {
+  x.push('A');
+  x = x.slice(0);
+  x.push('B');
+  x = y;
+  x.push('C');
+  console.log(x, y); // [3, 4, 'C'], [3, 4, 'C']
+}(x);
+
+console.log(x, y); // [1, 2 ,'A'], [3, 4, 'C']
+```
+> 这里涉及到了垃圾回收机制，更多的阅读参考：
+> * [`mdn`内存管理](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Memory_Management)
+> * [`JavaScript` 内存泄漏教程](http://www.ruanyifeng.com/blog/2017/04/memory-leak.html)
+> * [`JavaScript`中的垃圾回收和内存泄漏](https://github.com/BooheeFE/weekly/issues/8)
+
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200315154836.png)

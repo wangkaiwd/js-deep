@@ -10,15 +10,15 @@
 //    GO/VO/AO/EC/ECStack
 //    ...
 
-let a = 12;
-let b = a;
-b = 13;
-console.log('a', a);
-
-let a = {
-  n: 12,
-};
-
-let b = a;
-b.n = 13;
-console.log(a.n);
+// let a = 12;
+// let b = a;
+// b = 13;
+// console.log('a', a);
+//
+// let a = {
+//   n: 12,
+// };
+//
+// let b = a;
+// b.n = 13;
+// console.log(a.n);
