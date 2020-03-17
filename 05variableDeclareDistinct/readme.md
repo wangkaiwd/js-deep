@@ -78,3 +78,9 @@ console.log(x); // x is not defined
 let x = 12;
 ```
 
+暂时性死区(暂时没解决的`bug`)
+```javascript
+console.log(typeof a) // undefined (正常应该报错)
+// 使用let声明变量后，代码会报错，因为在let声明变量之前，只要用到该变量就会报错
+// let a;
+```
