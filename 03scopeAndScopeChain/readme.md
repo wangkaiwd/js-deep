@@ -1,10 +1,4 @@
 ## 作用域和作用域链
-函数创建时：
-
-
-函数执行时：
-
-
 ```javascript
 function A (y) {
   let x = 2;
