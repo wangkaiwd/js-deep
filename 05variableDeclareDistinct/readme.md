@@ -1,5 +1,7 @@
 ## `let`,`const`,`var`的区别
-
+> 参考文章：  
+> * [`let`和`const`命令](https://es6.ruanyifeng.com/#docs/let)
+> * 
 ### `let`,`const`没有变量声明提升
 首先让我们了解下`JavaScript`变量赋值的大概过程：
 ```text
@@ -48,9 +50,11 @@ function fn () {
 }
 fn();
 ```
+我们模拟一下代码执行的过程：
+```text
+```
 
 ### `let`,`const`不会为全局变量增加属性
-
 **全局变量对象`window(VO(G))`中**声明的变量(用`var`声明的)，也会给全局对象`window(VO(G))`中增加一个对应的属性。
 
 当然，私有的执行上下文中使用`var`声明变量仅仅是声明变量，并不会给全局对象设置属性
@@ -63,6 +67,15 @@ console.log(window.y); // undefined
 
 const z = 3;
 console.log(window.z); // undefined
+
+// 私有执行上下文
+function fn () {
+  var temp = 10
+  console.log(window.temp) // undefined
+  console.dir(fn.temp) // undefined
+}
+
+fn()
 ```
 
 当不使用关键字直接进行变量赋值的时候，如果私有上下文中没有对应的变量，那么会为全局变量对象`VO(G)`设置属性
@@ -102,7 +115,9 @@ console.log(typeof a) // undefined (正常应该报错)
 // 使用let声明变量后，代码会报错，因为在let声明变量之前，只要用到该变量就会报错
 // let a;
 ```
-
+### `let`,`const`的区别
 
 `let`和`const`的区别：`let`创建的变量是可以更改指针指向的(也就是可以重新赋值)，而`const`声明的变量是不允许改变指针指向的
 
+### 经典面试题
+下面这个面试题你应该
