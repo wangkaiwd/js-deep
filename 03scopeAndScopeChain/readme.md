@@ -36,6 +36,7 @@ console.log(x);
 <details>
   <summary>diagram</summary>
   
+  ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200323233304.png)
 </details>
 
 ```javascript
@@ -57,6 +58,11 @@ fn(8)(9);
 f(10);
 console.log(x);
 ```
+<details>
+  <summary>diagram</summary>
+  
+  ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200323235221.png)
+</details>
 
 ```javascript
 let a = 0, b = 0;
@@ -72,4 +78,5 @@ A(2);
 <details>
   <summary>diagram</summary>
   
+  ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200323235409.png)
 </details>
