@@ -13,6 +13,87 @@ C(3);
 <details>
   <summary>diagram</summary>
   
+  ```text
+  // 第一步：创建全局上下文，并将其压入ECStack中
+  ECStack = [
+    // => 全局执行上下文
+    EC(G) = {
+      // => 全局变量对象
+      VO(G): {
+        ... // => 包含全局对象原有的属性
+        x: 1,
+        A: function(y) {...},
+        A[[scope]]: VO(G) // 作用域为当前函数所在的变量对象
+      }
+    },
+  ];
+  // 第二步：执行函数A(2)
+  ECStack = [
+    // => A的执行上下文
+    EC(A) = {
+      // => 链表初始化为：AO(A) -> VO(G)
+      [[scope]]:VO(G)
+      scopeChain:<AO(A),AO[[scope]]>
+      // => 创建函数A的活动对象
+      AO(A): {
+        arguments: {0:2,length:1},
+        y:3,
+        x:2,
+        B: function B(z) {...}
+        B[[scope]]: AO(A)
+        this: window
+      }
+    },
+    // => 全局执行上下文
+    EC(G) = {
+      // => 全局变量对象
+      VO(G) = {
+        ... // => 包含对象原有的属性
+        x: 1,
+        A: function(y) {...},
+        A[[scope]]: VO(G) // => 创建函数的时候就确定了其作用域
+        C: function B(z) {...}
+      }
+    }
+  ]
+  // 第三步： 执行B/C函数 C(3)
+  ECStack = [
+    EC(B) = {
+      [[scope]]: AO(A)
+      scopeChain: <AO(B),B[[scope]]>
+      AO(B) = {
+        arguments: {0:3,length:1,...},
+        z: 3,
+        this: window
+      }
+    },
+    EC(A) = {
+      [[scope]]: VO(G)
+      scopeChain: <AO(A),A[[scope]]>
+  
+      AO(A) = {
+        arguments: {0: 2,length:1,...},
+        y: 2,
+        x: 2,
+        B: function B (z) {...},
+        B[[scope]]: AO(A),
+        this: window
+      }
+    },
+    //=>全局执行上下文
+    EC(G) = {
+      //=>全局变量对象
+      VO(G):{
+        ... //=>包含全局对象原有的属性
+        x: 1;
+        A: function(y){...};
+        A[[scope]]: VO(G); //=>创建函数的时候就确定了其作用域
+        C: function B (z) {...}
+      }
+    }
+  ]
+  ```
+
   ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200315162947.png)
 </details>
 
