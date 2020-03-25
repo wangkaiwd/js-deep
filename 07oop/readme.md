@@ -32,3 +32,5 @@ new 执行函数相比于普通函数执行：
          代码执行
          [新] 如果该函数没有返回对象，则返回`this`(`return this`，即步骤1创建的对象)
 ```
+
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200326004537.png)
