@@ -3,7 +3,18 @@
 
 下面是一个简单的自定类的例子
 ```javascript
+function func () {
+  const x = 100;
+  this.num = x + 100;
+}
+const f = new func(); // 通过new执行的时候，func就是一个自定义的类
 
+// func(); // 普通函数执行 this => window
+const f2 = new func();
+
+console.log(f === f2); // false
+
+console.log(f instanceof func); // true, instanceof:用来判断某一个实例是否属于某个类
 ```
 
 这里我们对比下普通函数执行和`new`运算符执行函数的具体步骤
