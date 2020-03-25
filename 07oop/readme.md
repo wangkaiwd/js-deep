@@ -34,3 +34,6 @@ new 执行函数相比于普通函数执行：
 ```
 
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200326004537.png)
+
+`typeof`知识点补充
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200326005346.png)
