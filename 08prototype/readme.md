@@ -42,5 +42,8 @@ Fn.prototype.getY(); // undefined
   <summary>diagram</summary>
   
   ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200326232606.png)
+  ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200327003810.png)
 </details>
 
+数组原型链图，并扩展原型上的方法，且支持链式调用：
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200327004016.png)
