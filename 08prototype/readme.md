@@ -58,3 +58,14 @@ console.log(fn(1, 2, 3, 4, 5));
 console.log(Array.prototype.slice.call('这是一段字符串', 0)); // ['这','是','一','段','字','符','串']
 ```
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200327005239.png)
+
+### 测试题
+
+#### 基于内置类原型扩展方法
+
+在`Number`的原型上添加方法，实现下面的调用
+```javascript
+let n = 10;
+let m = n.plus(10).minus(5);
+console.log(m);//=>15（10+10-5）
+```
