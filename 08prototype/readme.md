@@ -91,3 +91,32 @@ console.log(m);//=>15（10+10-5）
   })(Number.prototype);  
   ```
 </details>
+
+#### 重置类的原型指向
+重置原型指向，会丢失constructor属性，需要进行手动指定：
+```javascript
+fun.prototype = {
+  b: function () {
+    this.a = 20;
+    alert(this.a);
+  },
+  c: function () {
+    this.a = 30;
+    alert(this.a);
+  },
+};
+var my_fun = new fun();
+my_fun.b(); // 0
+my_fun.c(); // 30
+```
+<details>
+  <summary>answer</summary>
+  
+  ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200328170420.png)
+</details>
+
+理解了详细的执行过程后，我们再回答一下下边的俩个问题：
+```javascript
+console.log(my_fun.constructor);
+fun.prototype.b();
+```
