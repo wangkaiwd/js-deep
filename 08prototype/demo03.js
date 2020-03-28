@@ -21,21 +21,26 @@
 // console.log(y.valueOf() === x); // true
 
 // 答案
-Number.prototype.plus = function (number) {
-  number = Number(number);
-  if (isNaN(number)) {
-    number = 0;
-  }
-  return this + number;
-};
+// 优化:
+//    1. 提取公共内容为一个函数
+//    2. 由于全局变量会造成变量污染，通过闭包进行变量保护
+//    3. 将Number.prototype作为参数传入，感觉这一步优化没有什么必要
+(function (proto) {
+  const toNumber = number => {
+    number = Number(number);
+    if (isNaN(number)) {
+      number = 0;
+    }
+    return number;
+  };
 
-Number.prototype.minus = function (number) {
-  number = Number(number);
-  if (isNaN(number)) {
-    number = 0;
-  }
-  return this - number;
-};
+  proto.plus = function (number) {
+    return this + toNumber(number);
+  };
+  proto.minus = function (number) {
+    return this - toNumber(number);
+  };
+})(Number.prototype);
 
 let n = 10;
 let m = n.plus(10).minus(5);

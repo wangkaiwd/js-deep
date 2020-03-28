@@ -69,3 +69,25 @@ let n = 10;
 let m = n.plus(10).minus(5);
 console.log(m);//=>15（10+10-5）
 ```
+<details>
+  <summary>answer</summary>
+  
+  ```javascript
+  (function (proto) {
+    const toNumber = number => {
+      number = Number(number);
+      if (isNaN(number)) {
+        number = 0;
+      }
+      return number;
+    };
+  
+    proto.plus = function (number) {
+      return this + toNumber(number);
+    };
+    proto.minus = function (number) {
+      return this - toNumber(number);
+    };
+  })(Number.prototype);  
+  ```
+</details>
