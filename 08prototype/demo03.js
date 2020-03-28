@@ -1,3 +1,9 @@
+// 面试题：扩展Number的原型，使如下代码可以正确执行
+// let n = 10;
+// let m = n.plus(10).minus(5);
+// console.log(m);//=>15（10+10-5）
+
+// 该题需要注意的地方
 // 创建一个数据类型值：
 //    1. 字面量方式
 //    2. 构造函数方式
@@ -14,7 +20,23 @@
 // // y在进行运算时会先执行其valueOf方法来转换为其primitive value
 // console.log(y.valueOf() === x); // true
 
-// 扩展Number的原型，使如下代码可以正确执行
-// let n = 10;
-// let m = n.plus(10).minus(5);
-// console.log(m);//=>15（10+10-5）
+// 答案
+Number.prototype.plus = function (number) {
+  number = Number(number);
+  if (isNaN(number)) {
+    number = 0;
+  }
+  return this + number;
+};
+
+Number.prototype.minus = function (number) {
+  number = Number(number);
+  if (isNaN(number)) {
+    number = 0;
+  }
+  return this - number;
+};
+
+let n = 10;
+let m = n.plus(10).minus(5);
+console.log(m);//=>15（10+10-5）
