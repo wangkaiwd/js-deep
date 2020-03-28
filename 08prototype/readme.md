@@ -120,3 +120,19 @@ my_fun.c(); // 30
 console.log(my_fun.constructor);
 fun.prototype.b();
 ```
+
+#### 对象原型结合代码执行机制
+函数多种角色和运算符优先级
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200328180222.png)
+
+#### 惰性函数和闭包
+ 
+编写一个`add`函数满足如下需求
+```javascript
+add(1);       //1
+add(1)(2);    //3
+add(1)(2)(3); //6
+add(1)(2, 3);  //6
+add(1, 2)(3);  //6
+add(1, 2, 3);   //6
+```
