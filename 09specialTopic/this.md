@@ -5,5 +5,5 @@
 * 箭头函数中没有自身的`this`，所用到的`this`都是其最近父级上下文中的`this`
 * call/apply/bind
 
-
 ### `call/apply/bind`源码实现
+
