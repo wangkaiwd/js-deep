@@ -55,6 +55,61 @@ const newsModule = (() => {
 上边代码所描述的模块化方式我们称之为单例设计模式，它是最原始的模块化思想，它有如下特点：
 * 利用闭包机制包裹元素，保护其中的变量
 * 将想要让外界访问的内容通过`return`返回
+
 ### 惰性函数
+在`dom2`时期的事件绑定需要进行兼容性处理，实现的过程如下：
+```javascript
+function emit (element, event, fn) {
+  if (element.addEventListener) {
+    element.addEventListener(event, fn);
+  } else if (element.attachEvent) {
+    element.attachEvent(event, fn);
+  } else {
+    element[`on${event}`] = fn;
+  }
+}
+
+// 使用emit进行事件绑定
+// 假设页面中有id为button的按钮
+const $button = document.getElementById('button');
+emit($button, 'click', () => {
+  console.log('fn1');
+});
+emit($button, 'click', () => {
+  console.log('fn2');
+});
+```
+在上面的代码中，当我们第二次执行`emit`的时候，其实通过第一次`emit`的执行，就可以确定当前的执行环境，以及可以使用的`api`。
+
+但是代码第二次执行的时候还是会执行对应的`if`语句来判断哪一个`api`可以使用。
+
+为了让代码可以在第一次执行后，就可以识别当前的执行环境，并且在之后的执行中只使用当前环境下支持的`api`，而不用在执行多余的`if`语句，我们将代码改写为如下形式：
+```javascript
+function emit (element, event, fn) {
+  if (element.addEventListener) {
+    emit = function (element, event, fn) {
+      element.addEventListener(event, fn);
+    };
+  } else if (element.attachEvent) {
+    emit = function (element, event, fn) {
+      element.attachEvent(event, fn);
+    };
+  } else {
+    emit = function (element, event, fn) {
+      element[`on${event}`] = fn;
+    };
+  }
+  emit(element, event, fn);
+}
+// 使用emit进行事件绑定
+// 假设页面中有id为button的按钮
+const $button = document.getElementById('button');
+emit($button, 'click', () => {
+  console.log('fn1');
+});
+emit($button, 'click', () => {
+  console.log('fn2');
+});
+```
 
 ### 函数柯理化
