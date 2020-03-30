@@ -26,11 +26,15 @@ $box.addEventListener('click', function () {
 
 $box.addEventListener('click', obj.fn); // 30
 ```
+这个例子里介绍了几个常见的`this`指向的例子：
+* 事件绑定函数中的`this`为绑定事件的元素
+* 直接执行函数，相当于`window.fn()`，此时函数中的`this`指向`window`
+* 作为对象的方法来调用，`this`指向调用该函数的对象(函数前有“点”的话，`this`为点前边的内容，否则为`window`)
 
 ```javascript
 var x = 3, obj = { x: 5 };
 obj.fn = (function () {
-  this.x *= ++x; // window.x => 12
+  this.x *= ++x;
   return function (y) {
     this.x *= (++x) + y;
     console.log(x);
@@ -38,9 +42,13 @@ obj.fn = (function () {
 })();
 
 var fn = obj.fn;
-obj.fn(6); // obj.x = 5 * 13 + 6 => 71, window.x => 13
+obj.fn(6);
 // obj.fn对应的函数的地址是在自执行函数中创建的，所以作用域及作用域链都要从其定义的位置开始查找
-fn(4);     // window.x = 13 * 14 + 4 => 186
-console.log(obj.x, x); // 71, 186
+fn(4);
+console.log(obj.x, x);
 ```
-![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200316224129.png)
+<details>
+  <summary>diagram</summary>
+  
+  ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200316224129.png)
+</details>
