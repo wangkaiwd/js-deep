@@ -23,7 +23,7 @@ const shopModule = (() => {
   };
 })();
 
-// 物流模块
+// 新闻模块
 const newsModule = (() => {
   const getList = () => { // 获取物流信息列表
 
