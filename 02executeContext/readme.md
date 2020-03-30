@@ -66,12 +66,13 @@ let b = a;
 b.n = 13;
 console.log(a.n);
 ```
-
-![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200314213145.png)
+<details>
+  <summary>diagram</summary>
+  
+  ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200314213145.png)
+</details>
 
 如何释放占用内存：`a = null`。
-
-`null`并没有开辟新的内存，只是将之前的指针指向了一个空指针，取消了之前对某一个堆的引用，从而释放内存
 
 [`null`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/null)的本质是让变量指向一个空的指针，达到对原有被指针指向对象内存的释放和回收
 
@@ -79,81 +80,7 @@ console.log(a.n);
 * `null`: 表示尚未创建的变量，接下来要赋值为对象，但是暂时不赋值
 * `undefined`: 并不确定变量是否要赋值
 
-```javascript
-let a = {x:100, y:200}
-a = 0 // 占用栈中的内存空间
-a = null // 指向一个空指针，不会占用内存，并且表示一个暂未赋值的对象
-a = undefined // 指向空指针,并且表示一个没有赋值的变量
-```
-
-```javascript
-// 阿里面试题
-let a = {
-  n: 10,
-};
-
-let b = a;
-
-b.m = b = {
-  n: 20,
-};
-console.log(a);  // { n: 10, m: { n: 20 } }
-console.log(b);  // { n: 20 }
-```
-![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200315004757.png)
-
-```javascript
-// 360面试题
-let x = [12, 23];
-function fn (y) {
-  y[0] = 100;
-  y = [100];
-  y[1] = 200;
-  console.log(y); // [100, 200]
-}
-
-fn(x);
-console.log(x); // [100,23]
-```
-
-执行过程：
-* `fn(x)`在执行的时候，首先会将`x`对应的堆中存储的复杂对象的地址作为函数的实参传入
-* 函数执行步骤：
-    1. 初始化实参集合: `arguments`(`arguments = {0:AAAFFF000 ...}`)
-    2. 创建形参变量并赋值: `y=AAAFFF000`
-    3. 执行函数中的代码
-* 函数内容执行完毕后，函数内的内存没有被其它元素占用，需要出栈，然后继续执行后边的代码
-
-![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200315133628.png)
-
-```javascript
-let x = 10;
-
-~function (x) {
-  console.log(x);
-  x = x || 20 && 30 || 40;
-  console.log(x);
-}();
-
-console.log(x);
-```
-![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020031515054749.png)
-
-```javascript
-let x = [1, 2], y = [3, 4];
-~function (x) {
-  x.push('A');
-  x = x.slice(0);
-  x.push('B');
-  x = y;
-  x.push('C');
-  console.log(x, y); // [3, 4, 'C'], [3, 4, 'C']
-}(x);
-
-console.log(x, y); // [1, 2 ,'A'], [3, 4, 'C']
-```
-
-![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200315154836.png)
+下面我们介绍下`JavaScript`中的内存泄露
 
 ### 内存泄露
 > 这里涉及到了垃圾回收机制，更多的阅读参考：
@@ -184,3 +111,96 @@ arr = null // 将arr指向空对象指针，释放占用的内存，防止内存
 
 谷歌浏览器的“垃圾回收机制”：  
 浏览器会在空闲的时候，把所有不被占用的堆内存，进行释放和销毁
+
+```javascript
+let a = {x:100, y:200}
+a = 0 // 占用栈中的内存空间
+a = null // 指向一个空指针，不会占用内存，并且表示一个暂未赋值的对象
+a = undefined // 指向空指针,并且表示一个没有赋值的变量
+```
+
+### 面试题分析
+```javascript
+// 阿里面试题
+let a = {
+  n: 10,
+};
+
+let b = a;
+
+b.m = b = {
+  n: 20,
+};
+console.log(a);  // { n: 10, m: { n: 20 } }
+console.log(b);  // { n: 20 }
+```
+<details>
+  <summary>diagram</summary>
+  
+  ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200315004757.png)
+</details>
+
+```javascript
+// 360面试题
+let x = [12, 23];
+function fn (y) {
+  y[0] = 100;
+  y = [100];
+  y[1] = 200;
+  console.log(y); // [100, 200]
+}
+
+fn(x);
+console.log(x); // [100,23]
+```
+
+执行过程：
+* `fn(x)`在执行的时候，首先会将`x`对应的堆中存储的复杂对象的地址作为函数的实参传入
+* 函数执行步骤：
+    1. 初始化实参集合: `arguments`(`arguments = {0:AAAFFF000 ...}`)
+    2. 创建形参变量并赋值: `y=AAAFFF000`
+    3. 执行函数中的代码
+* 函数内容执行完毕后，函数内的堆内存没有被外部其它执行上下文中的元素占用，需要出栈，然后继续执行后边的代码
+<details>
+  <summary>diagram</summary>
+  
+  ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200315133628.png)
+</details>
+
+```javascript
+let x = 10;
+
+~function (x) {
+  console.log(x);
+  x = x || 20 && 30 || 40;
+  console.log(x);
+}();
+
+console.log(x);
+```
+<details>
+  <summary>diagram</summary>
+  
+  ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020031515054749.png)
+</details>
+
+```javascript
+let x = [1, 2], y = [3, 4];
+~function (x) {
+  x.push('A');
+  x = x.slice(0);
+  x.push('B');
+  x = y;
+  x.push('C');
+  console.log(x, y); // [3, 4, 'C'], [3, 4, 'C']
+}(x);
+
+console.log(x, y); // [1, 2 ,'A'], [3, 4, 'C']
+```
+
+<details>
+  <summary>diagram</summary>
+  
+  ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200315154836.png)
+</details>
+
