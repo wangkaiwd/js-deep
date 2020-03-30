@@ -40,7 +40,7 @@ const obj = { x: 100 };
 复杂数据类型（引用类型）:
 * object(Array, Function, Date ,Regexp ...)
 
-复杂数据类型的值在创建的时候会开辟一片堆内存，堆内存有一个可后续方便索引的16进制的地址。之后赋值时，`JavaSCript`引擎会通过指针将变量指向其对应的可索引地址来完成赋值操作。
+复杂数据类型的值在创建的时候会开辟一片堆内存，堆内存有一个可后续方便索引的16进制的地址。之后赋值时，`JavaScript`引擎会通过指针将变量指向其对应的可索引地址来完成赋值操作。
 
 ### 知识点补充
 #### `Number`类型`NaN`
@@ -57,7 +57,7 @@ isNaN(undefined) // true
 isNaN(null) // false
 ```
 #### `object`的`key`
-> 一个对象的属性名可以是任何有效的`JavaScript`字符串，或者可以被转换为字符串的任何类型，包括字符串` `(空字符串)。
+> 一个对象的属性名可以是任何有效的`JavaScript`字符串，或者可以被转换为字符串的任何类型，包括字符串`" "`(空字符串)。
 
 `JavaScript`中`object`的键值如果不是字符串或者`Symbol`的话，都会执行`toString`方法强制转换为字符串
 ```javascript
@@ -87,7 +87,7 @@ console.log(obj);
 // (() => {console.log('object key is a function')}).toString() => '() => {\n  console.log('object key is a function');\n}'
 ```
 
-这里是一道简单的测试题：
+这里是一道测试题：
 ```javascript
 const a = {
   x: 100,
@@ -99,9 +99,17 @@ const obj = {};
 obj[a] = 'aaa';
 obj[b] = 'bbb';
 
-console.log('obj', obj); // obj { '[object Object]': 'bbb' }
-console.log(obj[a] === obj[b]) // => true
+console.log('obj', obj);
+console.log(obj[a] === obj[b])
 ```
+<details>
+  <summary>question</summary>
+  
+  ```text
+  // obj { '[object Object]': 'bbb' }
+  // true
+  ```
+</details>
 这里由于`a`和`b`都是对象，最终会通过`toString`转换为`[object Object]`，将会表示同一个对象属性。所以对象的值最终是`{[object Object]: 'bbb'}`}
 
 ### 总结
