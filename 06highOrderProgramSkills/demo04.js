@@ -16,10 +16,11 @@ const fn3 = (x) => {
 const compose = (...functions) => {
   return (...args) => {
     if (functions.length === 0) return args;
-    return functions.reduce((accumulator, item, index) => {
+    // 注意：reverse 会更改原数组
+    return functions.reverse().reduce((accumulator, item, index) => {
       // 后一次的返回值会作为前一次的执行结果
-      return index === 0 ? item(...accumulator) : item(accumulator);
-    }, args);
+      return item(index === 1 ? accumulator(...args) : accumulator);
+    });
   };
 };
 console.log(compose(fn1, fn2, fn1, fn3)(5));

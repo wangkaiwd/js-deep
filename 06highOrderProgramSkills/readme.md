@@ -116,3 +116,78 @@ emit($button, 'click', () => {
 这就是`JavaScript`中的惰性函数，在执行了一次`if`分支后，接下来会直接执行该条件下的代码，减少不必要的判断逻辑，提升代码性能。
 
 ### 函数柯理化
+假设我们有如下代码：
+```javascript
+const obj = { x: 100 };
+
+const fn = function (y) {
+  this.x += y;
+  console.log(this);
+};
+
+document.addEventListener('click',fn)
+```
+这时，函数`fn`中的`this`指向`document`，并且参数`y`为事件对象`event`。
+
+现在我们想要在事件绑定函数时，将`fn`的`this`指向`obj`，并且为`fn`传入参数200，方法如下：
+```javascript
+// 通过call方法，在绑定事件中执行fn
+document.addEventListener('click',(e) => fn.call(obj, 200))
+
+// 使用bind方法返回一个改变this指向为obj的函数，并且在执行fn之前预先传入参数200
+document.addEventListener('click',fn.bind(obj,200))
+```
+> mdn中有对`bind`的用法进行如下描述：  
+> `bind()`的另一个最简单的用法是使一个函数拥有预设的初始参数。只要将这些参数(如果有的话)作为`bind()`的参数写在`this`后面。当绑定函数被调用时，这些参数会被插入到目标函数的参数列表的开始位置，传递给绑定函数的参数会跟在它们后面。
+
+这里我们再调用`bind`的时候，出了指定`this`，预先传入了事件监听函数的参数200。这里需要注意，在绑定事件执行的时候，浏览器还会为其传递事件对象作为参数，该参数会放到`bind`预置参数的后边。
+```javascript
+const obj = { x: 100 };
+
+// 函数执行时的参数会在bind预先指定的参数的后面
+// 这里的e是浏览器在执行事件绑定函数时帮我们传入的,
+// bind会帮我们在`fn`执行时将参数放到`bind`中提前传入的参数后边
+const fn = function (y, e) {
+  this.x += y;
+  console.log(this, e);
+};
+
+document.addEventListener('click',fn.bind(obj,200))
+```
+> 如果这里不是很理解的话，可以看一下模拟`bind`实现
+
+上边通过`bind`来进行事件绑定的例子，就是`JavaScript`中的柯理化函数：**利用闭包的机制，把一些内容预先存储和处理，在之后需要的时候直接通过作用域链查找使用**（闭包的保存机制）。
+
+关于柯理化，还有下面一个比较常见的例子：
+```javascript
+const fn1 = (x) => {
+  return x + 10;
+};
+
+const fn2 = (x) => {
+  return x * 10;
+};
+const fn3 = (x) => {
+  return x / 10;
+};
+
+// 实现compose函数，能够通过compose(fn1,fn2,fn3)(5)来实现如下调用
+fn1(fn2(fn3(5)))
+```
+
+这里我们可以提前传入需要嵌套调用的函数，然后再传入第一个函数的参数，并从右到左执行传入的函数：  
+```javascript
+// 先实现简单版
+// 函数参数扁平化
+const compose = (...functions) => {
+  return (...args) => {
+    if (functions.length === 0) return args;
+    // 注意：reverse 会更改原数组
+    return functions.reverse().reduce((accumulator, item, index) => {
+      // 后一次的返回值会作为前一次的执行结果
+      return item(index === 1 ? accumulator(...args) : accumulator);
+    });
+  };
+};
+console.log(compose(fn1, fn2, fn1, fn3)(5));
+```
