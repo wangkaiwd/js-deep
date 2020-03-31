@@ -1,17 +1,22 @@
 var class2type = {};
-var toString = class2type.toString;
-var hasOwn = class2type.hasOwnProperty;
-var fnToString = hasOwn.toString;
+var toString = class2type.toString; // Object.prototype.toString
+var hasOwn = class2type.hasOwnProperty; // Object.prototype.hasOwnProperty
+var fnToString = hasOwn.toString; // Function.prototype.toString
+// Function.prototype.toString.call(Object)
+// Object是一个类，也属于函数，可以调用函数的toString方法
 var ObjectFunctionString = fnToString.call(Object);
 
 'Boolean Number String Function Array Date RegExp Object Error Symbol'.split(' ').forEach(function anonymous (item) {
   class2type['[object ' + item + ']'] = item.toLowerCase();
+  // 拼接成如下格式 class2type[object Type] = type
 });
 
 function toType (obj) {
+  // null/undefined === null
   if (obj == null) {
-    return obj + '';
+    return obj + ''; // return 'null' / return 'undefined'
   }
+  // 复杂数据类型： typeof object = 'object' ; typeof function = 'function'
   return typeof obj === 'object' || typeof obj === 'function' ? class2type[toString.call(obj)] || 'object' : typeof obj;
 }
 
