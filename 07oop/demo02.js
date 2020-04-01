@@ -17,9 +17,14 @@ Dog.prototype.sayName = function () {
 
 // 相比于普通函数，new命令帮我们做的一些操作：
 //  1. 创建一个空对象
+//  2. 将空对象的__proto__属性指向当前函数的prototype
 //  3. 将this指向这个空对象
 //  4. 如果没有返回对象的话，将this返回
 
+const isObject = (value) => {
+  // typeof 函数 === 'function'
+  return (typeof value === 'object' || typeof value === 'function') && value !== null;
+};
 function _new (fn, ...args) {
   // const tempObject = {};
   // 将空对象的原型指向构造函数的prototype属性
@@ -31,7 +36,7 @@ function _new (fn, ...args) {
   // 但是避免了直接操作__proto__
   const tempObject = Object.create(fn.prototype);
   const result = fn.call(tempObject, ...args);
-  //
+  // 返回值是对象的话返回该对象
   if (typeof result === 'object' && result !== null || typeof result === 'function') {
     return result;
   }
