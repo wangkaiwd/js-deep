@@ -211,4 +211,9 @@ export default function compose (...funcs) {
 ```
 > `redux`源码为`ts`版本，笔者在这里去掉了类型以及其它无关内容
 
-这里我们在`reduce`传入的函数中又返回了一个函数：
+这里我们在`reduce`传入的函数中又返回了一个函数，最终会返回以如下函数：
+```javascript
+compose(f, g, h)
+
+(...args) => f(g(h(...args)))
+```

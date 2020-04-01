@@ -9,7 +9,7 @@
  *   `(...args) => f(g(h(...args)))`.
  */
 
-export default function compose (...funcs) {
+function compose (...funcs) {
   // 如果没有执行函数传入，那么最终会将传入的第一个函数的参数返回
   if (funcs.length === 0) {return (arg) => arg;}
 
@@ -23,3 +23,15 @@ export default function compose (...funcs) {
     };
   });
 }
+const fn1 = (x) => {
+  return x + 10;
+};
+
+const fn2 = (x) => {
+  return x * 10;
+};
+const fn3 = (x) => {
+  return x / 10;
+};
+
+console.log(compose(fn1, fn2, fn1, fn3)(5))
