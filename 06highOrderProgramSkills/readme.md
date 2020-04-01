@@ -191,3 +191,24 @@ const compose = (...functions) => {
 };
 console.log(compose(fn1, fn2, fn1, fn3)(5));
 ```
+
+在`redux`的源码中也有`compose`函数的实现：
+```javascript
+export default function compose (...funcs) {
+  // 如果没有执行函数传入，那么最终会将传入的第一个函数的参数返回
+  if (funcs.length === 0) {return (arg) => arg;}
+
+  // 如果传入的执行函数只有一个，将当前执行函数返回
+  if (funcs.length === 1) {return funcs[0];}
+
+  // 如果传入的执行函数有多个
+  return funcs.reduce((a, b) => {
+    return (...args) => {
+      return a(b(...args));
+    };
+  });
+}
+```
+> `redux`源码为`ts`版本，笔者在这里去掉了类型以及其它无关内容
+
+这里我们在`reduce`传入的函数中又返回了一个函数：
