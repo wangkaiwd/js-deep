@@ -2,6 +2,7 @@
 > [冴羽的博客](https://github.com/mqyqingfeng/Blog)
 ### 深入`JavaScript`执行机制
 问题记录：
+* 执行上下文和函数作用域及作用域链
 * 图解如下代码：
   ```javascript
   for (var i = 0; i < 5; i++) {
@@ -17,3 +18,4 @@
 ### 面向对象
 问题记录:
 * 图解`prototype`的相关内容
+
