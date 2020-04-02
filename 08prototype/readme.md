@@ -202,13 +202,46 @@ new new Foo().getName();
 </details>
 
 #### 惰性函数和闭包
- 
-编写一个`add`函数满足如下需求
+> [柯里化（Currying）](https://zh.javascript.info/currying-partials)
+
+编写一个`add`函数满足如下需求:
 ```javascript
-add(1);       //1
-add(1)(2);    //3
-add(1)(2)(3); //6
-add(1)(2, 3);  //6
-add(1, 2)(3);  //6
+add(1);         //1
+add(1)(2);      //3
+add(1)(2)(3);   //6
+add(1)(2, 3);   //6
+add(1, 2)(3);   //6
 add(1, 2, 3);   //6
 ```
+
+实现如下：
+```javascript
+const curry = (fn) => {
+  return function curried (...argsOuter) {
+    // 实参的个数大于等于被柯理化函数的个数，会直接直接执行函数
+    // 这里由于用到了fn.length,所以fn的参数个数要确定，不能使用...rest参数
+    if (argsOuter.length >= fn.length) {
+      return fn(...argsOuter);
+    }
+    return function (...argsInner) {
+      return curried(...argsOuter.concat(argsInner));
+    };
+  };
+};
+
+const sum = function (a, b, c) {
+  return a + b + c;
+};
+
+const add = curry(sum);
+console.log(add(1)(2)(3)); // 6
+```
+函数的执行步骤如下：
+* 上边的代码会对一个函数进行柯理化包装返回`curried`函数，返回的`curried`支持传入任意数量的参数
+* 如果新函数传入参数的数量小于被包装函数(`sum`)的形参的数量时，会继续返回一个新的函数
+* 该新函数在执行时会将之前传入的参数和当前参数进行拼接继续执行`curried`函数。然后重复之前的逻辑
+* 直到传入参数的数量大于等于被包装函数(`sum`)的形参数量时，执行`sum`函数并传入之前执行时的所有参数
+
+这样实现必须要求函数的参数的长度必须确定，那么对于参数个数不确定的函数我们该怎么办呢？
+* [Currying in JS: Answering the traditional question, Add(2)(3), which gives sum of both numbers](https://theanubhav.com/2019/02/03/js-currying-in-interview/#references)
+* 如果想看中文的话，这里有[笔者的翻译版本]()
