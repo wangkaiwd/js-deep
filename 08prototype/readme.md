@@ -1,8 +1,10 @@
 ## 原型链和原型的底层运行机制
-* 每一个函数(普通函数和类)都具备`prototype`，并且属性值是一个对象
-* `prototype`对象上本身一个属性：`constructor`，指向类本身
-* 每一个对象(普通对象、`prototype`、实例、函数等)都具备：`__proto__`属性，属性值是当前实例所属类的原型
+首先我们了解下关于原型和原型链比较重要的三个理论知识：
+* 每一个函数(普通函数和类)都具备`prototype`属性，并且属性值是一个对象
+* `prototype`对象上本身有一个属性：`constructor`，指向类本身
+* 每一个对象(普通对象、`prototype`、实例、函数等)都具备：`__proto__`属性，属性值是当前实例所属类的原型(`prototype`)
 
+下面是一个实例原型和原型链相关的例子：
 ```javascript
 function Fn () {
   this.x = 100;
@@ -57,7 +59,6 @@ console.log(fn(1, 2, 3, 4, 5));
 
 console.log(Array.prototype.slice.call('这是一段字符串', 0)); // ['这','是','一','段','字','符','串']
 ```
-![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200327005239.png)
 
 ### 测试题
 
