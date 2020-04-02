@@ -1,4 +1,5 @@
 function Foo () {
+  // 执行的时候会覆盖全局变量
   getName = function () {
     console.log(1);
   };
@@ -18,8 +19,8 @@ function getName () {
 }
 Foo.getName(); // 2
 getName(); // 4
-Foo().getName(); // 4
-getName(); // 4
-new Foo.getName(); // 1
-new Foo().getName(); // 1
-new new Foo().getName();
+Foo().getName(); // 1
+getName(); // 1
+new Foo.getName(); // new不带参数，优先级低于.    2
+new Foo().getName(); // new带参数，优先级和.相同，从左向右执行 3
+new new Foo().getName(); // 3

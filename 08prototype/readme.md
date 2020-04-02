@@ -1,4 +1,5 @@
 ## 原型链和原型的底层运行机制
+### 原型链查找机制
 首先我们了解下关于原型和原型链比较重要的三个理论知识：
 * 每一个函数(普通函数和类)都具备`prototype`属性，并且属性值是一个对象
 * `prototype`对象上本身有一个属性：`constructor`，指向类本身
@@ -47,10 +48,18 @@ Fn.prototype.getY(); // undefined
   ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200327003810.png)
 </details>
 
-数组原型链图，并扩展原型上的方法，且支持链式调用：
-![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200327004016.png)
+### 借用原型方法
+我们先定义一个数组，看一下它的原型和原型链之间的关系：
+```javascript
+const arr = [1,2,3]
+```
+<details>
+  <summary>diagram</summary>
+  
+  ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200327004016.png)
+</details>
 
-借用数组上的`slice`方法，来将字符串或者伪数组(如`arguments`)转换为真实数组：
+下面是一个借用数组上的`slice`方法，来将字符串或者伪数组(如`arguments`)转换为真实数组的例子：
 ```javascript
 function fn () {
   return Array.prototype.slice.call(arguments, 0);
@@ -59,6 +68,22 @@ console.log(fn(1, 2, 3, 4, 5));
 
 console.log(Array.prototype.slice.call('这是一段字符串', 0)); // ['这','是','一','段','字','符','串']
 ```
+
+为了弄明白上边代码的含义，我们先简单模拟实现一下`Array.prototype.slice`函数：
+```javascript
+Array.prototype.mySlice = function (start, end) {
+  const { length } = this;
+  end = end || length;
+  const result = [];
+  for (let i = start; i < end; i++) {
+    result[i] = this[i];
+  }
+  return result;
+};
+```
+`slice`方法会通过`this`的`length`属性通过`for`循环来遍历每一项，并且返回一个新数组。
+
+`Array.prototype.slice.call(arguments,0)`将`slice`方法的`this`指向了`arguments`，然后会通过`length`属性遍历`arguments`来返回一个新的真实数组，实现了将伪数组转换为真数组的功能。
 
 ### 测试题
 
@@ -94,8 +119,14 @@ console.log(m);//=>15（10+10-5）
 </details>
 
 #### 重置类的原型指向
-重置原型指向，会丢失constructor属性，需要进行手动指定：
+普通对象和原型对象的区别就是原型对象本身就有一个指向类的`constructor`属性，所以重置原型指向(将原型对象的指针指向一个新的对象)时候，会丢失`constructor`属性，需要进行手动指定：
 ```javascript
+function fun () {
+  this.a = 0;
+  this.b = function () {
+    alert(this.a);
+  };
+}
 fun.prototype = {
   b: function () {
     this.a = 20;
@@ -121,10 +152,54 @@ my_fun.c(); // 30
 console.log(my_fun.constructor);
 fun.prototype.b();
 ```
+<details>
+  <summary>answer</summary>
+  
+  ```text
+  1. undefined
+  2. 20 // 注意，这种执行方式的结果：fun.prototype.a = 30
+  ```
+</details>
 
 #### 对象原型结合代码执行机制
-函数多种角色和运算符优先级
-![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200328180222.png)
+函数多种角色和运算符优先级:
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200402214531.png)
+
+> 注意：`new`带参数和不带参数的执行优先级是不同的
+
+```javascript
+function Foo () {
+  getName = function () {
+    console.log(1);
+  };
+  return this;
+}
+Foo.getName = function () {
+  console.log(2);
+};
+Foo.prototype.getName = function () {
+  console.log(3);
+};
+var getName = function () {
+  console.log(4);
+};
+function getName () {
+  console.log(5);
+}
+Foo.getName();
+getName();
+Foo().getName();
+getName();
+new Foo.getName();
+new Foo().getName();
+new new Foo().getName();
+```
+
+<details>
+  <summary>answer</summary>
+  
+  ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200328180222.png)
+</details>
 
 #### 惰性函数和闭包
  
