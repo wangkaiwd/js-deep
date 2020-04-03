@@ -53,17 +53,30 @@
 // const fn = new Fn();
 
 // 4. 箭头函数
+// const fn = function () {
+//   console.log(this);
+//   setTimeout(() => {
+//     console.log(this);
+//   }, 1000);
+//   setTimeout(function () {
+//     console.log(this);
+//   });
+// };
+//
+// const obj = { x: 100, fn };
+//
+// obj.fn();
 
+// 5. call/apply/bind
+var x = 100;
+const obj = { x: 200, y: 200 };
 const fn = function () {
-  console.log(this);
-  setTimeout(() => {
-    console.log(this);
-  }, 1000);
-  setTimeout(function () {
-    console.log(this);
-  });
+  console.log(this.x);
 };
 
-const obj = { x: 100, fn };
+fn();
+fn.call(obj);
+fn.apply(obj);
 
-obj.fn();
+const fixedThisFn = fn.bind(obj);
+fixedThisFn();

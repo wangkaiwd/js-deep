@@ -27,7 +27,7 @@ fn1();
 <details>
   <summary>answer</summary>
   
-  ```test
+  ```text
   1. window
   2. {name: 'OBJ', fn: function() {console.log(this)}} // obj
   3. window
@@ -59,12 +59,12 @@ $button.addEventListener('mouseleave', function () {obj.fn();});
 <details>
   <summary>answer</summary>
   
-  ```test
+  ```text
   1. 200
   2. 100
   3. 点击button时：300
   4. 鼠标移入button时：300
-  5. 200
+  5. 鼠标移出时：200
   ```
 </details>
 
@@ -82,7 +82,7 @@ const fn = new Fn();
 <details>
   <summary>answer</summary>
   
-  ```test
+  ```text
   1. 200
   ```
 </details>
@@ -107,7 +107,7 @@ obj.fn();
 <details>
   <summary>answer</summary>
   
-  ```test
+  ```text
   1. {x:100, fn: function() {...}} // obj
   2. window
   3. {x:100, fn: function() {...}} // obj
@@ -115,6 +115,70 @@ obj.fn();
 </details>
 
 ### `call/apply/bind`改变`this`指向
+为`call/apply/bind`传入的第一个参数即为函数的`this`： 
+```javascript
+var x = 100;
+const obj = { x: 200, y: 200 };
+const fn = function () {
+  console.log(this.x);
+};
+
+fn();
+fn.call(obj);
+fn.apply(obj);
+
+const fixedThisFn = fn.bind(obj);
+fixedThisFn();
+```
+
+<details>
+  <summary>answer</summary>
+  
+  ```text
+  1. 100
+  2. 200
+  3. 200
+  4. 200
+  ```
+</details>
+
+* `call`在执行时，第一个参数为`this`指向，之后的参数`fn`执行时的参数
+* `apply`在执行时，第一个参数为`this`指向，之后的参数为`fn`执行时的参数组成的数组，数组的每一项会和`fn`的每一个参数进行对应
+* `bind`在执行时，第一个参数为预先传入`this`指向，之后的参数为实际调用`fn`前预先传入的参数，返回值为一个函数`fixedThisFn`，`fixedThisFn`内部会调用`fn`并指定其`this`指向
+
+为了更深入的理解`call/apply/bind`的执行过程，下面我们分别实现这三个函数
 
 ### `call/apply/bind`源码实现
+`call`的源码模拟如下：
+```javascript
 
+```
+
+`apply`的实现与`call`基本相同，只不过第二个参数是一个数组：
+```javascript
+
+```
+
+`bind`的源码模拟：
+```javascript
+
+```
+
+在深入理解`call/apply/bind`的实现原理后，我们尝试完成下面的测试：
+```javascript
+function fn1 () {console.log(1);}
+function fn2 () {console.log(2);}
+fn1.call(fn2);
+
+fn1.call.call(fn2);
+
+Function.prototype.call(fn1);
+Function.prototype.call.call(fn1);
+```
+<details>
+  <summary>answer</summary>
+  
+  ```text
+  1.
+  ```
+</details>
