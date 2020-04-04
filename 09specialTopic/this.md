@@ -1,4 +1,7 @@
 ## `this`指向
+> 参考文章：  
+> * [this](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/this)
+
 `this`指向情况分为以下几种情况：
 
 * 普通函数执行
@@ -8,7 +11,7 @@
 * `call/apply/bind`指定
 
 下面我们来进行一一介绍
-### 普通函数执行
+### 普通函数或作为对象属性执行
 `this`取决于方法执行前面是否有“点”，有“点”的话，“点”前面是谁`this`就是谁，如果没有点的话，`this`指向`window`
 ```javascript
 const fn = function () {
@@ -33,6 +36,8 @@ fn1();
   3. window
   ```
 </details>
+
+可以看到函数作为对象的属性被调用的时候，其`this`指向调用该函数的对象
 
 ### 事件绑定
 在进行事件绑定的时候，事件绑定函数中的`this`是绑定事件的元素：
@@ -68,8 +73,13 @@ $button.addEventListener('mouseleave', function () {obj.fn();});
   ```
 </details>
 
+但是需要注意的是，这里我们是在用户点击时，浏览器帮我们将点击事件的`this`指向绑定该事件的`DOM`元素。如果通过代码来触发对应的事件的话，我们可以通过`call/apply/bind`来指定其`this`
+```javascript
+$button.click.call() // this为window,打印结果为100
+```
+
 ### 构造函数(`new Fn`)
-构造函数(`new Fn`)执行，函数中的`this`是当前类的实例:  
+构造函数(`new Fn`)执行，函数中的`this`是当前类的实例，这是`new`关键字帮我们做到的:  
 ```javascript
 var x = 100;
 const Fn = function () {
@@ -146,10 +156,10 @@ fixedThisFn();
 * `apply`在执行时，第一个参数为`this`指向，之后的参数为`fn`执行时的参数组成的数组，数组的每一项会和`fn`的每一个参数进行对应
 * `bind`在执行时，第一个参数为预先传入`this`指向，之后的参数为实际调用`fn`前预先传入的参数，返回值为一个函数`fixedThisFn`，`fixedThisFn`内部会调用`fn`并指定其`this`指向
 
-为了更深入的理解`call/apply/bind`的执行过程，下面我们分别实现这三个函数
+为了更深入的理解`call/apply/bind`是如何改变函数中`this`指向的，下面我们分别模拟实现这三个函数
 
 ### `call/apply/bind`源码实现
-当函数作为对象属性被调用时，`this`指向调用该函数的对象：
+根据前面的介绍，我们知道：当函数作为对象属性被调用时，`this`指向调用该函数的对象
 ```javascript
 const obj = { x: 100, fn () {console.log(this);} };
 obj.fn();
@@ -236,6 +246,7 @@ Function.prototype.myOwnBind = function (context, ...outerArgs) {
 ```javascript
 Function.prototype.myOwnBind = (context, ...outerArgs) => (...innerArgs) => this.call(context, ...outerArgs, ...innerArgs);
 ```
+> 这里并没有实现通过`new`操作符来执行`fn.bind(context)`的操作，如果想知道其详细的实现过程，可以看我的这篇文章: [JS进阶-手写bind](https://zhuanlan.zhihu.com/p/83778815)
 
 在深入理解`call/apply/bind`的实现原理后，我们尝试完成下面的测试：
 ```javascript
@@ -252,6 +263,29 @@ Function.prototype.call.call(fn1);
   <summary>answer</summary>
   
   ```text
-  1.
+  1. 1
+  2. 2
+  3. 什么都不输出
+  4. 1
   ```
 </details>
+
+这里我们根据`call`的源码来进行推导一下`Function.prototype.call.call(fn1)`，其它的执行过程类似：
+```javascript
+// 1. 首先会将Function.prototype.call作为一个对象来执行它原型上的call方法
+// 所以call方法内部：
+//    this => Function.prototype.call
+//    context => fn1
+// 通过对象的属性来执行方法改变this指向
+//    fn1[uniqueKey] = this(Function.prototype.call)
+//    fn1[uniqueKey]() // 执行 Function.prototype.call方法，但是this是context
+// 2. 在this为fn1的情况下执行Function.prototype.call方法
+// 所以call方法内部：
+//    this => fn1
+//    context => window
+// 通过对象的属性来改变this指向
+//    window[uniqueKey] = fn1
+//    window[uniqueKey]() // 执行fn1()，但是this是window
+```
+
+这里就是有笔者关于`JavaScript`中`this`指向的相关内容的理解，希望能对阅读的小伙伴有所帮助
