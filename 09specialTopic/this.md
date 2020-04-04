@@ -149,19 +149,92 @@ fixedThisFn();
 为了更深入的理解`call/apply/bind`的执行过程，下面我们分别实现这三个函数
 
 ### `call/apply/bind`源码实现
+当函数作为对象属性被调用时，`this`指向调用该函数的对象：
+```javascript
+const obj = { x: 100, fn () {console.log(this);} };
+obj.fn();
+```
+利用`JavaScript`这个特性，我们可以将执行的函数作为`call/apply`的第一个参数`context`的属性，然后通过`context`来调用该属性对应的函数，函数的`this`便指向了`context`
+
 `call`的源码模拟如下：
 ```javascript
+Function.prototype.myOwnCall = function (context, ...args) {
+  const uniqueKey = new Date().getTime();
+  // this为调用call方法的函数
+  context[uniqueKey] = this;
+  // 作为对象的方法被对象调用，this指向该对象context
+  const result = context[uniqueKey](...args);
+  delete context[uniqueKey];
+  return result;
+};
+```
+到这里，有的小伙伴可能已经发现了，如果`call/apply`传入的`context`不是对象呢？
 
+首先我们看下`mdn`对`call`方法的第一个参数的描述：
+> 语法：`function.call(thisArg, arg1, arg2, ...)`  
+> * `thisArg`  
+>   可选的。在`function`函数运行时使用的`this`值。请注意，`this`可能不是该方法看到的实际值：如果这个函数处于非严格模式下，**则指定`null`或`undefined`时会自动替换为指向全局对象，原始值会被包装**
+
+接下来，我们对`myOwnCall`方法的第一个参数做如下处理：
+```javascript
+function translateToObject (context) {
+  // 可以通过 == 进行判断 context == null
+  // null == undefined  => 2个等号是成立的
+  // null,undefined => window
+  if (typeof context === 'undefined' || context === null) {
+    context = window;
+  } else if (typeof context === 'number') { // 原始值转换为包装对象
+    context = new Number(context);
+  } else if (typeof context === 'string') {
+    context = new String(context);
+  } else if (typeof context === 'boolean') {
+    context = new Boolean(context);
+  }
+  return context;
+}
+```
+在`myOwnCall`方法中调用该函数：
+```javascript
+Function.prototype.myOwnCall = function (context, ...args) {
+  context = translateToObject(context);
+  const uniqueKey = new Date().getTime();
+  // this为调用call方法的函数
+  context[uniqueKey] = this;
+  // 作为对象的方法被对象调用，this指向该对象context
+  const result = context[uniqueKey](...args);
+  delete context[uniqueKey];
+  return result;
+};
 ```
 
 `apply`的实现与`call`基本相同，只不过第二个参数是一个数组：
 ```javascript
-
+Function.prototype.myOwnBind = function (context, paramsArray) {
+  context = translateToObject(context);
+  const uniqueKey = new Date().getTime();
+  // this为调用call方法的函数
+  context[uniqueKey] = this;
+  // 作为对象的方法被对象调用，this指向该对象context
+  const result = context[uniqueKey](...paramsArray);
+  delete context[uniqueKey];
+  return result;
+};
 ```
+
+相比于`call/apply`，`bind`函数并没有立即执行函数，而是预先传入函数执行时的`this`和参数，并且返回一个函数，在返回的函数中执行调用`bind`函数并将预先传入的`this`和参数传入
 
 `bind`的源码模拟：
 ```javascript
-
+Function.prototype.myOwnBind = function (context, ...outerArgs) {
+  const fn = this;
+  return function (...innerArgs) {
+    return fn.call(context, ...outerArgs, ...innerArgs);
+  };
+};
+```
+精简版如下：
+```javascript
+Function.prototype.myOwnBind = (context, ...outerArgs) => (...innerArgs) => this.call(context, ...outerArgs, ...innerArgs);
 ```
 
 在深入理解`call/apply/bind`的实现原理后，我们尝试完成下面的测试：
