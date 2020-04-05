@@ -2,16 +2,16 @@
 > 参考文章：  
 > * [this](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/this)
 
-`this`指向情况分为以下几种情况：
+`JavaScript`中`this`指向分为以下几种情况：
 
-* 普通函数或作为对象属性执行
+* 普通函数或作为对象属性
 * 事件绑定
 * 构造函数
 * 箭头函数
 * `call/apply/bind`指定
 
 下面我们来进行一一介绍
-### 普通函数或作为对象属性执行
+### 普通函数或作为对象属性
 `this`取决于方法执行前面是否有“点”，有“点”的话，“点”前面是谁`this`就是谁，如果没有点的话，`this`指向`window`
 ```javascript
 const fn = function () {
