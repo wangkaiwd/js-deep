@@ -167,6 +167,49 @@ console.log(toString.call(arr)); // '[object Array]'
 如果你不知道选择哪种方式来检测数据类型的话，使用`Object.prototype.toString.call`方法准没错！
 
 ### `JQuery`源码数据类型检测
+在掌握了`JavaScript`中关于数据类型检测的相关知识后，我们看一下在`JQuery`中是如何进行数据类型检测的。
 
+先看下如何使用`JQuery`中的数据类型检测方法： 
+```javascript
+jQuery.type( true ) === "boolean"
+jQuery.type( 3 ) === "number"
+jQuery.type( "test" ) === "string"
+jQuery.type( function(){} ) === "function"
+jQuery.type( [] ) === "array"
+jQuery.type( undefined ) === "undefined"
+```
+
+下面是笔者整理的`JQuery`中的类型检测相关代码：
+```javascript
+var class2type = {};
+var toString = class2type.toString; // Object.prototype.toString
+var hasOwn = class2type.hasOwnProperty; // Object.prototype.hasOwnProperty
+var fnToString = hasOwn.toString; // Function.prototype.toString
+// Function.prototype.toString.call(Object)
+// Object是一个类，也属于函数，可以调用函数的toString方法
+var ObjectFunctionString = fnToString.call(Object);
+
+// 一些常见数据类型
+'Boolean Number String Function Array Date RegExp Object Error Symbol'.split(' ').forEach(function anonymous (item) {
+  class2type['[object ' + item + ']'] = item.toLowerCase();
+  // 拼接成如下格式 class2type[object Type] = type
+});
+
+function toType (obj) {
+  // null/undefined === null
+  // 若果obj是null或者undefined，返回其对应的字符串('null'或者'undefined')
+  if (obj == null) {
+    return obj + ''; // return 'null' / return 'undefined'
+  }
+  // 复杂数据类型： typeof object = 'object' ; typeof function = 'function'
+  // 1. typeof obj === 'object' || typeof obj === 'function' , 这个逻辑表示obj为对象或者null，null之前已经进行了处理
+  // 2. class2type[toString.call(obj)) || 'object',
+  //    这个逻辑表示会根据obj调用Object.prototype.toString方法后是否是class2type的属性，
+  //    是的话返回其类型，否则返回'object'
+  // 3. 对象 ? class2type中的属性值类型或'object' : typeof obj，
+  //    即复杂数据类型通过class2type中的属性值判断或者返回'object',简单数据类型直接使用typeof进行判断
+  return typeof obj === 'object' || typeof obj === 'function' ? class2type[toString.call(obj)] || 'object' : typeof obj;
+}
+```
 
 ### 总结
