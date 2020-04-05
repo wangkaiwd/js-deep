@@ -28,7 +28,7 @@ Fn.prototype.__proto__ = Array.prototype;
 // 2. Fn.prototype.__proto__ => Object.prototype  这里被改动 Fn.prototype.__proto__ => Array.prototype
 const fn = new Fn();
 console.log(fn instanceof Fn); // true
-console.log(fn instanceof Object); // false
+console.log(fn instanceof Object); // true
 console.log(fn instanceof Array); // true
 
 // constructor: 与 instanceof 类似

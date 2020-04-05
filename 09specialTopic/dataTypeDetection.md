@@ -81,3 +81,92 @@ console.log(_instanceof([], Object)); // true
 * 由于`[].__proto__ === Array.prototype`，所以`[] instanceof Array`返回`true`
 * 由于`Array.prototype.__proto__ === Object.prototype`，即`[].__proto__.__proto === Object.prototype`，所以`[] instanceof Object`返回`true`
 
+由于`instanceof`是根据原型链来进行检测的，所以我们可以得出以下俩个结论：
+* 原型链的指向可以改变，所以`instanceof`用来检测数据类型并不完全准确
+* 由于简单数据类型没有`__proto__`属性，所以无法使用`instanceof`来检测类型
+
+我们看下`instanceof`无法准确进行检测的例子：
+```javascript
+const fn = function() { };
+
+// 更改原型和原型链指向
+fn.__proto__ = Array.prototype;
+fn.prototype = Array.prototype;
+const fn1 = new fn();
+
+console.log(fn instanceof Function); // false
+console.log(fn instanceof Array); // true
+
+console.log(fn1 instanceof fn); // true
+console.log(fn1 instanceof Array); // true
+
+// 简单数据类型检测不准确
+console.log(1 instanceof Number); false
+```
+
+### constructor
+每一个函数都有一个`prototype`属性，该属性的值为对象。而`prototype`相比于普通对象，其天生就带有`constructor`属性，属性值为原型所属的函数：
+```javascript
+const arr = [];
+console.log(arr.constructor); // Array
+```
+上边我们定义了一个数组`arr`，在获取`arr`的`constructor`属性时：
+* 从本身的属性中查找并没有找到`constructor`属性
+* 从`arr.__proto__`中查找
+* 由于`arr`是`Array`的实例，所以`arr.__proto__ === Array.prototype`
+* `Array.prototype === Array`，所以`arr.constructor`为`Array`
+
+`constructor`和`instanceof`类似，都是基于原型链来进行数据类型检测，所以当我们修改原型指向后，检测结果并不准确。
+```javascript
+const arr = [];
+// 当然，一般情况下我们并不会这样做，这里仅仅举例说明
+Array.prototype.constructor = null;
+console.log(arr.constructor); // null
+```
+
+### Array.isArray
+`Array.isArray`是构造函数`Array`上的一个属性，它可以判断一个值的类型是否为数组：
+```javascript
+Array.isArray([1,2,3]); // true
+Array.isArray(1); // false
+Array.isArray('abc'); // false
+```
+当然，该方法只能用于判断数组，并不能判断是否为其它数据类型
+
+### Object.prototype.toString.call
+在上文中介绍的数据类型检测方法都有一定的不足，这里我们介绍的`Object.prototype.toString.call`方法可以很好的判断数据类型，并且弥补了之前几种方法出现的问题。
+
+下面我们看下如何使用该方法来进行数据类型检测：
+```javascript
+const toString = Object.prototype.toString
+// 判断简单数据类型
+console.log(toString.call(1)); // '[object Number]'
+console.log(toString.call('a')); // '[object String]'
+console.log(toString.call(true)); // '[object Boolean]'
+console.log(toString.call(null)); // '[object Null]'
+console.log(toString.call(undefined)); // '[object Undefined]'
+
+// 判断复杂数据类型，可以详细区分不同的对象
+console.log(toString.call([])); // '[object Array]'
+console.log(toString.call({})); // '[object Object]'
+console.log(toString.call(new Date)); // '[object Date]'
+```
+
+即使我们更改原型链，也可以准确检测数据类型：
+```javascript
+const arr = []
+arr.__proto__ = Function.prototype
+console.log(arr instanceof Array); // false
+console.log(toString.call(arr)); // '[object Array]'
+```
+
+`Object.prototype.toString`并不会将对象转换为字符串，而是将对象的信息作为`[object Type]`的格式输出。
+
+我们通过`call`方法来借用`Object.prototype.toString`，让其它非对象数据类型也能调用该方法，获取到其信息来进行数据检测。
+
+如果你不知道选择哪种方式来检测数据类型的话，使用`Object.prototype.toString.call`方法准没错！
+
+### `JQuery`源码数据类型检测
+
+
+### 总结
