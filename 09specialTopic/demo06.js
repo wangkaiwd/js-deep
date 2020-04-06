@@ -35,35 +35,55 @@ var isFunction = function isFunction (obj) {
 };
 
 var isWindow = function isWindow (obj) {
+  // null和undefined返回false, window = window.window
   return obj != null && obj === obj.window;
 };
 
+// 普通对象的逻辑：
+//    1. toString.call(obj) === '[object Object]'
+//    2. Object.create(null) 如果没有原型并且满足条件1就是普通对象
+//    3. 如果对象的原型有constructor属性，并且置为Object的话，就是普通对象
 var isPlainObject = function isPlainObject (obj) {
   var proto, Ctor;
   if (!obj || toString.call(obj) !== '[object Object]') {
     return false;
   }
+  // 获取obj的原型
   proto = Object.getPrototypeOf(obj);
+
+  // 如果一个对象没有原型，那么是plain object
   // Objects with no prototype (`Object.create( null )`)
   if (!proto) {
     return true;
   }
-  // Objects with prototype are plain iff they were constructed by a global Object function
+
+  // proto原型自身有constructor属性，赋值给Ctor,否则Ctor为false
+  // Objects with prototype are plain if they were constructed by a global Object function
   Ctor = hasOwn.call(proto, 'constructor') && proto.constructor;
+  // 如果Ctor是一个函数，
+  // 那么Ctor调用Function.prototype.toString方法是否和Object调用Function.prototype.toString方法结果相同
   return typeof Ctor === 'function' && fnToString.call(Ctor) === ObjectFunctionString;
 };
 
+// 空对象
 var isEmptyObject = function isEmptyObject (obj) {
   var name;
+  // 如果obj是空对象不会执行该循环
+  // in 关键字会遍历原型上的一些属性和方法，需要与hasOwnProperty进行结合使用
   for (name in obj) {
     return false;
   }
   return true;
 };
 
+// 伪数组：
+//    1. 有length属性
+//    2. 不是函数和全局对象window
 var isArrayLike = function isArrayLike (obj) {
+  // 如果obj存在，并且有length属性
   var length = !!obj && 'length' in obj && obj.length,
     type = toType(obj);
+  // 函数和全局对象window都有length属性
   if (isFunction(obj) || isWindow(obj)) {
     return false;
   }

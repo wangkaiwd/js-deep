@@ -101,7 +101,7 @@ console.log(fn1 instanceof fn); // true
 console.log(fn1 instanceof Array); // true
 
 // 简单数据类型检测不准确
-console.log(1 instanceof Number); false
+console.log(1 instanceof Number); // false
 ```
 
 ### constructor
@@ -211,5 +211,59 @@ function toType (obj) {
   return typeof obj === 'object' || typeof obj === 'function' ? class2type[toString.call(obj)] || 'object' : typeof obj;
 }
 ```
+`JQuery`会将类型经过`Object.prototype.toString`方法转换后的结果作为`key`放到`class2type`中，并将类型的小写值作为属性值，最终在调用时返回
+
+`JQuery`还为我们封装了一些工具方法方便进行类型判断：
+```javascript
+var isWindow = function isWindow (obj) {
+  // null和undefined返回false, window = window.window
+  return obj != null && obj === obj.window;
+};
+
+// 普通对象的逻辑：
+//    1. toString.call(obj) === '[object Object]'
+//    2. Object.create(null) 如果没有原型并且满足条件1就是普通对象
+//    3. 如果对象的原型有constructor属性，并且置为Object的话，就是普通对象
+var isPlainObject = function isPlainObject (obj) {
+  var proto, Ctor;
+  if (!obj || toString.call(obj) !== '[object Object]') {
+    return false;
+  }
+  // 获取obj的原型
+  proto = Object.getPrototypeOf(obj);
+
+  // 如果一个对象没有原型，那么是plain object
+  // Objects with no prototype (`Object.create( null )`)
+  if (!proto) {
+    return true;
+  }
+
+  // proto原型自身有constructor属性，赋值给Ctor,否则Ctor为false
+  // Objects with prototype are plain if they were constructed by a global Object function
+  Ctor = hasOwn.call(proto, 'constructor') && proto.constructor;
+  // 如果Ctor是一个函数，
+  // 那么Ctor调用Function.prototype.toString方法是否和Object调用Function.prototype.toString方法结果相同
+  return typeof Ctor === 'function' && fnToString.call(Ctor) === ObjectFunctionString;
+};
+
+// 空对象
+var isEmptyObject = function isEmptyObject (obj) {
+  var name;
+  // 如果obj是空对象不会执行该循环
+  // in 关键字会遍历原型上的一些属性和方法，需要与hasOwnProperty进行结合使用
+  for (name in obj) {
+    return false;
+  }
+  return true;
+};
+```
+
+在日常开发中，我们可以结合`JQuery`源码封装自己的类型判断函数。
 
 ### 总结
+`JavaScript`中的类型检测方法各有特点，对于其用法我们做一下小结：
+
+* 简单数据类型可以使用`typeof`来判断，语法简单快捷
+* 可以直接使用`Array.isArray`来检测数组
+* `instanceof`和`constructor`可以用来检测对象的具体类型，但是在修改了原型链后，结果会不准确
+* `Object.prototype.toString.call`是一个万能公式，基本上可以用来检测`JavaScript`中所有的数据类型 
