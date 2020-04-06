@@ -110,7 +110,7 @@ console.log(obj[a] === obj[b])
   // true
   ```
 </details>
-这里由于`a`和`b`都是对象，最终会通过`toString`转换为`[object Object]`，将会表示同一个对象属性。所以对象的值最终是`{[object Object]: 'bbb'}`}
+这里由于`a`和`b`都是对象，最终会通过`toString`转换为`[object Object]`，将会表示同一个对象属性。所以对象的值最终是`{[object Object]: 'bbb'}`
 
 ### 总结
 现在，我们来解释下，文章开头位置的代码的具体执行过程：  
