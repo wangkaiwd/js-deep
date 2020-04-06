@@ -19,6 +19,7 @@
 对于复杂数据类型，*`typeof`会将`function`进行单独处理*。而`function`之外的数据类型，不管是字面量对象，还是`Date, Regexp, Math`都会统一返回`object`。当`typeof`用来处理`null`时也会返回`object`
 
 总结一下：
+
 * `typeof function === 'function'`
 * `typeof null === 'object'`
 * `typeof execeptFunctionObject === 'object'`
@@ -78,10 +79,12 @@ console.log(_instanceof([], Array));  // true
 console.log(_instanceof([], Object)); // true
 ```
 根据`instanceof`的原理可以做出如下推论：
+
 * 由于`[].__proto__ === Array.prototype`，所以`[] instanceof Array`返回`true`
 * 由于`Array.prototype.__proto__ === Object.prototype`，即`[].__proto__.__proto === Object.prototype`，所以`[] instanceof Object`返回`true`
 
 由于`instanceof`是根据原型链来进行检测的，所以我们可以得出以下俩个结论：
+
 * 原型链的指向可以改变，所以`instanceof`用来检测数据类型并不完全准确
 * 由于简单数据类型没有`__proto__`属性，所以无法使用`instanceof`来检测类型
 
@@ -111,10 +114,11 @@ const arr = [];
 console.log(arr.constructor); // Array
 ```
 上边我们定义了一个数组`arr`，在获取`arr`的`constructor`属性时：
+
 * 从本身的属性中查找并没有找到`constructor`属性
 * 从`arr.__proto__`中查找
 * 由于`arr`是`Array`的实例，所以`arr.__proto__ === Array.prototype`
-* `Array.prototype === Array`，所以`arr.constructor`为`Array`
+* `Array.prototype.constructor === Array`，所以`arr.constructor`为`Array`
 
 `constructor`和`instanceof`类似，都是基于原型链来进行数据类型检测，所以当我们修改原型指向后，检测结果并不准确。
 ```javascript
