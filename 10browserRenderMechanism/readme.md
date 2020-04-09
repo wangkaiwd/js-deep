@@ -1,4 +1,6 @@
 ## 浏览器渲染机制
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200410001328.png)
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200410001943.png)
 ### 进程和线程
 浏览器是多线程
 
@@ -11,3 +13,32 @@
 
 ### 经典面试题
 浏览器的地址栏中输入一个`url`地址到呈现页面，经历了哪些事情？
+
+### 页面加载过程
+浏览器分配一个线程，“自上而下、从左到右”依次解析和渲染代码
+
+#### `css`加载
+* `link`标签引入
+    * 浏览器会开辟一个新的线程，去服务器获取对应的资源文件（不会阻碍主线程的渲染）
+* `style`标签引入
+* `@import`引入
+
+#### `js`加载
+
+
+### 减少网络请求次数
+网络资源请求或者`http`请求的[最大并发数](https://stackoverflow.com/a/985704):  
+```text
+Firefox 2:  2
+Firefox 3+: 6
+Opera 9.26: 4
+Opera 12:   6
+Safari 3:   4
+Safari 5:   6
+IE 7:       2
+IE 8:       6
+IE 10:      8
+Chrome:     6
+```
+
+为了避免并发的出现，导致某些资源延迟加载，页面渲染速度变慢，我们应该尽可能减少`http`请求的数量
