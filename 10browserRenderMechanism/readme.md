@@ -1,4 +1,5 @@
 ## 浏览器渲染机制
+> [How the browser renders a web page? — DOM, CSSOM and Rendering](https://itnext.io/how-the-browser-renders-a-web-page-dom-cssom-and-rendering-df10531c9969)
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200410001328.png)
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200410001943.png)
 ### 进程和线程
@@ -44,3 +45,6 @@ Chrome:     6
 ```
 
 为了避免并发的出现，导致某些资源延迟加载，页面渲染速度变慢，我们应该尽可能减少`http`请求的数量
+
+### 回流和重绘(Reflow & Repaint)
+> [Understanding Repaint and Reflow in JavaScript](https://medium.com/darrja-%E0%A4%A6%E0%A4%B0%E0%A5%8D%E0%A4%9C%E0%A4%BE/what-the-heck-is-repaint-and-reflow-in-the-browser-b2d0fb980c08)
