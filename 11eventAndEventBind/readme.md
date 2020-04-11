@@ -1,9 +1,10 @@
 ## 事件和事件绑定
 > [event reference](https://developer.mozilla.org/zh-CN/docs/Web/Events)
-### 什么是事件
+
+事件：   
 浏览器赋予元素天生默认的一些行为，不论是否绑定相关的方法，只要进行相应的行为操作了，那么一定会触发相应的事件
 
-### 事件绑定
+事件绑定：  
 给元素的某一个事件行为绑定方法，目的是行为触发可以做点自己想做的事
 
 `DOM0`事件绑定
@@ -59,6 +60,9 @@ document.addEventListener('click', function (event) {
 ```
 
 ### 事件传播机制
+> [Event dispatch and DOM event flow](https://www.w3.org/TR/DOM-Level-3-Events/#event-flow)
+
+![](https://www.w3.org/TR/DOM-Level-3-Events/images/eventflow.svg)
 
 ### 阻止浏览器默认行为
 > [Browser default actions](https://javascript.info/default-browser-action)
