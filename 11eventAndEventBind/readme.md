@@ -33,8 +33,11 @@ element.removeEventListener(type, listener, useCapter)
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200411194707.png)
 
 ### 事件对象
+鼠标事件对象
 
-常用的事件
+键盘事件对象
+
+常用的事件对象属性：
 
 需要注意的是，每次事件触发时传递的事件对象都是相同的: 
 ```javascript
@@ -58,3 +61,52 @@ document.addEventListener('click', function (event) {
 ### 事件传播机制
 
 ### 阻止浏览器默认行为
+> [Browser default actions](https://javascript.info/default-browser-action)
+
+在`JavaScript`中，许多事件将会自动导致浏览器执行特定的行为，比如：
+* 点击`a`链接
+* 点击`form`提交按钮
+* 在文本上按下鼠标按钮并且移动鼠标选择文本
+* 在页面中右键鼠标出现选项菜单
+
+这里我们先看一下`a`标签的例子，`a`标签的默认行为：
+* 跳转页面
+* 锚点定位
+
+阻止`a`标签的默认行为：
+```html
+<a href="javascript:;">跳转</a>
+```
+
+也可以为`a`标签绑定点击事件，在点击事件中阻止默认行为： 
+```javascript
+const aLink = document.getElementById('a');
+aLink.onclick = function(e) {
+  // return false
+  e.preventDefault();
+} 
+```
+
+`input`输入框能输入内容也是浏览器的一种默认行为，我们限制用户最多只能输入18位：
+```html
+<body>
+<input class="input" type="text">
+<script>
+  const input = document.getElementsByClassName('input')[0];
+  input.addEventListener('keydown', function (e) {
+    // const value = e.target.value;
+    // const value = this.value
+    const whiteList = [13, 8, 37, 38, 39, 40];
+    if (this.value.length >= 10 && !whiteList.includes(e.keyCode)) {
+      e.preventDefault();
+    }
+  });
+</script>
+</body>
+```
+> 这里只是为了学习对应的知识点而模拟的场景，实际上我们可以使用原生的`maxLength`属性
+
+上边的代码在`input`中输入的内容长度超过10位后，将阻止浏览器的默认行为，导致`input`无法输入。
+
+但是我们的`input`框在此时应该还可以进行移动光标、通过`enter`键提交、通过`backspace`键删除内容，我们通过其对应的`keyCode`值来进行过滤。
+

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<input class="input" type="text">
+<script>
+  const input = document.getElementsByClassName('input')[0];
+  input.addEventListener('keydown', function (e) {
+    // const value = e.target.value;
+    // const value = this.value
+    const whiteList = [13, 8, 37, 38, 39, 40];
+    if (this.value.length >= 10 && !whiteList.includes(e.keyCode)) {
+      e.preventDefault();
+    }
+  });
+</script>
+</body>
+</html>
