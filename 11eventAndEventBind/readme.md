@@ -62,7 +62,13 @@ document.addEventListener('click', function (event) {
 ### 事件传播机制
 > [Event dispatch and DOM event flow](https://www.w3.org/TR/DOM-Level-3-Events/#event-flow)
 
+我们先看下`w3c`中比较经典的一张图：
 ![](https://www.w3.org/TR/DOM-Level-3-Events/images/eventflow.svg)
+
+下面是一个例子，我们可以与上图一起结合学习：
+```javascript
+```
+
 
 ### 阻止浏览器默认行为
 > [Browser default actions](https://javascript.info/default-browser-action)
