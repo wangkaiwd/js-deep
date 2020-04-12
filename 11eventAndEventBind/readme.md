@@ -162,11 +162,14 @@ center.addEventListener('click', function (e) {
   const outer = $('.outer'), inner = $('.inner'), select = $('#select');
   const elements = [outer, inner];
   const eventMap = { over: ['mouseover', 'mouseout'], enter: ['mouseenter', 'mouseleave'] };
+  // over或者enter,根据下拉框进行切换
   let type = 'over';
+  // 事件监听函数
   const listener = function (e) {
     const className = e.currentTarget.className;
     console.log(`${className}-${e.type}`);
   };
+  // 为outer和inner元素绑定事件
   const bindListeners = function () {
     elements.map(item => {
       eventMap[type].map(event => {
@@ -174,6 +177,8 @@ center.addEventListener('click', function (e) {
       });
     });
   };
+
+  // 移除对应type所绑定的事件
   const removeListeners = function () {
     elements.map(item => {
       eventMap[type].map(event => {
@@ -181,10 +186,15 @@ center.addEventListener('click', function (e) {
       });
     });
   };
+
+  // 初始化事件绑定
   bindListeners();
   select.addEventListener('change', function (e) {
+    // 切换select时，先移除对应的事件
     removeListeners();
+    // 更改type值
     type = e.target.value;
+    // 为对应type的元素绑定事件
     bindListeners();
   });
 </script>
