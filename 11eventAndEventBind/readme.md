@@ -123,6 +123,65 @@ center.addEventListener('click', function (e) {
 我们可以通过事件对象从`Event.prototype`原型上继承的`eventPhase`属性来判断当前事件所处的阶段：
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200412155708.png)
 
+### `mouseover`和`mouseenter`的本质区别
+> `mouseout`和`mouseleave`同理
+
+`mouseover`和`mouseenter`的区别有以下2点：
+* `mouseover`支持事件冒泡，`mouseenter`不支持事件冒泡
+* `mouseover`从子元素进入父元素的时候，会触发父元素的`mouseover`事件，而`mouseenter`并不会
+
+我们通过一个例子来学习俩者的区别并理解事件传播过程：
+```html
+<body>
+<select name="" id="select">
+  <option value="over">mouseover</option>
+  <option value="enter">mouseenter</option>
+</select>
+<div class="outer">
+  <div class="inner">
+  </div>
+</div>
+<script>
+  const $ = (selector) => document.querySelector(selector);
+  const outer = $('.outer'), inner = $('.inner'), select = $('#select');
+  const elements = [outer, inner];
+  const eventMap = { over: ['mouseover', 'mouseout'], enter: ['mouseenter', 'mouseleave'] };
+  let type = 'over';
+  const listener = function (e) {
+    const className = e.currentTarget.className;
+    console.log(`${className}-${e.type}`);
+  };
+  const bindListeners = function () {
+    elements.map(item => {
+      eventMap[type].map(event => {
+        item.addEventListener(event, listener);
+      });
+    });
+  };
+  const removeListeners = function () {
+    elements.map(item => {
+      eventMap[type].map(event => {
+        item.removeEventListener(event, listener);
+      });
+    });
+  };
+  bindListeners();
+  select.addEventListener('change', function (e) {
+    removeListeners();
+    type = e.target.value;
+    bindListeners();
+  });
+</script>
+</body>
+```
+这里是在线例子:[mouseover-mouseenter-differ](https://stackblitz.com/edit/mouseover-mouseenter-differ)
+
+我们分析一下从最左侧划入最右侧，俩个事件的触发过程
+
+`mouseover`:
+
+`mouseenter`:
+
 ### 阻止浏览器默认行为
 > [Browser default actions](https://javascript.info/default-browser-action)
 
@@ -175,3 +234,4 @@ aLink.onclick = function(e) {
 
 但是我们的`input`框在此时应该还可以进行移动光标、通过`enter`键提交、通过`backspace`键删除内容，我们通过其对应的`keyCode`值来进行过滤。
 
+当然，浏览器中的默认行为还有很多,这里我们只是列举了一些而已，当大家遇到的时候都可以使用上边提到的方法阻止其默认行为

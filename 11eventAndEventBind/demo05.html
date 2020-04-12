@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      color: #fff;
+      font-size: 30px;
+    }
+    .outer {
+      /* 防止边界折叠 margin collapse */
+      padding-top: 1px;
+      margin: 100px auto;
+      width: 200px;
+      height: 200px;
+      background-color: lightcoral;
+    }
+    .inner {
+      margin: 0 auto;
+      margin-top: -40px;
+      width: 100px;
+      height: 100px;
+      background-color: lightgreen;
+    }
+  </style>
+</head>
+<body>
+<select name="" id="select">
+  <option value="over">mouseover</option>
+  <option value="enter">mouseenter</option>
+</select>
+<div class="outer">
+  <div class="inner">
+  </div>
+</div>
+<script>
+  const $ = (selector) => document.querySelector(selector);
+  const outer = $('.outer'), inner = $('.inner'), select = $('#select');
+  const elements = [outer, inner];
+  const eventMap = { over: ['mouseover', 'mouseout'], enter: ['mouseenter', 'mouseleave'] };
+  let type = 'over';
+  const listener = function (e) {
+    const className = e.currentTarget.className;
+    console.log(`${className}-${e.type}`);
+  };
+  const bindListeners = function () {
+    elements.map(item => {
+      eventMap[type].map(event => {
+        item.addEventListener(event, listener);
+      });
+    });
+  };
+  const removeListeners = function () {
+    elements.map(item => {
+      eventMap[type].map(event => {
+        item.removeEventListener(event, listener);
+      });
+    });
+  };
+  bindListeners();
+  select.addEventListener('change', function (e) {
+    removeListeners();
+    type = e.target.value;
+    bindListeners();
+  });
+</script>
+</body>
+</html>
