@@ -116,9 +116,9 @@ center.addEventListener('click', function (e) {
 * 通过`addEventListener`绑定的事件方法，我们可以控制在捕获或冒泡阶段执行
 
 事件传播分为三个阶段：
-* 冒泡阶段(`bubble phase`): 事件对象以相反的顺序传从目标元素开始，传播到`Window`结束
-* 目标阶段(`target phase`): 事件对象到达了事件对象的事件目标。
-* 捕获阶段(`capture phase`): 事件对象从`Window`开始，传播到目标元素结束
+* 冒泡阶段(`bubble phase`): 事件对象逆向向上传播回目标元素的祖先元素，从父亲开始，最终到达`Window`
+* 目标阶段(`target phase`): 事件对象已经抵达事件目标元素，为这个阶段注册的事件监听被调用
+* 捕获阶段(`capture phase`): 事件正在被目标元素的祖先对象所处理，这个处理过程从`Window`开始，一直到目标元素的父元素
 
 我们可以通过事件对象从`Event.prototype`原型上继承的`eventPhase`属性来判断当前事件所处的阶段：
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200412155708.png)
