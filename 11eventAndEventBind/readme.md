@@ -1,4 +1,5 @@
 ## `JavaScript DOM` 事件
+
 ### 事件和事件绑定
 > [event reference](https://developer.mozilla.org/zh-CN/docs/Web/Events)
 
@@ -297,3 +298,6 @@ aLink.onclick = function(e) {
 但是我们的`input`框在此时应该还可以进行移动光标、通过`enter`键提交、通过`backspace`键删除内容，我们通过其对应的`keyCode`值来进行过滤。
 
 当然，浏览器中的默认行为还有很多,这里我们只是列举了一些而已，当大家遇到的时候都可以使用上边提到的方法阻止其默认行为
+
+### 事件委托
+> [How JavaScript Event Delegation Works](https://davidwalsh.name/event-delegate)
