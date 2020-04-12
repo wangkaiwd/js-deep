@@ -30,8 +30,7 @@ element.addEventListener(type, listener, useCapture)
 element.removeEventListener(type, listener, useCapter)
 ```
 
-原理：基于原型链查找机制，找到`EventTarget.prototype`上的`addEventListener`方法执行，它是基于浏览器事件池机制完成事件绑定的。
-![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200411194707.png)
+原理：基于原型链查找机制，找到`EventTarget.prototype`上的`addEventListener`方法执行，它实现类似于发布订阅模式。
 
 ### 事件对象
 鼠标事件对象
