@@ -1,11 +1,12 @@
-## 事件和事件绑定
+## `JavaScript DOM` 事件
+### 事件和事件绑定
 > [event reference](https://developer.mozilla.org/zh-CN/docs/Web/Events)
 
 事件：   
 浏览器赋予元素天生默认的一些行为，不论是否绑定相关的方法，只要进行相应的行为操作了，那么一定会触发相应的事件
 
 事件绑定：  
-给元素的某一个事件行为绑定方法，目的是行为触发可以做点自己想做的事
+给元素的某一个事件行为绑定方法，目的是行为触发时可以做点自己想做的事
 
 `DOM0`事件绑定
 ```javascript
@@ -21,7 +22,7 @@ element.onevent = null // 将属性值指向空对象指针，取消对之前函
 
 根据`DOM0`事件绑定的原理，我们可以得到以下结论：
 * 不是所有的事件类型都支持这种绑定方式，元素有`onxxx`属性时，才能给其绑定方法(例如：`DOMContentLoaded`事件就不支持这种绑定方案)
-* 只能给当前元素的某一个事件行为绑定一个事件处理处理函数(在为对象的属性赋值为新函数的时候，会取消对之前函数地址的引用)
+* 只能给当前元素的某一个事件行为绑定一个事件处理函数(在为对象的属性赋值为新函数的时候，会取消对之前函数地址的引用)
 
 
 `DOM2`事件绑定：
@@ -30,14 +31,28 @@ element.addEventListener(type, listener, useCapture)
 element.removeEventListener(type, listener, useCapter)
 ```
 
-原理：基于原型链查找机制，找到`EventTarget.prototype`上的`addEventListener`方法执行，它实现类似于发布订阅模式。
+原理：基于原型链查找机制，找到`EventTarget.prototype`上的`addEventListener`方法执行。
+
+它的实现类似于发布订阅模式，会将对应事件的事件监听器函数放入一个数组中，在该事件触发时，将数组中的函数一次执行。所以这种事件绑定方式支持对**同一个事件绑定多个事件监听器**
 
 ### 事件对象
-鼠标事件对象
+> [DOM event 接口](https://developer.mozilla.org/zh-CN/docs/Web/API/Event)
 
-键盘事件对象
+浏览器会在事件执行时，为我们绑定的事件执行函数传入一个参数，该参数就是事件对象
 
-常用的事件对象属性：
+事件对象的常用属性属性和方法：
+* currentTarget: 绑定事件的元素
+* eventPhase: 指示事件流正在处理哪个阶段
+* target: 触发事件的元素
+* type: 事件的类型(不区分大小写)
+* preventDefault: 取消事件(阻止浏览器默认行为)
+* stopPropagation: 停止事件冒泡
+
+常用的事件对象有以下几种：  
+* 鼠标事件对象：[MouseEvent](https://developer.mozilla.org/zh-CN/docs/Web/API/MouseEvent)
+* 键盘事件对象: [KeyboardEvent](https://developer.mozilla.org/zh-CN/docs/Web/API/KeyboardEvent)
+* 触摸事件对象：[TouchEvent](https://developer.mozilla.org/zh-CN/docs/Web/API/TouchEvent)
+* 拖拽事件对象：[DragEvent](https://developer.mozilla.org/zh-CN/docs/Web/API/DragEvent)
 
 需要注意的是，每次事件触发时传递的事件对象都是相同的: 
 ```javascript
@@ -60,6 +75,8 @@ document.addEventListener('click', function (event) {
 
 ### 事件传播机制
 > [Event dispatch and DOM event flow](https://www.w3.org/TR/DOM-Level-3-Events/#event-flow)
+
+![](https://www.w3.org/TR/uievents/images/eventflow.svg)
 
 下面是一个关于事件冒泡和捕获的例子：
 ```javascript
