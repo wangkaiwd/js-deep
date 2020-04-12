@@ -178,13 +178,49 @@ center.addEventListener('click', function (e) {
 我们分析一下从最左侧划入最右侧，俩个事件的触发过程
 
 `mouseover`:
+* 鼠标移入`outer`元素，触发`outer`的`mouseover`事件
+* 鼠标从`outer`移入`inner`时，首先触发`outer`的`mouseout`事件。之后移入`inner`，触发`inner`的`mouseover`事件，由于事件冒泡机制，触发`outer`的`mouseover`事件
+* 鼠标移出`inner`时，首先触发`inner`的`mouseout`事件，由于冒泡机制，会触发`outer`的`mouseout`事件。之后移入`outer`触发`outer`的`mouseover`事件
+* 鼠标移出`outer`，触发`outer`的`mouseout`事件
+
+打印结果如下：
+```javascript
+// 鼠标移入outer
+// outer-mouseover
+
+// 鼠标从outer移入inner
+// outer-mouseout -> inner-mouseover -> outer-mouseover
+
+// 鼠标从inner移入outer
+// inner-mouseout -> outer-mouseout -> outer-mouseover
+
+// 鼠标移出outer
+// outer-mouseout 
+```
 
 `mouseenter`:
+* 鼠标进入`outer`，触发`outer`的`mouseenter`事件
+* 鼠标从`outer`离开进入`inner`，触发`inner`的`mouseenter`事件，此事件不会冒泡
+* 鼠标从`inner`离开进入`outer`，触发`inner`的`mouseleave`事件，此事件不会冒泡
+* 鼠标从`outer`离开，触发`outer`的`mouseleave`事件
+
+打印结果如下：
+```javascript
+// 鼠标进入outer
+// outer-mouseenter
+
+// 鼠标从outer进入inner
+// inner-mouseenter
+
+// 鼠标从inner进入outer
+// inner-mouseleave
+
+// 鼠标离开outer
+// outer-mouseleave
+```
 
 ### 阻止浏览器默认行为
 > [Browser default actions](https://javascript.info/default-browser-action)
-
-事件对象中的`path`属性表示了事件的传播路径
 
 在`JavaScript`中，许多事件将会自动导致浏览器执行特定的行为，比如：
 * 点击`a`链接
