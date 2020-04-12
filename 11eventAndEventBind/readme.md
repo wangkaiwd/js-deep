@@ -109,8 +109,7 @@ center.addEventListener('click', function (e) {
 // window -> html -> body -> outer -> inner -> center
 ```
 我们画图分析一下事件的传播机制：
-![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/event-flow-2020-04-12-1644.svg)
-
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/hhhh-2020-04-12-1644.png)
 
 需要注意的是：
 * 通过`onxxx`绑定的事件方法，只能在目标阶段和冒泡阶段执行
@@ -119,7 +118,7 @@ center.addEventListener('click', function (e) {
 事件传播分为三个阶段：
 * 冒泡阶段(`bubble phase`): 事件对象以相反的顺序传从目标元素开始，传播到`Window`结束
 * 目标阶段(`target phase`): 事件对象到达了事件对象的事件目标。
-* 捕获阶段(`capture phase`): 事件对象从`Window`传播到目标元素
+* 捕获阶段(`capture phase`): 事件对象从`Window`开始，传播到目标元素结束
 
 我们可以通过事件对象从`Event.prototype`原型上继承的`eventPhase`属性来判断当前事件所处的阶段：
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200412155708.png)
