@@ -44,8 +44,65 @@
 </div>
 <script>
   const $ = (selector) => document.querySelector(selector);
-  const $outer = $('outer'), inner = $('inner'), center = $('center');
-  $outer.addEventListener('');
+  const outer = $('.outer'), inner = $('.inner'), center = $('.center');
+  // on方法绑定无法控制事件阶段
+  // window.onclick = function (e) {
+  //   console.log('window');
+  // };
+  // document.body.onclick = function (e) {
+  //   console.log('body');
+  // };
+  // outer.onclick = function (e) {
+  //   console.log(e);
+  //   console.log('outer');
+  // };
+  // inner.onclick = function (e) {
+  //   console.log('inner');
+  // };
+  // center.onclick = function (e) {
+  //   console.log('center');
+  // };
+
+  // addEventListener进行事件监听可以控制事件传播阶段
+  // addEventListener的第三个参数可以控制支持冒泡(false)还是捕获(true),默认是支持冒泡(false)
+  // window.addEventListener('click', function (e) {
+  //   console.log('window');
+  // });
+  // document.documentElement.addEventListener('click', function (e) {
+  //   console.log('html');
+  // });
+  // document.body.addEventListener('click', function (e) {
+  //   console.log('body');
+  // });
+  // outer.addEventListener('click', function (e) {
+  //   console.log('outer');
+  // });
+  // inner.addEventListener('click', function (e) {
+  //   console.log('inner');
+  // });
+  // center.addEventListener('click', function (e) {
+  //   console.log('center');
+  // });
+
+  window.addEventListener('click', function (e) {
+    console.log('window');
+  }, true);
+  document.documentElement.addEventListener('click', function (e) {
+    console.log('html');
+  }, true);
+  document.body.addEventListener('click', function (e) {
+    console.log('body');
+  }, true);
+  outer.addEventListener('click', function (e) {
+    console.log('outer');
+  }, true);
+  inner.addEventListener('click', function (e) {
+    console.log('inner');
+  }, true);
+  center.addEventListener('click', function (e) {
+    console.log('center');
+  }, true);
+
 </script>
 </body>
 </html>

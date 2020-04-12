@@ -62,16 +62,72 @@ document.addEventListener('click', function (event) {
 ### 事件传播机制
 > [Event dispatch and DOM event flow](https://www.w3.org/TR/DOM-Level-3-Events/#event-flow)
 
-我们先看下`w3c`中比较经典的一张图：
-![](https://www.w3.org/TR/DOM-Level-3-Events/images/eventflow.svg)
-
-下面是一个例子，我们可以与上图一起结合学习：
+下面是一个关于事件冒泡和捕获的例子：
 ```javascript
-```
+// addEventListener进行事件监听可以控制事件传播阶段
+// addEventListener的第三个参数可以控制支持冒泡(false)还是捕获(true),默认是支持冒泡(false)
+window.addEventListener('click', function (e) {
+  console.log('window');
+});
+document.documentElement.addEventListener('click', function (e) {
+  console.log('html');
+});
+document.body.addEventListener('click', function (e) {
+  console.log('body');
+});
+outer.addEventListener('click', function (e) {
+  console.log('outer');
+});
+inner.addEventListener('click', function (e) {
+  console.log('inner');
+});
+center.addEventListener('click', function (e) {
+  console.log('center');
+});
 
+// center -> inner -> outer -> body -> window
+
+window.addEventListener('click', function (e) {
+  console.log('window');
+}, true);
+document.documentElement.addEventListener('click', function (e) {
+  console.log('html');
+}, true);
+document.body.addEventListener('click', function (e) {
+  console.log('body');
+}, true);
+outer.addEventListener('click', function (e) {
+  console.log('outer');
+}, true);
+inner.addEventListener('click', function (e) {
+  console.log('inner');
+}, true);
+center.addEventListener('click', function (e) {
+  console.log('center');
+}, true);
+
+// window -> html -> body -> outer -> inner -> center
+```
+我们画图分析一下事件的传播机制：
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/event-flow-2020-04-12-1644.svg)
+
+
+需要注意的是：
+* 通过`onxxx`绑定的事件方法，只能在目标阶段和冒泡阶段执行
+* 通过`addEventListener`绑定的事件方法，我们可以控制在捕获或冒泡阶段执行
+
+事件传播分为三个阶段：
+* 冒泡阶段(`bubble phase`): 事件对象以相反的顺序传从目标元素开始，传播到`Window`结束
+* 目标阶段(`target phase`): 事件对象到达了事件对象的事件目标。
+* 捕获阶段(`capture phase`): 事件对象从`Window`传播到目标元素
+
+我们可以通过事件对象从`Event.prototype`原型上继承的`eventPhase`属性来判断当前事件所处的阶段：
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200412155708.png)
 
 ### 阻止浏览器默认行为
 > [Browser default actions](https://javascript.info/default-browser-action)
+
+事件对象中的`path`属性表示了事件的传播路径
 
 在`JavaScript`中，许多事件将会自动导致浏览器执行特定的行为，比如：
 * 点击`a`链接
