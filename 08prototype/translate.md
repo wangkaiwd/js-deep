@@ -11,7 +11,7 @@
 
 现在，我们只需要创建一个函数，该函数返回另外一个函数，依次执行函数就能给出总和，就是这样。
 
-如果你第一次第一次遇到这个问题，在继续阅读之前，请尝试先自己解决这个问题。
+如果你第一次遇到这个问题，在继续阅读之前，请尝试先自己解决这个问题。
 
 解决方法：
 ```javascript
@@ -30,4 +30,59 @@ const add = (x) => (y) => x + y
 
 ### 什么是`currying`
 
+`currying`是一个将拥有多个参数的函数转换为拥有单个或多个函数序列的技术。在上面的问题中，我们简单的将`add(2,3)`转换为`add(2)(3)`。
 
+你可以通过这篇 [文章](https://bjouhier.wordpress.com/2011/04/04/currying-the-callback-or-the-essence-of-futures) 深入`currying`。
+
+### `add(2)(3)`问题的变体
+在这个`currying`问题中可能也会看到漂浮这个问题周围的许多变体问题。
+
+#### `add(2)(3)(4)...`,可以传入无数个参数
+
+我们知道如何去处理求和并且返回函数(与闭包一起)，但是我们不确定什么时候停止返回函数，这意味着：什么时候主函数返回结果以及什么时候主函数返回另一个`curried`函数。
+
+这里可能有俩个选项：
+
+##### 1. 使用`valueOf`属性
+
+在这篇[文章](https://theanubhav.com/2018/11/07/understanding-primitive-and-getter-setters/) 中，我们已经理解`ToPrimitive`操作是如何通过`JS`引擎被处理的。
+考虑到这一事实，如果我们返回一个`valueOf`属性为到目前为止的计算结果的对象(或函数)，我们将能够区分为了进一步求和返回一个函数和到目前为止求和的结果之间的区别。让我们看一下下边的代码：
+```javascript
+// 传参个数不确定
+const add = function (x) {
+  let sum = x
+
+  function result (y) {
+    sum = sum + y
+    return result
+  }
+
+  // 直接赋值存在的问题：会直接的到初始值，之后即使sum的值发生改变，result.valueOf的值也不会更新
+  // 解决方法：
+  // 1. 赋值为对象，来改变对象中的键值对，之后通过对象来获取键值对内容
+  // 2. 赋值为函数，函数会在每次执行时都开辟一个执行上下文，并通过作用域链来进行变量查找，找到的都是最新的sum值
+  // result.valueOf = sum
+  result.valueOf = function () {
+    return sum
+  }
+  return result
+}
+```
+> 笔者注：在进行强制类型转换时，都会先调用该值的`valueOf`方法
+
+如下的执行将会工作：
+````javascript
+// 下边的`+`和`==` 会将add执行结果强制转换为number,这里会首先调用valueOf方法
+console.log(5 + add(2)(3)) // true
+console.log(add(2)(3)(4) == 9) // true
+console.log(add(3)(4)(5).valueOf()) // 9
+````
+
+换句话说，这些例子不会按照预期工作或者在一些地方会出现异常，比如：
+```javascript
+add(3)(4)(5) // return function
+console.log(add(3)(4)(5)) // output: function
+console.log(add(3)(4)(5) === 12) // false, '==='不会进行强制类型转换 
+```
+
+##### 2. 显式的调用一个属性
