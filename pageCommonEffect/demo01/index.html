@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>magnifying glass</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
+    body {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .magnifying-glass .commodity {
+      position: relative;
+      user-select: none;
+      overflow: hidden;
+    }
+    .magnifying-glass .move-box {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 80px;
+      height: 80px;
+      background-color: rgba(0, 0, 0, 0.4);
+      cursor: move;
+    }
+  </style>
+</head>
+<body>
+<div class="magnifying-glass">
+  <div class="commodity">
+    <img
+      src="https://img13.360buyimg.com/n1/s350x449_jfs/t1/96667/9/17458/147644/5e87ff72Ea4ad4ced/b617ea0ce1f5b0fd.jpg!cc_350x449.jpg"
+      alt="">
+    <div class="move-box"></div>
+  </div>
+</div>
+</body>
+<script>
+  // load事件中会保证图片加载完毕，否则会计算出来加载图片之前的dom结构
+  window.addEventListener('load', function () {
+    const $ = (selector) => document.querySelector(selector);
+    const commodity = $('.commodity'), moveBox = $('.move-box');
+    const { left: leftX, top: topY, width: widthCommodity, height: heightCommodity } = commodity.getBoundingClientRect();
+    const onMouseEnter = function () {
+      moveBox.style.display = 'block';
+    };
+    const onMouseMove = function (e) {
+      const { width, height } = moveBox.getBoundingClientRect();
+      const { clientX, clientY } = e;
+      const distanceX = clientX - leftX - width / 2;
+      const distanceY = clientY - topY - height / 2;
+      const minX = 0, minY = 0,
+        maxX = widthCommodity - width,
+        maxY = heightCommodity - height;
+      if (distanceX <= minX) {
+        moveBox.style.transform = `translate(${minX}px,${distanceY}px)`;
+      }
+      if (distanceX >= maxX) {
+        moveBox.style.transform = `translate(${maxX}px,${distanceY}px)`;
+      }
+      if (distanceY <= minY) {
+        moveBox.style.transform = `translate(${distanceX}px,${minY}px)`;
+      }
+      if (distanceY >= maxY) {
+        moveBox.style.transform = `translate(${distanceX}px,${maxY}px)`;
+      }
+      if ((distanceX > minX) && (distanceX < maxX) && (maxY > distanceY) && (distanceY > minY)) {
+        moveBox.style.transform = `translate(${distanceX}px,${distanceY}px)`;
+      }
+    };
+    const onMouseleave = function () {
+      moveBox.style.display = 'none';
+    };
+    commodity.addEventListener('mouseenter', onMouseEnter);
+    commodity.addEventListener('mousemove', onMouseMove);
+    commodity.addEventListener('mouseleave', onMouseleave);
+  });
+</script>
+</html>
+
