@@ -99,3 +99,35 @@ Chrome:     6
 
 ### 回流和重绘(Reflow & Repaint)
 > [Understanding Repaint and Reflow in JavaScript](https://medium.com/darrja-%E0%A4%A6%E0%A4%B0%E0%A5%8D%E0%A4%9C%E0%A4%BE/what-the-heck-is-repaint-and-reflow-in-the-browser-b2d0fb980c08)
+
+`DOM`的重绘和回流`Repaint & Reflow`
+
+重绘：元素样式的我改变(但宽高、大小、位置等不变)
+
+回流：元素的大小或位置发生了变化(当页面布局和几何信息发生变化的时候)，触发了重新布局，导致渲染树重新计算布局和渲染
+
+注意：回流一定会触发重绘，而重绘不一定会回流
+
+#### 避免`DOM`的回流
+* `vue/react`中的`virtual DOM`
+* 分离读写操作
+* 集中改变样式
+* 缓存布局信息
+* 元素批量修改
+
+ 
+现代浏览器的渲染队列机制：在更改样式的时候，会检查之后的代码是否继续修改样式，如果是的话，会统一将操作放到一个队列中，一起执行
+```javascript
+window.addEventListener('DOMContentLoaded',function() {
+  const navBox = document.getElementById('navBox')
+  // => 由于渲染队列机制，只会引发一次回流(读写分离)
+  navBox.style.width = '100px';
+  navBox.style.height = '100px';
+  console.log(navBox.offsetWidth);
+  
+  // => 读写不分离，触发俩次回流
+  navBox.style.width = '100px';
+  console.log(navBox.offsetWidth);
+  navBox.style.height = '100px';
+})
+```
