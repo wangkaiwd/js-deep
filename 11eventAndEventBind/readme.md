@@ -301,3 +301,13 @@ aLink.onclick = function(e) {
 
 ### 事件委托
 > [How JavaScript Event Delegation Works](https://davidwalsh.name/event-delegate)
+
+关于事件委托，`mdn`的介绍如下： 
+> 利用事件的冒泡机制，如果你想要在大量子元素中单击任何一个都可以运行一段代码，您可以将事件监听器设置在其父节点上，并让子节点上发生的事件冒泡到父节点上，而不是每个节点单独设置事件监听器
+
+一个很好的例子是一系列列表项，如果你想让每个列表点击时弹出一条信息，您可以将`click`单击事件监听器设置在父元素`ul`上，它将会冒泡到列表项上。
+
+> 以下内容翻译自[How JavaScript Event Delegation Works](https://davidwalsh.name/event-delegate)
+
+在`JavaScript`世界中事件代理是热门话题之一，这是有充分理由的。事件代理允许你避免为所有指定的节点添加事件监听器，而是为它们的添加事件监听器。这个事件监听器会分析事件冒泡在子元素中找到一个匹配项。基础概念相当地简单，但是许多人不理解事件委托是如何工作的。让我们解释一下事件代理是如何工作的并且提供一个基础的事件委托纯`JavaScript`的例子。
+
