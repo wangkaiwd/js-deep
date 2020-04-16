@@ -16,10 +16,12 @@
       height: 100vh;
       display: flex;
       align-items: center;
-      justify-content: center;
+    }
+    .magnifying-glass {
+      position: relative;
+      margin-left: 100px;
     }
     .magnifying-glass .commodity {
-      position: relative;
       user-select: none;
       overflow: hidden;
     }
@@ -33,6 +35,15 @@
       background-color: rgba(0, 0, 0, 0.4);
       cursor: move;
     }
+    .magnifying-glass .large-picture {
+      display: none;
+      position: absolute;
+      left: 100%;
+      top: 0;
+      width: 400px;
+      height: 600px;
+      overflow: hidden;
+    }
   </style>
 </head>
 <body>
@@ -43,48 +54,53 @@
       alt="">
     <div class="move-box"></div>
   </div>
+  <div class="large-picture">
+    <img
+      src="https://img13.360buyimg.com/n1/s350x449_jfs/t1/96667/9/17458/147644/5e87ff72Ea4ad4ced/b617ea0ce1f5b0fd.jpg!cc_350x449.jpg"
+      alt=""
+      width="750"
+      height="898"
+    >
+  </div>
 </div>
 </body>
 <script>
   // load事件中会保证图片加载完毕，否则会计算出来加载图片之前的dom结构
   window.addEventListener('load', function () {
-    const $ = (selector) => document.querySelector(selector);
-    const commodity = $('.commodity'), moveBox = $('.move-box');
-    const { left: leftX, top: topY, width: widthCommodity, height: heightCommodity } = commodity.getBoundingClientRect();
+    const $ = (selector) => document.querySelector(selector)
+    const commodity = $('.commodity'), moveBox = $('.move-box'), largePicture = $('.large-picture')
+    const { left: leftX, top: topY, width: widthCommodity, height: heightCommodity } = commodity.getBoundingClientRect()
     const onMouseEnter = function () {
-      moveBox.style.display = 'block';
-    };
+      moveBox.style.display = 'block'
+      largePicture.style.display = 'block'
+    }
     const onMouseMove = function (e) {
-      const { width, height } = moveBox.getBoundingClientRect();
-      const { clientX, clientY } = e;
-      const distanceX = clientX - leftX - width / 2;
-      const distanceY = clientY - topY - height / 2;
+      const { width, height } = moveBox.getBoundingClientRect()
+      const { clientX, clientY } = e
+      let distanceX = clientX - leftX - width / 2
+      let distanceY = clientY - topY - height / 2
       const minX = 0, minY = 0,
         maxX = widthCommodity - width,
-        maxY = heightCommodity - height;
-      if (distanceX <= minX) {
-        moveBox.style.transform = `translate(${minX}px,${distanceY}px)`;
-      }
-      if (distanceX >= maxX) {
-        moveBox.style.transform = `translate(${maxX}px,${distanceY}px)`;
-      }
-      if (distanceY <= minY) {
-        moveBox.style.transform = `translate(${distanceX}px,${minY}px)`;
-      }
-      if (distanceY >= maxY) {
-        moveBox.style.transform = `translate(${distanceX}px,${maxY}px)`;
-      }
-      if ((distanceX > minX) && (distanceX < maxX) && (maxY > distanceY) && (distanceY > minY)) {
-        moveBox.style.transform = `translate(${distanceX}px,${distanceY}px)`;
-      }
-    };
+        maxY = heightCommodity - height
+      if (distanceX <= minX) {distanceX = minX}
+      if (distanceX >= maxX) {distanceX = maxX}
+      if (distanceY <= minY) {distanceY = minY}
+      if (distanceY >= maxY) {distanceY = maxY}
+      moveBox.style.transform = `translate(${distanceX}px,${distanceY}px)`
+      // width/commodity = distanceX/offsetX
+      // height/commodity = distanceY/offsetY
+      const offsetX = distanceX * widthCommodity / width
+      const offsetY = distanceY * heightCommodity / height
+      largePicture.style.transform = `translate(${offsetX}px,${offsetY}px)`
+    }
     const onMouseleave = function () {
-      moveBox.style.display = 'none';
-    };
-    commodity.addEventListener('mouseenter', onMouseEnter);
-    commodity.addEventListener('mousemove', onMouseMove);
-    commodity.addEventListener('mouseleave', onMouseleave);
-  });
+      moveBox.style.display = 'none'
+      moveBox.style.display = 'none'
+    }
+    commodity.addEventListener('mouseenter', onMouseEnter)
+    commodity.addEventListener('mousemove', onMouseMove)
+    commodity.addEventListener('mouseleave', onMouseleave)
+  })
 </script>
 </html>
 
