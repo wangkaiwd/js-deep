@@ -68,11 +68,13 @@
   // load事件中会保证图片加载完毕，否则会计算出来加载图片之前的dom结构
   window.addEventListener('load', function () {
     const $ = (selector) => document.querySelector(selector)
-    const commodity = $('.commodity'), moveBox = $('.move-box'), largePicture = $('.large-picture')
+    const commodity = $('.commodity'), moveBox = $('.move-box'),
+      largePictureWrapper = $('.large-picture'),
+      largePicture = $('.large-picture img')
     const { left: leftX, top: topY, width: widthCommodity, height: heightCommodity } = commodity.getBoundingClientRect()
     const onMouseEnter = function () {
       moveBox.style.display = 'block'
-      largePicture.style.display = 'block'
+      largePictureWrapper.style.display = 'block'
     }
     const onMouseMove = function (e) {
       const { width, height } = moveBox.getBoundingClientRect()
@@ -87,8 +89,6 @@
       if (distanceY <= minY) {distanceY = minY}
       if (distanceY >= maxY) {distanceY = maxY}
       moveBox.style.transform = `translate(${distanceX}px,${distanceY}px)`
-      // width/commodity = distanceX/offsetX
-      // height/commodity = distanceY/offsetY
       const offsetX = distanceX * widthCommodity / width
       const offsetY = distanceY * heightCommodity / height
       largePicture.style.transform = `translate(${offsetX}px,${offsetY}px)`
