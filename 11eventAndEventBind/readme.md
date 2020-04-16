@@ -309,5 +309,31 @@ aLink.onclick = function(e) {
 
 > 以下内容翻译自[How JavaScript Event Delegation Works](https://davidwalsh.name/event-delegate)
 
-在`JavaScript`世界中事件代理是热门话题之一，这是有充分理由的。事件代理允许你避免为所有指定的节点添加事件监听器，而是为它们的添加事件监听器。这个事件监听器会分析事件冒泡在子元素中找到一个匹配项。基础概念相当地简单，但是许多人不理解事件委托是如何工作的。让我们解释一下事件代理是如何工作的并且提供一个基础的事件委托纯`JavaScript`的例子。
+在`JavaScript`世界中事件代理是热门话题之一，这是有充分理由的。事件代理允许你避免为所有指定的节点添加事件监听器，而是为它们的父元素添加事件监听器。这个事件监听器会分析事件冒泡在子元素中找到一个匹配项。基础概念相当地简单，但是许多人不理解事件委托是如何工作的。让我们解释一下事件代理是如何工作的并且提供一个基础的事件委托纯`JavaScript`的例子。
 
+比如说我们有一个拥有一些子元素的父元素`ul`:
+```html
+<ul id="parent-list">
+	<li id="post-1">Item 1</li>
+	<li id="post-2">Item 2</li>
+	<li id="post-3">Item 3</li>
+	<li id="post-4">Item 4</li>
+	<li id="post-5">Item 5</li>
+	<li id="post-6">Item 6</li>
+</ul>
+```
+
+在每一个子元素被点击的时候，我们需要有一些事情发生。你可以为每一个`li`元素添加一个单独的事件监听器，但是如果`li`元素被频繁地从列表中移除和添加会怎么样呢？添加和移除事件监听器将会是一个噩梦，尤其是在你的应用内的不同的位置添加和移除代码。更好的解决方法是为父元素`ul`添加一个事件监听器。但是如果你为父元素添加了事件监听器，你将如何知道哪一个元素被点击呢？
+
+简单的：当事件冒泡到`ul`元素时，你可以检查事件对象的`target`属性来获得真实点击节点的引用。这里是一个用来举例说明事件委托非常基础的`JavaScript`代码片段：
+```javascript
+// 获取元素，添加事件监听器
+document.getElementById('parent-list').addEventListener('click', function (e) {
+  // e.target 是被点击的元素
+  // 如果它是一个列表项
+  if (e.target && e.target.nodeName === 'LI') {
+    // 找到点击的列表项，输出id
+    console.log('List item', e.target.id.replace('post-', ''), 'was clicked');
+  }
+});
+```

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<ul id="parent-list">
+  <li id="post-1">Item 1</li>
+  <li id="post-2">Item 2</li>
+  <li id="post-3">Item 3</li>
+  <li id="post-4">Item 4</li>
+  <li id="post-5">Item 5</li>
+  <li id="post-6">Item 6</li>
+</ul>
+</body>
+<script>
+  // 获取元素，添加事件监听器
+  document.getElementById('parent-list').addEventListener('click', function (e) {
+    // e.target 是被点击的元素
+    // 如果它是一个列表项
+    if (e.target && e.target.nodeName === 'LI') {
+      // 找到点击的列表项，输出id
+      console.log('List item', e.target.id.replace('post-', ''), 'was clicked');
+    }
+  });
+</script>
+</html>
