@@ -35,7 +35,7 @@
       background-color: rgba(0, 0, 0, 0.4);
       cursor: move;
     }
-    .magnifying-glass .large-picture-wrapper {
+    .magnifying-glass .origin {
       display: none;
       position: absolute;
       left: 100%;
@@ -54,7 +54,7 @@
       alt="">
     <div class="move-box"></div>
   </div>
-  <div class="large-picture-wrapper">
+  <div class="origin">
     <img
       src="https://img13.360buyimg.com/n1/s350x449_jfs/t1/96667/9/17458/147644/5e87ff72Ea4ad4ced/b617ea0ce1f5b0fd.jpg!cc_350x449.jpg"
       alt=""
@@ -67,37 +67,55 @@
   window.addEventListener('load', function () {
     const $ = (selector) => document.querySelector(selector);
     const commodity = $('.commodity'), moveBox = $('.move-box'),
-      largePictureWrapper = $('.large-picture-wrapper'),
-      largePicture = $('.large-picture-wrapper img');
-    const { left: leftX, top: topY, width: widthCommodity, height: heightCommodity } = commodity.getBoundingClientRect();
+      origin = $('.origin'),
+      originImg = $('.origin img');
+    const { left: commodityLeft, top: commodityTop, width: commodityWidth, height: commodityHeight } = commodity.getBoundingClientRect();
+
+    let width = undefined, height = undefined, originHeight = undefined, originWidth = undefined;
+    const minX = 0, minY = 0;
+    let maxX = undefined, maxY = undefined;
     const onMouseEnter = function () {
       moveBox.style.display = 'block';
-      largePictureWrapper.style.display = 'block';
+      origin.style.display = 'block';
+      getDimensions();
+      calculateOriginImgDimensions();
+      getBoundaryValues();
     };
+
+    const getDimensions = function () {
+      const rectMoveBox = moveBox.getBoundingClientRect();
+      width = rectMoveBox.width;
+      height = rectMoveBox.height;
+      const rectOrigin = origin.getBoundingClientRect();
+      originWidth = rectOrigin.width;
+      originHeight = rectOrigin.height;
+    };
+    const calculateOriginImgDimensions = function () {
+      originImg.style.width = commodityWidth * originWidth / width + 'px';
+      originImg.style.height = commodityHeight * originHeight / height + 'px';
+    };
+
+    const getBoundaryValues = function () {
+      maxX = commodityWidth - width;
+      maxY = commodityHeight - height;
+    };
+
     const onMouseMove = function (e) {
-      const { width, height } = moveBox.getBoundingClientRect();
-      const { width: largePictureWrapperWidth, height: largePictureWrapperHeight } = largePictureWrapper.getBoundingClientRect();
       const { clientX, clientY } = e;
-      let distanceX = clientX - leftX - width / 2;
-      let distanceY = clientY - topY - height / 2;
-      const minX = 0, minY = 0,
-        maxX = widthCommodity - width,
-        maxY = heightCommodity - height;
+      let distanceX = clientX - commodityLeft - width / 2;
+      let distanceY = clientY - commodityTop - height / 2;
       if (distanceX <= minX) {distanceX = minX;}
       if (distanceX >= maxX) {distanceX = maxX;}
       if (distanceY <= minY) {distanceY = minY;}
       if (distanceY >= maxY) {distanceY = maxY;}
-      const offsetX = distanceX * largePictureWrapperWidth / width;
-      const offsetY = distanceY * largePictureWrapperHeight / height;
-      // height/ largePictureWrapperHeight = commodityHeight / largePictureHeight
-      largePicture.style.width = widthCommodity * largePictureWrapperWidth / width + 'px';
-      largePicture.style.height = heightCommodity * largePictureWrapperHeight / height + 'px';
+      const originDistanceX = distanceX * originWidth / width;
+      const originDistanceY = distanceY * originHeight / height;
       moveBox.style.transform = `translate(${distanceX}px,${distanceY}px)`;
-      largePicture.style.transform = `translate(${-offsetX}px,${-offsetY}px)`;
+      originImg.style.transform = `translate(${-originDistanceX}px,${-originDistanceY}px)`;
     };
     const onMouseleave = function () {
       moveBox.style.display = 'none';
-      largePictureWrapper.style.display = 'none';
+      origin.style.display = 'none';
     };
     commodity.addEventListener('mouseenter', onMouseEnter);
     commodity.addEventListener('mousemove', onMouseMove);
