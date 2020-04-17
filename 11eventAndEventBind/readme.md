@@ -87,7 +87,12 @@ document.addEventListener('click', function (event) {
 * 在文本上按下鼠标按钮并且移动鼠标选择文本
 * 在页面中右键鼠标出现选项菜单
 
-这里我们先看一下`a`标签的例子，`a`标签的默认行为：
+阻止浏览器默认行为一般有俩种方法：
+
+1. 在事件处理函数中`return false`
+2. 在事件处理函数中调用事件对象的`preventDefault`方法
+
+这里我们先看一下`a`标签的例子。`a`标签通常具有的行为如下：
 
 * 跳转页面
 * 锚点定位
@@ -96,7 +101,6 @@ document.addEventListener('click', function (event) {
 ```html
 <a href="javascript:;">跳转</a>
 ```
-
 也可以为`a`标签绑定点击事件，在点击事件中阻止默认行为： 
 ```javascript
 const aLink = document.getElementById('a');
@@ -132,6 +136,7 @@ aLink.onclick = function(e) {
 ### 事件传播机制
 > [Event dispatch and DOM event flow](https://www.w3.org/TR/DOM-Level-3-Events/#event-flow)
 
+这是`w3c`中事件传播机制的一张图，大家可以结合例子进行理解
 ![](https://www.w3.org/TR/uievents/images/eventflow.svg)
 
 下面是一个关于事件冒泡和捕获的例子：
@@ -180,13 +185,13 @@ center.addEventListener('click', function (e) {
 
 // window -> html -> body -> outer -> inner -> center
 ```
-我们画图分析一下事件的传播机制：
+我们画图分析一下上边代码中事件的传播机制：
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/hhhh-2020-04-12-1644.png)
 
 需要注意的是：
 
 * 通过`onxxx`绑定的事件方法，只能在目标阶段和冒泡阶段执行
-* 通过`addEventListener`绑定的事件方法，我们可以控制在捕获或冒泡阶段执行
+* 通过`addEventListener`绑定的事件方法，我们可以通过第三个参数(默认为`false`支持冒泡)控制在捕获(`true`)或冒泡(`false`)阶段执行
 
 事件传播分为三个阶段：
 * 冒泡阶段(`bubble phase`): 事件对象逆向向上传播回目标元素的祖先元素，从父亲开始，最终到达`Window`
@@ -314,7 +319,7 @@ center.addEventListener('click', function (e) {
 
 > 以下内容翻译自[How JavaScript Event Delegation Works](https://davidwalsh.name/event-delegate)
 
-在`JavaScript`世界中事件代理是热门话题之一，这是有充分理由的。事件代理允许你避免为所有指定的节点添加事件监听器，而是为它们的父元素添加事件监听器。这个事件监听器会分析事件冒泡在子元素中找到一个匹配项。基础概念相当地简单，但是许多人不理解事件委托是如何工作的。让我们解释一下事件代理是如何工作的并且提供一个基础的事件委托纯`JavaScript`的例子。
+在`JavaScript`世界中事件代理是热门话题之一，这是有充分理由的。事件代理允许你避免为所有指定的节点添加事件监听器，而是为它们的父元素添加事件监听器。这个事件监听器会分析事件冒泡用来在子元素中找到一个匹配项。基础概念相当地简单，但是许多人不理解事件委托是如何工作的。接下来让我们解释一下事件代理是如何工作的并且提供一个基础的事件委托的原生`JavaScript`的例子。
 
 比如说我们有一个拥有一些子元素的父元素`ul`:
 ```html
@@ -327,8 +332,7 @@ center.addEventListener('click', function (e) {
 	<li id="post-6">Item 6</li>
 </ul>
 ```
-
-在每一个子元素被点击的时候，我们需要有一些事情发生。你可以为每一个`li`元素添加一个单独的事件监听器，但是如果`li`元素被频繁地从列表中移除和添加会怎么样呢？添加和移除事件监听器将会是一个噩梦，尤其是在你的应用内的不同的位置添加和移除代码。更好的解决方法是为父元素`ul`添加一个事件监听器。但是如果你为父元素添加了事件监听器，你将如何知道哪一个元素被点击呢？
+在每一个子元素被点击的时候，我们需要有一些事情发生。你可以为每一个`li`元素添加一个单独的事件监听器，但是如果`li`元素被频繁地从列表中移除和添加会怎么样呢？添加和移除事件监听器将会是一个噩梦，尤其是在你的应用内的不同位置添加和移除代码。更好的解决方法是为父元素`ul`添加一个事件监听器。但是如果你为父元素添加了事件监听器，你将如何知道哪一个元素被点击呢？
 
 简单的：当事件冒泡到`ul`元素时，你可以检查事件对象的`target`属性来获得真实点击节点的引用。这里是一个用来举例说明事件委托非常基础的`JavaScript`代码片段：
 ```javascript
@@ -342,8 +346,7 @@ document.getElementById('parent-list').addEventListener('click', function (e) {
   }
 });
 ```
-
-通过为父元素添加一个事件监听器开始。当事件监听器被触发的时候，检查事件元素来确保它是响应元素的类型。如果它是一个`LI`元素，我们得到了我们需要的元素。如果它不是我们想要的元素，事件将会被忽略。这个例子特别简单--直接比较`UL`和`LI`。让我们尝试一些更困难的。如果说我们有一个拥有许多子元素的父`DIV`,但是我们关心的只有拥有`classA`类名的`A`标签：
+通过为父元素添加一个事件监听器开始。当事件监听器被触发的时候，检查事件元素来确保它是响应元素的类型。如果它是一个`LI`元素的话，我们便得到了我们需要的元素。如果它不是我们想要的元素，事件将会被忽略。这个例子特别简单--直接比较`UL`和`LI`即可。让我们尝试一些更困难的。如果说我们有一个拥有许多子元素的父`DIV`,但是我们关心的只有拥有`classA`类名的`A`标签：
 ```javascript
 // 获取父div,添加事件监听器...
 document.getElementById('myDiv').addEventListener('click',function(e) {
