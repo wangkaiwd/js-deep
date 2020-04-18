@@ -30,36 +30,25 @@
 <body>
 <div class="tree-container">
   <ul class="tree level1" id="tree-demo">
-    <li class="tree-item">
-      <i>+</i><span class="tree-item-title">01</span>
-      <ul class="tree level1_1">
-        <li class="tree-item">1_0</li>
-        <li class="tree-item">1_1</li>
-        <li class="tree-item">1_2</li>
-      </ul>
-    </li>
-    <li>
-      <i>+</i><span class="tree-item-title">02</span>
-      <ul class="tree level2_1">
-        <li class="tree-item">2_0</li>
-        <li class="tree-item">2_1</li>
-        <li class="tree-item">
-          <i>+</i><span>2_2</span>
-        </li>
-        <ul class="tree level2_1_1">
-          <li class="tree-item">2_0_0</li>
-          <li class="tree-item">2_1_1</li>
-          <li class="tree-item">2_2_2</li>
-        </ul>f
-      </ul>
-    </li>
-    <li class="tree-item">03</li>
+
   </ul>
 </div>
 </body>
+<script src="dataSource.js"></script>
 <script>
-  const renderTree = function () {
-    // const
+  const $ = (selector) => document.querySelector(selector);
+  const tree = $('#tree-demo');
+  const renderTree = function (dataSource) {
+    let string = ``;
+    dataSource.forEach(data => {
+      const children = data.children;
+      string += ` <li class="tree-item">
+        ${children ? `<i>+</i>` : ''}<span class="tree-item-title">${data.name}</span>
+        ${children ? `<ul class="tree">${renderTree(children)}</ul>` : ''}
+      </li> `;
+    });
+    return string;
   };
+  tree.innerHTML = renderTree(dataSource);
 </script>
 </html>

@@ -12,7 +12,14 @@ const dataSource = [
     open: true,
     children: [
       { name: 'test2_1' },
-      { name: 'test2_2' },
+      {
+        name: 'test2_2',
+        children: [
+          {
+            name: 'test2_2_1',
+          },
+        ],
+      },
     ],
   },
 ];
