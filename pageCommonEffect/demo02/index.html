@@ -62,6 +62,8 @@
       const ul = target.parentElement.querySelector('ul');
       if (icon === '+') {
         target.innerText = '-';
+        // 如果操作的样式过多的话，可以把一段样式放到css类中,
+        // 然后动态操作类名即可
         ul.style.display = 'none';
       } else {
         target.innerText = '+';
