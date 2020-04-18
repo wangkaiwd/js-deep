@@ -59,10 +59,13 @@
     const { target } = e;
     if (target && target.matches('.icon')) {
       const icon = target.innerText;
+      const ul = target.parentElement.querySelector('ul');
       if (icon === '+') {
         target.innerText = '-';
+        ul.style.display = 'none';
       } else {
         target.innerText = '+';
+        ul.style.display = 'block';
       }
     }
   });
