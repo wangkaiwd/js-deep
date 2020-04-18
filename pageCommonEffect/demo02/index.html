@@ -41,14 +41,30 @@
   const renderTree = function (dataSource) {
     let string = ``;
     dataSource.forEach(data => {
-      const children = data.children;
+      const { children, name, open } = data;
       string += ` <li class="tree-item">
-        ${children ? `<i>+</i>` : ''}<span class="tree-item-title">${data.name}</span>
-        ${children ? `<ul class="tree">${renderTree(children)}</ul>` : ''}
+        ${children ? `<i class="icon">${open ? '+' : '-'}</i>` : ''}<span class="tree-item-title">${name}</span>
+        ${children ? `<ul class="tree" style="display:${open ? 'block' : 'none'}">${renderTree(children)}</ul>` : ''}
       </li> `;
     });
     return string;
   };
   tree.innerHTML = renderTree(dataSource);
+
+  // 事件委托，可以处理动态绑定元素：在本例中，我们如果不使用事件委托的话，
+  // 如果要获取`i`标签元素的话，必须等到数据渲染完毕，才能获取。
+  // 如果使用事件委托的话，在一开始就可以直接为其页面中已经存在ul父元素设置事件监听，
+  // 而不用管它里面子元素的变化
+  tree.addEventListener('click', function (e) {
+    const { target } = e;
+    if (target && target.matches('.icon')) {
+      const icon = target.innerText;
+      if (icon === '+') {
+        target.innerText = '-';
+      } else {
+        target.innerText = '+';
+      }
+    }
+  });
 </script>
 </html>
