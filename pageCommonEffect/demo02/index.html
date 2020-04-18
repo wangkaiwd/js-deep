@@ -6,13 +6,60 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>tree</title>
+  <link rel="stylesheet" href="../assets/styles/reset.css">
+  <style>
+    .tree-container {
+      width: 200px;
+      margin: 30px auto;
+    }
+    .tree-container .tree-item {
+
+    }
+    .tree-container .tree {
+      padding-left: 10px;
+    }
+    .tree-container > .tree {
+      padding-left: 0;
+    }
+    .tree-container .tree-item-title {
+      display: inline-block;
+      padding-left: 4px;
+    }
+  </style>
 </head>
 <body>
 <div class="tree-container">
-  <ul class="tree"></ul>
+  <ul class="tree level1" id="tree-demo">
+    <li class="tree-item">
+      <i>+</i><span class="tree-item-title">01</span>
+      <ul class="tree level1_1">
+        <li class="tree-item">1_0</li>
+        <li class="tree-item">1_1</li>
+        <li class="tree-item">1_2</li>
+      </ul>
+    </li>
+    <li>
+      <i>+</i><span class="tree-item-title">02</span>
+      <ul class="tree level2_1">
+        <li class="tree-item">2_0</li>
+        <li class="tree-item">2_1</li>
+        <li class="tree-item">
+          <i>+</i><span>2_2</span>
+        </li>
+        <ul class="tree level2_1_1">
+          <li class="tree-item">2_0_0</li>
+          <li class="tree-item">2_1_1</li>
+          <li class="tree-item">2_2_2</li>
+        </ul>f
+      </ul>
+    </li>
+    <li class="tree-item">03</li>
+  </ul>
 </div>
 </body>
 <script>
-  
+  const renderTree = function () {
+    // const
+  };
 </script>
 </html>
