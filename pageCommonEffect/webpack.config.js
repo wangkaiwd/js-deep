@@ -1,7 +1,20 @@
 const path = require('path');
+const fs = require('fs');
 module.exports = {
   mode: 'development',
-  entry: { index: './src/index.ts', demo: './src/demo01/demo.ts' },
+  entry () {
+    const entries = fs.readdirSync(path.resolve(__dirname, 'src'), { withFileTypes: true }).reduce((count, item) => {
+      if (item.isDirectory() && item.name.includes('demo')) {
+        const filepath = path.resolve(__dirname, 'src', item.name, 'demo.ts');
+        fs.existsSync(filepath) && (count[item.name] = filepath);
+      }
+      return count;
+    }, {});
+    return {
+      index: path.resolve(__dirname, 'src/index.ts'),
+      ...entries,
+    };
+  },
   devServer: {
     // Tell the server where to serve content from. 告诉服务器提供内容的位置
     contentBase: './',
