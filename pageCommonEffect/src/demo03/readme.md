@@ -9,3 +9,6 @@
 在拖动时禁用文本选择：
 * [`selectstart`](https://developer.mozilla.org/zh-CN/docs/Web/API/Document/selectstart_event)
 * [javascript: Disable Text Select](https://stackoverflow.com/questions/16805684/javascript-disable-text-select)
+
+
+添加显示和隐藏动画，引发了回流和重绘

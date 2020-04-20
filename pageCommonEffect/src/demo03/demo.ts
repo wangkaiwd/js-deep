@@ -22,6 +22,7 @@ const onMouseMove = (e: MouseEvent) => {
   if (moveX >= maxX) {moveX = maxX;}
   if (moveY <= minY) {moveY = minY;}
   if (moveY >= maxY) {moveY = maxY;}
+  // 可以重置transform属性
   modal.style.top = moveY + height / 2 + 'px';
   modal.style.left = moveX + width / 2 + 'px';
 };
@@ -46,6 +47,7 @@ const onMouseUp = (e: MouseEvent) => {
   removeListeners();
 };
 const onMouseDown = (e: MouseEvent) => {
+  // FIXME: 只有按下鼠标左键才会执行逻辑，中键和右键都不行
   const target = e.target as HTMLDivElement;
   if (target && target.matches('.self-modal-title')) {
     pressing = true;
