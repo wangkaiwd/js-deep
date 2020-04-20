@@ -17,15 +17,30 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      min-width: 10em;
-      min-height: 4em;
+      min-width: 18em;
+      min-height: 6em;
       border: 1px solid lightcoral;
+    }
+    .self-modal .self-modal-title {
+      padding: 0.4em 0.6em;
+      background-color: gray;
+      color: #ffffff;
+      font-size: 18px;
+      cursor: move;
+    }
+    .self-modal .self-modal-content {
+      padding: 0.6em;
     }
   </style>
 </head>
 <body>
 <div class="self-modal">
-  这是一个模态框
+  <div class="self-modal-title">
+    I am a modal title
+  </div>
+  <div class="self-modal-content">
+    这是一个模态框
+  </div>
 </div>
 </body>
 <script src="/build/demo03.js"></script>

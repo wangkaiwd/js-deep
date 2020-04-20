@@ -10,21 +10,8 @@ const boundary = {
 };
 let offsetX = 0, offsetY = 0;
 let pressing = false;
-modal.addEventListener('mousedown', (e: MouseEvent) => {
-  pressing = true;
-  const { clientX, clientY } = e;
-  const { top, left } = modal.getBoundingClientRect();
-  offsetX = clientX - left;
-  offsetY = clientY - top;
 
-});
-
-document.addEventListener('mouseup', (e: MouseEvent) => {
-  pressing = false;
-  offsetX = 0;
-  offsetY = 0;
-});
-document.addEventListener('mousemove', (e: MouseEvent) => {
+const onMouseMove = (e: MouseEvent) => {
   if (!pressing) {return;}
   const { clientX, clientY } = e;
   // 思路还要梳理一遍,最好画图
@@ -37,4 +24,37 @@ document.addEventListener('mousemove', (e: MouseEvent) => {
   if (moveY >= maxY) {moveY = maxY;}
   modal.style.top = moveY + height / 2 + 'px';
   modal.style.left = moveX + width / 2 + 'px';
-});
+};
+const onSelectStart = (e: Event) => {
+  e.preventDefault();
+};
+const removeListeners = () => {
+  document.removeEventListener('mousemove', onMouseMove);
+  document.removeEventListener('mouseup', onMouseUp);
+  document.removeEventListener('selectstart', onSelectStart);
+};
+
+const bindListeners = () => {
+  document.addEventListener('mouseup', onMouseUp);
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('selectstart', onSelectStart);
+};
+const onMouseUp = (e: MouseEvent) => {
+  pressing = false;
+  offsetX = 0;
+  offsetY = 0;
+  removeListeners();
+};
+const onMouseDown = (e: MouseEvent) => {
+  const target = e.target as HTMLDivElement;
+  if (target && target.matches('.self-modal-title')) {
+    pressing = true;
+    const { clientX, clientY } = e;
+    const { top, left } = modal.getBoundingClientRect();
+    offsetX = clientX - left;
+    offsetY = clientY - top;
+    bindListeners();
+  }
+};
+modal.addEventListener('mousedown', onMouseDown);
+
