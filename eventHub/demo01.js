@@ -29,6 +29,8 @@ class EventBus {
         // splice会更改原数组的内容，造成数组塌陷
         // array.splice(i, 1);
         array[i] = null;
+        // 这里在添加的时候进行了去重，所以没有必要继续循环
+        return;
       }
     }
   }
