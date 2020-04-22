@@ -36,19 +36,42 @@
 
 // 2. Explicit call to a property
 
+// function add (x) {
+//   let sum = x;
+//   function resultFn (y) {
+//     sum += y;
+//     // 通过函数的属性来记录求和后的值
+//     resultFn.result = sum;
+//     return resultFn;
+//   }
+//   // f.result = () => sum;
+//   return resultFn;
+// }
+//
+// console.log(add(3)(4)(5).result); // 12
+// const t = add(3)(4);
+// console.log(t.result); // 7
+// console.log(t(5).result); //12
+
+// 3. Explicit call to function with no arguments for final result
+
 function add (x) {
+  if (!x) return;
   let sum = x;
-  function resultFn (y) {
+  return function resultFn (y) {
+    const length = arguments.length;
+    if (length === 0) {
+      return sum;
+    }
     sum += y;
-    // 通过函数的属性来记录求和后的值
-    resultFn.result = sum;
     return resultFn;
-  }
-  // f.result = () => sum;
-  return resultFn;
+  };
 }
 
-console.log(add(3)(4)(5).result); // 12
-const t = add(3)(4);
-console.log(t.result); // 7
-console.log(t(5).result); //12
+console.log(add(2)(3)()); // 5
+const t = add(3)(4)(5);
+console.log(t()); // 12
+
+
+
+

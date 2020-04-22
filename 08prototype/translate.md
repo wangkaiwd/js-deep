@@ -112,3 +112,27 @@ console.log(t.result); // 7
 console.log(t(5).result); //12
 ```
 如果必须要实现这类问题，应该通过模块/类而不只是用一个简单的函数来模拟这些行为。
+
+##### 3. 为最后的结果显示的调用没有参数的函数
+当函数被没有参数的情况下调用时，也可以设计函数返回求和结果。如果参数被传递，函数将继续为之前的结果加上这些数字。
+```javascript
+function add (x) {
+  if (!x) return;
+  let sum = x;
+  return function resultFn (y) {
+    const length = arguments.length;
+    if (length === 0) {
+      return sum;
+    }
+    sum += y;
+    return resultFn;
+  };
+}
+```
+这可以用以下几种方式使用
+```javascript
+console.log(add(2)(3)()); // 5
+const t = add(3)(4)(5);
+console.log(t()); // 12
+```
+#### 在同一个函数中使用`add(2)(3)(4)`和`add(2,3,4)`
