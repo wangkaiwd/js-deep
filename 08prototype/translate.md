@@ -169,3 +169,23 @@ console.log(add(2)(3, 4)); // 9
 ```
 
 ##### 2. 固定数量函数的通用方法
+这个方法要创建一个高阶函数，该高阶函数一次参数为一个函数，第二个参数为第一个参数必须要传入的参数的数量--在我们的例子`add(2,3,4)`中是3。这个函数将会追踪参数，除非收集的参数总数和传入函数期望的参数总和相同。
+```javascript
+const fixCurry = (fn, totalArg) => {
+  // fn.length ： 函数形参的数量
+  const length = totalArg || fn.length;
+  let totalArgs = [];
+
+  const resultFn = (...args) => {
+    totalArgs = totalArgs.concat(args);
+    if (totalArgs.length >= length) {
+      return fn(...totalArgs);
+    } else {
+      return resultFn;
+    }
+  };
+
+  return resultFn();
+};
+```
+上面的函数接受一个函数-`fn`和一个可选的`totalArgs`,这俩个参数在调用`fn`之前是必须的。如果`totalArgs`没有传入，将会依赖于函数签名并且使用函数被定义时参数的数量(译者注：形参的数量)。`totalArg`
