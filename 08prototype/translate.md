@@ -1,4 +1,4 @@
-## `JavaScript`中的柯理化：回答一个传统的问题，`Add(2)(3)`，给出俩个数字的和
+## [译]`JavaScript`中的柯理化：回答一个传统的问题，`Add(2)(3)`，给出俩个数字的和
 > 原文： [Currying in JS: Answering the traditional question, Add(2)(3), which gives sum of both numbers](https://theanubhav.com/2019/02/03/js-currying-in-interview/#references)
 
 理解`currying`的概念，并且深入分析关于`currying`的最常见的面试问题。
