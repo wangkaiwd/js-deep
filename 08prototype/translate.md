@@ -1,7 +1,7 @@
-## [译]`JavaScript`中的柯理化：回答一个传统的问题，`Add(2)(3)`，给出俩个数字的和
+## [译]`JavaScript`中的柯理化：回答一个经典问题，`Add(2)(3)`，给出俩个数字的和
 > 原文： [Currying in JS: Answering the traditional question, Add(2)(3), which gives sum of both numbers](https://theanubhav.com/2019/02/03/js-currying-in-interview/#references)
 
-理解`currying`的概念，并且深入分析关于`currying`的最常见的面试问题。
+> 理解柯理化的概念，并且深入分析关于柯理化的最常见的面试问题。
 
 ### 首先，用`JavaScript`实现`add(2)(3)`
 
@@ -137,6 +137,7 @@ console.log(t()); // 12
 ```
 #### 在同一个函数中使用`add(2)(3)(4)`和`add(2,3,4)`
 这是另一个变体，用同一个函数满足`add(2,3,4)`和`add(2)(3)(4)`俩种用例以及任何的组合情况。因此，一个单独的函数应该满足如下情况：
+
 * add(2)(3)(4)
 * add(2,3,4)
 * add(2)(3,4)
@@ -188,3 +189,14 @@ console.log(add(1)(2, 3)); // 6
 console.log(add(1)(3)(2)); // 6
 console.log(add(1, 2)(3)); // 6
 ```
+同样适用于乘法(或者任何其它可以被柯理化的函数)：
+```javascript
+const multiply = fixCurry((a, b, c) => a * b * c, 3);
+console.log(multiply(1, 2, 3)); // 6
+console.log(multiply(1)(2, 3)); // 6
+console.log(multiply(1)(3)(2)); // 6
+console.log(multiply(1, 2)(3));  // 6
+```
+这个`fixCurry`也可以被用于`currying`任何拥有固定参数的函数
+
+对于相加和相乘需要另外注意的一点是，前3个自然数的相加和相乘是相同的。

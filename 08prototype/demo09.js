@@ -48,3 +48,10 @@ console.log(add(1, 2, 3)); // 6
 console.log(add(1)(2, 3)); // 6
 console.log(add(1)(3)(2)); // 6
 console.log(add(1, 2)(3)); // 6
+
+const multiply = fixCurry((a, b, c) => a * b * c, 3);
+console.log(multiply(1, 2, 3)); // 6
+console.log(multiply(1)(2, 3)); // 6
+console.log(multiply(1)(3)(2)); // 6
+console.log(multiply(1, 2)(3));  // 6
+
