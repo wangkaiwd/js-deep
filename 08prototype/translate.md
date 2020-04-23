@@ -172,25 +172,19 @@ console.log(add(2)(3, 4)); // 9
 这个方法要创建一个高阶函数，该高阶函数一次参数为一个函数，第二个参数为第一个参数必须要传入的参数的数量--在我们的例子`add(2,3,4)`中是3。这个函数将会追踪参数，除非收集的参数总数和传入函数期望的参数总和相同。
 ```javascript
 const fixCurry = (fn, totalArg) => {
-  // fn.length ： 函数形参的数量
   const length = totalArg || fn.length;
-  let totalArgs = [];
-
-  const resultFn = (...args) => {
-    totalArgs = totalArgs.concat(args);
-    if (totalArgs.length >= length) {
-      return fn(...totalArgs);
-    } else {
-      return resultFn;
-    }
+  return function resultFn (...args) {
+    return args.length < length ? resultFn.bind(null, ...args) : fn(...args);
   };
-
-  return resultFn();
 };
 ```
 上面的函数接受一个函数-`fn`和一个可选的`totalArgs`,这俩个参数在调用`fn`之前是必须的。如果`totalArgs`没有传入，将会依赖于函数签名并且使用函数被定义时参数的数量(译者注：形参的数量)。`totalArg`可能被用于函数`fn`,`fn`依赖于`arguments`实现并且在它的签名中没有参数被定义。`fixCurry`返回了一个函数，该函数不断为另一个函数添加(通过`bind`)参数，如果达到阈值，它会用到目前为止之间所有调用搜集的参数来调用`fn`。
 
 让我们看一下使用示例：
 ```javascript
-
+const add = fixCurry((a, b, c) => a + b + c, 3);
+console.log(add(1, 2, 3)); // 6
+console.log(add(1)(2, 3)); // 6
+console.log(add(1)(3)(2)); // 6
+console.log(add(1, 2)(3)); // 6
 ```
