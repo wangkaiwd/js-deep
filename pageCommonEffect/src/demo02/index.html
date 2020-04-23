@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>tree</title>
+  <link rel="stylesheet" href="../assets/styles/reset.css">
+  <style>
+    .tree-container {
+      width: 200px;
+      margin: 30px auto;
+    }
+    .tree-container .tree-item {
+
+    }
+    .tree-container .tree {
+      padding-left: 10px;
+    }
+    .tree-container > .tree {
+      padding-left: 0;
+    }
+    .tree-container .tree-item-title {
+      display: inline-block;
+      padding-left: 4px;
+    }
+  </style>
+</head>
+<body>
+<div class="tree-container">
+  <ul class="tree level1" id="tree-demo">
+
+  </ul>
+</div>
+</body>
+<script src="dataSource.js"></script>
+<script>
+  const $ = (selector) => document.querySelector(selector);
+  const tree = $('#tree-demo');
+  const renderTree = function (dataSource) {
+    let string = ``;
+    dataSource.forEach(data => {
+      const { children, name, open } = data;
+      string += ` <li class="tree-item">
+        ${children ? `<i class="icon">${open ? '+' : '-'}</i>` : ''}<span class="tree-item-title">${name}</span>
+        ${children ? `<ul class="tree" style="display:${open ? 'block' : 'none'}">${renderTree(children)}</ul>` : ''}
+      </li> `;
+    });
+    return string;
+  };
+  tree.innerHTML = renderTree(dataSource);
+
+  // 事件委托，可以处理动态绑定元素：在本例中，我们如果不使用事件委托的话，
+  // 如果要获取`i`标签元素的话，必须等到数据渲染完毕，才能获取。
+  // 如果使用事件委托的话，在一开始就可以直接为其页面中已经存在ul父元素设置事件监听，
+  // 而不用管它里面子元素的变化
+  tree.addEventListener('click', function (e) {
+    const { target } = e;
+    if (target && target.matches('.icon')) {
+      const icon = target.innerText;
+      const ul = target.parentElement.querySelector('ul');
+      if (icon === '+') {
+        target.innerText = '-';
+        // 如果操作的样式过多的话，可以把一段样式放到css类中,
+        // 然后动态操作类名即可
+        ul.style.display = 'none';
+      } else {
+        target.innerText = '+';
+        ul.style.display = 'block';
+      }
+    }
+  });
+</script>
+</html>

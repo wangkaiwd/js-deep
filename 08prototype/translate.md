@@ -85,4 +85,54 @@ console.log(add(3)(4)(5)) // output: function
 console.log(add(3)(4)(5) === 12) // false, '==='不会进行强制类型转换 
 ```
 
+这个行为基于一个事实：在`JS`引擎需要将`add(2)(3)(4)`的结果转换为原始类型的时候，`valueOf`属性将会被`JS`引擎调用。上面所有得出正确结果的陈述是由于`JS`引擎尝试转换结果为原始值这个事实
+
 ##### 2. 显式的调用一个属性
+
+另一个方法是，我们们遵循一个约定：函数的消费者应该显示的调用结果中的一个属性来获得总和。这个解决方案和使用`valueOf`的解决方案非常类似，但是不会有隐式的转换发生。像这样：
+```javascript
+function add (x) {
+  let sum = x;
+  function resultFn (y) {
+    sum += y;
+    // 通过函数的属性来记录求和后的值
+    resultFn.result = sum;
+    return resultFn;
+  }
+  // f.result = () => sum;
+  return resultFn;
+}
+
+```
+使用将会是：
+```javascript
+console.log(add(3)(4)(5).result); // 12
+const t = add(3)(4);
+console.log(t.result); // 7
+console.log(t(5).result); //12
+```
+如果必须要实现这类问题，应该通过模块/类而不只是用一个简单的函数来模拟这些行为。
+
+##### 3. 为最后的结果显示的调用没有参数的函数
+当函数被没有参数的情况下调用时，也可以设计函数返回求和结果。如果参数被传递，函数将继续为之前的结果加上这些数字。
+```javascript
+function add (x) {
+  if (!x) return;
+  let sum = x;
+  return function resultFn (y) {
+    const length = arguments.length;
+    if (length === 0) {
+      return sum;
+    }
+    sum += y;
+    return resultFn;
+  };
+}
+```
+这可以用以下几种方式使用
+```javascript
+console.log(add(2)(3)()); // 5
+const t = add(3)(4)(5);
+console.log(t()); // 12
+```
+#### 在同一个函数中使用`add(2)(3)(4)`和`add(2,3,4)`
