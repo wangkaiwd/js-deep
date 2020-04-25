@@ -4,6 +4,7 @@ interface IOptions {
   onCancel: () => void;
   onOk: () => void;
   content: string;
+  animationDuration?: number;
 }
 
 class Dialog {
@@ -28,6 +29,7 @@ class Dialog {
   constructor (selector: string, options: IOptions) {
     this.element = document.querySelector<HTMLDivElement>(selector)!;
     this.options = options;
+    this.options.animationDuration = options.animationDuration || 0.3;
     if (!this.element) {
       console.error('please pass correct selector!');
       return;
@@ -49,8 +51,9 @@ class Dialog {
 
   init () {
     this.createHtmlTemplate();
-    this.maxX = window.innerWidth - this.content.offsetWidth;
-    this.maxY = window.innerHeight - this.content.offsetHeight;
+    // fixme: 这俩行代码为什么会影响动画？
+    // this.maxX = window.innerWidth - this.content.offsetWidth;
+    // this.maxY = window.innerHeight - this.content.offsetHeight;
     this.bindEvents();
   }
 
@@ -124,6 +127,9 @@ class Dialog {
     this.content.style.transition = 'none';
     this.startX = clientX - left;
     this.startY = clientY - top;
+    // 在屏幕宽度变化时要重新获取window.innerWidth和window.innerHeight
+    this.maxX = window.innerWidth - this.content.offsetWidth;
+    this.maxY = window.innerHeight - this.content.offsetHeight;
   }
 
   onMouseMove (e: MouseEvent) {
@@ -142,7 +148,7 @@ class Dialog {
 
   onMouseUp (e: MouseEvent) {
     this.pressing = false;
-    this.content.style.transition = 'all 0.3s';
+    this.content.style.transition = `all ${this.options.animationDuration}s`;
     document.removeEventListener('mousemove', this.onMouseMove);
     document.removeEventListener('mouseup', this.onMouseUp);
     document.removeEventListener('selectstart', this.onSelectStart);
@@ -159,8 +165,8 @@ class Dialog {
   }
 
   leaveAnimation () {
-    this.mask.style.transition = `all 20s`;
-    this.content.style.transition = `all 20s`;
+    this.mask.style.transition = `all ${this.options.animationDuration}s`;
+    this.content.style.transition = `all ${this.options.animationDuration}s`;
     this.mask.style.opacity = '0';
     this.content.style.top = '0px';
     this.content.style.transform = 'translate(-50%,-100%)';
@@ -179,7 +185,7 @@ class Dialog {
     // 回流和重绘(读写分离可以避免回流和重绘)
     this.leaveAnimation();
     // 强制回流
-    this.mask.offsetWidth;
+    const width = this.mask.offsetWidth;
     this.enterAnimation();
   }
 
