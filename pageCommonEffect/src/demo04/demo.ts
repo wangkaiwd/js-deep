@@ -31,6 +31,7 @@ class Dialog {
     // 和原型上的没有指定具体this的onOk方法
     this.onOk = this.onOk.bind(this);
     this.onCancel = this.onCancel.bind(this);
+    this.onTransitionend = this.onTransitionend.bind(this);
   }
 
   init () {
@@ -97,11 +98,33 @@ class Dialog {
       this.close();
     }
     this.init();
+    // 回流和重绘(读写分离可以避免回流和重绘)
+    this.leaveAnimation();
+    // 强制回流
+    this.mask.offsetWidth;
+    this.enterAnimation();
+  }
+
+  enterAnimation () {
+    this.mask.style.opacity = '1';
+    this.content.style.top = '50%';
+    this.content.style.transform = 'translate(-50%,-50%)';
+  }
+
+  leaveAnimation () {
+    this.mask.style.opacity = '0';
+    this.content.style.top = '0px';
+    this.content.style.transform = 'translate(-50%,-100%)';
+  }
+
+  onTransitionend () {
+    this.removeEvents();
+    this.dialog.remove();
   }
 
   close () {
-    this.removeEvents();
-    this.dialog.remove();
+    this.leaveAnimation();
+    this.dialog.addEventListener('transitionend', this.onTransitionend);
   }
 }
 
