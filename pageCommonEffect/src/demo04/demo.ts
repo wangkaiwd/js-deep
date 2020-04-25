@@ -21,11 +21,18 @@ class Dialog {
       console.error('please pass correct selector!');
       return;
     }
-    this.init();
+    // 在进行事件绑定的时候，this指向会指向绑定事件的元素
+    // 这样会将Dialog.prototype.onOk方法在通过bind指定this后
+    // 赋值给实例的私有属性onOk
+    // 在最终实例化后，实例会有一个自己私有的指定this的onOk方法
+    // 和原型上的没有指定具体this的onOk方法
+    this.onOk = this.onOk.bind(this);
+    this.onCancel = this.onCancel.bind(this);
   }
 
   init () {
     this.createHtmlTemplate();
+    this.bindEvents();
   }
 
   createHtmlTemplate () {
@@ -42,8 +49,26 @@ class Dialog {
     this.batchAppend(this.element, [mask, content]);
   }
 
-  bindEvents () {
+  onOk () {
+    this.options.onOk();
+    this.close();
+  }
 
+  onCancel () {
+    this.options.onCancel();
+    this.close();
+  }
+
+  bindEvents () {
+    this.buttons[0].addEventListener('click', this.onOk);
+    this.buttons[0].addEventListener('click', this.onCancel);
+    this.closeIcon.addEventListener('click', this.onCancel);
+  }
+
+  removeEvents () {
+    this.buttons[0].removeEventListener('click', this.onOk);
+    this.buttons[0].removeEventListener('click', this.onCancel);
+    this.closeIcon.removeEventListener('click', this.onCancel);
   }
 
   batchAppend (target: HTMLElement, source: HTMLElement[]) {
@@ -63,26 +88,16 @@ class Dialog {
   }
 
   open () {
-
+    this.init();
   }
 
   close () {
-
+    this.removeEvents();
+    this.element.innerHTML = '';
   }
 }
 
-// 如何使用dialog
-
-// 结合`jQuery`源码技巧
-
-// const dialog = new Dialog(selector,options)
-// options = {
-//   title: '',
-//   buttons: [],
-//   onCancel,
-//   onOk
-// }
-
+const button1 = document.querySelector<HTMLButtonElement>('#button1')!;
 const dialog = new Dialog('.wk-dialog-container', {
   title: 'wk-dialog title',
   buttonTexts: ['continue', 'close'],
@@ -90,3 +105,7 @@ const dialog = new Dialog('.wk-dialog-container', {
   onCancel: () => {console.log('cancel');},
   onOk: () => {console.log('ok');}
 });
+
+button1.onclick = function () {
+  dialog.open();
+};
