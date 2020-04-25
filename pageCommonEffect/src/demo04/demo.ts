@@ -10,12 +10,15 @@ class Dialog {
   options: IOptions;
   element: HTMLElement;
   prefix: string = 'wk-dialog';
-  footer: HTMLElement = null!; // 初始值处理有没有更优雅的方法？
+  // 这里的类型如何才能精确到HTMLDivElement
+  dialog: HTMLElement = null!;// 初始值处理有没有更优雅的方法？
+  content: HTMLElement = null!;
+  mask: HTMLElement = null!;
   closeIcon: HTMLElement = null!;
   buttons: HTMLButtonElement[] = [];
 
   constructor (selector: string, options: IOptions) {
-    this.element = document.querySelector<HTMLElement>(selector)!;
+    this.element = document.querySelector<HTMLDivElement>(selector)!;
     this.options = options;
     if (!this.element) {
       console.error('please pass correct selector!');
@@ -36,17 +39,19 @@ class Dialog {
   }
 
   createHtmlTemplate () {
-    const mask = this.createElement('div', `${this.prefix}-mask`);
+    this.dialog = this.createElement('div', this.prefix);
+    this.mask = this.createElement('div', `${this.prefix}-mask`);
     const { content: contentHtml, title, buttonTexts } = this.options;
     const header = this.createElement('div', `${this.prefix}-header`, title);
     const body = this.createElement('div', `${this.prefix}-body`, contentHtml);
-    this.footer = this.createElement('div', `${this.prefix}-footer`, this.createButtons());
+    const footer = this.createElement('div', `${this.prefix}-footer`, this.createButtons());
     // fixme:这里的类型如何进行处理
-    this.buttons = (this.footer.children) as any;
+    this.buttons = (footer.children) as any;
     this.closeIcon = this.createElement('div', `${this.prefix}-close-icon`, '×');
-    const content = this.createElement('div', `${this.prefix}-content`);
-    this.batchAppend(content, [header, body, this.footer, this.closeIcon]);
-    this.batchAppend(this.element, [mask, content]);
+    this.content = this.createElement('div', `${this.prefix}-content`);
+    this.batchAppend(this.content, [header, body, footer, this.closeIcon]);
+    this.batchAppend(this.dialog, [this.mask, this.content]);
+    this.element.appendChild(this.dialog);
   }
 
   onOk () {
@@ -75,7 +80,7 @@ class Dialog {
     source.forEach(item => target.appendChild(item));
   }
 
-  createElement (htmlTag: string, className: string, innerHtml: string = '') {
+  createElement (htmlTag: keyof HTMLElementTagNameMap, className: string, innerHtml: string = '') {
     const element = document.createElement(htmlTag);
     element.classList.add(className);
     element.innerHTML = innerHtml;
@@ -88,12 +93,15 @@ class Dialog {
   }
 
   open () {
+    if (this.dialog) {
+      this.close();
+    }
     this.init();
   }
 
   close () {
     this.removeEvents();
-    this.element.innerHTML = '';
+    this.dialog.remove();
   }
 }
 
