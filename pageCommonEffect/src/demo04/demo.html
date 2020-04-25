@@ -8,12 +8,62 @@
   <title>Document</title>
   <link rel="stylesheet" href="../assets/styles/reset.css">
   <style>
+    .dialog-container {
 
+    }
+    .dialog-container .dialog-mask {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, .6);
+    }
+    .dialog-container .dialog-content {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 0 30px 30px;
+      width: 500px;
+      background-color: #fff;
+    }
+    .dialog-container .dialog-header {
+      padding-top: 30px;
+      font-size: 24px;
+    }
+    .dialog-container .dialog-body {
+      padding: 32px 0;
+    }
+    .dialog-container .dialog-close-icon {
+      font-size: 28px;
+      position: absolute;
+      right: 8px;
+      top: 2px;
+    }
   </style>
 </head>
 <body>
-<div class="window">
-  <div class="bar"></div>
+<div class="dialog-container">
+  <div class="dialog-mask"></div>
+  <div class="dialog-content">
+    <div class="dialog-close-icon">×</div>
+    <div class="dialog-header">
+      dialog title
+    </div>
+    <div class="dialog-body">
+      This is a completely accessible dialog.
+
+      Try hitting the tab key* and notice how the focus stays within the dialog itself. To close dialog hit the esc
+      button, click on the overlay or just click the close button.
+
+      * alt+tab in safari
+    </div>
+    <div class="dialog-footer">
+      <button>continue</button>
+      <button>close</button>
+    </div>
+  </div>
 </div>
 </body>
 <script src="/build/demo04.js"></script>
