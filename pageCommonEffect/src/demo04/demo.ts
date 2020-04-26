@@ -211,3 +211,4 @@ const dialog = new Dialog('.wk-dialog-container', {
 button1.onclick = function () {
   dialog.open();
 };
+
