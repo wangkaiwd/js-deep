@@ -51,10 +51,10 @@ class Dialog {
 
   init () {
     this.createHtmlTemplate();
+    this.bindEvents();
     // fixme: 这俩行代码为什么会影响动画？
     // this.maxX = window.innerWidth - this.content.offsetWidth;
     // this.maxY = window.innerHeight - this.content.offsetHeight;
-    this.bindEvents();
   }
 
   createHtmlTemplate () {
@@ -185,7 +185,10 @@ class Dialog {
     // 回流和重绘(读写分离可以避免回流和重绘)
     this.leaveAnimation();
     // 强制回流
-    const width = this.mask.offsetWidth;
+    // const width = this.mask.offsetWidth;
+    // 没有明白为什么这俩行放到这里就不会出现问题
+    this.maxX = window.innerWidth - this.content.offsetWidth;
+    this.maxY = window.innerHeight - this.content.offsetHeight;
     this.enterAnimation();
   }
 
