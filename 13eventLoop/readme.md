@@ -103,4 +103,4 @@ console.log(9);
 </details>
 
 ### 异步`ajax`
-
+为什么同步操作时，`readystatechange`事件在`send`之前，只在`readyState`为4的时候触发？
