@@ -1,6 +1,7 @@
 ## `JavaScript`事件循环机制
 > 阅读推荐： 
 > * [并发模型与事件循环](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/EventLoop)
+> * [事件循环：微任务和宏任务](https://zh.javascript.info/event-loop)
 > * [JavaScript 运行机制详解：再谈Event Loop](http://www.ruanyifeng.com/blog/2014/10/event-loop.html)
 > * [JavaScript Visualized: Event Loop](https://dev.to/lydiahallie/javascript-visualized-event-loop-3dif)
 
@@ -56,3 +57,39 @@ console.log(n); // 5
 `JS`不管在任何时候同时只能做一件事情，它的异步并不是真正的异步，而是基于事件队列和事件循环机制，把一些方法延后执行而已。
 
 发送`ajax`请求是一个例外，浏览器会单独分配一个线程继续执行`JS`，另外分配一个线程去发送`HTTP`事务
+
+### 测试题
+```javascript
+setTimeout(() => {
+  console.log(1);
+}, 20);
+
+console.log(2);
+
+setTimeout(() => {
+  console.log(3);
+}, 10);
+
+console.log(4);
+// console.time('AA');
+for (let i = 0; i < 90000000; i++) {
+  // do something
+}
+// console.timeEnd('AA'); // 大概60ms左右
+console.log(5);
+// 由于之前执行for循环会耗费比较长的时间，
+// 所以在将下边的异步任务放入任务队列的时候，
+// 之前放入任务队列中的2个任务已经执行完毕了
+setTimeout(() => {
+  console.log(6);
+}, 8);
+console.log(7);
+
+setTimeout(() => {
+  console.log(8);
+}, 15);
+console.log(9);
+// 任务队列中的任务执行顺序：谁先到执行的时间就先执行谁
+```
+
+`Anwser`: 
