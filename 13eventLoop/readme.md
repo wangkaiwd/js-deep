@@ -46,7 +46,12 @@ console.log(n); // 5
 * 执行上下文中栈中的代码执行完毕，线程进入空闲状态(执行完最后一行`console.log(n)`)
 * 先在微任务事件队列中查找，找到后放到执行上下文栈中执行(上例中没有微任务)
 * 然后在宏任务事件队列中查找，找到后放到执行上下文中执行(时间到达后执行箭头函数)
-![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200427002818.png)
+
+<details>
+  <summary>diagram</summary>
+  
+  ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200427002818.png)
+</details>
 
 需要注意的是：
 * 只有主线程空闲下来，才会去事件队列中查找对应的任务，放到执行上下文栈中执行
@@ -91,5 +96,11 @@ setTimeout(() => {
 console.log(9);
 // 任务队列中的任务执行顺序：谁先到执行的时间就先执行谁
 ```
+<details>
+  <summary>answer diagram</summary>
+  
+  ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200427232715.png)
+</details>
 
-`Anwser`: 
+### 异步`ajax`
+
