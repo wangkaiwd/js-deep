@@ -2,16 +2,17 @@
 > * 原文地址：[JavaScript Visualized: Event Loop](https://dev.to/lydiahallie/javascript-visualized-event-loop-3dif)
 > * 原文作者：[Lydia Hallie](https://dev.to/lydiahallie)
 
-事件循环是每一个`JavaScript`开发者必须使用一种方式或者另外的方法处理的事情之一，但是一开始理解起来可能有点令人困惑。我是一个可视化学习者，所以我认为我应该尝试用一种可视化的方式通过低分辨率的动图(`gifs`)来帮你解释它。现在是2019年，动图(`gifs`)还是有一点像素化和模糊。
+事件循环是每一个`JavaScript`开发者必须以某种方式处理的事情之一，但是起初理解起来可能有点令人困惑。我是一个可视化学习者，所以我认为我应该尝试用一种可视化的方式通过低分辨率的动图(`gifs`)来帮你解释它。现在是2019年，动图(`gifs`)还是有一点像素化和模糊。
 
-但是首先，什么是事件循环以及我们为什么应该关心它呢？
+那么首先，什么是事件循环以及我们为什么应该关心它呢？
 
-`JavaScript`是**单线程**(`single-threaded`): 同时只能运行一个项目。通常这没什么大不了，但是想象一下，现在你正在运行一个需要30秒的任务。在任务期间，任何其它事情发生之(`JavaScript`默认运行在浏览器的主线程上，因此整个`UI`是卡住的)前都需要等待30秒。现在是2019年了，没有人想要一个慢的、响应不及时的网页。
+`JavaScript`是**单线程**(`single-threaded`): 同时只能做一个项目。通常这没什么大不了，但是想象一下，现在你正在运行一个需要30秒的任务。在任务期间，任何其它事情发生(`JavaScript`默认运行在浏览器的主线程上，因此整个`UI`是卡住的)之前都需要等待30秒。现在是2019年了，没有人想要一个慢的、响应迟钝的网页。
 
-幸运地，浏览器给我们一些`JavaScript`引擎它自己没有提供的特性：`WEB API`。它包括`DOM API`、`setTimeout`、`HTTP`请求等内容。这能帮助我们创建一些异步、非阻塞的行为。
+幸运的是，浏览器给我们一些`JavaScript`引擎它自己没有提供的特性：`WeB API`。它包括`DOM API`、`setTimeout`、`HTTP`请求等内容。这能帮助我们创建一些异步、非阻塞的行为。
 
 当我们调用一个函数的时候，它会被添加到一个叫做调用栈的东西中。调用栈不是浏览器特有的，而是`JS`引擎的一部分。它是栈意味着它是先进后出(想想一堆煎饼)。当函数返回一个值的时候，它会被弹出栈。
 ![](https://res.cloudinary.com/practicaldev/image/fetch/s--44yasyNX--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://devtolydiahallie.s3-us-west-1.amazonaws.com/gid1.6.gif)
+> 图1：当函数被调用的时候会被推入到调用栈中，当函数返回一个值的时候会从调用栈中弹出。
 
 `respond`函数返回一个`setTimeout`函数。`setTimeout`通过`Web API`提供给我们，它让我们在不阻塞主线程的情况下延迟执行任务。我们为`setTimeout`传递的回调函数即箭头函数`() => { return 'Hey' }`被添加到`Web API`。与此同时，`setTimetout`函数和`respond`函数被弹出栈，它们都返回了它们的值。
 ![](https://res.cloudinary.com/practicaldev/image/fetch/s--d_n4m4HH--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://devtolydiahallie.s3-us-west-1.amazonaws.com/gif2.1.gif)
