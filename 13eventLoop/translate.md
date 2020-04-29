@@ -16,17 +16,21 @@
 
 `respond`函数返回一个`setTimeout`函数。`setTimeout`通过`Web API`提供给我们，它让我们在不阻塞主线程的情况下延迟执行任务。我们为`setTimeout`传递的回调函数即箭头函数`() => { return 'Hey' }`被添加到`Web API`。与此同时，`setTimetout`函数和`respond`函数被弹出栈，它们都返回了它们的值。
 ![](https://res.cloudinary.com/practicaldev/image/fetch/s--d_n4m4HH--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://devtolydiahallie.s3-us-west-1.amazonaws.com/gif2.1.gif)
+> 图2：`setTimeout`通过浏览器提供，`Web API`将会注意我们传入的回调
 
-在`Web API`中,定时器运行时间和我们传递给`setTimeout`的第二个参数一样长，即1000ms。回调函数不会立即被被添加到调用栈中，反而会被传给一个叫队列的东西。
+在`Web API`中,定时器运行时间和我们传递给`setTimeout`的第二个参数一样长，即1000ms。回调函数不会立即被添加到调用栈中，而是会被传给一个叫队列的东西。
 ![](https://res.cloudinary.com/practicaldev/image/fetch/s--MewGMdte--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://devtolydiahallie.s3-us-west-1.amazonaws.com/gif3.1.gif)
+> 图3：当定时器结束的时候(这个例子中是1000ms)，回调会被传递到回调队列
 
-这是一个令人疑惑的部分：他并不意味着在1000ms后，回调函数被添加到调用栈(从而返回一个值)。它是在1000ms后被添加到队列。由于这是一个队列，因此函数必须等到轮到它的时候再执行。
+这是一个令人疑惑的部分：并不是说在1000ms后，回调函数被添加到调用栈(从而返回一个值)。它是在1000ms后被添加到队列。由于这是一个队列，因此函数必须等到轮到它的时候再执行。
 
 这是我们一直在等待的部分，事件循环去做它唯一任务的时间到了：**通过调用栈连接队列**！如果调用栈是空的，也就是说所有之前被调用的函数已经返回它们的值并且已经从栈内弹出，那么队列中的第一项会被添加到调用栈。在这个例子中，没有其它的函数被调用，意味着到回调函数在队列中是第一项时调用栈是空的。
 ![](https://res.cloudinary.com/practicaldev/image/fetch/s--b2BtLfdz--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://devtolydiahallie.s3-us-west-1.amazonaws.com/gif4.gif)
+> 图4：事件循环会查看调用队列和调用栈，如果调用栈是空的，它会将队列中的第一项推入栈中。
 
 回调函数被添加到调用栈调用然后返回一个值，最终被弹出栈。
 ![](https://res.cloudinary.com/practicaldev/image/fetch/s--NYOknEYi--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://devtolydiahallie.s3-us-west-1.amazonaws.com/gif5.gif)
+> 图5：回调函数被推入调用占中执行。一但它返回一个值，就会从调用栈内弹出。
 
 阅读文章是有趣的，但是你只有通过不断地实践才能完全理解它。尝试想出如果我们运行如下代码控制台会得到什么？
 ```javascript
@@ -39,12 +43,12 @@ foo();
 baz();
 ```
 
-明白了吗？让我们快速看一下，当在浏览器中运行这段代码时发生了什么？
+明白了吗？让我们快速看一下，在浏览器中运行这段代码时发生了什么？
 ![](https://res.cloudinary.com/practicaldev/image/fetch/s--BLtCLQcd--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://devtolydiahallie.s3-us-west-1.amazonaws.com/gif14.1.gif)
 
 1. 我们调用`bar`。`bar`返回一个`setTimeout`函数。
 2. 我们传递给`setTimeout`的回调被添加到`Web API`,`setTimeout`和`bar`被弹出调用栈。
-3. 计时器开始运行，与此同时`foo`被调用并且输出`First`。`foo`返回`undefined`,`baz`被调用，并且回调被添加到队列中。
+3. 定时器开始运行，与此同时`foo`被调用并且输出`First`。`foo`返回`undefined`,`baz`被调用，并且回调被添加到队列中。
 4. `baz`输出`Third`。在`baz`返回内容后，事件循环看到调用栈是空的，然后将回调添加到调用栈中。
 5. 回调输出`Second`。
 
