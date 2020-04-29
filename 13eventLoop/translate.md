@@ -1,6 +1,6 @@
 ## [译] `JavaScript`可视化：事件循环
-> 原文地址：https://dev.to/lydiahallie/javascript-visualized-event-loop-3dif
-> 原文作者：https://dev.to/lydiahallie
+> * 原文地址：https://dev.to/lydiahallie/javascript-visualized-event-loop-3dif
+> * 原文作者：https://dev.to/lydiahallie
 
 事件循环是每一个`JavaScript`开发者必须使用一种方式或者另外的方法处理的事情之一，但是一开始理解起来可能有点令人困惑。我是一个可视化学习者，所以我认为我应该尝试用一种可视化的方式通过低分辨率的动图(`gifs`)来帮你解释它。现在是2019年，动图(`gifs`)还是有一点像素化和模糊。
 
@@ -14,7 +14,7 @@
 ![](https://res.cloudinary.com/practicaldev/image/fetch/s--44yasyNX--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://devtolydiahallie.s3-us-west-1.amazonaws.com/gid1.6.gif))
 
 `respond`函数返回一个`setTimeout`函数。`setTimeout`通过`Web API`提供给我们，它让我们在不阻塞主线程的情况下延迟执行任务。我们为`setTimeout`传递的回调函数即箭头函数`() => { return 'Hey' }`被添加到`Web API`。与此同时，`setTimetout`函数和`respond`函数被弹出栈，它们都返回了它们的值。
-![](https://res.cloudinary.com/practicaldev/image/fetch/s--d_n4m4HH--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://devtolydiahallie.s3-us-west-1.amazonaws.com/gif2.1.gif
+![](https://res.cloudinary.com/practicaldev/image/fetch/s--d_n4m4HH--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://devtolydiahallie.s3-us-west-1.amazonaws.com/gif2.1.gif)
 
 在`Web API`中,定时器运行时间和我们传递给`setTimeout`的第二个参数一样长，即1000ms。回调函数不会立即被被添加到调用栈中，反而会被传给一个叫队列的东西。
 ![](https://res.cloudinary.com/practicaldev/image/fetch/s--MewGMdte--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://devtolydiahallie.s3-us-west-1.amazonaws.com/gif3.1.gif)
