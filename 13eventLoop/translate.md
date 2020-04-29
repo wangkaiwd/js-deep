@@ -1,6 +1,6 @@
 ## [译] `JavaScript`可视化：事件循环
-> * 原文地址：https://dev.to/lydiahallie/javascript-visualized-event-loop-3dif
-> * 原文作者：https://dev.to/lydiahallie
+> * 原文地址：[JavaScript Visualized: Event Loop](https://dev.to/lydiahallie/javascript-visualized-event-loop-3dif)
+> * 原文作者：[Lydia Hallie](https://dev.to/lydiahallie)
 
 事件循环是每一个`JavaScript`开发者必须使用一种方式或者另外的方法处理的事情之一，但是一开始理解起来可能有点令人困惑。我是一个可视化学习者，所以我认为我应该尝试用一种可视化的方式通过低分辨率的动图(`gifs`)来帮你解释它。现在是2019年，动图(`gifs`)还是有一点像素化和模糊。
 
@@ -11,7 +11,7 @@
 幸运地，浏览器给我们一些`JavaScript`引擎它自己没有提供的特性：`WEB API`。它包括`DOM API`、`setTimeout`、`HTTP`请求等内容。这能帮助我们创建一些异步、非阻塞的行为。
 
 当我们调用一个函数的时候，它会被添加到一个叫做调用栈的东西中。调用栈不是浏览器特有的，而是`JS`引擎的一部分。它是栈意味着它是先进后出(想想一堆煎饼)。当函数返回一个值的时候，它会被弹出栈。
-![](https://res.cloudinary.com/practicaldev/image/fetch/s--44yasyNX--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://devtolydiahallie.s3-us-west-1.amazonaws.com/gid1.6.gif))
+![](https://res.cloudinary.com/practicaldev/image/fetch/s--44yasyNX--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://devtolydiahallie.s3-us-west-1.amazonaws.com/gid1.6.gif)
 
 `respond`函数返回一个`setTimeout`函数。`setTimeout`通过`Web API`提供给我们，它让我们在不阻塞主线程的情况下延迟执行任务。我们为`setTimeout`传递的回调函数即箭头函数`() => { return 'Hey' }`被添加到`Web API`。与此同时，`setTimetout`函数和`respond`函数被弹出栈，它们都返回了它们的值。
 ![](https://res.cloudinary.com/practicaldev/image/fetch/s--d_n4m4HH--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://devtolydiahallie.s3-us-west-1.amazonaws.com/gif2.1.gif)
