@@ -104,3 +104,34 @@ console.log(9);
 
 ### 异步`ajax`
 为什么同步操作时，`readystatechange`事件在`send`之前，只在`readyState`为4的时候触发？
+
+### `Promise`和`async/await`
+```javascript
+async function async1 () {
+  console.log('async1 start');
+  await async2();
+  console.log('async1 end');
+}
+
+async function async2 () {
+  console.log('async2');
+}
+
+console.log('script start');
+setTimeout(function () {
+  console.log('setTimeout');
+}, 0);
+async1();
+new Promise(function (resolve) {
+  console.log('promise1');
+  resolve();
+}).then(function () {
+  console.log('promise2');
+});
+console.log('script end');
+```
+<details>
+  <summary>answer diagram</summary>
+  
+  ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200444429224546.png)
+</details>
