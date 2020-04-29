@@ -106,6 +106,7 @@ console.log(9);
 为什么同步操作时，`readystatechange`事件在`send`之前，只在`readyState`为4的时候触发？
 
 ### `Promise`和`async/await`
+例1：
 ```javascript
 async function async1 () {
   console.log('async1 start');
@@ -133,5 +134,44 @@ console.log('script end');
 <details>
   <summary>answer diagram</summary>
   
-  ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200444429224546.png)
+  output: `script start, async1 start, async2, promise1, script end, async1 end, promise2, setTimeout`
+  ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200444429224546.png) 
+</details>
+
+例2：
+```javascript
+console.log(1);
+setTimeout(() => console.log(2), 1000);
+
+async function fn () {
+  console.log(3);
+  setTimeout(() => {console.log(4);}, 20);
+  return Promise.reject();
+}
+
+async function run () {
+  console.log(5);
+  await fn();
+  console.log(6);
+}
+
+run();
+
+for (let i = 0; i < 90000000; i++) {}
+
+setTimeout(() => {
+  console.log(7);
+  new Promise((resolve, reject) => { // 宏任务
+    console.log(8);
+    resolve(); // 微任务，会将then中的一个函数放到微任务队列中
+  }).then(() => {console.log(9);});
+}, 0);
+
+console.log(10);
+```
+<details>
+  <summary>answer diagram</summary>
+  
+  output: `1, 5, 3, 10, Uncaught(in promise) undefined, 4, 7, 8, 9, 2`
+  ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200444429224546.png) 
 </details>
