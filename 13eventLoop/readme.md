@@ -99,6 +99,7 @@ console.log(9);
 <details>
   <summary>answer diagram</summary>
   
+  output: `2 4 5 7 9 3 1 6 8`
   ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200427232715.png)
 </details>
 
@@ -175,3 +176,30 @@ console.log(10);
   output: `1, 5, 3, 10, Uncaught(in promise) undefined, 4, 7, 8, 9, 2`
   ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200444429224546.png) 
 </details>
+
+### `async/await`需要注意的几个点
+* 如果`await`后的`async`报错或者执行`Promise.reject(reason)`,`await`下边的代码将不会执行
+* 为了让`await`不影响后边代码的执行，可以使用`try...catch`语句。或者在`Promies`对象后再跟一个`catch`方法来处理错误
+```javascript
+// try catch
+async function f() {
+  try {
+    await Promise.reject('出错了');
+  } catch(e) {
+  }
+  return await Promise.resolve('hello world');
+}
+
+f()
+.then(v => console.log(v))
+
+// .catch处理错误
+async function f() {
+  await Promise.reject('出错了')
+    .catch(e => console.log(e));
+  return await Promise.resolve('hello world');
+}
+
+f()
+.then(v => console.log(v))
+```
