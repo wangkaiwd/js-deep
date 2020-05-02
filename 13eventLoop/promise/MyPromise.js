@@ -1,7 +1,7 @@
 class MyPromise {
   state = 'pending';
   value = undefined;
-  caches = [{}];
+  caches = [{}]; // 这里其实可以不用数组，直接对象就可以
 
   constructor (executor) {
     try {
@@ -81,14 +81,14 @@ class MyPromise {
   static all (array) {
     return new MyPromise((resolve, reject) => {
       const results = [];
-      let index = 0;
-      array.map((item) => {
+      for (let i = 0; i < array.length; i++) {
+        const item = array[i];
         if (item instanceof MyPromise) {
           item.then(
             (result) => {
-              results[index] = result;
-              index++;
-              if (array.length === index) {
+              results[i] = result;
+              // 这里是微任务，执行的时候，可能index已经变了
+              if (array.length === i + 1) {
                 // Promise的状态一旦确定就不会改变,继续循环也不会在执行下边的代码
                 resolve(results);
               }
@@ -99,10 +99,9 @@ class MyPromise {
             }
           );
         } else { // 非Promise的其它值，原样返回
-          results[index] = item;
-          index++;
+          results[i] = item;
         }
-      });
+      }
       // 如果全是非Promise的值的话，放到数组中返回
       if (results.length === array.length) {
         resolve(results);
@@ -130,7 +129,7 @@ const p = new MyPromise((resolve, reject) => {
     resolve('all', 1000);
   }, 1000);
 });
-const arr = [1, MyPromise.reject(2), MyPromise.resolve(1), p];
+const arr = [1, MyPromise.resolve(2), 3, MyPromise.resolve(1), p];
 
 MyPromise.all(arr).then(
   (results) => {
