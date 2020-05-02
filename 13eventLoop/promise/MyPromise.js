@@ -4,7 +4,11 @@ class MyPromise {
   caches = [{}];
 
   constructor (executor) {
-    executor(this.resolve.bind(this), this.reject.bind(this));
+    try {
+      executor(this.resolve.bind(this), this.reject.bind(this));
+    } catch (e) {
+      this.reject(e.message);
+    }
   }
 
   resolve (result) {
@@ -23,25 +27,51 @@ class MyPromise {
     setTimeout(() => {
       this.caches.forEach((item) => {
         if (typeof item[state] === 'function') {
-          this.value = item[state].call(this, this.value);
+          item[state].call(this, this.value);
         }
       });
     }, 0);
   }
 
-  then (resolve, reject) {
-    this.caches.push({ resolved: resolve, rejected: reject });
-    return this;
+  then (resolveFn, rejectFn) {
+    return new MyPromise((resolve, reject) => {
+      // 新的Promise的状态根据前一个Promise
+      // 1. resolve返回一个值
+      // 2. resolve返回一个promise
+      // 3. resolve报错
+      const cache = {
+        resolved: () => {
+          try {
+            const returnValue = resolveFn(this.value);
+            returnValue instanceof MyPromise ? returnValue.then(resolve, reject) : resolve(returnValue);
+          } catch (e) {
+            reject(e.message);
+          }
+        },
+        rejected: () => {
+          try {
+            const returnValue = rejectFn(this.value);
+            returnValue instanceof MyPromise ? returnValue.then(resolve, reject) : resolve(returnValue);
+          } catch (e) {
+            reject(e.message);
+          }
+        }
+      };
+      // 先做一次处理，然后再将对应的函数放到缓存队列中
+      this.caches.push(cache);
+    });
   }
 }
 
 // 支持链式调用
 new MyPromise((resolve, reject) => {
   setTimeout(() => {
-    resolve(100);
+    reject(100);
   }, 1000);
 })
-  .then(result => console.log(result), reason => console.log(reason))
+  .then(result => result * 2, reason => console.log(reason))
   .then((result) => {
     console.log('result', result);
+  }, (reason) => {
+    console.log('reason', reason);
   });
