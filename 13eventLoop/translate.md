@@ -1,6 +1,7 @@
 ## [译] `JavaScript`可视化：事件循环
 > * 原文地址：[JavaScript Visualized: Event Loop](https://dev.to/lydiahallie/javascript-visualized-event-loop-3dif)
 > * 原文作者：[Lydia Hallie](https://dev.to/lydiahallie)
+> * [事件循环在线演示编辑器](latentflip.com/loupe)
 
 事件循环是每一个`JavaScript`开发者必须以某种方式处理的事情之一，但是起初理解起来可能有点令人困惑。我是一个可视化学习者，所以我认为我应该尝试用一种可视化的方式通过低分辨率的动图(`gifs`)来帮你解释它。现在是2019年，动图(`gifs`)还是有一点像素化和模糊。
 
