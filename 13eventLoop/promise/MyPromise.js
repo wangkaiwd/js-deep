@@ -43,7 +43,7 @@ class MyPromise {
       rejectFn = reason => MyPromise.reject(reason);
     }
     return new MyPromise((resolve, reject) => {
-      // 新的Promise的状态根据前一个Promise
+      // 新的Promise的状态根据前一个Promise的状态确定
       // 1. resolve返回一个值
       // 2. resolve返回一个promise
       // 3. resolve报错
@@ -71,15 +71,11 @@ class MyPromise {
   }
 
   static reject (reason) {
-    return new MyPromise((resolve, reject) => {
-      reject(reason);
-    });
+    return new MyPromise((resolve, reject) => reject(reason));
   }
 
   static resolve (result) {
-    return new MyPromise((resolve) => {
-      resolve(result);
-    });
+    return new MyPromise((resolve) => resolve(result));
   }
 
   static all (array) {
@@ -88,7 +84,6 @@ class MyPromise {
       let index = 0;
       array.map((item) => {
         if (item instanceof MyPromise) {
-          console.log('item', item);
           item.then(
             (result) => {
               results[index] = result;
@@ -98,16 +93,17 @@ class MyPromise {
                 resolve(results);
               }
             },
-            reason => {
+            reason => { // 如果有一个rejected状态的Promise，就执行reject函数
               // Promise的状态一旦确定就不会改变,继续循环也不会在执行下边的代码
               reject(reason);
             }
           );
-        } else {
+        } else { // 非Promise的其它值，原样返回
           results[index] = item;
           index++;
         }
       });
+      // 如果全是非Promise的值的话，放到数组中返回
       if (results.length === array.length) {
         resolve(results);
       }
