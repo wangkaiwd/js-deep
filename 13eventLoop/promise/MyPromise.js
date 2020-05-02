@@ -34,6 +34,14 @@ class MyPromise {
   }
 
   then (resolveFn, rejectFn) {
+    // 如果resolveFn和rejectFn传入非函数内容(如null和undefined)
+    if (typeof resolveFn !== 'function') {
+      // 返回一个新的和原来一样的Promise, value是原来的value,状态也是原来的状态
+      resolveFn = result => result;
+    }
+    if (typeof rejectFn !== 'function') {
+      rejectFn = reason => reason;
+    }
     return new MyPromise((resolve, reject) => {
       // 新的Promise的状态根据前一个Promise
       // 1. resolve返回一个值
@@ -70,6 +78,7 @@ new MyPromise((resolve, reject) => {
   }, 1000);
 })
   .then(result => result * 2, reason => console.log(reason))
+  .then(null, null)
   .then((result) => {
     console.log('result', result);
   }, (reason) => {
