@@ -8,33 +8,29 @@ class MyPromise {
   }
 
   resolve (result) {
-    this.value = result;
-    this.state = 'resolved';
-    setTimeout(() => {
-      this.caches.forEach(({ resolve }) => {
-        if (typeof resolve === 'function') {
-          const xxx = resolve.call(this, this.value);
-          this.value = xxx;
-        }
-      });
-    }, 0);
+    this.change(result, 'resolved');
   }
 
   reject (reason) {
-    this.value = reason;
-    this.state = 'rejected';
+    this.change(reason, 'rejected');
+  }
+
+  change (value, state) {
+    // Promise的状态一旦更改就不会再改变
+    if (this.state !== 'pending') {return;}
+    this.value = value;
+    this.state = state;
     setTimeout(() => {
-      this.caches.forEach(({ reject }) => {
-        if (typeof reject === 'function') {
-          const xxx = reject.call(this, this.value);
-          this.value = xxx;
+      this.caches.forEach((item) => {
+        if (typeof item[state] === 'function') {
+          this.value = item[state].call(this, this.value);
         }
       });
     }, 0);
   }
 
   then (resolve, reject) {
-    this.caches.push({ resolve, reject });
+    this.caches.push({ resolved: resolve, rejected: reject });
     return this;
   }
 }
