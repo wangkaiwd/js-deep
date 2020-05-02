@@ -1,7 +1,7 @@
 class MyPromise {
   state = 'pending';
   value = undefined;
-  caches = {};
+  caches = [{}];
 
   constructor (executor) {
     executor(this.resolve.bind(this), this.reject.bind(this));
@@ -9,31 +9,43 @@ class MyPromise {
 
   resolve (result) {
     this.value = result;
+    this.state = 'resolved';
     setTimeout(() => {
-      const { resolve } = this.caches;
-      if (typeof resolve === 'function') {
-        resolve.call(this, this.value);
-      }
+      this.caches.forEach(({ resolve }) => {
+        if (typeof resolve === 'function') {
+          const xxx = resolve.call(this, this.value);
+          this.value = xxx;
+        }
+      });
     }, 0);
   }
 
   reject (reason) {
     this.value = reason;
+    this.state = 'rejected';
     setTimeout(() => {
-      const { reject } = this.caches;
-      if (typeof reject === 'function') {
-        reject.call(this, this.value);
-      }
+      this.caches.forEach(({ reject }) => {
+        if (typeof reject === 'function') {
+          const xxx = reject.call(this, this.value);
+          this.value = xxx;
+        }
+      });
     }, 0);
   }
 
   then (resolve, reject) {
-    this.caches = { resolve, reject };
+    this.caches.push({ resolve, reject });
+    return this;
   }
 }
 
+// 支持链式调用
 new MyPromise((resolve, reject) => {
   setTimeout(() => {
     resolve(100);
   }, 1000);
-}).then(result => console.log(result), reason => console.log(reason));
+})
+  .then(result => console.log(result), reason => console.log(reason))
+  .then((result) => {
+    console.log('result', result);
+  });
