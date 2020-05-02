@@ -81,18 +81,69 @@ class MyPromise {
       resolve(result);
     });
   }
+
+  static all (array) {
+    return new MyPromise((resolve, reject) => {
+      const results = [];
+      let index = 0;
+      array.map((item) => {
+        if (item instanceof MyPromise) {
+          console.log('item', item);
+          item.then(
+            (result) => {
+              results[index] = result;
+              index++;
+              if (array.length === index) {
+                // Promise的状态一旦确定就不会改变,继续循环也不会在执行下边的代码
+                resolve(results);
+              }
+            },
+            reason => {
+              // Promise的状态一旦确定就不会改变,继续循环也不会在执行下边的代码
+              reject(reason);
+            }
+          );
+        } else {
+          results[index] = item;
+          index++;
+        }
+      });
+      if (results.length === array.length) {
+        resolve(results);
+      }
+    });
+  }
 }
 
 // 支持链式调用
-new MyPromise((resolve, reject) => {
+// new MyPromise((resolve, reject) => {
+//   setTimeout(() => {
+//     resolve(100);
+//   }, 1000);
+// })
+//   .then(result => MyPromise.reject(result * 2), reason => console.log(reason))
+//   .then(null, null)
+//   .then((result) => {
+//     console.log('result', result);
+//   }, (reason) => {
+//     console.log('reason', reason);
+//   });
+
+const p = new MyPromise((resolve, reject) => {
   setTimeout(() => {
-    resolve(100);
+    resolve('all', 1000);
   }, 1000);
-})
-  .then(result => MyPromise.reject(result * 2), reason => console.log(reason))
-  .then(null, null)
-  .then((result) => {
-    console.log('result', result);
-  }, (reason) => {
-    console.log('reason', reason);
-  });
+});
+const arr = [1, MyPromise.reject(2), MyPromise.resolve(1), p];
+
+MyPromise.all(arr).then(
+  (results) => {
+    console.log('results', results);
+  },
+  (reject) => {
+    console.log('reject', reject);
+  }
+);
+// Promise.all(arr).then((results) => {
+//   console.log(results);
+// }); // [1,2,'all']
