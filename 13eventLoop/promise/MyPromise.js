@@ -40,7 +40,7 @@ class MyPromise {
       resolveFn = result => result;
     }
     if (typeof rejectFn !== 'function') {
-      rejectFn = reason => reason;
+      rejectFn = reason => MyPromise.reject(reason);
     }
     return new MyPromise((resolve, reject) => {
       // 新的Promise的状态根据前一个Promise
@@ -69,15 +69,27 @@ class MyPromise {
       this.caches.push(cache);
     });
   }
+
+  static reject (reason) {
+    return new MyPromise((resolve, reject) => {
+      reject(reason);
+    });
+  }
+
+  static resolve (result) {
+    return new MyPromise((resolve) => {
+      resolve(result);
+    });
+  }
 }
 
 // 支持链式调用
 new MyPromise((resolve, reject) => {
   setTimeout(() => {
-    reject(100);
+    resolve(100);
   }, 1000);
 })
-  .then(result => result * 2, reason => console.log(reason))
+  .then(result => MyPromise.reject(result * 2), reason => console.log(reason))
   .then(null, null)
   .then((result) => {
     console.log('result', result);
