@@ -104,3 +104,21 @@
 
 完美!这个语法看起来已经比之前的嵌套回调好多了。
 
+### 宏任务和微任务(macrotask and microtask)
+我们知道了一些如何和创建`promise`以及如何提取出`promise`的值的方法。让我们为脚本添加一些更多的代码并且再次运行它：
+![](https://res.cloudinary.com/practicaldev/image/fetch/s--uNG7sXon--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/ey4ubnv5yjgi6hbh97xq.gif)
+
+等下，发生了什么？！🤯
+
+首先，`Start!`被输出。好的，我们已经看到了那一个即将到来的消息：`console.log('Start!')`在最前一行输出！然而，第二个被打印的值是`End!`，并不是`promise`被解决的值！只有在`End!`被打印之后，`promise`的值才会被打印。这里发生了什么？
+
+我们最终看到了`promise`真正的力量！🚀 尽管`JavaScript`是单线程的，我们可以使用`Promise`添加异步任务！
+
+等等，我们之前没见过这种情况吗？🤔在[`JavaScript event loop`](https://dev.to/lydiahallie/javascript-visualized-event-loop-3dif)中，我们不是也可以使用浏览器原生的方法如`setTimeout`创建某类异步行为吗？
+
+是的！然而，在事件循环内部，实际上有2中类型的队列：**宏任务(macro)队列**(或者只是叫做**任务队列**)和**微任务队列**。(宏)任务队列用于**宏任务**，微任务队列用于**微任务**。
+
+那么什么是宏任务，什么是微任务呢？尽管他们比我在这里介绍的要多一些，但是最常用的已经被展示在下面的表格中！
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200503233943.png)
+
+我们看到`Promise`在微任务列表中！😃
