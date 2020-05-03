@@ -58,3 +58,49 @@
 
 > 有趣的事实，我让[`Jake Archibald`](https://twitter.com/jaffathecake)校对这篇文章，它指出当前的状态显示为`resolved`而不是`fulfuilled`实际上是`Chrome`中的[一个`bug`](https://twitter.com/jaffathecake/status/1248179232775319559)。感谢[`Mathias Bynens`](https://twitter.com/mathias)，这个问题现在已经在`Canary`中修复了。
 
+好了，现在我们知道如何更好控制那个模糊的`Promise`对象。但是他被用来做什么呢？
+
+在介绍章节，我展示了一个获得图片、压缩图片、为图片应用过滤器并保存它的例子！最终，这变成了一个混乱的嵌套回调。
+
+幸运的，`Promise`可以帮助我们解决这个问题！首先，让我们重写整个代码块，以便每个函数返回一个`Promise`代替之前的函数。
+
+如果图片被加载完成并且一切正常，让我们用加载完的图片**解决(`resolve`)**`promise`!否则，如果在加载文件时某个地方有一个错误，我们将会用发生的错误**拒绝(`reject`)**`promise`。
+![](https://res.cloudinary.com/practicaldev/image/fetch/s--r9xngcNz--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/iebp0rzfnfqsrmmjplme.png)
+
+让我们看下当我们在终端运行这段代码时会发生什么？
+![](https://res.cloudinary.com/practicaldev/image/fetch/s--uERkfSWf--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/wsu5nn26dp4elcwh764m.gif)
+
+非常酷！就像我们所期望的一样，`promise`得到了解析数据的值。
+
+但是现在呢？我们不关心整个`promise`对象，我们只关心数据的值！幸运的，有内置的方法来得到`promise`的值。
+
+对于一个`promise`, 我们可以使用它上面的3个方法：
+
+* `.then()`: 在一个`promise`被`resolved`后调用
+* `.catch()`: 在一个`promise`被`rejected`后被调用
+* `.finally()`: 不论`promise`是被`resolved`还是`reject`总是调用
+![](https://res.cloudinary.com/practicaldev/image/fetch/s--19tIvFJQ--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/mu1aqqnyfjsfon5hwrtw.png)
+
+`.then`方法接收传递个`resolve`方法的值。
+![](https://res.cloudinary.com/practicaldev/image/fetch/s--DZld0c-0--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/11vxhn9cun7stpjbdi80.gif)
+
+`.catch`方法接收传递给`rejected`方法的值
+![](https://res.cloudinary.com/practicaldev/image/fetch/s--e9SZHcPk--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/v5y24jz4u89flazvdyn4.gif)
+
+最终，我们拥有了`promise`被解决后(`resolved`)的值，并不需要整个`promise`对象！现在我们可以用这个值做任何我们想做的事。
+
+顺便提醒一下，当你知道一个`promise`总是`resolve`或者总是`reject`的时候，你可以写`Promise.resolve`或`Promise.reject`，传入你想要`reject`或`resolve`的`promise`的值。
+![](https://res.cloudinary.com/practicaldev/image/fetch/s--61Gva3Ze--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/90hxwjfadzslvdbkr4l8.png)
+
+在下边的例子中你将会经常看到这个语法😄
+
+在`getImage`的例子中，为了运行它们，我们最终不得不嵌套多个回调。幸运的，`.then`处理器可以帮助我们完成这件事！🥳
+
+`.then`它自己的执行结果是一个`promise`。这意味着我们可以链接任意数量的`.then`：前一个`then`回调的结果将会作为参数传递给下一个`then`回调！
+![](https://res.cloudinary.com/practicaldev/image/fetch/s--X8h-NDc2--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/i6busbetmoya9vny2eku.png)
+
+在`getImage`示例中，为了传递被处理的图片到下一个函数，我们可以链接多个`then`回调。相比于之前最终得到许多嵌套回调，现在我们得到了整洁的`then`链。
+![](https://res.cloudinary.com/practicaldev/image/fetch/s--e1nVrqe1--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/u9l3lxwxlxgv2edv79xh.png)
+
+完美!这个语法看起来已经比之前的嵌套回调好多了。
+
