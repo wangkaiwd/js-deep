@@ -138,17 +138,17 @@
 
 首先，`Task1`返回一个值并且从调用栈中弹出。然后，`JavaScript`引擎检查微任务队列中排队的任务。一旦微任务中所有的任务被放入调用栈并且最终被弹出，`JavaScript`引擎会检查宏任务队列中的任务，将他们弹入调用栈中并且在它们返回值的时候把它们弹出调用栈。
 
-图中足够粉色的盒子是不同的任务，让我们用一些真实的代码来执行它！
+图中足够粉色的盒子是不同的任务，让我们用一些真实的代码来使用它！
 ![](https://res.cloudinary.com/practicaldev/image/fetch/s--fnbqqf1d--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/g61wwyi8wchk2hpzeq4u.png)
 
 在这段代码中，我们有宏任务`setTimeout`和微任务`promise`的`then`回调。一旦`JavaScript`引擎到达`setTimeout`函数所在的那行就会涉及到事件循环。让我们一步一步地运行这段代码，看看会得到什么样的日志！
 
-> 快速提一下：在下边的例子中，我正在展示的像`console.log`,`setTimeout`和`Promise.resolve`等方法正在被添加到调用栈中。它们内部的方法实际上没有出现在堆栈痕迹中，因此如果你正在使用调试器，不用担心，你不会在任何地方见到它们。它只是在没有添加一堆样本文件代码的情况下使这个概念解释起来更加简单。
+> 快速提一下：在下边的例子中，我正在展示的像`console.log`,`setTimeout`和`Promise.resolve`等方法正在被添加到调用栈中。它们是内部的方法实际上没有出现在堆栈痕迹中，因此如果你正在使用调试器，不用担心，你不会在任何地方见到它们。它只是在没有添加一堆样本文件代码的情况下使这个概念解释起来更加简单。
 
-在第一行，`JavaScript`引擎遇到了`console.log()`方法，它被添加到调用栈。在它在控制台输出值`Start!`后，`console.log`函数被从调用栈内弹出，之后`JavaScript`引擎继续执行代码。
+在第一行，`JavaScript`引擎遇到了`console.log()`方法，它被添加到调用栈，之后它在控制台输出值`Start!`。`console.log`函数从调用栈内弹出，之后`JavaScript`引擎继续执行代码。
 ![](https://res.cloudinary.com/practicaldev/image/fetch/s---Bt6DKsn--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/6cbjuexvy6z9ltk0bi18.gif)
 
-`JavaScript`引擎遇到了`setTimeout`方法，他被弹入调用栈中。`setTimeout`是浏览器的原生方法：它的回到函数(`() => console.log('In timeout')`)将会被添加到`Web API`，知道计时器完成计时。尽管我们为计时器提供的值是0，在它被添加到**宏任务**队列(`setTimeout`是一个宏任务)之后回调还是会被首先推入`Web API`。
+`JavaScript`引擎遇到了`setTimeout`方法，他被弹入调用栈中。`setTimeout`是浏览器的原生方法：它的回调函数(`() => console.log('In timeout')`)将会被添加到`Web API`，直到计时器完成计时。尽管我们为计时器提供的值是0，在它被添加到**宏任务**队列(`setTimeout`是一个宏任务)之后回调还是会被首先推入`Web API`。
 ![](https://res.cloudinary.com/practicaldev/image/fetch/s--6NSYq-nO--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/yqoemb6f32lvovge8yrp.gif)
 
 `JavaScript`引擎遇到了`Promise.resolve`方法。`Promise.resolve`被添加到调用栈。在`Promise`解决(`resolve`)值之后，它的`then`中的回调函数被添加到**微任务队列**。
