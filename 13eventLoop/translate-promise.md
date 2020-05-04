@@ -168,3 +168,39 @@
 终于，所有的事情完成了!🥳看起来我们之前看到的输出最终并不是那么出乎意料。
 
 ### `Async/Await`
+`ES7`引入了一个新的在`JavaScript`中添加异步行为的方式并且使`promise`用起来更加简单！随着`asnync`和`await`关键字的引入，我们能够创建一个隐式的返回一个`promise`的`async`函数。但是，我们该怎么做呢？ 😮
+
+之前，我们看到不管是通过输入`new Promise(() => {})`,`Promise.resolve`或`Promise.reject`，我们都可以显示的使用`Promise`对象创建`promise`。
+
+我们现在创建隐式地返回一个对象的异步函数，而不是显示地使用`Promise`对象！这意味着我们不再需要写任何`Promise`对象了。
+![](https://res.cloudinary.com/practicaldev/image/fetch/s--5ED_HyNC--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/72lqrcvy9lc8ehbpitd0.png)
+
+尽管`async`函数隐式的返回`promise`是一个非常棒的事实，但是在使用`await`关键字的时候才能看到`async`函数的真正力量。使用`await`关键字，当我们等待`await`后的值返回一个`resolved`的`promise`时我们可以暂停异步函数。如果我们想要得到这个`resolved`的`promise`的值，就像我们之前用`then`回调那样，我们可以为被`await`的`promise`的值赋值为变量！
+
+这样，我们就可以暂停一个异步函数吗？很好，但这到底是什么意思？
+
+当我们运行下面的代码块时让我们看下发生了什么：
+![](https://res.cloudinary.com/practicaldev/image/fetch/s--aOWmZxnV--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/e5duygomitj9o455107a.gif)
+
+额，这里发生了什么呢？
+![](https://res.cloudinary.com/practicaldev/image/fetch/s--bfscMU3t--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/d27d7xxiekczftjyic4b.gif)
+
+首先，`JavaScript`引擎遇到了`console.log`。它被弹入到调用栈中，这之后`Before function!`被输出。
+![](https://res.cloudinary.com/practicaldev/image/fetch/s--wN7yFTnt--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/9wqej2269vmntfcuxs9t.gif)
+
+然后，我们调用了异步函数`myFunc()`，这之后`myFunc`函数体运行。函数主体内的最开始一行，我们调用了另一个`console.log`，这次传入的是字符串`In function!`。`console.log``被添加到调用栈中，输出值，然后从栈内弹出。
+![](https://res.cloudinary.com/practicaldev/image/fetch/s--lX9JfreE--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/lch6lutxnl88j0durpyh.gif)
+
+函数体继续执行，将我们带到第二行。最终，我们看到一个`await`关键字！🎉
+
+最先发生的事实被等待的值执行：在这个例子中是函数`one`。它被弹入调用栈，并且最终返回一个解决状态的`promise`。一旦`Promise`被解决并且`one`返回一个值，`JavaScript`遇到了`await`关键字。
+
+当遇到`await`关键字的时候，异步函数被暂停。函数体的执行被暂停，`async`函数中剩余的代码会在微任务中运行而不是一个常规任务！
+![](https://res.cloudinary.com/practicaldev/image/fetch/s--UC78HoCO--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/b6l3psgewvtrtmrr60tg.gif)
+
+现在，因为遇到了`await`关键字，异步函数`myFunc`被暂停，`JavaScript`引擎跳出异步函数，并且在异步函数被调用的执行上下文中继续执行代码：在这个例子中是**全局执行上下文**！🏃🏽‍♀️
+![](https://res.cloudinary.com/practicaldev/image/fetch/s--V8u36kEG--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/hlhrtuspjyrstifubdhs.gif)
+
+最终，没有更多的任务在全局执行上下文中运行！事件循环检查看看是否有任何的微任务在排队：是的，有！在解决了`one`的值以后，异步函数`myFunc`开始排队。`myFunc`被弹入调用栈中，在它之前中断的地方继续运行。
+
+变量`res`最终获得了它的值，也就是`one`返回的`promise`被解决的值！我们用`res`的值(在这个例子中是字符串`One!`)调用`console.log`。`One!`被打印到控制台并且`console.log`从调用栈弹出。
