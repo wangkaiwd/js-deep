@@ -1,4 +1,7 @@
-## `JavaScript`可视化：`Promise`和`Asnyc/Await`
+## [译]`JavaScript`可视化：`Promise`和`Async/Await`
+> * 原文地址：[JavaScript Visualized: Event Loop](https://dev.to/lydiahallie/javascript-visualized-event-loop-3dif)
+> * 原文作者：[Lydia Hallie](https://dev.to/lydiahallie)
+
 曾经不得不处理没有按照你期望的方式运行的`JS`代码吗？可能是函数被随机的、不可预测时间的执行，或者被延迟执行。你可能正在处理`ES6`引入的一个非常酷的新特性:`Promise`!
 
 我多年之前的好奇心已经得到了回报，在不眠的夜晚再次给了我时间来制作一些动画。是时候来谈论`Promise`了：为什么你要使用它们，它们在底层是如何工作的，以及我们如何能用最现代的方式来书写它们？
