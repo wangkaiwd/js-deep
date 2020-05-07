@@ -2,8 +2,7 @@
 //  观察者和被观察者之间是有关系的
 
 class Subject { // 被观察者
-  name = '';
-  caches = [];
+  caches = [ ];
   state = 'pending';
 
   constructor (name) {
@@ -25,8 +24,6 @@ class Subject { // 被观察者
 }
 
 class Observe { // 观察者
-  name = '';
-
   constructor (name) {
     this.name = name;
   }
