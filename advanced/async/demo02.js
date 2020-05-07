@@ -4,8 +4,8 @@ function after (times, fn) {
   const result = {};
   return (key, value) => {
     result[key] = value;
-    times--;
-    if (times === 0) {
+    // -- 在前，先自减，再参与运算
+    if (--times === 0) {
       fn(result);
     }
   };
