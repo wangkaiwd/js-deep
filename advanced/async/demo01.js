@@ -1,19 +1,19 @@
 // 对某些函数进行扩展，面向切片编程
 // 使用场景?
-const say = function () {
-  console.log('say');
+const say = function (who) {
+  console.log('say', who);
 };
 say.before = function (callback) {
-  return () => {
+  return (...args) => {
     callback();
-    this();
+    this(...args);
   };
 };
 // 原型上扩展
 Function.prototype.before = function (callback) {
-  return () => {
+  return (...args) => {
     callback();
-    this();
+    this(...args);
   };
 };
 // 扩展say方法，让它在执行之前先做一些事情
@@ -22,4 +22,4 @@ Function.prototype.before = function (callback) {
 const newSay = say.before(function () {
   console.log('before say');
 });
-newSay();
+newSay('me');
