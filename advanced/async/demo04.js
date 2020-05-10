@@ -6,11 +6,12 @@ const REJECTED = 'rejected';
 class Promise {
   constructor (executor) {
     this.status = PENDING;
+    this.value = undefined;
     const resolve = (result) => {
-
+      this.value = result;
     };
     const reject = (reason) => {
-
+      this.value = reason;
     };
     executor(resolve, reject);
   }
