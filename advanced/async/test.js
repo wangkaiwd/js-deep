@@ -1,7 +1,6 @@
 const Promise = require('./demo04');
 console.log(1);
 const p1 = new Promise((resolve, reject) => {
-  console.log(2);
   // setTimeout(() => {
   // reject('hh');
   // 这里的报错捕获不到
@@ -13,10 +12,13 @@ const p1 = new Promise((resolve, reject) => {
 p1.then(
   (result) => {
     console.log('result', result);
+    return result + 'hh';
   },
   (err) => {
     console.log('err', err);
   }
-);
-console.log(4);
+).then((result) => {
+  console.log('result', result);
+});
 
+console.log(2);
