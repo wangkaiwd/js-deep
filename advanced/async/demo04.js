@@ -23,8 +23,10 @@ class Promise {
     if (this.status !== PENDING) return;
     this.value = result;
     this.status = RESOLVED;
-    this.resolveFnList.forEach(resolveFn => {
-      resolveFn(this.value);
+    setTimeout(() => {
+      this.resolveFnList.forEach(resolveFn => {
+        resolveFn.call(undefined, this.value);
+      });
     });
   }
 
@@ -33,20 +35,16 @@ class Promise {
     if (this.status !== PENDING) return;
     this.value = reason;
     this.status = REJECTED;
-    this.rejectFnList.forEach(rejectFn => {
-      rejectFn(this.value);
+    setTimeout(() => {
+      this.rejectFnList.forEach(rejectFn => {
+        rejectFn.call(undefined, this.value);
+      });
     });
   }
 
   then (onFulfilled, onRejected) {
-    if (this.status === RESOLVED) {
-      onFulfilled(this.value);
-    } else if (this.status === REJECTED) {
-      onRejected(this.value);
-    } else {
-      this.rejectFnList.push(onRejected);
-      this.resolveFnList.push(onFulfilled);
-    }
+    this.rejectFnList.push(onRejected);
+    this.resolveFnList.push(onFulfilled);
   }
 }
 
