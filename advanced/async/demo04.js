@@ -43,6 +43,9 @@ class Promise {
   // 2. 当Promise的状态处于PENDING的时候，说明resolve/reject未执行，此时.then方法会先执行，需要将then方法中传入的参数进行缓存，然后通过resolve或者reject进行调用。感觉这里也可以不用处理异步。
   // 总结：Promise中传入的方法要永远保证后执行
   then (onFulfilled, onRejected) {
+    // 2.2.1
+    onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : value => value;
+    onRejected = typeof onFulfilled === 'function' ? onRejected : reason => throw reason;
     const promise2 = new Promise((resolve, reject) => {
       if (this.status === RESOLVED) { // executor中直接执行了resolve
         setTimeout(() => {
@@ -73,4 +76,5 @@ class Promise {
   }
 }
 
+// 1. 优化.then方法
 module.exports = Promise;
