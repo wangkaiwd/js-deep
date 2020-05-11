@@ -9,17 +9,17 @@ const p1 = new Promise((resolve, reject) => {
   resolve('hello');
   // throw new Error('exception!');
 });
-setTimeout(() => {
-  p1.then(
-    (result) => {
-      console.log('result', result);
-      return result + 'hh';
-    },
-    (err) => {
-      console.log('err', err);
-    }
-  );
-}, 1000);
+// setTimeout(() => {
+p1.then(
+  (result) => {
+    console.log('result', result);
+    return result + 'hh';
+  },
+  (err) => {
+    console.log('err', err);
+  }
+);
+// }, 1000);
 
 console.log(2);
 
