@@ -44,6 +44,7 @@ class Promise {
   // 总结：Promise中传入的方法要永远保证后执行
   then (onFulfilled, onRejected) {
     // 2.2.1
+    // 当.then中传入的参数不是函数时，需要忽略参数，返回一个和原来一样的新Promise
     onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : value => value;
     onRejected = typeof onFulfilled === 'function' ? onRejected : reason => throw reason;
     const promise2 = new Promise((resolve, reject) => {
@@ -51,9 +52,11 @@ class Promise {
         setTimeout(() => {
           onFulfilled(this.value);
         }, 0);
-      } else if (this.status === REJECTED) { // executor中直接执行了reject
+      } else if (this.status === REJECTED) {
+        // executor中直接执行了reject,.then中执行的方法要放入微任务队列中
+        // 这里用setTimeout(() => {},0)来模拟微任务
         setTimeout(() => {
-          onSelectStart(this.value);
+          onRejected(this.value);
         }, 0);
       } else {
         // 创建函数，用来做一些事情(根据情况处理返回值)
@@ -73,6 +76,10 @@ class Promise {
       }
     });
     return promise2;
+  }
+
+  resolvePromise (promise, x) {
+
   }
 }
 
