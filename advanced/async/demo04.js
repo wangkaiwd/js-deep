@@ -46,17 +46,25 @@ class Promise {
     // 2.2.1
     // 当.then中传入的参数不是函数时，需要忽略参数，返回一个和原来一样的新Promise
     onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : value => value;
-    onRejected = typeof onFulfilled === 'function' ? onRejected : reason => throw reason;
+    onRejected = typeof onFulfilled === 'function' ? onRejected : reason => {throw reason;};
     const promise2 = new Promise((resolve, reject) => {
       if (this.status === RESOLVED) { // executor中直接执行了resolve
         setTimeout(() => {
-          onFulfilled(this.value);
+          try {
+            const x = onFulfilled(this.value);
+            this.resolvePromise(promise2, x, resolve, reject);
+          } catch (e) {
+            reject(e);
+          }
         }, 0);
       } else if (this.status === REJECTED) {
         // executor中直接执行了reject,.then中执行的方法要放入微任务队列中
         // 这里用setTimeout(() => {},0)来模拟微任务
         setTimeout(() => {
-          onRejected(this.value);
+          try {
+            const x = onRejected(this.value);
+            this.resolvePromise(promise2, x, resolve, reject);
+          } catch (e) {reject(e);}
         }, 0);
       } else {
         // 创建函数，用来做一些事情(根据情况处理返回值)
@@ -64,22 +72,53 @@ class Promise {
         this.resolveFnList.push((result) => {
           try {
             const x = onFulfilled(result);
-            x instanceof Promise ? x.then(resolve, reject) : resolve(x);
-          } catch (e) {reject(e.message);}
+            this.resolvePromise(promise2, x, resolve, reject);
+          } catch (e) {reject(e);}
         });
         this.rejectFnList.push((reason) => {
           try {
             const x = onRejected(reason);
-            x instanceof Promise ? x.then(resolve, reject) : resolve(x);
-          } catch (e) {reject(e.message);}
+            this.resolvePromise(promise2, x, resolve, reject);
+          } catch (e) {reject(e);}
         });
       }
     });
     return promise2;
   }
 
-  resolvePromise (promise, x) {
-
+  // 根据x的状态来判断新返回的promise的状态
+  resolvePromise (promise2, x, resolve, reject) {
+    // 简单的可以直接判断x是否是promise
+    // 此房法为了兼容所有的promise库，库的执行流程是一样的
+    // 尽可能详细，不出错
+    // 1.引用同一个对象,可能会造成死循环
+    if (promise2 === x) {
+      // todo: 这行代码感觉没有生效
+      return reject(new TypeError('Chaining cycle'));
+    }
+    // 2. 判断x的类型
+    if (x !== null && typeof x === 'object' || typeof x === 'function') {
+      // 可能是promise
+      // promise 有 then方法
+      try {
+        // let then be x.then
+        const then = x.then;
+        if (typeof then === 'function') {
+          // 这里不使用x.then,有可能第二次取值会出错，见nativeTest
+          then.call(x, (y) => {
+            resolve(y);
+          }, (r) => {
+            reject(r);
+          });
+        } else { // 对象
+          resolve(x);
+        }
+      } catch (e) {
+        reject(e);
+      }
+    } else { // 不是promise,说明返回了一个普通值
+      resolve(x);
+    }
   }
 }
 
