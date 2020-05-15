@@ -44,7 +44,7 @@ const obj = { x: 100 };
 
 ### 知识点补充
 #### `Number`类型`NaN`
-`NaN`(`not-a-number1`)与其它任何值都不相等，通过函数`isNaN`来检测一个数字是否是`NaN`
+`NaN`(`not-a-number`)与其它任何值都不相等，通过函数`isNaN`来检测一个数字是否是`NaN`
 ```javascript
 typeof NaN // number
 ```
@@ -110,6 +110,7 @@ console.log(obj[a] === obj[b])
   // true
   ```
 </details>
+
 这里由于`a`和`b`都是对象，最终会通过`toString`转换为`[object Object]`，将会表示同一个对象属性。所以对象的值最终是`{[object Object]: 'bbb'}`
 
 ### 总结
