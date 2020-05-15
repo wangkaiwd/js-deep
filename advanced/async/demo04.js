@@ -89,7 +89,7 @@ class Promise {
   // 根据x的状态来判断新返回的promise的状态
   resolvePromise (promise2, x, resolve, reject) {
     // 简单的可以直接判断x是否是promise
-    // 此房法为了兼容所有的promise库，库的执行流程是一样的
+    // 此方法法为了兼容所有的promise库，库的执行流程是一样的
     // 尽可能详细，不出错
     // 1.引用同一个对象,可能会造成死循环
     if (promise2 === x) {

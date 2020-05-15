@@ -54,4 +54,16 @@ promise.then(onFulfilled, onRejected)
 #### 2.2.4. 在执行上下文栈中只包含平台代码之前，`onFulfilled`或`onRejected`一定不能被调用
 #### 2.2.5. `onFulfilled`和`onRejected`一定被作为函数调用(没有`this`值)
 #### 2.2.6. 同一个`promise`上的`then`可能被调用多次
-* 2.2.6.1. 
+* 2.2.6.1. 如果`promise`被**解决**，所有相应的`onFulfilled`回调必须按照他们原始调用`then`的顺序执行
+* 2.2.6.2. 如果`promise`被**拒绝**，所有相应的`onRejected`回调必须按照他们原始调用`then`的顺序执行
+
+#### 2.2.7. `then`必须返回一个`promise`
+```javascript
+promise2 = promise1.then(onFulfilled,onRejected)
+```
+* 2.2.7.1. 如果`onFulfilled`或`onRjected`返回一个值`x`，运行`promise`解决程序`[[Resolve]](promise2,x)`
+* 2.2.7.2. 如果`onFulfilled`或`onRejected`抛出一个异常`e`，`promise2`必须用`e`作为原因被**拒绝**
+* 2.2.7.3. 如果`onFulfilled`不是一个函数并且`promise1`被**解决**，`promise2`必须用与`promise1`相同的值被**解决**
+* 2.2.7.4. 如果`onRejected`不是一个函数并且`promise1`被**拒绝**，`promise2`必须用与`promise1`相同的原因被拒绝
+
+#### 2.3. `Promise`解决程序
