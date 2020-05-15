@@ -67,3 +67,31 @@ promise2 = promise1.then(onFulfilled,onRejected)
 * 2.2.7.4. 如果`onRejected`不是一个函数并且`promise1`被**拒绝**，`promise2`必须用与`promise1`相同的原因被拒绝
 
 #### 2.3. `Promise`解决程序
+`promise`解决程序是一个抽象操作，它以一个`promise`和一个值作为输入，我们将其表示为`[[Resolve]](promise, x)`。如果`x`是一个`thenable`，它尝试让`promise`采用`x`的状态，并假设`x`的行为至少在某种程度上类似于`promise`。否则，它将会用值`x`**解决** `promise`。
+
+This treatment of thenables allows promise implementations to interoperate, as long as they expose a Promises/A+-compliant then method. It also allows Promises/A+ implementations to “assimilate” nonconformant implementations with reasonable then methods.
+
+要运行`[[Resolve]](promise, x)`，执行如下步骤：
+
+* 2.3.1. 如果`promise`和`x`引用同一个对象，用一个`TypeError`作为原因来拒绝`promise`
+* 2.3.2. 如果`x`是一个`promise`，采用它的状态： 
+    * 2.3.2.1. 如果`x`是等待态，`promise`必须保持等待状态，知道`x`被**解决**或**拒绝**
+    * 2.3.2.2. 如果`x`是**解决**态，用相同的值解决`promise`
+    * 2.3.2.3. 如果`x`是**拒绝**态，用相同的原因拒绝`promise`
+* 2.3.3. 否则，如果`x`是一个对象或函数
+    * 2.3.3.1. 让`then`成为`x.then`
+    * 2.3.3.2. 如果检索属性`x.then`导致抛出了一个异常`e`，用`e`作为原因拒绝`promise`
+    * 2.3.3.3. 如果`then`是一个函数，用`x`作为`this`调用它，第一个参数是`resolvePromise`，第二个参数是`rejectPromise`：
+        * 2.3.3.3.1. 如果`resolvePromise`用一个值`y`调用，运行`[[Resolve]](promise, y)`
+        * 2.3.3.3.2. 如果`resolvePromise`用一个原因`r`调用，用`r`拒绝`promise`。
+        * 2.3.3.3.3. 如果`resolvePromise`和`rejectPromise`同时被调用，或者对同一个参数进行多次调用，那么第一次调用优先，以后的调用都会被忽略。
+        * 2.3.3.3.4. 如果调用`then`抛出了一个异常`e`,
+            * 2.3.3.4.1. 如果`resolvePromise`或`rejectPromise`已经被调用，忽略它
+            * 2.3.3.4.2. 否则，用`e`作为原因拒绝`promise`
+    * 2.3.3.4. 如果`then`不是一个函数，用`x`**解决**`promise`
+* 2.3.4. 如果`x`不是一个对象或函数，用`x`解决`promise`
+
+If a promise is resolved with a thenable that participates in a circular thenable chain, such that the recursive nature of [[Resolve]](promise, thenable) eventually causes [[Resolve]](promise, thenable) to be called again, following the above algorithm will lead to infinite recursion. Implementations are encouraged, but not required, to detect such recursion and reject promise with an informative TypeError as the reason. [3.6]
+
+### 3. 注释
+* 3.1.
