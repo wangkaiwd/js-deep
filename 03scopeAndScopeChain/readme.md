@@ -161,3 +161,25 @@ A(2);
   
   ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200323235409.png)
 </details>
+
+```javascript
+var x = 3, obj = { x: 5 };
+obj.fn = (function () {
+  this.x *= ++x;
+  return function (y) {
+    this.x *= (++x) + y;
+    console.log(x);
+  };
+})();
+
+var fn = obj.fn;
+obj.fn(6);
+// obj.fn对应的函数的地址是在自执行函数中创建的，所以作用域及作用域链都要从其定义的位置开始查找
+fn(4);
+console.log(obj.x, x);
+```
+<details>
+  <summary>diagram</summary>
+  
+  ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200316224129.png)
+</details>
