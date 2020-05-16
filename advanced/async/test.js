@@ -7,13 +7,21 @@ const promise = new Promise((resolve, reject) => {
 const promise2 = promise.then(() => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      resolve(100);
+      // 可能resolve的结果还是一个promise
+      resolve(new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(100 );
+        });
+      }));
+      // resolve(100);
     }, 1000);
   });
 });
 
 promise2.then((result) => {
   console.log('result', result);
+}, reason => {
+  console.log('reason', reason);
 });
 
 
