@@ -49,7 +49,7 @@ class Promise {
     // 类似于 promise.then(result => result, reason => {throw reason})
     onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : value => value;
     // 如果onFulfilled没有传的话，继续抛出一个错误
-    onRejected = typeof onFulfilled === 'function' ? onRejected : reason => {throw reason;};
+    onRejected = typeof onRejected === 'function' ? onRejected : reason => {throw reason;};
     const promise2 = new Promise((resolve, reject) => {
       if (this.status === RESOLVED) { // executor中直接执行了resolve
         setTimeout(() => {
@@ -73,16 +73,20 @@ class Promise {
         // 创建函数，用来做一些事情(根据情况处理返回值)
         // PENDING状态，说明Promise还没有执行resolve或reject
         this.resolveFnList.push((result) => {
-          try {
-            const x = onFulfilled(result);
-            this.resolvePromise(promise2, x, resolve, reject);
-          } catch (e) {reject(e);}
+          setTimeout(() => {
+            try {
+              const x = onFulfilled(result);
+              this.resolvePromise(promise2, x, resolve, reject);
+            } catch (e) {reject(e);}
+          });
         });
         this.rejectFnList.push((reason) => {
-          try {
-            const x = onRejected(reason);
-            this.resolvePromise(promise2, x, resolve, reject);
-          } catch (e) {reject(e);}
+          setTimeout(() => {
+            try {
+              const x = onRejected(reason);
+              this.resolvePromise(promise2, x, resolve, reject);
+            } catch (e) {reject(e);}
+          });
         });
       }
     });
@@ -103,6 +107,7 @@ class Promise {
     if (x !== null && typeof x === 'object' || typeof x === 'function') {
       // 可能是promise
       // promise 有 then方法
+      let called = false;
       try {
         // let then be x.then
         const then = x.then;
@@ -112,15 +117,23 @@ class Promise {
             // 这里y有可能还是一个promise
             // resolve(y);
             // 继续对resolve中的promise进行promise.then,直到resolve中传入的是一个普通值
+            if (called) return;
+            called = true;
             this.resolvePromise(promise2, y, resolve, reject);
           }, (r) => {
             // 如果在失败
+            if (called) return;
+            called = true;
             reject(r);
           });
         } else { // 对象
+          if (called) return;
+          called = true;
           resolve(x);
         }
       } catch (e) {
+        if (called) return;
+        called = true;
         reject(e);
       }
     } else { // 不是promise,说明返回了一个普通值
@@ -129,5 +142,17 @@ class Promise {
   }
 }
 
-// 1. 优化.then方法
-module.exports = Promise;
+// 为了测试
+const deferred = function () {
+  let resolve, reject;
+  return {
+    promise: new Promise((res, rej) => {
+      resolve = res;
+      reject = rej;
+    }),
+    resolve,
+    reject
+  };
+};
+module.exports = { deferred };
+// module.exports = Promise;

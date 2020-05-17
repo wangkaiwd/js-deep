@@ -1,28 +1,12 @@
 const Promise = require('./demo04');
-const promise = new Promise((resolve, reject) => {
-  resolve('hello');
+const p1 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve('hello');
+  }, 1000);
 });
 
-// 引用同一个对象：2.3.1
-const promise2 = promise.then(() => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      // 可能resolve的结果还是一个promise，如果不做处理的话，resolve的还是promise
-      resolve(new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve(100);
-        }, 1000);
-      }));
-      // resolve(100);
-    }, 1000);
-  });
-});
-
-promise2.then((result) => {
+p1.then((result) => {
   console.log('result', result);
-}, reason => {
-  console.log('reason', reason);
 });
-
 
 
