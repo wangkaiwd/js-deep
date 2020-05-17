@@ -7,11 +7,11 @@ const promise = new Promise((resolve, reject) => {
 const promise2 = promise.then(() => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      // 可能resolve的结果还是一个promise
+      // 可能resolve的结果还是一个promise，如果不做处理的话，resolve的还是promise
       resolve(new Promise((resolve, reject) => {
         setTimeout(() => {
-          resolve(100 );
-        });
+          resolve(100);
+        }, 1000);
       }));
       // resolve(100);
     }, 1000);

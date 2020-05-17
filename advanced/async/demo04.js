@@ -45,7 +45,10 @@ class Promise {
   then (onFulfilled, onRejected) {
     // 2.2.1
     // 当.then中传入的参数不是函数时，需要忽略参数，返回一个和原来一样的新Promise
+    // why: throw reason can't as a return value
+    // 类似于 promise.then(result => result, reason => {throw reason})
     onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : value => value;
+    // 如果onFulfilled没有传的话，继续抛出一个错误
     onRejected = typeof onFulfilled === 'function' ? onRejected : reason => {throw reason;};
     const promise2 = new Promise((resolve, reject) => {
       if (this.status === RESOLVED) { // executor中直接执行了resolve
@@ -106,8 +109,12 @@ class Promise {
         if (typeof then === 'function') {
           // 这里不使用x.then,有可能第二次取值会出错，见nativeTest
           then.call(x, (y) => {
-            resolve(y);
+            // 这里y有可能还是一个promise
+            // resolve(y);
+            // 继续对resolve中的promise进行promise.then,直到resolve中传入的是一个普通值
+            this.resolvePromise(promise2, y, resolve, reject);
           }, (r) => {
+            // 如果在失败
             reject(r);
           });
         } else { // 对象
