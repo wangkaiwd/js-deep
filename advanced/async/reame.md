@@ -43,3 +43,15 @@
 * 尝试翻译`Promise/A+`
 * 基本功能
 * 链式`.then`调用
+
+### `promise`周边
+* `deffer`: 减少嵌套，进行延迟调用
+* 实现`Promise`的`catch`方法
+* 实现`node`中的`promisify`，支持将回调函数转换为`promise`
+* `promise.all`方法实现
+* 自己手动实现`promise.race`方法
+* 自己手动实现`promise.finally`方法
+* 递归解析`resovle`, 这里涉及到一个问题:`Promise.resolve`和`Promise.reject`的区别
+
+
+
