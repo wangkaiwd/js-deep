@@ -53,5 +53,9 @@
 * 自己手动实现`promise.finally`方法
 * 递归解析`resovle`, 这里涉及到一个问题:`Promise.resolve`和`Promise.reject`的区别
 
+### generator
+* `generator + Promise`处理异步
+* `generator`自动执行和传参(基础用法)
+* `co`处理`generator`函数
 
 
