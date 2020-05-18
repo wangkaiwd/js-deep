@@ -165,8 +165,10 @@ class Promise {
 
   }
 
-  static finally () {
+  static finally (fn) {
+    return new Promise((resolve,reject) => {
 
+    });
   }
 }
 
