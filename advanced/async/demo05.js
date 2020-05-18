@@ -24,6 +24,12 @@ class Promise {
     this.value = result;
     this.status = RESOLVED;
     this.resolveFnList.forEach(resolveFn => {
+      // 如果result还是一个Promise的话，需要再次进行处理对Promise进行处理
+      // if (result !== null && typeof result === 'object' || typeof result === 'function') {
+      //   return result.then((value) => { // 'hello'
+      //     this.resolve.call(result, value);
+      //   }, (reason) => this.reject.call(result, reason));
+      // }
       resolveFn.call(undefined, this.value);
     });
   }
@@ -160,24 +166,36 @@ class Promise {
     });
   }
 
-  static resolve (value) {
-    return new Promise((resolve) => {
-      resolve(value);
+  race () {
+
+  }
+
+  static all (promises) {
+    return new Promise((resolve, reject) => {
+      for (let i = 0; i < promises.length; i++) {
+        const item = promises[i];
+        // 传入的内容可能不是Promise
+      }
     });
+  }
+
+  static resolve (value) {
+    // return new Promise((resolve, reject) => {
+    //   if (value !== null && typeof value === 'object' || typeof value === 'function') {
+    //     return value.then((result) => {
+    //       resolve(result);
+    //     }, (reason) => {
+    //       reject(reason);
+    //     });
+    //   }
+    //   resolve(value);
+    // });
   }
 
   static reject (reason) {
     return new Promise((resolve, reject) => {
       reject(reason);
     });
-  }
-
-  static all () {
-
-  }
-
-  static race () {
-
   }
 }
 
