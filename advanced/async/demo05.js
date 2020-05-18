@@ -178,16 +178,9 @@ class Promise {
   }
 
   static resolve (value) {
-    // return new Promise((resolve, reject) => {
-    //   if (value !== null && typeof value === 'object' || typeof value === 'function') {
-    //     return value.then((result) => {
-    //       resolve(result);
-    //     }, (reason) => {
-    //       reject(reason);
-    //     });
-    //   }
-    //   resolve(value);
-    // });
+    return new Promise((resolve) => {
+      resolve(value);
+    });
   }
 
   static reject (reason) {

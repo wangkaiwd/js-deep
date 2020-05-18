@@ -34,23 +34,24 @@ const Promise = require('./demo05');
 //   );
 
 // Promise resolve another Promise
-const p1 = new Promise((resolve, reject) => {
-  setTimeout(() => {
-    // resolve another promise
-    resolve(new Promise((resolve, reject) => {
-      resolve('hello');
-    }));
-  }, 1000);
-});
-p1.then((result) => {
-  console.log('result', result);
-});
-
-// Promise.resolve another Promise
-// Promise.resolve(new Promise((resolve, reject) => {
+// const p1 = new Promise((resolve, reject) => {
 //   setTimeout(() => {
-//     resolve(3);
+//     // resolve another promise
+//     resolve(new Promise((resolve, reject) => {
+//       resolve('hello');
+//     }));
 //   }, 1000);
-// })).then((result) => {
+// });
+// p1.then((result) => {
 //   console.log('result', result);
 // });
+
+// Promise.resolve another Promise, if use Promise.reject, will not wait 1000ms
+// 如果使用Promise.reject将不会等待1s后执行，而是直接将Promise进行reject
+Promise.resolve(new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve(3);
+  }, 1000);
+})).then((result) => {
+  console.log('result', result);
+});
