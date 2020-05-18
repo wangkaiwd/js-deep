@@ -1,4 +1,4 @@
-// const Promise = require('./demo05');
+const Promise = require('./demo05');
 
 // Promise.then
 // const p1 = new Promise((resolve, reject) => {
@@ -34,23 +34,23 @@
 //   );
 
 // Promise resolve another Promise
-// const p1 = new Promise((resolve, reject) => {
-//   setTimeout(() => {
-//     // resolve another promise
-//     resolve(new Promise((resolve, reject) => {
-//       resolve('hello');
-//     }));
-//   }, 1000);
-// });
-// p1.then((result) => {
-//   console.log('result', result);
-// });
-
-// Promise.resolve another Promise
-Promise.resolve(new Promise((resolve, reject) => {
+const p1 = new Promise((resolve, reject) => {
   setTimeout(() => {
-    resolve(3);
+    // resolve another promise
+    resolve(new Promise((resolve, reject) => {
+      resolve('hello');
+    }));
   }, 1000);
-})).then((result) => {
+});
+p1.then((result) => {
   console.log('result', result);
 });
+
+// Promise.resolve another Promise
+// Promise.resolve(new Promise((resolve, reject) => {
+//   setTimeout(() => {
+//     resolve(3);
+//   }, 1000);
+// })).then((result) => {
+//   console.log('result', result);
+// });

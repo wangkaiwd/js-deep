@@ -20,16 +20,14 @@ class Promise {
   }
 
   resolve (result) {
+    if (result instanceof Promise) {
+      // 传入.then中的函数，最后会在class中直接调用，所以this指向为undefined(class中为严格模式)
+      return result.then(this.resolve.bind(this), this.reject.bind(this)); // 递归解析直到是普通值
+    }
     if (this.status !== PENDING) return;
     this.value = result;
     this.status = RESOLVED;
     this.resolveFnList.forEach(resolveFn => {
-      // 如果result还是一个Promise的话，需要再次进行处理对Promise进行处理
-      // if (result !== null && typeof result === 'object' || typeof result === 'function') {
-      //   return result.then((value) => { // 'hello'
-      //     this.resolve.call(result, value);
-      //   }, (reason) => this.reject.call(result, reason));
-      // }
       resolveFn.call(undefined, this.value);
     });
   }
