@@ -145,6 +145,21 @@ class Promise {
     return this.then(null, rejectFn);
   }
 
+  // 由于无法知道promise的最终状态，所以finally的回调函数中不接受任何参数，它仅用于无论最终结果如何都要执行的情况
+  // 相比于.then(onFulfilled,onRejected)，finally并不会更改promise的value和status,
+  // 会在下一次.then的时候继续处理.finally之前promise的value和status
+  finally (fn) {
+    return new Promise((resolve, reject) => {
+      this.then((result) => {
+        resolve(result);
+        fn();
+      }, (reason) => {
+        fn();
+        reject(reason);
+      });
+    });
+  }
+
   static resolve (value) {
     return new Promise((resolve) => {
       resolve(value);
@@ -164,12 +179,16 @@ class Promise {
   static race () {
 
   }
-
-  static finally (fn) {
-    return new Promise((resolve,reject) => {
-
-    });
-  }
 }
 
 module.exports = Promise;
+
+// 从源码角度分析Promise的异步过程
+// 1. 自执行函数中同步执行resolve/reject
+//    1. 此时会执行执行executor中传入的resolve和reject，并且更改promise的状态和值
+//    2. 在调用.then的时候，会判断promise的状态来确定是执行onFulfilled函数，还是执行onRejected函数
+//    3. 通过setTimeout(() => {},0)来执行对应状态的回调，实现异步
+// 2. 自执行函数中异步执行resolve/reject
+//    1. 此时，如果.then是立即调用的话，promise的状态为pending，需要将对应状态的函数到全局的数组中
+//       1. 将函数(进行setTimeout(() => {},0)异步处理)放到数组中，然后在resolve/reject调用的时候，执行数组中的函数
+//    2. 此时，如果.then是异步调用，并且异步的时间大于resolve/reject的时间，那么会走1.2.，否则走2.1.
