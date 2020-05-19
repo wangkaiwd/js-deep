@@ -164,8 +164,15 @@ class Promise {
     });
   }
 
-  race () {
-
+  // 返回一个promise,一旦迭代器中的某个promise解决或拒绝，返回的promise就会解决或拒绝
+  // 只处理最先解决或拒绝的promise
+  static race (promises) {
+    return new Promise((resolve, reject) => {
+      for (let i = 0; i < promises.length; i++) {
+        const item = promises[i];
+        Promise.resolve(item).then(resolve, reject);
+      }
+    });
   }
 
   static all (promises) {

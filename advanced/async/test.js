@@ -21,21 +21,22 @@ const Promise = require('./demo05');
 // });
 // const p2 = Promise.resolve(3).finally(() => {}).then(result => {console.log(result);});
 // const p3 = Promise.resolve(3).then(() => {}, () => {}).then(result => {console.log(result);});
-const p3 = Promise.resolve(new Promise((resolve, reject) => {
-  setTimeout(() => {
-    resolve(100);
-  }, 1000);
-}));
+
 // Promise.all
-Promise.all([1, Promise.resolve(2), p3, 4])
-  .then(
-    (values) => {
-      console.log('values', values);
-    },
-    (errors) => {
-      console.log(errors);
-    }
-  );
+// const p3 = Promise.resolve(new Promise((resolve, reject) => {
+//   setTimeout(() => {
+//     resolve(100);
+//   }, 1000);
+// }));
+// Promise.all([1, Promise.resolve(2), p3, 4])
+//   .then(
+//     (values) => {
+//       console.log('values', values);
+//     },
+//     (errors) => {
+//       console.log(errors);
+//     }
+//   );
 
 // Promise resolve another Promise
 // const p1 = new Promise((resolve, reject) => {
@@ -59,3 +60,22 @@ Promise.all([1, Promise.resolve(2), p3, 4])
 // })).then((result) => {
 //   console.log('result', result);
 // });
+
+// Promise.race
+const p = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve(1000);
+  }, 1000);
+});
+
+const p2 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve(500);
+  }, 500);
+});
+Promise.race([1, Promise.reject('error'), p, p2]).then((result) => {
+  console.log('result', result);
+}, (error) => {
+  console.log('error', error);
+});
+
