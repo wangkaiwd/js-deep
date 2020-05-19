@@ -1,6 +1,6 @@
 const fs = require('fs');
 const read = (...args) => {
-  // 通过延迟函数来少些一些函数嵌套
+  // 通过延迟对象来解决Promise的嵌套问题
   // return new Promise((resolve, reject) => {
   //   fs.readFile(...args, (err, data) => {
   //     if (err) return reject(err);

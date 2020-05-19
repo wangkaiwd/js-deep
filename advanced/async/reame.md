@@ -54,10 +54,3 @@
 * 递归解析`resovle`, 这里涉及到一个问题:`Promise.resolve`和`Promise.reject`的区别
 
 `Promise.resolve`和`Promise.reject`其实就是`resolve`和`reject`调用的区别，因为`Promise.resolve`的实现是基于`Promise`的`resolve`方法的调用。
-
-### generator
-* `generator + Promise`处理异步
-* `generator`自动执行和传参(基础用法)
-* `co`处理`generator`函数
-
-
