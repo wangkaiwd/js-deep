@@ -198,6 +198,26 @@ class Promise {
     });
   }
 
+  static allSettled (promises) {
+    return new Promise((resolve, reject) => {
+      const final = [];
+      let count = 0;
+      for (let i = 0; i < promises.length; i++) {
+        const item = promises[i];
+        Promise.resolve(item).then(
+          (result) => {
+            final[count] = { status: 'resolved', value: result };
+            if (++count === promises.length) {resolve(final);}
+          },
+          (reason) => {
+            final[count] = { status: 'rejected', reason };
+            if (++count === promises.length) {resolve(final);}
+          }
+        );
+      }
+    });
+  }
+
   static resolve (value) {
     return new Promise((resolve) => {
       resolve(value);

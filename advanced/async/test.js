@@ -73,7 +73,7 @@ const p2 = new Promise((resolve, reject) => {
     resolve(500);
   }, 500);
 });
-Promise.race([1, Promise.reject('error'), p, p2]).then((result) => {
+Promise.allSettled([1, Promise.reject('error'), p, p2]).then((result) => {
   console.log('result', result);
 }, (error) => {
   console.log('error', error);
