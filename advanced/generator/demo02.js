@@ -16,4 +16,4 @@ const it = read(); // 并没有执行
 // 第一次执行时，会在第一个yield之前暂停，所以传入的内容并不会生效，没有意义
 it.next('hello'); // next中传入的参数将会是执行完成的yield的返回值
 it.next('world'); // a = word
-
+it.next('xxx'); // b = xxx
