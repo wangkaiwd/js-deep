@@ -21,17 +21,21 @@ const Promise = require('./demo05');
 // });
 // const p2 = Promise.resolve(3).finally(() => {}).then(result => {console.log(result);});
 // const p3 = Promise.resolve(3).then(() => {}, () => {}).then(result => {console.log(result);});
-
+const p3 = Promise.resolve(new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve(100);
+  }, 1000);
+}));
 // Promise.all
-// Promise.all([1, Promise.resolve(2), Promise.resolve(3), 4])
-//   .then(
-//     (values) => {
-//       console.log('values', values);
-//     },
-//     (errors) => {
-//       console.log(errors);
-//     }
-//   );
+Promise.all([1, Promise.resolve(2), p3, 4])
+  .then(
+    (values) => {
+      console.log('values', values);
+    },
+    (errors) => {
+      console.log(errors);
+    }
+  );
 
 // Promise resolve another Promise
 // const p1 = new Promise((resolve, reject) => {
@@ -48,10 +52,10 @@ const Promise = require('./demo05');
 
 // Promise.resolve another Promise, if use Promise.reject, will not wait 1000ms
 // 如果使用Promise.reject将不会等待1s后执行，而是直接将Promise进行reject
-Promise.resolve(new Promise((resolve, reject) => {
-  setTimeout(() => {
-    resolve(3);
-  }, 1000);
-})).then((result) => {
-  console.log('result', result);
-});
+// Promise.resolve(new Promise((resolve, reject) => {
+//   setTimeout(() => {
+//     resolve(3);
+//   }, 1000);
+// })).then((result) => {
+//   console.log('result', result);
+// });

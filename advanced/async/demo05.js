@@ -73,7 +73,7 @@ class Promise {
             this.resolvePromise(promise2, x, resolve, reject);
           } catch (e) {reject(e);}
         }, 0);
-      } else {
+      } else { // pending状态
         // 创建函数，用来做一些事情(根据情况处理返回值)
         // PENDING状态，说明Promise还没有执行resolve或reject
         this.resolveFnList.push((result) => {
@@ -170,9 +170,23 @@ class Promise {
 
   static all (promises) {
     return new Promise((resolve, reject) => {
+      // 注意：每个Promise的完成时间可能是不一样的，要确保数组中的内容是promise传入all方法时的顺序
+      const final = [];
+      let count = 0; // 记录promise的处理个数
       for (let i = 0; i < promises.length; i++) {
         const item = promises[i];
-        // 传入的内容可能不是Promise
+        // 传入的内容可能不是Promise,统一转换为promise
+        Promise.resolve(item).then((result) => {
+          final[i] = result;
+          // 数组可能会由于最后一项的promise先被完成而导致数组的长度满足
+          // const arr = [] ; arr[3] = 4; arr.length === 4 // true
+          // 所以这里通过索引来记录Promise的完成个数，直到所有的Promise都完成，才会resolve
+          if (++count === promises.length) {resolve(final);}
+        }, (reason) => {
+          // Promise的状态一旦更改就不能再发生变化，所以只要一有reject的情况发生或者异常抛出
+          // 就会直接返回一个rejected状态的promise
+          reject(reason);
+        });
       }
     });
   }
