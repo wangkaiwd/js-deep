@@ -231,6 +231,14 @@ class Promise {
   }
 }
 
+Promise.deferred = function () {
+  const deferred = {};
+  deferred.promise = new Promise((resolve, reject) => {
+    deferred.resolve = resolve;
+    deferred.reject = reject;
+  });
+  return deferred;
+};
 module.exports = Promise;
 
 // 从源码角度分析Promise的异步过程
