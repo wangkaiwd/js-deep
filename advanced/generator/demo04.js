@@ -34,3 +34,4 @@ function co (iterator) {
 co(read()).then((result) => {
   console.log('result', result);
 });
+
