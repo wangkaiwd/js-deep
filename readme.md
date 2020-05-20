@@ -21,20 +21,3 @@
 ### 面向对象
 问题记录:
 * 图解`prototype`的相关内容
-
-### `WebStorm`笔记
-#### `AceJump`
-> * 快速跳转
-> * 灵活选中代码
-
-* `ctrl + ;`(cycle)
-    * `Word Mode` (once)
-    * `Declaration` (twice)
-    * `Target Mode` (thrice): 
-
-* `->`: to target the last
-* `<-`: to target the first
-* `↑`: to target the first non-whitespace characters of every line in the editor
-
-* `Line Mode`: `ctrl + shift + ;`
-    * to target the beginning, first non-whitespace, and last character of every line in the editor
