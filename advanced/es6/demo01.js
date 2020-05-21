@@ -11,6 +11,8 @@ animal.say();
 
 // 将父类原型上的方法可以让子类通过原型链进行查找
 // Tiger.prototype.__proto__ = Animal.prototype;
+// 在不支持直接访问__proto__的情况下：
+// Tiger.prototype.setPrototypeOf(Animal.prototype);
 // Object.create() 创建一个新对象，使用现有的对象来提供新创建的对象的__proto__。
 // search keywords: classical inheritance with Object.create()
 
@@ -32,3 +34,6 @@ function create (proto) {
   Fn.prototype = proto;
   return new Fn();
 }
+
+const tiger = new Tiger('tiger');
+tiger.say();
