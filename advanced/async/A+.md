@@ -117,7 +117,7 @@ obj.then.then = obj.then
 由于`resolvePromise`方法中会对返回值(参数`x`)的类型进行判断，这样会导致返回值的类型一直为`promise`,即无限循环调用`resolvePromise`。  
 [resolvePromise递归调用参考](https://github.com/wangkaiwd/js-deep/blob/144a92af2d840a8a3ec6ffd2955b0dcf3caf717e/advanced/async/demo04.js#L137-L143)
 
-### 3. 注释
+### 3. 注解
 * 3.1. 这里“平台代码”意味着引擎、环境以及`promise`的实现代码。实际上，
 * 3.2. 严格模式下，它们中的`this`将会是`undefined`；在非严格模式，`this`将会是全局对象。
 * 3.3. 假如实现满足所有需求，可以允许`promise2 === promise1`。每一个实现都应该记录是否能够产生`promise2 === promise1`以及什么情况下会出现`promise2 === promise1`。
