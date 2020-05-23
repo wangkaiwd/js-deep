@@ -1,6 +1,8 @@
 ## Promise/A+
 > 参考:
 > * [【翻译】Promises/A+规范](https://www.ituring.com.cn/article/66566)
+> * [promises-tests](https://github.com/promises-aplus/promises-tests)
+
 
 `promise`表示一个异步操作的最终结果。和一个`promise`进行交互的主要方式是通过它的`then`方法，该方法注册回调要么接收一个`promise`的最终值，要么接收`promise`为什么不能被**满足**的原因。
 
@@ -9,6 +11,9 @@
 从历史上来说，`Promise/A+`阐明了早期`Promise/A 提案`的行为条款，扩展了原有规范约定俗成的行为，并且省略了没有被指定或者有问题的部分。
 
 最终，`Promise/A+`规范没有处理如何创建、满足或拒绝`promises`,而是选择去专注于提供一个可交互操作的`then`方法。未来在相关规范的工作中可能会提到这些话题。
+
+> 译者注：  
+> 在阅读`Promise/A+`时，最好结合[`promises-tests`](https://github.com/promises-aplus/promises-tests)一起理解，可以明白规范中对应描述的使用场景，方便理解
 
 ### 1. 术语
 * 1.1. promise: 一个拥有符合这个规范的行为的`then`方法的对象或函数。
