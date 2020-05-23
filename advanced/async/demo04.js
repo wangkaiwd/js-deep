@@ -1,4 +1,7 @@
 // https://promisesaplus.com/
+
+// Promise的状态
+// 2.1. A promise must be in one of three states: pending, fulfilled, rejected
 const PENDING = 'pending';
 const RESOLVED = 'resolved';
 const REJECTED = 'rejected';
@@ -20,6 +23,8 @@ class Promise {
   }
 
   resolve (result) {
+    // 2.1.2. and 2.1.2.
+    // When not pending, a promise: must not transition to any other state
     if (this.status !== PENDING) return;
     this.value = result;
     this.status = RESOLVED;
@@ -29,17 +34,19 @@ class Promise {
   }
 
   reject (reason) {
+    // 2.1.3. and 2.1.2.
     // Promise的state和value一旦确定将不能再次修改
     if (this.status !== PENDING) return;
     this.value = reason;
     this.status = REJECTED;
+    //
     this.rejectFnList.forEach(rejectFn => {
       rejectFn.call(undefined, this.value);
     });
   }
 
   // 为什么不能将状态被更改后的异步写到resolve和reject函数中？
-  // 1. 当Promise的状态不处于PENDING的时候，说明resolve/reject函数已经调用，此时如果将异步写在resovle/reject中的话，会导致在异步调用.then的时候，无法通过resolve/reject执行.then中传入函数
+  // 1. 当Promise的状态不处于PENDING的时候，说明resolve/reject函数已经调用，此时如果将异步写在resolve/reject中的话，会导致在异步调用.then的时候，无法通过resolve/reject执行.then中传入函数
   // 2. 当Promise的状态处于PENDING的时候，说明resolve/reject未执行，此时.then方法会先执行，需要将then方法中传入的参数进行缓存，然后通过resolve或者reject进行调用。感觉这里也可以不用处理异步。
   // 总结：Promise中传入的方法要永远保证后执行
   then (onFulfilled, onRejected) {
@@ -47,11 +54,16 @@ class Promise {
     // 当.then中传入的参数不是函数时，需要忽略参数，返回一个和原来一样的新Promise
     // why: throw reason can't as a return value
     // 类似于 promise.then(result => result, reason => {throw reason})
+    // 2.2.1.
+    // 2.2.1.1.
     onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : value => value;
     // 如果onFulfilled没有传的话，继续抛出一个错误
+    // 2.2.1.2.
     onRejected = typeof onRejected === 'function' ? onRejected : reason => {throw reason;};
+    //
     const promise2 = new Promise((resolve, reject) => {
       if (this.status === RESOLVED) { // executor中直接执行了resolve
+        //
         setTimeout(() => {
           try {
             const x = onFulfilled(this.value);
@@ -67,7 +79,10 @@ class Promise {
           try {
             const x = onRejected(this.value);
             this.resolvePromise(promise2, x, resolve, reject);
-          } catch (e) {reject(e);}
+          } catch (e) {
+            // .then返回的Promise的value和status已经确定了
+            reject(e);
+          }
         }, 0);
       } else {
         // 创建函数，用来做一些事情(根据情况处理返回值)
