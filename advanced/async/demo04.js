@@ -97,7 +97,8 @@ class Promise {
         });
         this.rejectFnList.push((reason) => {
           setTimeout(() => {
-            try {
+            try { // 执行resolvePromise方法之前，会先判断onFulfilled和onRejected方法在执行之后是否会报错
+              // 如果报错的话就会直接将错误reject
               const x = onRejected(reason);
               this.resolvePromise(promise2, x, resolve, reject);
             } catch (e) {reject(e);}
@@ -109,6 +110,11 @@ class Promise {
   }
 
   // 根据x的状态来判断新返回的promise的状态
+  // resolvePromise方法
+  //  1. 返回的promise与.then中函数的返回值相同
+  //  2. 返回普通值，直接resolve
+  //  3. 如果返回Promise, 则执行x.then方法
+  //      如果x.then方法中onFulfilled的参数还是Promise的话，需要进行递归处理，直到最终为普通值，进行resolve
   resolvePromise (promise2, x, resolve, reject) {
     // 简单的可以直接判断x是否是promise
     // 此方法法为了兼容所有的promise库，库的执行流程是一样的
