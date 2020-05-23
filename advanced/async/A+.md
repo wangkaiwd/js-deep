@@ -87,8 +87,8 @@ promise2 = promise1.then(onFulfilled,onRejected)
     * 2.3.3.3. 如果`then`是一个函数，用`x`作为`this`调用它，`then`方法的参数为俩个回调函数，第一个参数叫做`resolvePromise`，第二个参数叫做`rejectPromise`：
         * 2.3.3.3.1. 如果`resolvePromise`用一个值`y`调用，运行`[[Resolve]](promise, y)`。译者注：这里再次调用`[[Resolve]](promise,y)`，因为`y`可能还是`promise`
         * 2.3.3.3.2. 如果`resolvePromise`用一个原因`r`调用，用`r`拒绝`promise`。译者注：这里如果`r`为`promise`的话，依旧会直接`reject`，**拒绝**的原因就是`promise`，即`r`。并不会等到`r`被**解决**或**拒绝**
-        * 2.3.3.3.3. 如果`resolvePromise`和`rejectPromise`都被调用，或者对同一个参数进行多次调用，那么第一次调用优先，以后的调用都会被忽略。
-        * 2.3.3.3.4. 如果调用`then`抛出了一个异常`e`,
+        * [2.3.3.3.3.](https://github.com/promises-aplus/promises-tests/blob/4786505fcb0cafabc5f5ce087e1df86358de2da6/lib/tests/2.3.3.js#L357) 如果`resolvePromise`和`rejectPromise`都被调用，或者对同一个参数进行多次调用，那么第一次调用优先，以后的调用都会被忽略。
+        * [2.3.3.3.4.](https://github.com/promises-aplus/promises-tests/blob/4786505fcb0cafabc5f5ce087e1df86358de2da6/lib/tests/2.3.3.js#L757) 如果调用`then`抛出了一个异常`e`,
             * 2.3.3.4.1. 如果`resolvePromise`或`rejectPromise`已经被调用，忽略它
             * 2.3.3.4.2. 否则，用`e`作为原因拒绝`promise`
     * 2.3.3.4. 如果`then`不是一个函数，用`x`**解决**`promise`
@@ -112,5 +112,7 @@ obj.then.then = obj.then
 [resolvePromise递归调用参考](https://github.com/wangkaiwd/js-deep/blob/144a92af2d840a8a3ec6ffd2955b0dcf3caf717e/advanced/async/demo04.js#L137-L143)
 
 ### 3. 注释
-* 3.1.
-
+* 3.1. 这里“平台代码”意味着引擎、环境以及`promise`的实现代码。实际上，
+* 3.2. 严格模式下，它们中的`this`将会是`undefined`；在非严格模式，`this`将会是全局对象。
+* 3.3. 
+* 3.6. 实现不应该在`thenable`链的深度上做任意限制，并且假设超过那个任意限制将会无限递归。只有真正的循环才应该引发一个`TypeError`；如果遇到一个无限循环的`thenable`，永远执行递归是正确的行为。
