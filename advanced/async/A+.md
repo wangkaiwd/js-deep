@@ -1,5 +1,6 @@
-## Promise/A+
+## [译]Promise/A+
 > 参考:
+> * 原文：[Promises/A+](https://promisesaplus.com/#notes)
 > * [【翻译】Promises/A+规范](https://www.ituring.com.cn/article/66566)
 > * [promises-tests](https://github.com/promises-aplus/promises-tests)
 
@@ -59,13 +60,13 @@ promise.then(onFulfilled, onRejected)
 * 2.2.3.2. 它一定不能在`promise`被**拒绝**之前调用。
 * 2.2.3.3. 它一定不能被调用多次。
 
-#### 2.2.4. 在执行上下文栈中只包含平台代码之前，`onFulfilled`或`onRejected`一定不能被调用
-#### 2.2.5. `onFulfilled`和`onRejected`一定被作为函数调用(没有`this`值)
+#### 2.2.4. 在执行上下文栈中只包含平台代码之前，`onFulfilled`或`onRejected`一定不能被调用 [3.1]
+#### 2.2.5. `onFulfilled`和`onRejected`一定被作为函数调用(没有`this`值) [3.2]
 #### 2.2.6. 同一个`promise`上的`then`可能被调用多次
 * 2.2.6.1. 如果`promise`被**解决**，所有相应的`onFulfilled`回调必须按照他们原始调用`then`的顺序执行
 * 2.2.6.2. 如果`promise`被**拒绝**，所有相应的`onRejected`回调必须按照他们原始调用`then`的顺序执行
 
-#### 2.2.7. `then`必须返回一个`promise`
+#### 2.2.7. `then`必须返回一个`promise` [3.3]
 ```javascript
 promise2 = promise1.then(onFulfilled,onRejected)
 ```
@@ -82,12 +83,12 @@ promise2 = promise1.then(onFulfilled,onRejected)
 要运行`[[Resolve]](promise, x)`，执行如下步骤：
 
 * [2.3.1.](https://github.com/promises-aplus/promises-tests/blob/4786505fcb0cafabc5f5ce087e1df86358de2da6/lib/tests/2.3.1.js#L11) 如果`promise`和`x`引用同一个对象，用一个`TypeError`作为原因来拒绝`promise`
-* 2.3.2. 如果`x`是一个`promise`，采用它的状态： 
+* 2.3.2. 如果`x`是一个`promise`，采用它的状态：[3.4]
     * 2.3.2.1. 如果`x`是等待态，`promise`必须保持等待状态，知道`x`被**解决**或**拒绝**
     * 2.3.2.2. 如果`x`是**解决**态，用相同的值解决`promise`
     * 2.3.2.3. 如果`x`是**拒绝**态，用相同的原因拒绝`promise`
 * 2.3.3. 否则，如果`x`是一个对象或函数
-    * [2.3.3.1.](https://github.com/promises-aplus/promises-tests/blob/4786505fcb0cafabc5f5ce087e1df86358de2da6/lib/tests/2.3.3.js#L132-L141) 让`then`成为`x.then`。
+    * [2.3.3.1.](https://github.com/promises-aplus/promises-tests/blob/4786505fcb0cafabc5f5ce087e1df86358de2da6/lib/tests/2.3.3.js#L132-L141) 让`then`成为`x.then`。[3.5]
     * 2.3.3.2. 如果检索属性`x.then`导致抛出了一个异常`e`，用`e`作为原因拒绝`promise`
     * 2.3.3.3. 如果`then`是一个函数，用`x`作为`this`调用它，`then`方法的参数为俩个回调函数，第一个参数叫做`resolvePromise`，第二个参数叫做`rejectPromise`：
         * 2.3.3.3.1. 如果`resolvePromise`用一个值`y`调用，运行`[[Resolve]](promise, y)`。译者注：这里再次调用`[[Resolve]](promise,y)`，因为`y`可能还是`promise`
@@ -99,7 +100,7 @@ promise2 = promise1.then(onFulfilled,onRejected)
     * 2.3.3.4. 如果`then`不是一个函数，用`x`**解决**`promise`
 * 2.3.4. 如果`x`不是一个对象或函数，用`x`解决`promise`
 
-如果`promise`用一个循环的`thenable`链**解决**，由于`[[Resolve]](promise, thenalbe)`的递归特性，最终将导致`[[Resolve]](promise, thenable)`被再次调用，遵循上上面的算法将会导致无限递归。规范中并没有强制要求处理这种情况，但也鼓励实现者检测这样的递归是否存在，并且用一个信息丰富的`TypeError`作为原因**拒绝**`promise`。
+如果`promise`用一个循环的`thenable`链**解决**，由于`[[Resolve]](promise, thenalbe)`的递归特性，最终将导致`[[Resolve]](promise, thenable)`被再次调用，遵循上上面的算法将会导致无限递归。规范中并没有强制要求处理这种情况，但也鼓励实现者检测这样的递归是否存在，并且用一个信息丰富的`TypeError`作为原因**拒绝**`promise`。[3.6]
 
 译者注：这里的循环`thenable`可能是指如下情况：
 ```javascript
