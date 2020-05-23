@@ -128,9 +128,13 @@ class Promise {
     if (x !== null && typeof x === 'object' || typeof x === 'function') {
       // 可能是promise
       // promise 有 then方法
+      // 当直接通过含有.then方法的对象来作为promise的时候，可能会多次调用onFulfilled或onRejected
+      // 只有最先调用的会生效
+      // https://github.com/promises-aplus/promises-tests/blob/4786505fcb0cafabc5f5ce087e1df86358de2da6/lib/tests/2.3.3.js#L360-L368
       let called = false;
       try {
         // let then be x.then
+        // 2.3.3.1.
         const then = x.then;
         if (typeof then === 'function') {
           // 这里不使用x.then,有可能第二次取值会出错，见nativeTest

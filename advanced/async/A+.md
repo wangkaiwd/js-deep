@@ -1,6 +1,7 @@
 ## Promise/A+
 > 参考:
 > * [【翻译】Promises/A+规范](https://www.ituring.com.cn/article/66566)
+
 `promise`表示一个异步操作的最终结果。和一个`promise`进行交互的主要方式是通过它的`then`方法，该方法注册回调要么接收一个`promise`的最终值，要么接收`promise`为什么不能被**满足**的原因。
 
 这个规范详细描述了`then`方法的行为，提供了一个可交互操作的基础，所有的符合`promise/A+`规范的`promise`的实现都可以依靠该基础来实现。因此，这个规范应该被认为是十分稳定的。尽管`Promise/A+`组织可能会偶尔地通过一些较小的向后兼容的改变来修订这个规范，来解决新发现的一些边界情况。只有在经过仔细的考虑、讨论和测试后，我们才会集成大的或者向后不兼容的更改。
@@ -83,10 +84,10 @@ promise2 = promise1.then(onFulfilled,onRejected)
 * 2.3.3. 否则，如果`x`是一个对象或函数
     * 2.3.3.1. 让`then`成为`x.then`
     * 2.3.3.2. 如果检索属性`x.then`导致抛出了一个异常`e`，用`e`作为原因拒绝`promise`
-    * 2.3.3.3. 如果`then`是一个函数，用`x`作为`this`调用它，第一个参数是`resolvePromise`，第二个参数是`rejectPromise`：
-        * 2.3.3.3.1. 如果`resolvePromise`用一个值`y`调用，运行`[[Resolve]](promise, y)`
-        * 2.3.3.3.2. 如果`resolvePromise`用一个原因`r`调用，用`r`拒绝`promise`。
-        * 2.3.3.3.3. 如果`resolvePromise`和`rejectPromise`同时被调用，或者对同一个参数进行多次调用，那么第一次调用优先，以后的调用都会被忽略。
+    * 2.3.3.3. 如果`then`是一个函数，用`x`作为`this`调用它，`then`方法的参数为俩个回调函数，第一个参数叫做`resolvePromise`，第二个参数叫做`rejectPromise`：
+        * 2.3.3.3.1. 如果`resolvePromise`用一个值`y`调用，运行`[[Resolve]](promise, y)`。译者注：这里再次调用`[[Resolve]](promise,y)`，因为`y`可能还是`promise`
+        * 2.3.3.3.2. 如果`resolvePromise`用一个原因`r`调用，用`r`拒绝`promise`。译者注：这里如果`r`为`promise`的话，依旧会直接`reject`，**拒绝**的原因就是`promise`，即`r`。并不会等到`r`被**解决**或**拒绝**
+        * 2.3.3.3.3. 如果`resolvePromise`和`rejectPromise`都被调用，或者对同一个参数进行多次调用，那么第一次调用优先，以后的调用都会被忽略。
         * 2.3.3.3.4. 如果调用`then`抛出了一个异常`e`,
             * 2.3.3.4.1. 如果`resolvePromise`或`rejectPromise`已经被调用，忽略它
             * 2.3.3.4.2. 否则，用`e`作为原因拒绝`promise`
@@ -108,7 +109,7 @@ obj.then.then = obj.then
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200523221732.png)
 
 由于`resolvePromise`方法中会对返回值(参数`x`)的类型进行判断，这样会导致返回值的类型一直为`promise`,即无限循环调用`resolvePromise`。  
-[resolvePromise](https://github.com/wangkaiwd/js-deep/blob/144a92af2d840a8a3ec6ffd2955b0dcf3caf717e/advanced/async/demo04.js#L137-L143)
+[resolvePromise递归调用参考](https://github.com/wangkaiwd/js-deep/blob/144a92af2d840a8a3ec6ffd2955b0dcf3caf717e/advanced/async/demo04.js#L137-L143)
 
 ### 3. 注释
 * 3.1.
