@@ -81,13 +81,13 @@ promise2 = promise1.then(onFulfilled,onRejected)
 
 要运行`[[Resolve]](promise, x)`，执行如下步骤：
 
-* 2.3.1. 如果`promise`和`x`引用同一个对象，用一个`TypeError`作为原因来拒绝`promise`
+* [2.3.1.](https://github.com/promises-aplus/promises-tests/blob/4786505fcb0cafabc5f5ce087e1df86358de2da6/lib/tests/2.3.1.js#L11) 如果`promise`和`x`引用同一个对象，用一个`TypeError`作为原因来拒绝`promise`
 * 2.3.2. 如果`x`是一个`promise`，采用它的状态： 
     * 2.3.2.1. 如果`x`是等待态，`promise`必须保持等待状态，知道`x`被**解决**或**拒绝**
     * 2.3.2.2. 如果`x`是**解决**态，用相同的值解决`promise`
     * 2.3.2.3. 如果`x`是**拒绝**态，用相同的原因拒绝`promise`
 * 2.3.3. 否则，如果`x`是一个对象或函数
-    * 2.3.3.1. 让`then`成为`x.then`
+    * [2.3.3.1.](https://github.com/promises-aplus/promises-tests/blob/4786505fcb0cafabc5f5ce087e1df86358de2da6/lib/tests/2.3.3.js#L132-L141) 让`then`成为`x.then`。
     * 2.3.3.2. 如果检索属性`x.then`导致抛出了一个异常`e`，用`e`作为原因拒绝`promise`
     * 2.3.3.3. 如果`then`是一个函数，用`x`作为`this`调用它，`then`方法的参数为俩个回调函数，第一个参数叫做`resolvePromise`，第二个参数叫做`rejectPromise`：
         * 2.3.3.3.1. 如果`resolvePromise`用一个值`y`调用，运行`[[Resolve]](promise, y)`。译者注：这里再次调用`[[Resolve]](promise,y)`，因为`y`可能还是`promise`
@@ -119,5 +119,7 @@ obj.then.then = obj.then
 ### 3. 注释
 * 3.1. 这里“平台代码”意味着引擎、环境以及`promise`的实现代码。实际上，
 * 3.2. 严格模式下，它们中的`this`将会是`undefined`；在非严格模式，`this`将会是全局对象。
-* 3.3. 
+* 3.3. 假如实现满足所有需求，可以允许`promise2 === promise1`。每一个实现都应该记录是否能够产生`promise2 === promise1`以及什么情况下会出现`promise2 === promise1`。
+* 3.4. 通常，只有`x`来自于当前实现，才知道它是一个真正的`promise`。这条规则允许那些特例实现采用符合已知要求的`Promise`的状态。
+* 3.5. 这个程序首先存储`x.then`的引用，之后测试那个引用，然后再调用那个引用，这样避免了多次访问`x.then`属性。此类预防措施对于确保访问者属性的一致性非常重要，因为访问者属性的值可能在俩次检索之间发生变化。
 * 3.6. 实现不应该在`thenable`链的深度上做任意限制，并且假设超过那个任意限制将会无限递归。只有真正的循环才应该引发一个`TypeError`；如果遇到一个无限循环的`thenable`，永远执行递归是正确的行为。
