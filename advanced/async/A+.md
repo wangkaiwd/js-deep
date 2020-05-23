@@ -1,4 +1,6 @@
 ## Promise/A+
+> 参考:
+> * [【翻译】Promises/A+规范](https://www.ituring.com.cn/article/66566)
 `promise`表示一个异步操作的最终结果。和一个`promise`进行交互的主要方式是通过它的`then`方法，该方法注册回调要么接收一个`promise`的最终值，要么接收`promise`为什么不能被**满足**的原因。
 
 这个规范详细描述了`then`方法的行为，提供了一个可交互操作的基础，所有的符合`promise/A+`规范的`promise`的实现都可以依靠该基础来实现。因此，这个规范应该被认为是十分稳定的。尽管`Promise/A+`组织可能会偶尔地通过一些较小的向后兼容的改变来修订这个规范，来解决新发现的一些边界情况。只有在经过仔细的考虑、讨论和测试后，我们才会集成大的或者向后不兼容的更改。
@@ -69,7 +71,7 @@ promise2 = promise1.then(onFulfilled,onRejected)
 #### 2.3. `Promise`解决程序
 `promise`解决程序是一个抽象操作，它以一个`promise`和一个值作为输入，我们将其表示为`[[Resolve]](promise, x)`。如果`x`是一个`thenable`，它尝试让`promise`采用`x`的状态，并假设`x`的行为至少在某种程度上类似于`promise`。否则，它将会用值`x`**解决** `promise`。
 
-This treatment of thenables allows promise implementations to interoperate, as long as they expose a Promises/A+-compliant then method. It also allows Promises/A+ implementations to “assimilate” nonconformant implementations with reasonable then methods.
+这种`thenable`的特性使得`Promise`的实现更具有通用性：只要其暴露一个遵循`Promise/A+`协议的`then`方法即可。这同时也使遵循`Promise/A+`规范的实现可以与那些不太规范但可用的实现能良好共存。
 
 要运行`[[Resolve]](promise, x)`，执行如下步骤：
 
@@ -91,7 +93,23 @@ This treatment of thenables allows promise implementations to interoperate, as l
     * 2.3.3.4. 如果`then`不是一个函数，用`x`**解决**`promise`
 * 2.3.4. 如果`x`不是一个对象或函数，用`x`解决`promise`
 
-If a promise is resolved with a thenable that participates in a circular thenable chain, such that the recursive nature of [[Resolve]](promise, thenable) eventually causes [[Resolve]](promise, thenable) to be called again, following the above algorithm will lead to infinite recursion. Implementations are encouraged, but not required, to detect such recursion and reject promise with an informative TypeError as the reason. [3.6]
+如果`promise`用一个循环的`thenable`链**解决**，由于`[[Resolve]](promise, thenalbe)`的递归特性，最终将导致`[[Resolve]](promise, thenable)`被再次调用，遵循上上面的算法将会导致无限递归。规范中并没有强制要求处理这种情况，但也鼓励实现者检测这样的递归是否存在，并且用一个信息丰富的`TypeError`作为原因**拒绝**`promise`。
+
+译者注：这里的循环`thenable`可能是指如下情况：
+```javascript
+const obj = {
+    then:function() { 
+      //...    
+    }
+}
+obj.then.then = obj.then
+```
+这样`obj`对象中的`then`将会形成一个环，可以一直无限循环调用`.then`方法。(类似于`window`全局对象，`window.window`依旧是`window`自己)
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200523221732.png)
+
+由于`resolvePromise`方法中会对返回值(参数`x`)的类型进行判断，这样会导致返回值的类型一直为`promise`,即无限循环调用`resolvePromise`。  
+[resolvePromise](https://github.com/wangkaiwd/js-deep/blob/144a92af2d840a8a3ec6ffd2955b0dcf3caf717e/advanced/async/demo04.js#L137-L143)
 
 ### 3. 注释
 * 3.1.
+
