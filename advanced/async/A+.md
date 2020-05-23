@@ -7,7 +7,7 @@
 
 `promise`表示一个异步操作的最终结果。和一个`promise`进行交互的主要方式是通过它的`then`方法，该方法注册回调要么接收一个`promise`的最终值，要么接收`promise`为什么不能被**满足**的原因。
 
-这个规范详细描述了`then`方法的行为，提供了一个可交互操作的基础，所有的符合`promise/A+`规范的`promise`的实现都可以依靠该基础来实现。因此，这个规范应该被认为是十分稳定的。尽管`Promise/A+`组织可能会偶尔地通过一些较小的向后兼容的改变来修订这个规范，来解决新发现的一些边界情况。只有在经过仔细的考虑、讨论和测试后，我们才会集成大的或者向后不兼容的更改。
+这个规范详细描述了`then`方法的行为，提供了一个可交互操作的基础，所有的符合`promise/A+`规范的`promise`的都可以依靠该基础来实现。因此，这个规范应该被认为是十分稳定的。尽管`Promise/A+`组织可能会偶尔地通过一些较小的向后兼容的改变修订规范，来解决新发现的一些边界情况。但是，只有在经过仔细的考虑、讨论和测试后，我们才会集成大的或者向后不兼容的更改。
 
 从历史上来说，`Promise/A+`阐明了早期`Promise/A 提案`的行为条款，扩展了原有规范约定俗成的行为，并且省略了没有被指定或者有问题的部分。
 
@@ -25,7 +25,7 @@
 
 ### 2. 必要条件
 
-#### 2.1. Promise States
+#### 2.1. Promise 状态
 `promise`必须是这三个状态中的一种：等待态`pending`,解决态`fulfilled`或拒绝态`rejected`
 
 * 2.1.1. 当一个`promise`处于等待状态的时候：
@@ -39,7 +39,7 @@
 
 在这里，"一定不能改变"意味着不变的身份(例如 `===`)，但是并不意味着深度不可变性。(译注者：这里应该是说只要**值**的引用相同即可，并不需要引用中的每一个值都相等)
 
-#### 2.2. The `then` Method
+#### 2.2. then 方法
 `Promise`必须提供一个`then`方法来访问当前或最终的值或原因。
 
 `Promise`的`then`方法接受俩个参数：
@@ -50,7 +50,7 @@ promise.then(onFulfilled, onRejected)
 * 2.2.1.1. 如果`onFulfilled`不是一个函数，它必须被忽略
 * 2.2.1.2. 如果`onRejected`不是一个函数，它必须被忽略
 
-#### 2.2.2。 如果`onFulfilled`是一个函数
+#### 2.2.2. 如果`onFulfilled`是一个函数
 * 2.2.2.1. 它必须在`promise`被**解决**后调用，`promise`的值作为它的第一个参数。
 * 2.2.2.2. 它一定不能在`promise`被**解决**前调用。
 * 2.2.2.3. 它一定不能被调用多次。
@@ -73,14 +73,14 @@ promise2 = promise1.then(onFulfilled,onRejected)
 * 2.2.7.1. 如果`onFulfilled`或`onRjected`返回一个值`x`，运行`promise`解决程序`[[Resolve]](promise2,x)`
 * 2.2.7.2. 如果`onFulfilled`或`onRejected`抛出一个异常`e`，`promise2`必须用`e`作为原因被**拒绝**
 * 2.2.7.3. 如果`onFulfilled`不是一个函数并且`promise1`被**解决**，`promise2`必须用与`promise1`相同的值被**解决**
-* 2.2.7.4. 如果`onRejected`不是一个函数并且`promise1`被**拒绝**，`promise2`必须用与`promise1`相同的原因被拒绝
+* 2.2.7.4. 如果`onRejected`不是一个函数并且`promise1`被**拒绝**，`promise2`必须用与`promise1`相同的原因被**拒绝**
 
 #### 2.3. `Promise`解决程序
 `promise`解决程序是一个抽象操作，它以一个`promise`和一个值作为输入，我们将其表示为`[[Resolve]](promise, x)`。如果`x`是一个`thenable`，它尝试让`promise`采用`x`的状态，并假设`x`的行为至少在某种程度上类似于`promise`。否则，它将会用值`x`**解决** `promise`。
 
 这种`thenable`的特性使得`Promise`的实现更具有通用性：只要其暴露一个遵循`Promise/A+`协议的`then`方法即可。这同时也使遵循`Promise/A+`规范的实现可以与那些不太规范但可用的实现能良好共存。
 
-要运行`[[Resolve]](promise, x)`，执行如下步骤：
+要运行`[[Resolve]](promise, x)`，需要执行如下步骤：
 
 * [2.3.1.](https://github.com/promises-aplus/promises-tests/blob/4786505fcb0cafabc5f5ce087e1df86358de2da6/lib/tests/2.3.1.js#L11) 如果`promise`和`x`引用同一个对象，用一个`TypeError`作为原因来拒绝`promise`
 * 2.3.2. 如果`x`是一个`promise`，采用它的状态：[3.4]
@@ -100,7 +100,7 @@ promise2 = promise1.then(onFulfilled,onRejected)
     * 2.3.3.4. 如果`then`不是一个函数，用`x`**解决**`promise`
 * 2.3.4. 如果`x`不是一个对象或函数，用`x`解决`promise`
 
-如果`promise`用一个循环的`thenable`链**解决**，由于`[[Resolve]](promise, thenalbe)`的递归特性，最终将导致`[[Resolve]](promise, thenable)`被再次调用，遵循上上面的算法将会导致无限递归。规范中并没有强制要求处理这种情况，但也鼓励实现者检测这样的递归是否存在，并且用一个信息丰富的`TypeError`作为原因**拒绝**`promise`。[3.6]
+如果`promise`用一个循环的`thenable`链**解决**，由于`[[Resolve]](promise, thenalbe)`的递归特性，最终将导致`[[Resolve]](promise, thenable)`被再次调用，遵循上上面的算法将会导致无限递归。规范中并没有强制要求处理这种情况，但也鼓励实现者检测这样的递归是否存在，并且用一个信息丰富的`TypeError`作为原因**拒绝**`promise`。[3.6']
 
 译者注：这里的循环`thenable`可能是指如下情况：
 ```javascript
