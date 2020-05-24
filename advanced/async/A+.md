@@ -93,14 +93,14 @@ promise2 = promise1.then(onFulfilled,onRejected)
     * 2.3.3.3. 如果`then`是一个函数，用`x`作为`this`调用它。`then`方法的参数为俩个回调函数，第一个参数叫做`resolvePromise`，第二个参数叫做`rejectPromise`：
         * 2.3.3.3.1. 如果`resolvePromise`用一个值`y`调用，运行`[[Resolve]](promise, y)`。译者注：这里再次调用`[[Resolve]](promise,y)`，因为`y`可能还是`promise`
         * 2.3.3.3.2. 如果`rejectPromise`用一个原因`r`调用，用`r`拒绝`promise`。译者注：这里如果`r`为`promise`的话，依旧会直接`reject`，**拒绝**的原因就是`promise`。并不会等到`promise`被**解决**或**拒绝**
-        * [2.3.3.3.3.](https://github.com/promises-aplus/promises-tests/blob/4786505fcb0cafabc5f5ce087e1df86358de2da6/lib/tests/2.3.3.js#L357) 如果`resolvePromise`和`rejectPromise`都被调用，或者对同一个参数进行多次调用，那么第一次调用优先，以后的调用都会被忽略。
+        * [2.3.3.3.3.](https://github.com/promises-aplus/promises-tests/blob/4786505fcb0cafabc5f5ce087e1df86358de2da6/lib/tests/2.3.3.js#L357) 如果`resolvePromise`和`rejectPromise`都被调用，或者对同一个参数进行多次调用，那么第一次调用优先，以后的调用都会被忽略。译者注：这里主要针对`thenable`，`promise`的状态一旦更改就不会再改变。
         * [2.3.3.3.4.](https://github.com/promises-aplus/promises-tests/blob/4786505fcb0cafabc5f5ce087e1df86358de2da6/lib/tests/2.3.3.js#L757) 如果调用`then`抛出了一个异常`e`,
             * 2.3.3.4.1. 如果`resolvePromise`或`rejectPromise`已经被调用，忽略它
             * 2.3.3.4.2. 否则，用`e`作为原因拒绝`promise`
     * 2.3.3.4. 如果`then`不是一个函数，用`x`**解决**`promise`
 * 2.3.4. 如果`x`不是一个对象或函数，用`x`解决`promise`
 
-如果`promise`用一个循环的`thenable`链**解决**，由于`[[Resolve]](promise, thenalbe)`的递归特性，最终将导致`[[Resolve]](promise, thenable)`被再次调用，遵循上面的算法将会导致无限递归。规范中并没有强制要求处理这种情况，但也鼓励实现者检测这样的递归是否存在，并且用一个信息丰富的`TypeError`作为原因**拒绝**`promise`。[3.6']
+如果`promise`用一个循环的`thenable`链**解决**，由于`[[Resolve]](promise, thenalbe)`的递归特性，最终将导致`[[Resolve]](promise, thenable)`被再次调用，遵循上面的算法将会导致无限递归。规范中并没有强制要求处理这种情况，但也鼓励实现者检测这样的递归是否存在，并且用一个信息丰富的`TypeError`作为原因**拒绝**`promise`。[3.6]
 
 译者注：这里的循环`thenable`可能是指如下情况：
 ```javascript
@@ -118,7 +118,7 @@ obj.then.then = obj.then
 [resolvePromise递归调用参考](https://github.com/wangkaiwd/js-deep/blob/144a92af2d840a8a3ec6ffd2955b0dcf3caf717e/advanced/async/demo04.js#L137-L143)
 
 ### 3. 注解
-* 3.1. 这里“平台代码”意味着引擎、环境以及`promise`的实现代码。实际上，
+* 3.1. 这里“平台代码”意味着引擎、环境以及`promise`的实现代码。在实践中，这需要确保`onFulfilled`和`onRejected`异步地执行，并且应该在`then`方法被调用的那一轮事件循环之后用新的执行栈执行。这可以用如`setTimeout`或`setImmediate`这样的“宏任务”机制实现，或者用如`MutationObserver`或`process.nextTick`这样的“微任务”机制实现。由于`promise`的实现被考虑为“平台代码”，因此在自身处理程序被调用时可能已经包含一个任务调度队列。
 * 3.2. 严格模式下，它们中的`this`将会是`undefined`；在非严格模式，`this`将会是全局对象。
 * 3.3. 假如实现满足所有需求，可以允许`promise2 === promise1`。每一个实现都应该记录是否能够产生`promise2 === promise1`以及什么情况下会出现`promise2 === promise1`。
 * 3.4. 通常，只有`x`来自于当前实现，才知道它是一个真正的`promise`。这条规则允许那些特例实现采用符合已知要求的`Promise`的状态。
