@@ -26,6 +26,9 @@ class Promise {
   }
 
   then (onFulfilled, onRejected) {
+    // 2.2.1.
+    onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : y => y;
+    onRejected = typeof onRejected === 'function' ? onRejected : r => {throw r;};
     // 2.2.7. then必须返回一个Promise
     // 这里能访问到Promise吗？
     // 可以。then方法在执行的时候已经完成了Promise的定义，方法在定义的时候并不会执行，而是会在堆内存中存储代码字符串
@@ -132,4 +135,12 @@ class Promise {
   }
 }
 
+Promise.deferred = function () {
+  const deferred = {};
+  deferred.promise = new Promise((resolve, reject) => {
+    deferred.resolve = resolve;
+    deferred.reject = reject;
+  });
+  return deferred;
+};
 module.exports = Promise;

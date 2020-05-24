@@ -239,6 +239,4 @@ p.then((result) => {
 ```
 
 ### 测试`Promise`
-
-### `Promise`补充
-`resolve`方法和`reject`方法有什么本质上的区别？
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/202005222225002044.png)
