@@ -1,6 +1,8 @@
 ## 从零到一实现符合`Promise/A+`的`Promise`
 `Promise/A+`规范专注于提供一个**通用的`then`方法**，对于如何创建、解决以及拒绝`promise`并没有进行处理，对于`Promise.all`,`Promise.catch`等方法也没有进行明文规定。
 
+为了方便理解，下文中`.then`中传入的俩个回调函数我们分别用`onFulfilled`和`onRejected`来代指。
+
 ### 实现基础使用场景
 下面是一个`Promise`最基础的使用方法：
 ```javascript
@@ -181,3 +183,54 @@ p.then((result) => {
   console.log('reason2', reason);
 });
 ```
+`.then`方法会返回一个新的`Promise`，新`Promise`的返回值是由`.then`方法中传入的2个回调函数的返回值来确定的。其可能的情况如下： 
+* 回调函数中返回普通值(不包括`Promise`)，此时直接将返回值`resolve(x)`,如果没有返回值即相当于返回`undefined`
+  ```javascript
+  const p = new Promise((resolve) => {
+    resolve(100);
+  });
+  p.then((result1) => result1 * 2).then((result2) => console.log(result2)); 
+  // 200
+  ```
+* 回调函数中返回一个`Promise`，将会以返回的`Promise`的状态和值作为`.then`方法返回的`Promise`的状态和值
+  ```javascript
+  const p = new Promise((resolve) => {
+    resolve(100);
+  });
+  // 返回一个解决状态的Promise
+  p.then((result1) => {
+    return new Promise((resolve, reject) => {
+      resolve(400);
+    });
+  }).then((result2) => {
+    console.log(result2);
+  });
+  // 400
+  
+  // 返回一个拒绝状态的Promise
+  p.then((result1) => {
+    return new Promise((resolve, reject) => {
+      reject(400);
+    });
+  }).then((result2) => {
+    console.log(result2);
+  }, (reason) => {
+    console.log(reason);
+  });
+  // reason 400
+  ```
+* 如果`.then`方法中传入的回调函数在执行时出现了错误，新返回的`Promise`将用错误`e`来作为原因被拒绝
+  ````javascript
+  p.then((result1) => {
+    console.log(a);
+  }).then((result2) => {
+    console.log('result2', result2);
+  }, (reason) => {
+    console.log('reason', reason);
+  });
+  // reason ReferenceError: a is not defined
+  ````
+### 测试`Promise`
+
+### `Promise`补充
+`resolve`方法和`reject`方法有什么本质上的区别？
