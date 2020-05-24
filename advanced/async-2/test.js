@@ -88,9 +88,25 @@ function test6 () {
   });
 }
 
+// .then的参数不是函数
+function test7 () {
+  const p = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(100);
+    }, 1000);
+  });
+  // 第一个第二.then返回的Promise都是相当于p的拷贝新的promise
+  p.then().then(null, 1).then((result) => {
+    console.log('result', result);
+  }, (reason) => {
+    console.log('reason', reason);
+  });
+}
+
 // test1();
 // test2();
 // test3();
 // test4();
 // test5();
 // test6();
+test7();

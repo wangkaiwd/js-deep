@@ -22,7 +22,11 @@ class Promise {
       this.reason = reason;
       this.rejectFnList.forEach(fn => fn.call(undefined)); // 2.2.5 调用onRejected时this指向为undefined
     };
-    executor(resolve, reject);
+    try {
+      executor(resolve, reject);
+    } catch (e) {
+      reject(e);
+    }
   }
 
   then (onFulfilled, onRejected) {
