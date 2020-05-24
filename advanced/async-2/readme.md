@@ -233,6 +233,11 @@ p.then((result) => {
 这里我们用图来简单描述一下：
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/Untitled-2020-04-12-1644%20(2).png)
 
+`.then`方法的实现如下：
+```javascript
+
+```
+
 ### 测试`Promise`
 
 ### `Promise`补充
