@@ -9,3 +9,5 @@
     * 手动返回一个函数
     * 通过`reduce`构造一个返回函数(`redux`源码)
 * `new`方法实现
+* `es5`实现`class`，分析其中的不同之处
+* `es5`实现`class`的`extends`
