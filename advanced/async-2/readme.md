@@ -1,4 +1,7 @@
-## 从零到一实现符合`Promise/A+`的`Promise`
+## 从零到一实现完全符合`Promise/A+`的`Promise`
+> * [本文源代码](https://github.com/wangkaiwd/js-deep/blob/master/advanced/async-2/promise.js)
+> * 参考文章：[Promise的源码实现（完美符合Promise/A+规范）](https://github.com/YvetteLau/Blog/issues/2)
+
 `Promise/A+`规范专注于提供一个**通用的`then`方法**，对于如何创建、解决以及拒绝`promise`并没有进行处理，对于`Promise.all`,`Promise.catch`等方法也没有进行明文规定。
 
 为了方便理解，下文中`.then`中传入的俩个回调函数我们分别用`onFulfilled`和`onRejected`来代指。
