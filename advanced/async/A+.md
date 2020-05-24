@@ -1,5 +1,5 @@
 ## [译]Promise/A+
-> 参考:
+> 参考文章：  
 > * 原文：[Promises/A+](https://promisesaplus.com/#notes)
 > * [【翻译】Promises/A+规范](https://www.ituring.com.cn/article/66566)
 > * [promises-tests](https://github.com/promises-aplus/promises-tests)
@@ -49,17 +49,14 @@ promise.then(onFulfilled, onRejected)
 ##### 2.2.1 `onFulfilled`和`onRejected`都是可选的参数
 * 2.2.1.1. 如果`onFulfilled`不是一个函数，它必须被忽略
 * 2.2.1.2. 如果`onRejected`不是一个函数，它必须被忽略
-
 #### 2.2.2. 如果`onFulfilled`是一个函数
 * 2.2.2.1. 它必须在`promise`被**解决**后调用，`promise`的值作为它的第一个参数。
 * 2.2.2.2. 它一定不能在`promise`被**解决**前调用。
 * 2.2.2.3. 它一定不能被调用多次。
-
 #### 2.2.3. 如果`onRejected`是一个函数
 * 2.2.3.1. 它必须在`promise`被**拒绝**之后调用，用`promise`的原因作为它的第一个参数。
 * 2.2.3.2. 它一定不能在`promise`被**拒绝**之前调用。
 * 2.2.3.3. 它一定不能被调用多次。
-
 #### 2.2.4. 在执行上下文栈中只包含平台代码之前，`onFulfilled`或`onRejected`一定不能被调用 [3.1]
 #### 2.2.5. `onFulfilled`和`onRejected`一定被作为函数调用(没有`this`值) [3.2]
 #### 2.2.6. 同一个`promise`上的`then`可能被调用多次
@@ -74,7 +71,6 @@ promise2 = promise1.then(onFulfilled,onRejected)
 * 2.2.7.2. 如果`onFulfilled`或`onRejected`抛出一个异常`e`，`promise2`必须用`e`作为原因被**拒绝**
 * 2.2.7.3. 如果`onFulfilled`不是一个函数并且`promise1`被**解决**，`promise2`必须用与`promise1`相同的值被**解决**
 * 2.2.7.4. 如果`onRejected`不是一个函数并且`promise1`被**拒绝**，`promise2`必须用与`promise1`相同的原因被**拒绝**
-
 #### 2.3. `Promise`解决程序
 `promise`解决程序是一个抽象操作，它以一个`promise`和一个值作为输入，我们将其表示为`[[Resolve]](promise, x)`。如果`x`是一个`thenable`，它尝试让`promise`采用`x`的状态，并假设`x`的行为至少在某种程度上类似于`promise`。否则，它将会用值`x`**解决** `promise`。
 
