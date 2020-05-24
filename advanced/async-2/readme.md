@@ -230,6 +230,9 @@ p.then((result) => {
   });
   // reason ReferenceError: a is not defined
   ````
+这里我们用图来简单描述一下：
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/Untitled-2020-04-12-1644%20(2).png)
+
 ### 测试`Promise`
 
 ### `Promise`补充
