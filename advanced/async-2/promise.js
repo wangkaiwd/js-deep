@@ -93,15 +93,27 @@ class Promise {
     }
     if (x !== null && typeof x === 'object' || typeof x === 'function') { // 2.3.3. 如果x是一个对象或函数
       // 2.3.3.1 让then成为x.then
+      // 2.3.3.3.
+      let called = false;
+      // return {
+      //   then: function (resolvePromise, rejectPromise) {
+      //     resolvePromise(sentinel);
+      //     rejectPromise(other);
+      //   }
+      // };
       try {
         const then = x.then;
         if (typeof then === 'function') {
           then.call(x, (y) => {
             // 2.3.3.3.1
             // 如果y还是一个promise，会递归调用this.resolvePromise,直到y为一个普通值，而resolve,reject方法一直调用的都是.then方法返回的Promise的
+            if (called) return;
+            called = true;
             this.resolvePromise(promise2, y, resolve, reject);
           }, (r) => {
             // 2.3.3.3.2.
+            if (called) return;
+            called = true;
             reject(r);
           });
         } else {
@@ -109,6 +121,9 @@ class Promise {
         }
       } catch (e) {
         // 2.3.3.2. 如果检索x.then属性发生错误，用错误e作为原因拒绝Promise
+        // 2.3.3.3.4
+        if (called) return;
+        called = true;
         reject(e);
       }
     } else {
