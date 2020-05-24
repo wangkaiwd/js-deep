@@ -169,6 +169,8 @@ module.exports = Promise;
 这样我们就实现了异步的`resolve/reject`
 
 ### 实现链式调用
+> `then`方法的实现是`Promise/A+`规范中的最重要的部分，代码逻辑会相对较难一些。而且`Promise`也是围绕`then`来进行扩展和使用。 
+
 现在我们的`Promise`并不支持链式调用，我们继续将用例进行升级：
 ```javascript
 const p = new Promise((resolve, reject) => {
