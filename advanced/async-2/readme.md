@@ -543,7 +543,7 @@ Promise.deferred = function () {
   return deferred;
 };
 ```
-`promises-tests`要求我们必须要用`Node.js`模块导出一个非常小的接口：
+`promises-tests`要求我们必须要用`Node.js`模块导出一个非常小的适配器接口：
 ```javascript
 {
   deferred: function() {
@@ -555,7 +555,7 @@ Promise.deferred = function () {
   }
 }
 ```
-![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200525004610.png)
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/202005222225113141.png)
 
 这样暴露出来的`Promise`可以让我们在使用的时候少写`new Promise`的相关代码，减少嵌套，直接使用`Promise`实例和`resolve`以及`reject`方法:
 ```javascript
