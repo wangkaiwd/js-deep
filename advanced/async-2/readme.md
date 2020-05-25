@@ -192,52 +192,54 @@ p.then((result) => {
 });
 ```
 `.then`方法会返回一个新的`Promise`，新`Promise`的返回值是由`.then`方法中传入的2个回调函数的返回值来确定的。其可能的情况如下： 
+
 * 回调函数中返回普通值(不包括`Promise`)，此时直接将返回值`resolve(x)`,如果没有返回值即相当于返回`undefined`
-  ```javascript
-  const p = new Promise((resolve) => {
-    resolve(100);
-  });
-  p.then((result1) => result1 * 2).then((result2) => console.log(result2)); 
-  // 200
-  ```
+```javascript
+const p = new Promise((resolve) => {
+  resolve(100);
+});
+p.then((result1) => result1 * 2).then((result2) => console.log(result2)); 
+// 200
+``` 
 * 回调函数中返回一个`Promise`，将会以返回的`Promise`的状态和值作为`.then`方法返回的`Promise`的状态和值
-  ```javascript
-  const p = new Promise((resolve) => {
-    resolve(100);
+```javascript
+const p = new Promise((resolve) => {
+  resolve(100);
+});
+// 返回一个解决状态的Promise
+p.then((result1) => {
+  return new Promise((resolve, reject) => {
+    resolve(400);
   });
-  // 返回一个解决状态的Promise
-  p.then((result1) => {
-    return new Promise((resolve, reject) => {
-      resolve(400);
-    });
-  }).then((result2) => {
-    console.log(result2);
+}).then((result2) => {
+  console.log(result2);
+});
+// 400
+
+// 返回一个拒绝状态的Promise
+p.then((result1) => {
+  return new Promise((resolve, reject) => {
+    reject(400);
   });
-  // 400
-  
-  // 返回一个拒绝状态的Promise
-  p.then((result1) => {
-    return new Promise((resolve, reject) => {
-      reject(400);
-    });
-  }).then((result2) => {
-    console.log(result2);
-  }, (reason) => {
-    console.log(reason);
-  });
-  // reason 400
-  ```
+}).then((result2) => {
+  console.log(result2);
+}, (reason) => {
+  console.log(reason);
+});
+// reason 400
+```
 * 如果`.then`方法中传入的回调函数在执行时出现了错误，新返回的`Promise`将用错误`e`来作为原因被拒绝
-  ````javascript
-  p.then((result1) => {
-    console.log(a);
-  }).then((result2) => {
-    console.log('result2', result2);
-  }, (reason) => {
-    console.log('reason', reason);
-  });
-  // reason ReferenceError: a is not defined
-  ````
+````javascript
+p.then((result1) => {
+  console.log(a);
+}).then((result2) => {
+  console.log('result2', result2);
+}, (reason) => {
+  console.log('reason', reason);
+});
+// reason ReferenceError: a is not defined
+````
+  
 这里我们用图来简单描述一下：
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/Untitled-2020-04-12-1644%20(2).png)
 
@@ -576,4 +578,4 @@ npx promises-aplus-tests ./promise.js
 ```
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/202005222225002044.png)
 
-当然，社区中还有许多优秀的[符合`Promise/A+`规范的`Promise`实现](https://promisesaplus.com/implementations#standalone)，我们可以参考优秀的代码进行借鉴学习。
+当然，社区中还有许多优秀的[符合`Promise/A+`规范的`Promise`实现](https://promisesaplus.com/implementations#standalone) ，我们可以参考优秀的代码进行借鉴学习。
