@@ -11,6 +11,19 @@ class Promise {
     this.resolveFnList = [];
     this.rejectFnList = [];
     const resolve = (result) => {
+      if (result !== null && typeof result === 'object' || typeof result === 'function') {
+        try {
+          const then = result.then;
+          then.call(result, (y) => {
+            resolve(y);
+          }, (r) => {
+            reject(r);
+          });
+        } catch (e) {
+          reject(e);
+        }
+        return;
+      }
       if (this.state !== PENDING) return;
       this.state = RESOLVED;
       this.value = result;
