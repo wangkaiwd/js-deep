@@ -530,7 +530,7 @@ class Promise {
 module.exports = Promise;
 ```
 ### 测试`Promise`
-`Promise/A+`组织为我们提供了一套[测试用例](https://github.com/promises-aplus/promises-tests)，来让我们测试实现的`Promise`是否符合`Promise/A+`规范。
+`Promise/A+`组织为我们提供了一套[测试用例](https://github.com/promises-aplus/promises-tests)，来让我们测试实现的`Promise`是否完全符合`Promise/A+`规范。
 
 为了使用测试用例，需要在`Promise`源码末尾添加如下代码：
 ```javascript
@@ -557,7 +557,7 @@ Promise.deferred = function () {
 ```
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200525004610.png)
 
-这样暴露出来的`Promise`可以让我们再使用的时候少写`new Promise`的相关代码，直接使用`Promise`实例和`resolve`以及`reject`方法:
+这样暴露出来的`Promise`可以让我们在使用的时候少写`new Promise`的相关代码，减少嵌套，直接使用`Promise`实例和`resolve`以及`reject`方法:
 ```javascript
 const deferred = Promise.deferred();
 setTimeout(() => {
@@ -576,4 +576,4 @@ npx promises-aplus-tests ./promise.js
 ```
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/202005222225002044.png)
 
-当然，社区中还有许多优秀的[符合`Promise/A+`规范的实现](https://promisesaplus.com/implementations#standalone)，我们可以参考优秀的代码进行借鉴学习。
+当然，社区中还有许多优秀的[符合`Promise/A+`规范的`Promise`实现](https://promisesaplus.com/implementations#standalone)，我们可以参考优秀的代码进行借鉴学习。
