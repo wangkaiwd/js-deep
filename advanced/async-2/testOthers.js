@@ -60,7 +60,42 @@ function test4 () {
   });
 }
 
+function test5 () {
+  const p = Promise.resolve(new Promise((resolve, reject) => {
+    resolve(100);
+  }));
+  p.then((result) => {
+    console.log('result', result);
+  }, (reason) => {
+    console.log('reason', reason);
+  });
+}
+
+function test6 () {
+  const p = Promise.reject(100);
+  p.then((result) => {
+    console.log('result', result);
+  }, (reason) => {
+    console.log('reason', reason);
+  });
+}
+
+function test7 () {
+  const p1 = Promise.resolve(1);
+  const p2 = new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(2);
+    }, 1000);
+  });
+  Promise.all([0, p1, p2, 3]).then((results) => {
+    console.log('results', results);
+  });
+}
+
 // test1();
 // test2();
 // test3();
 // test4();
+// test5();
+// test6();
+test7();

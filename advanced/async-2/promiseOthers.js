@@ -150,6 +150,40 @@ class Promise {
       resolve(x);
     }
   }
+
+  static resolve (result) {
+    return new Promise((resolve) => {
+      resolve(result);
+    });
+  }
+
+  static reject (reason) {
+    return new Promise((resolve, reject) => {
+      reject(reason);
+    });
+  }
+
+  static all (iterable) {
+    return new Promise((resolve, reject) => {
+      const final = [];
+      let count = 0; // 记录promise执行次数，全部执行完成后，将结果进行resolve
+      for (let i = 0; i < iterable.length; i++) {
+        const item = iterable[i];
+        // 不是promise的其它值通过Promise.resolve转换为promise进行统一处理
+        Promise.resolve(item).then((result) => {
+          final[i] = result;
+          console.log('count', count);
+          if (++count === iterable.length) {
+            resolve(final);
+          }
+        }, (reason) => {
+          // 一旦有promise被拒绝就立即拒绝all方法返回的promise，虽然循环还会继续，
+          // 但是由于Promise的状态只能由pending变为其它状态，所以之后的resolve和reject并不会生效
+          reject(reason);
+        });
+      }
+    });
+  }
 }
 
 Promise.deferred = function () {
