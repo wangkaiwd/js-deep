@@ -174,7 +174,7 @@ module.exports = Promise;
 ### 实现链式调用
 > `then`方法的实现是`Promise/A+`规范中的最重要的部分，代码逻辑会相对较难一些。而且`Promise`也是围绕`then`来进行扩展和使用，需要重点理解和学习。
 
-现在我们的`Promise`并不支持链式调用，我们继续将用例进行升级：
+现在我们的`Promise`并不支持链式调用，我们继续将使用场景进行升级：
 ```javascript
 const p = new Promise((resolve, reject) => {
   setTimeout(() => {
@@ -353,14 +353,14 @@ class Promise {
 ```
 这里的`resolvePromise`就是`Promise/A+`规范中提到的`[[Resolve]](promise, x)`，它会判断`.then`中传入回调返回值的类型，来确定`.then`返回`Promise`的状态和值。
 
-有时候我们传递给`.then`函数中的值可能不是函数，而是其它值。此时，`.then`函数执行后会返回一个和之前`Promise`完全相同的`Promise`，只不过俩个`Promise`所占用的堆内存不同。我们看下面的例子：
+有时候我们传递给`.then`函数中的参数可能不是函数，而是其它值。此时，`.then`函数执行后会返回一个和之前`Promise`完全相同的`Promise`(类似于之前`Promise`的拷贝)，只不过俩个`Promise`所占用的堆内存不同。我们看下面的例子：
 ```javascript
 const p = new Promise((resolve, reject) => {
   setTimeout(() => {
     resolve(100);
   }, 1000);
 });
-// 第一个第二.then返回的Promise都是相当于p的拷贝新的promise
+// 第一个和第二个.then返回的新Promise都是相当于p的拷贝
 p.then().then(null, 1).then((result) => {
   console.log('result', result);
 }, (reason) => {
@@ -375,7 +375,7 @@ p.then(y => y, r => {throw r})
   console.log('reason', reason);
 });
 ```
-我们在`.then`函数中添加如下代码，来构造`Promise`可以处理的函数：
+我们在`.then`函数中添加如下代码，将`.then`中不是函数的参数巧妙的构建为一个函数，来支持`Promise`的继续调用：
 ```javascript
 then (onFulfilled, onRejected) {
   // 2.2.1.
