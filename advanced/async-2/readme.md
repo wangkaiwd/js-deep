@@ -71,7 +71,7 @@ class Promise {
 
 module.exports = Promise;
 ```
-`Promise`的实例上有一个`.then`方法，它接收俩个回调函数作为参数。当`Promise`的状态为`resolved`时，用`Promise`的`value`作为参数，执行第`.then`中的第一个回调函数。当`Promise`的状态为`rejected`时，用`Promise`的`reason`作为参数执行第二个回调函数。代码如下：
+`Promise`的实例上有一个`.then`方法，它接收俩个回调函数作为参数。当`Promise`的状态为`resolved`时，用`Promise`的`value`作为参数，执行`.then`中的第一个回调函数。当`Promise`的状态为`rejected`时，用`Promise`的`reason`作为参数执行第二个回调函数。代码如下：
 ```javascript
 class Promise {
   // ...
@@ -84,7 +84,7 @@ class Promise {
   }
 }
 ```
-到这里，我们的需求已经实现了，但是代码完全是同步，我们需要用`setTimeout(()=> {...},0)`来实现异步，确保`.then`中的回调函数是异步执行的。
+到这里，需求已经实现了，但是代码完全是同步的，我们需要用`setTimeout(()=> {...},0)`来实现异步，确保`.then`中的回调函数是异步执行的。
 ```javascript
 class Promise {
   // ...
@@ -172,7 +172,7 @@ module.exports = Promise;
 这样我们就实现了异步的`resolve/reject`
 
 ### 实现链式调用
-> `then`方法的实现是`Promise/A+`规范中的最重要的部分，代码逻辑会相对较难一些。而且`Promise`也是围绕`then`来进行扩展和使用。 
+> `then`方法的实现是`Promise/A+`规范中的最重要的部分，代码逻辑会相对较难一些。而且`Promise`也是围绕`then`来进行扩展和使用，需要重点理解和学习。
 
 现在我们的`Promise`并不支持链式调用，我们继续将用例进行升级：
 ```javascript
