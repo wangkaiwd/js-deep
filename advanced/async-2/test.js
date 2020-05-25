@@ -103,10 +103,21 @@ function test7 () {
   });
 }
 
+function test8 () {
+  const deferred = Promise.deferred();
+  setTimeout(() => {
+    deferred.resolve(100);
+  }, 1000);
+  deferred.promise.then((result) => {
+    console.log('result', result);
+  });
+}
+
 // test1();
 // test2();
 // test3();
 // test4();
 // test5();
 // test6();
-test7();
+// test7();
+test8();

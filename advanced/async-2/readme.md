@@ -553,6 +553,18 @@ Promise.deferred = function () {
 }
 ```
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200525004610.png)
+
+这样暴露出来的`Promise`可以让我们再使用的时候少写`new Promise`的相关代码，直接使用`Promise`实例和`resolve`以及`reject`方法:
+```javascript
+const deferred = Promise.deferred();
+setTimeout(() => {
+  deferred.resolve(100);
+}, 1000);
+deferred.promise.then((result) => {
+  console.log('result', result);
+});
+```
+
 接下来我们在命令行中安装`promises-tests`并测试自己的`Promise`代码：
 ```shell script
 yarn init -y
