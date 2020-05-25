@@ -167,12 +167,11 @@ class Promise {
     return new Promise((resolve, reject) => {
       const final = [];
       let count = 0; // 记录promise执行次数，全部执行完成后，将结果进行resolve
-      for (let i = 0; i < iterable.length; i++) {
+      for (let i = 0; i < iterable.length; i++) { // 这里要使用let,防止执行顺序错乱
         const item = iterable[i];
         // 不是promise的其它值通过Promise.resolve转换为promise进行统一处理
         Promise.resolve(item).then((result) => {
           final[i] = result;
-          console.log('count', count);
           if (++count === iterable.length) {
             resolve(final);
           }
