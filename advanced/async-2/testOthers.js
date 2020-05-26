@@ -84,11 +84,13 @@ function test7 () {
   const p1 = Promise.resolve(1);
   const p2 = new Promise((resolve) => {
     setTimeout(() => {
-      resolve(2);
+      resolve(4);
     }, 1000);
   });
   Promise.all([0, p1, p2, 3]).then((results) => {
     console.log('results', results);
+  }, (reason) => {
+    console.log('reason', reason);
   });
 }
 

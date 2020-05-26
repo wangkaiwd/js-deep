@@ -91,18 +91,13 @@ p.then((result) => {
 而`reject`方法在执行时，并不会对传入的参数进行类型判断，而是直接执行`reject`方法。下面，我们对自己的`Promise`源码进行改造：
 ```javascript
 const resolve = (result) => {
-  if (result !== null && typeof result === 'object' || typeof result === 'function') {
-    try {
-      const then = result.then;
-      then.call(result, (y) => {
-        resolve(y);
-      }, (r) => {
-        reject(r);
-      });
-    } catch (e) {
-      reject(e);
-    }
-    return;
+  // 如果是Promise的话，进行递归调用
+  if (typeof result.then === 'function') {
+    return result.then((y) => {
+      resolve(y);
+    }, (r) => {
+      reject(r);
+    });
   }
   if (this.state !== PENDING) return;
   this.state = RESOLVED;
@@ -191,6 +186,44 @@ p.then((result) => {
 3. 只要参数数组中有一个`promise`被拒绝，新返回的`promise`状态就会变为拒绝状态，原因为第一个被拒绝`promise`的原因
 
 实现如下：
-````javascript
+```javascript
+class Promise {
+  // ...  
+  static all (iterable) {
+    return new Promise((resolve, reject) => {
+      const final = [];
+      let count = 0; // 记录promise执行次数，全部执行完成后，将结果进行resolve
+      for (let i = 0; i < iterable.length; i++) { // 这里要使用let,防止执行顺序错乱
+        const item = iterable[i];
+        // 不是promise的其它值通过Promise.resolve转换为promise进行统一处理
+        Promise.resolve(item).then((result) => {
+          final[i] = result;
+          if (++count === iterable.length) {
+            resolve(final);
+          }
+        }, (reason) => {
+          // 一旦有promise被拒绝就立即拒绝all方法返回的promise，虽然循环还会继续，
+          // 但是由于Promise的状态只能由pending变为其它状态，所以之后的resolve和reject并不会生效
+          reject(reason);
+        });
+      }
+    });
+  }
+}
+```
 
+测试代码：
+````javascript
+const p1 = Promise.resolve(1);
+const p2 = new Promise((resolve) => {
+  setTimeout(() => {
+    resolve(4);
+  }, 1000);
+});
+Promise.all([0, p1, p2, 3]).then((results) => {
+  console.log('results', results);
+}, (reason) => {
+  console.log('reason', reason);
+});
+// results [0, 1, 4, 3]
 ````

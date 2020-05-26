@@ -11,18 +11,13 @@ class Promise {
     this.resolveFnList = [];
     this.rejectFnList = [];
     const resolve = (result) => {
-      if (result !== null && typeof result === 'object' || typeof result === 'function') {
-        try {
-          const then = result.then;
-          then.call(result, (y) => {
-            resolve(y);
-          }, (r) => {
-            reject(r);
-          });
-        } catch (e) {
-          reject(e);
-        }
-        return;
+      // 如果是Promise的话，进行递归调用
+      if (typeof result.then === 'function') {
+        return result.then((y) => {
+          resolve(y);
+        }, (r) => {
+          reject(r);
+        });
       }
       if (this.state !== PENDING) return;
       this.state = RESOLVED;
