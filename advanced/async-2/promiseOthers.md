@@ -383,4 +383,4 @@ p.finally(() => {
 });
 ```
 
-到目前为止，我们已经重新实现了所有`Promise`的周边方法
+到目前为止，我们已经重新实现了所有`Promise`的周边方法，所有的源代码在这里: [传送门](https://github.com/wangkaiwd/js-deep/blob/master/advanced/async-2/promiseOthers.js) 。通过对`Promise`源码的理解和实现，可以帮助我们更好的明白`Promise`的运行机制，更加熟练的在实际工作中运用`Promise`。
