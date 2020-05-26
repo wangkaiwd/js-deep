@@ -199,12 +199,7 @@ class Promise {
     return new Promise((resolve, reject) => {
       for (let i = 0; i < iterable.length; i++) {
         const item = iterable[i];
-        Promise.resolve(item).then((y) => {
-          // 这里无法终止循环
-          resolve(y);
-        }, (r) => {
-          reject(r);
-        });
+        Promise.resolve(item).then(resolve, reject);
       }
     });
   }
