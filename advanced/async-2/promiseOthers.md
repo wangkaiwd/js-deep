@@ -1,5 +1,5 @@
 ## 手写`Promise`周边方法
-> 在阅读本文之前，需要先根据`Promise/A+`规范实现符合规范的`Promise`。如果你想要学习如何写一个符合规范的`Promise`,可以参考我的这边文章: [从零到一实现完全符合Promise/A+的Promise](https://github.com/wangkaiwd/js-deep/blob/master/advanced/async-2/readme.md) 。
+> 在阅读本文之前，需要先根据`Promise/A+`规范实现符合规范的`Promise`。如果你想要学习如何写一个符合规范的`Promise`,可以参考笔者的这篇文章: [从零到一实现完全符合Promise/A+的Promise](https://github.com/wangkaiwd/js-deep/blob/master/advanced/async-2/readme.md) 。
 
 在`Promise/A+`的基础上，原生`Promise`还为我们提供了一些额外的方法，方便用户使用。
 
@@ -16,12 +16,12 @@
 * Promise.race(iterable)
 * Promise.allSettled(iterable)
 
-> 原生的[`allSettled`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled) 方法目前还不能直接使用，目前还处于`TC39`第4阶段草案
+> 原生的[`allSettled`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled) 方法目前还不能直接，还处于`TC39`第4阶段草案
 
 接下来让我们看看这些方法应该如何实现。
 
 ### `resolve`新的`Promise`
-在我们之前实现的`Promise`中，并没有对立即执行函数中`resolve`函数中传入`promise`的情况进行处理。在原生`Promise`中会以`resolve`中传入的`Promise`的状态来作为`Promise`实例的状态，让我看下下边的代码：
+在我们之前实现的`Promise`中，并没有对立即执行函数中`resolve`函数中传入`promise`的情况进行处理。在原生`Promise`中会以`resolve`中传入的`Promise`的状态来作为`Promise`实例的状态，让我们看下下边的代码：
 ```javascript
 // 解决一个rejected的Promise,最终会调用最外层Promise立即执行函数的reject函数
 const p = new Promise((resolve, reject) => {
@@ -237,12 +237,7 @@ class Promise {
     return new Promise((resolve, reject) => {
       for (let i = 0; i < iterable.length; i++) {
         const item = iterable[i];
-        Promise.resolve(item).then((y) => {
-          // 这里无法终止循环
-          resolve(y);
-        }, (r) => {
-          reject(r);
-        });
+        Promise.resolve(item).then(resolve, reject);
       }
     });
   }
