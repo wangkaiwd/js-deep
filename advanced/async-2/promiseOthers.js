@@ -146,6 +146,22 @@ class Promise {
     }
   }
 
+  catch (onRejected) {
+    return this.then(null, onRejected);
+  }
+
+  finally (onFinally) {
+    return new Promise((resolve, reject) => {
+      this.then((result) => {
+        onFinally();
+        resolve(result);
+      }, (reason) => {
+        onFinally();
+        reject(reason);
+      });
+    });
+  }
+
   static resolve (result) {
     return new Promise((resolve) => {
       resolve(result);
@@ -174,6 +190,42 @@ class Promise {
           // 一旦有promise被拒绝就立即拒绝all方法返回的promise，虽然循环还会继续，
           // 但是由于Promise的状态只能由pending变为其它状态，所以之后的resolve和reject并不会生效
           reject(reason);
+        });
+      }
+    });
+  }
+
+  static race (iterable) {
+    return new Promise((resolve, reject) => {
+      for (let i = 0; i < iterable.length; i++) {
+        const item = iterable[i];
+        Promise.resolve(item).then((y) => {
+          // 这里无法终止循环
+          resolve(y);
+        }, (r) => {
+          reject(r);
+        });
+      }
+    });
+  }
+
+  static allSettled (iterable) {
+    return new Promise((resolve, reject) => {
+      const final = [];
+      let count = 0; // 记录promise执行次数，全部执行完成后，将结果进行resolve
+      for (let i = 0; i < iterable.length; i++) { // 这里要使用let,防止执行顺序错乱
+        const item = iterable[i];
+        // 不是promise的其它值通过Promise.resolve转换为promise进行统一处理
+        Promise.resolve(item).then((result) => {
+          final[i] = { status: 'fulfilled', value: result };
+          if (++count === iterable.length) {
+            resolve(final);
+          }
+        }, (reason) => {
+          // 一旦有promise被拒绝就立即拒绝all方法返回的promise，虽然循环还会继续，
+          // 但是由于Promise的状态只能由pending变为其它状态，所以之后的resolve和reject并不会生效
+          ++count;
+          final[i] = { status: 'rejected', reason };
         });
       }
     });

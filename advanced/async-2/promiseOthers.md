@@ -1,4 +1,4 @@
-## 手写`Promise`的其它方法
+## 手写`Promise`周边方法
 > 在阅读本文之前，需要先根据`Promise/A+`规范实现符合规范的`Promise`。如果你想要学习如何写一个符合规范的`Promise`,可以参考我的这边文章: [从零到一实现完全符合Promise/A+的Promise](https://github.com/wangkaiwd/js-deep/blob/master/advanced/async-2/readme.md) 。
 
 在`Promise/A+`的基础上，原生`Promise`还为我们提供了一些额外的方法，方便用户使用。
@@ -117,7 +117,6 @@ resolve中传入Promise的话，会根据Promise的最终状态来决定调用re
 ```
 
 ### `Promise.resolve`方法
-首先我们看一下`mdn`中对于它的描述：
 > `Promise.resolve(value)`返回一个以给定值解析后的`Promise`对象
 
 1. `value`是`thenable`或`Promise`，将会等到`Promise`执行完成后才会执行`resolve`方法，并且采用`value`的最终状态
@@ -150,7 +149,6 @@ p.then((result) => {
 ```
 
 ### `Promise.reject`方法
-`mdn`的描述如下：
 > `Promise.reject(reason)`: 方法返回一个带有拒绝原因的`Promise`对象。
 
 实现如下：
@@ -227,3 +225,167 @@ Promise.all([0, p1, p2, 3]).then((results) => {
 });
 // results [0, 1, 4, 3]
 ````
+
+### `Promise.race`方法
+> `Promise.race(iterable)`: 方法返回一个`promise`，一旦迭代器中的某个`promise`解决或拒绝，返回的`promise`就会解决或拒绝
+
+实现代码：
+```javascript
+class Promise {
+  // ...  
+  static race (iterable) {
+    return new Promise((resolve, reject) => {
+      for (let i = 0; i < iterable.length; i++) {
+        const item = iterable[i];
+        Promise.resolve(item).then((y) => {
+          // 这里无法终止循环
+          resolve(y);
+        }, (r) => {
+          reject(r);
+        });
+      }
+    });
+  }
+  // ...  
+}
+```
+
+测试代码：
+```javascript
+const p1 = Promise.resolve(1);
+const p2 = new Promise((resolve) => {
+  setTimeout(() => {
+    resolve(4);
+  }, 1000);
+});
+Promise.race([0, p1, p2, 3]).then((results) => {
+  console.log('results', results);
+}, (reason) => {
+  console.log('reason', reason);
+});
+```
+
+### `Promise.allSettled`方法
+> 返回一个在所有给定的`promise`已被解决或被拒绝后的解决状态的`promise`，并带有一个对象数组，每个对象表示对应的`promise`结果
+
+1. 方法最终都会返回一个处于解决状态的`promise`
+2. `onFulfilled`函数的参数为对象组成的数组，对象中包含`promise`解决或拒绝的状态以及解决的值和失败的原因。
+
+实现如下：
+```javascript
+class Promise {
+  // ...  
+  static allSettled (iterable) {
+    return new Promise((resolve, reject) => {
+      const final = [];
+      let count = 0; // 记录promise执行次数，全部执行完成后，将结果进行resolve
+      for (let i = 0; i < iterable.length; i++) { // 这里要使用let,防止执行顺序错乱
+        const item = iterable[i];
+        // 不是promise的其它值通过Promise.resolve转换为promise进行统一处理
+        Promise.resolve(item).then((result) => {
+          final[i] = { status: 'fulfilled', value: result };
+          if (++count === iterable.length) {
+            resolve(final);
+          }
+        }, (reason) => {
+          // 一旦有promise被拒绝就立即拒绝all方法返回的promise，虽然循环还会继续，
+          // 但是由于Promise的状态只能由pending变为其它状态，所以之后的resolve和reject并不会生效
+          ++count;
+          final[i] = { status: 'rejected', reason };
+        });
+      }
+    });
+  }
+  // ...  
+}
+```
+
+测试代码：
+```javascript
+const p1 = Promise.reject(1);
+const p2 = new Promise((resolve) => {
+  setTimeout(() => {
+    resolve(4);
+  }, 1000);
+});
+Promise.allSettled([0, p1, p2, 3]).then((results) => {
+  console.log('results', results);
+});
+// results [
+//  { status: 'fulfilled', value: 0 },
+//  { status: 'rejected', reason: 1 },
+//  { status: 'fulfilled', value: 4 },
+//  { status: 'fulfilled', value: 3 }
+// ]
+```
+
+### `Promise`的一些原型方法
+
+#### `Promise.prototype.catch`
+> `catch()`: 返回一个`Promise`，并且处理拒绝的情况
+
+实现如下：
+```javascript
+class Promise {
+  // ...  
+  catch (onRejected) {
+    return this.then(null, onRejected);
+  }
+  // ...  
+}
+```
+
+测试代码：
+```javascript
+const p = new Promise((resolve, reject) => {
+  resolve(100);
+});
+p.then((result) => {
+  return Promise.reject(result);
+}).catch((error) => {
+  console.log('error', error);
+});
+```
+
+#### `Promise.prototype.finally`
+> `finally()`方法返回一个`Promise`。在`Promise`结束时，无论结果是`fulfilled`或者是`rejected`，都会执行指定的回调函数。这为在`Promise`是否成功完成后都需要执行的代码提供了一种方式。
+
+1. 由于无法知道`promise`的最终状态，所以`finally`的回调函数中不接收任何参数，它仅用于无论最终结果如何都要执行的结果
+2. 调用`.finally`方法并不会更改前一个`promise`的状态和值，只是添加了一段在解决或拒绝时都会执行的代码
+
+实现如下：
+```javascript
+class Promise {
+  // ...  
+  finally (onFinally) {
+    return new Promise((resolve, reject) => {
+      this.then((result) => {
+        onFinally();
+        resolve(result);
+      }, (reason) => {
+        onFinally();
+        reject(reason);
+      });
+    });
+  }
+  // ...  
+}
+```
+
+测试代码：
+```javascript
+const p = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve(10);
+  }, 1000);
+});
+p.finally(() => {
+  console.log('befor process');
+}).then((result) => {
+  console.log('result', result);
+}).finally(() => {
+  console.log('after process');
+});
+```
+
+到目前为止，我们已经重新实现了所有`Promise`的周边方法
