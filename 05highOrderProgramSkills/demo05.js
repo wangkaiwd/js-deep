@@ -18,7 +18,7 @@ function compose (...funcs) {
 
   // 如果传入的执行函数有多个
   return funcs.reduce((a, b) => {
-    return (...args) => {
+    return (...args) => { // 函数中的内容并不会立即执行
       return a(b(...args));
     };
   });
