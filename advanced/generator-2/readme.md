@@ -1,0 +1,1 @@
+## `Generator`函数
