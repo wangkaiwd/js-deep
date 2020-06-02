@@ -1,1 +1,3 @@
-console.log('vue');
+import vue from 'vue';
+
+console.log(vue);

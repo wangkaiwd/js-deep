@@ -11,3 +11,5 @@
 * `new`方法实现
 * `es5`实现`class`，分析其中的不同之处
 * `es5`实现`class`的`extends`
+
+
