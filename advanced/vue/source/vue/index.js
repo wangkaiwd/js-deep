@@ -1,4 +1,4 @@
-import { initState } from 'vue/observe';
+import { initState } from './observe';
 
 function Vue (options) {
   this._init(options);
