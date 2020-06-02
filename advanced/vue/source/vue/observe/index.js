@@ -27,7 +27,7 @@ function initWatch () {
 function initState (vm) {
   const opts = vm.$options;
   if (opts.data) {
-    initData();
+    initData(vm);
   }
   if (opts.computed) {
     initComputed();
