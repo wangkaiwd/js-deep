@@ -93,5 +93,37 @@ animal.say(); // say
 
 我们再来看下边的一个例子：
 ```javascript
+function Fn () {
+  this.x = 100;
+  this.y = 200;
+  this.getX = function () {
+    console.log(this.x);
+  };
+}
+
+Fn.prototype.getX = function () {
+  console.log(this.x);
+};
+
+Fn.prototype.getY = function () {
+  console.log(this.y);
+};
+
+const f1 = new Fn();
+const f2 = new Fn();
+```
+
+我们画图来描述一下这之间的关系：
+
+理解了原型链和原型的指向关系后，我们看看以下代码会输出什么：
+```javascript
 
 ```
+
+到这里，我们已经初步理解了原型和原型链的一些相关概念，下面让我们通过一些实际例子来应用一下吧！
+
+### 借用原型方法
+在`JavaScript`中，我们可以通过`call/bind/apply`来更改`this`指向，
+
+### 实现构造函数之间的继承
+
