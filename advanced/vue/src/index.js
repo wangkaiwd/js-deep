@@ -7,8 +7,11 @@ const vm = new Vue({
   data () {
     return {
       msg: 'hello',
-      person: { name: 'zf', age: 10 },
-      arr: [1, 2, 3]
+      person: { name: 'zs', age: 10 },
+      arr: [1, 2, 3],
+      f: function () {
+        console.log(f);
+      }
     };
   },
   computed: {},
@@ -16,6 +19,8 @@ const vm = new Vue({
 });
 
 // Vue实例对象
-console.log(vm);
+vm.msg = 'hello world';
+vm.person.name = 'ls';
+console.log(vm._data);
 
 
