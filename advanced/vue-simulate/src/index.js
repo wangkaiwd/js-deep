@@ -19,8 +19,9 @@ const vm = new Vue({
 });
 
 // Vue实例对象
-vm.msg = 'hello world';
-vm.person.name = 'ls';
-console.log(vm._data);
+
+// 并不会触发Object.defineProperty中的set方法
+vm.arr.push(4);
+console.log(vm);
 
 
