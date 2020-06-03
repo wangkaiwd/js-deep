@@ -17,9 +17,10 @@ const methods = [
   'splice'
 ];
 
-function observeArray (inserted) {
-  for (let i = 0; i < inserted; i++) {
-    observe(inserted[i]);
+export function observeArray (array) {
+  if (!Array.isArray(array)) return;
+  for (let i = 0; i < array.length; i++) {
+    observe(array[i]);
   }
 }
 

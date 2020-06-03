@@ -8,7 +8,7 @@ const vm = new Vue({
     return {
       msg: 'hello',
       person: { name: 'zs', age: 10 },
-      arr: [1, 2, 3],
+      arr: [{ a: 1 }, 1, 2, 3],
       f: function () {
         console.log(f);
       }
@@ -24,7 +24,16 @@ const vm = new Vue({
 // vm.arr.push(4);
 
 // 如果数组中新增的内容是对象
-vm.arr.push({ a: 1 });
+// vm.arr[0].a = 100;
+console.log(vm.arr[1] = '1');
 console.log(vm);
 
+// 什么样的数组会被观察：
+// [ 0, 1, 2] 数组中每一项并不是对象，并不会被观察
+// [0,1,2].length-- 数组长度的变化没有进行监控
 
+// [{a:1}]  会对数组中的对象进行观察
+// [].push/unshift/splice 方法可以被监控 vm.$set 内部调用的就是数组的splice方法
+
+// 1. 不能对数组索引进行观察
+// 2. 不能对数组长度进行观察

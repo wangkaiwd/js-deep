@@ -1,5 +1,5 @@
 import { observe } from './index';
-import { arrayMethods } from './array';
+import { arrayMethods, observeArray } from './array';
 
 function defineReactive (data, key, value) {
   // 如果value依旧是一个对象(不包括function)的话，为对象中的每一个属性设置get,set方法
@@ -7,11 +7,14 @@ function defineReactive (data, key, value) {
   // 重新设置set,get方法
   Object.defineProperty(data, key, {
     get () {
+      console.log('获取数据');
       return value;
     },
     set (newVal) {
-      if (value === newVal) return;
       console.log('设置数据');
+      if (value === newVal) return;
+      // 如果新设置的值是对象，继续进行观察
+      observe(newVal);
       value = newVal;
     }
   });
@@ -21,6 +24,8 @@ class Observer {
   constructor (data) {
     if (Array.isArray(data)) {
       data.__proto__ = arrayMethods;
+      // 还要对数组中的每一项再进行观察
+      observeArray(data);
     } else {
       this.walk(data);
     }
