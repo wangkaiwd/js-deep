@@ -1,4 +1,6 @@
 ## 彻底理解：`JavaScript`原型和原型链
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020-6-4-9-40-prototype-bg%40%E5%87%A1%E7%A7%91%E5%BF%AB%E5%9B%BE01.png)
+
 `JavaScript`中有许多内置对象，如:`Object, Math, Date`等。我们通常会这样使用它们：
 ```javascript
 // 创建一个JavaScript Date实例
