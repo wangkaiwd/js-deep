@@ -118,6 +118,10 @@ const f2 = new Fn();
 我们画图来描述一下实例、构造函数、以及`prototype`和`__proto__`之间的关系：
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020-6-4-9-29prototype.png)
 
+我们再来看一下`Function`和`Object`以及其原型之间的关系：
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020-6-4-10-00.png)
+由于`Function`和`Object`都是函数，因此它们的所属类为`Function`，它们的`__proto__`都指向`Function.prototype`。而`Function.prototype.__proto__`又指向`Object.prototype`，所以它们既可以调用函数原型上的方法，也可以调用对象原型上的方法。
+
 当我们需要获取实例上的某个属性时：
 > 上例中：
 > * 实例：`fn`
