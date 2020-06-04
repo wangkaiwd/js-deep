@@ -8,6 +8,16 @@
   <title>Document</title>
 </head>
 <body>
-<div id="app"></div>
+<div id="app">
+  <input type="text" v-model="msg">
+  {{msg}}
+  <div>
+    名称：{{person.name}}
+    年龄：{{person.age}}
+  </div>
+  <div>
+    {{arr}}
+  </div>
+</div>
 </body>
 </html>

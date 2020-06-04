@@ -3,7 +3,7 @@
 import Vue from 'vue';
 
 const vm = new Vue({
-  el: '#app',
+  el: '#app', // vue实例的挂载点。可以是一个CSS选择器字符串，也可以是一个真实的HTML元素
   data () {
     return {
       msg: 'hello',
