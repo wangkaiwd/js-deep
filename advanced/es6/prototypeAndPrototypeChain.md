@@ -114,7 +114,8 @@ const f2 = new Fn();
 ```
 
 我们画图来描述一下实例、构造函数、以及`prototype`和`__proto__`之间的关系：
-![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020-06-04-0953-prototype.png)
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020-6-4-9-29prototype.png)
+
 当我们需要获取实例上的某个属性时：
 > 上例中：
 > * 实例：`fn`
