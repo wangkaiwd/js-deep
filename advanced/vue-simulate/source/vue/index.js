@@ -13,6 +13,7 @@ Vue.prototype._init = function (options) {
   // @see: https://vuejs.org/v2/api/#vm-options
   vm.$options = options;
   // MVVM原理：需要数据重新初始化
+  // 拦截数组的方法和对象的属性
   initState(vm);
 };
 export default Vue;
