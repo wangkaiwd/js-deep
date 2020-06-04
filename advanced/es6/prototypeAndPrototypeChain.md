@@ -113,11 +113,34 @@ const f1 = new Fn();
 const f2 = new Fn();
 ```
 
-我们画图来描述一下这之间的关系：
+我们画图来描述一下实例、构造函数、以及`prototype`和`__proto__`之间的关系：
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020-06-04-0953-prototype.png)
+当我们需要获取实例上的某个属性时：
+> 上例中：
+> * 实例：`fn`
+> * 实例所属类: `Fn`
+1. 首先会从自身的私有属性上进行查找
+2. 如果没有找到，会到自身的`__proto__`上进行查找，而实例的`__proto__`指向其所属类的`prototype`,即会在类的`prototype`上进行查找
+3. 如果还没有找到，继续到类的`prototype`的`__proto__`中查找，即`Object.prototype`
+4. 如果在`Object.prototype`中依旧没有找到，那么返回`null`
 
-理解了原型链和原型的指向关系后，我们看看以下代码会输出什么：
+上述查找过程便形成了`JavaScript`中的原型链。
+
+在理解了原型链和原型的指向关系后，我们看看以下代码会输出什么：
 ```javascript
+console.log(f1.getX === f2.getX);
+console.log(f1.getY === f2.getY);
 
+console.log(f1.__proto__.getY === Fn.prototype.getY);
+console.log(f1.__proto__.getX === f2.getX);
+console.log(f1.getX === Fn.prototype.getX);
+console.log(f1.constructor);
+console.log(Fn.prototype.__proto__.constructor);
+
+f1.getX();
+f1.__proto__.getX();
+f2.getY();
+Fn.prototype.getY();
 ```
 
 到这里，我们已经初步理解了原型和原型链的一些相关概念，下面让我们通过一些实际例子来应用一下吧！
