@@ -1,4 +1,4 @@
-id = 0; // 没产生一个watcher都要有一个唯一标识
+let id = 0; // 没产生一个watcher都要有一个唯一标识
 // 渲染 计算属性 vm.watch 都会用到watcher
 class Watcher {
   /**
@@ -23,3 +23,5 @@ class Watcher {
     this.getter();
   }
 }
+
+export default Watcher;

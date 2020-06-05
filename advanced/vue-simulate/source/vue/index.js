@@ -1,4 +1,5 @@
 import { initState } from './observe';
+import Watcher from './observe/watcher';
 
 function Vue (options) {
   this._init(options);
@@ -17,18 +18,18 @@ function query (el) {
 Vue.prototype._update = function () {
   const vm = this;
   // 用 用户传入的数据更新 视图
-  const { el } = vm.$options;
   // 将el中的{{msg}} 替换为真实的数据
   // 文档碎片会存在于内存中，而不是主DOM树的一部分。可以先创建文档碎片，然后追加元素到文档碎片中，最终追加文档碎片到DOM树中
   // 在DOM树中，文档碎片被其所有子元素替换。
   const node = document.createDocumentFragment();
   let firstChild;
-  while (firstChild = el.firstChild) {
+  while (firstChild = vm.$el.firstChild) {
     // 如果给定子节点是文档中已经存在的一个节点的引用，appendChild从当前的位置移动这个节点到新的位置(追加节点到某个其它节点之前，没有必要从节点的父节点移除该节点)
     // appendChild:如果节点已经存在的话，移动这个节点
     // 从el中移动到node对应的文档碎片中
     node.appendChild(firstChild);
   }
+  console.log('node', node);
 };
 Vue.prototype.$mount = function () {
   const vm = this;
