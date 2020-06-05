@@ -28,8 +28,8 @@ const vm = new Vue({
 // vm.arr[0].a = 100;
 // console.log(vm.arr[1] = '1');
 // 不会被观察
-vm.person.sex = '南';
-console.log(vm);
+// vm.person.sex = '南';
+console.log(vm.msg);
 
 // 什么样的数组会被观察：
 // [ 0, 1, 2] 数组中每一项并不是对象，并不会被观察

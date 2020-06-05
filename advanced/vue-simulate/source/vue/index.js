@@ -1,5 +1,6 @@
 import { initState } from './observe';
 import Watcher from './observe/watcher';
+import { compilerText } from './utils';
 
 function Vue (options) {
   this._init(options);
@@ -15,12 +16,26 @@ function query (el) {
   return;
 }
 
+// 遍历所有节点，将找到的{{}}标签中的字符串用data中对应属性的值进行替换
+function compiler (node, vm) {
+  const childNodes = Array.from(node.childNodes);
+  for (let i = 0; i < childNodes.length; i++) {
+    const childNode = childNodes[i];
+    if (childNode.nodeType === 1) { // 元素
+      compiler(childNode, vm);
+    } else if (childNode.nodeType === 3) { // 文本，需要对{{}}中的内容进行替换
+      compilerText(childNode, vm);
+    }
+  }
+}
+
 Vue.prototype._update = function () {
   const vm = this;
   // 用 用户传入的数据更新 视图
   // 将el中的{{msg}} 替换为真实的数据
   // 文档碎片会存在于内存中，而不是主DOM树的一部分。可以先创建文档碎片，然后追加元素到文档碎片中，最终追加文档碎片到DOM树中
   // 在DOM树中，文档碎片被其所有子元素替换。
+  // 可以防止DOM的回流和重绘，提升性能
   const node = document.createDocumentFragment();
   let firstChild;
   while (firstChild = vm.$el.firstChild) {
@@ -29,7 +44,9 @@ Vue.prototype._update = function () {
     // 从el中移动到node对应的文档碎片中
     node.appendChild(firstChild);
   }
-  console.log('node', node);
+  compiler(node, vm);
+  // 替换完成后再重新移入到根元素中
+  vm.$el.appendChild(node);
 };
 Vue.prototype.$mount = function () {
   const vm = this;
