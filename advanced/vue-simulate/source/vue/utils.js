@@ -1,5 +1,6 @@
 const reg = /\{\{((?:.|\r?\n)+?)\}\}/g;
-export function getValue(vm, expr) {
+
+export function getValue (vm, expr) {
   const keys = expr.split('.');
   let result = undefined;
   // [person,name]
@@ -11,10 +12,14 @@ export function getValue(vm, expr) {
   }
   return result;
 }
+
 export function compilerText (node, vm) {
+  if (!node.expr) {
+    node.expr = node.textContent;
+  }
   // 可能是对象
   // {{person.name}}
-  node.textContent = node.textContent.replace(reg, (...args) => {
+  node.textContent = node.expr.replace(reg, (...args) => {
     return getValue(vm, args[1]);
   });
 }

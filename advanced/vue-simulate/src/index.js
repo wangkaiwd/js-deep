@@ -50,4 +50,6 @@ const vm = new Vue({
 // 2. 当你编辑数组的长度的时候
 
 // 依赖收集
-vm.msg = 'xxx';
+setTimeout(() => {
+  vm.msg = 'xxx';
+}, 2000);

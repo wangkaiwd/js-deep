@@ -45,6 +45,12 @@ Vue.prototype._update = function () {
     node.appendChild(firstChild);
   }
   compiler(node, vm);
+  // @see:https://gist.github.com/gleuch/2475825#file-gistfile1-js-L10-L15
+  // const div = document.createElement('div');
+  // div.appendChild(node.cloneNode(true));
+  // outerHTML: 元素及其所有后代的HTML字符串
+  // innerHTML: 元素的所有后代HTML字符串,不包括该元素本身
+  // console.log(div.outerHTML);
   // 替换完成后再重新移入到根元素中
   vm.$el.appendChild(node);
 };
