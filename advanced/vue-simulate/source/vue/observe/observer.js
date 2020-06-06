@@ -1,13 +1,19 @@
 import { observe } from './index';
 import { arrayMethods, observeArray } from './array';
+import Dep from './dep';
 
 function defineReactive (data, key, value) {
   // 如果value依旧是一个对象(不包括function)的话，为对象中的每一个属性设置get,set方法
   observe(value);
+  const dep = new Dep();
   // 重新设置set,get方法
   Object.defineProperty(data, key, {
-    get () {
+    get () { // 在替换双花括号里的内容时，获取vm.msg,此时Dep.target为渲染watcher。获取person.name时，还是添加同一个watcher
       console.log('获取数据');
+      if (Dep.target) {
+        // dep.addSubscribe(Dep.target);
+        dep.depend()
+      }
       return value;
     },
     set (newVal) {
@@ -16,6 +22,7 @@ function defineReactive (data, key, value) {
       // 如果新设置的值是对象，继续进行观察
       observe(newVal);
       value = newVal;
+      dep.notify(); // 赋值的时候，vm.msg = 'xxx',调用渲染watcher的update方法，来再次更新视图
     }
   });
 }

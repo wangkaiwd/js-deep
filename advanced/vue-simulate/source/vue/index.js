@@ -60,6 +60,8 @@ Vue.prototype.$mount = function () {
   // 渲染时通过watcher来渲染
   // vue2.0通过watcher来进行组件级更新
   new Watcher(vm, updateComponent);
+
+  // 每个数据更改了，需要重新渲染
 };
 // vue初始化，可以具体再细分初始化各个配置
 Vue.prototype._init = function (options) {
@@ -74,6 +76,7 @@ Vue.prototype._init = function (options) {
   initState(vm);
 
   // 初始化工作 vue1.0 =>
+  // 文本编译
   if (vm.$options.el) {
     vm.$mount();
   }

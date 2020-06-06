@@ -29,7 +29,7 @@ const vm = new Vue({
 // console.log(vm.arr[1] = '1');
 // 不会被观察
 // vm.person.sex = '南';
-console.log(vm.msg);
+// console.log(vm.msg);
 
 // 什么样的数组会被观察：
 // [ 0, 1, 2] 数组中每一项并不是对象，并不会被观察
@@ -48,3 +48,6 @@ console.log(vm.msg);
 // 数组
 // 1. 当用索引直接设置数组的某一项时
 // 2. 当你编辑数组的长度的时候
+
+// 依赖收集
+vm.msg = 'xxx';
