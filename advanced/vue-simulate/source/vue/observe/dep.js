@@ -7,12 +7,10 @@ class Dep {
   }
 
   addSubscribe (watcher) {
-    console.log('add');
     this.subscribes.push(watcher);
   }
 
   notify () {
-    console.log(this.subscribes);
     this.subscribes.forEach(subscribe => subscribe.update());
   }
 
