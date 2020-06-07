@@ -1,4 +1,5 @@
 import { popTarget, pushTarget } from './dep';
+import { observe } from './index';
 
 let id = 0; // 没产生一个watcher都要有一个唯一标识
 // 渲染 计算属性 vm.watch 都会用到watcher
@@ -64,16 +65,48 @@ function flushQueue () {
   has = {};
 }
 
+let callbacks = [];
+
+function flushCallbacks () {
+  callbacks.forEach(cb => cb());
+}
+
+// @see: https://vuejs.org/v2/guide/reactivity.html#Async-Update-Queue
 function queueWatcher (watcher) {
   const { id } = watcher;
   if (has[id] == null) { // 去重
     has[id] = true;
     queue.push(watcher);
     // nextTick()
-    setTimeout(() => {
-      flushQueue(); // 只有在所有主线程代码完成后才会清空队列和has,而只有has和queue在清空后才会执行watcher的更新方法
-    }, 0);
+    // setTimeout(() => {
+    //   flushQueue(); // 只有在所有主线程代码完成后才会清空队列和has,而只有has和queue在清空后才会执行watcher的更新方法
+    // }, 0);
+    nextTick(flushQueue);
   }
+}
+
+function nextTick (cb) {
+  callbacks.push(cb);
+  // 异步执行: Promise.then MutationObserver setImmediate setTimeout
+  if (Promise) {
+    return Promise.resolve().then(() => {
+      flushCallbacks();
+    });
+  }
+  if (MutationObserver) {
+    const observer = new MutationObserver(() => {
+      flushCallbacks();
+      observer.disconnect();
+    });
+    const textNode = document.createTextNode('1');
+    observer.observe(textNode, { characterData: true });
+    textNode.textContent = '2';
+    return;
+  }
+  if (setImmediate) {
+    return setImmediate(flushCallbacks);
+  }
+  setTimeout(flushCallbacks, 0);
 }
 
 export default Watcher;
