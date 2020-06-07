@@ -9,4 +9,5 @@
 ### 编译文本
 
 ### 依赖收集
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020-6-7-5-19-dependence-collect.png)
 
