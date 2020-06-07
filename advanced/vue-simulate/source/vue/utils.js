@@ -22,7 +22,7 @@ export function compilerText (node, vm) {
   // 可能是对象
   // {{person.name}}
   node.textContent = node.expr.replace(reg, (...args) => {
-    return getValue(vm, args[1]);
+    return JSON.stringify(getValue(vm, args[1]));
   });
 }
 

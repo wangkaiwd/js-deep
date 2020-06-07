@@ -3,20 +3,20 @@ let id = 0;
 class Dep {
   constructor () {
     this.id = ++id;
-    this.subscribes = [];
+    this.subs = [];
   }
 
-  addSubscribe (watcher) {
-    this.subscribes.push(watcher);
+  addSub (watcher) {
+    this.subs.push(watcher);
   }
 
   notify () {
-    this.subscribes.forEach(subscribe => subscribe.update());
+    this.subs.forEach(sub => sub.update());
   }
 
   depend () {
     if (Dep.target) {
-      Dep.target.addDep(this)
+      Dep.target.addDep(this);
     }
   }
 }

@@ -15,9 +15,10 @@
 `DocumentFragment`不能直接得到其中的`html`内容，需要将其放入一个`DOM`元素中，调用`innerHTML/outerHTML`来获取去它的序列化`HTML`字符串
 * [代码段](https://gist.github.com/gleuch/2475825#file-gistfile1-js-L10-L15)
 
-#### 对象
+#### [对象](https://vuejs.org/v2/guide/reactivity.html#For-Objects)
 
-#### 数组
+#### [数组](https://vuejs.org/v2/guide/reactivity.html#For-Arrays)
+* 数组子项依旧为数组的依赖`watcher`收集？
 
 #### knowledge point
 * [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set)

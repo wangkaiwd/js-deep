@@ -24,6 +24,17 @@ export function observeArray (array) {
   }
 }
 
+// 对数组进行了依赖收集，以及依然是数组的子项继续依赖收集
+export function dependArray (value) {
+  for (let i = 0; i < value.length; i++) {
+    const item = value[i];
+    item.__ob__ && item.__ob__.dep.depend();
+    if (Array.isArray(item)) {
+      dependArray(item);
+    }
+  }
+}
+
 methods.forEach(method => {
   arrayMethods[method] = function (...args) {
     // 借用数组原型上的方法，用调用arrayMethods[method]方法的数组来调用Array.prototype上的方法
@@ -40,6 +51,7 @@ methods.forEach(method => {
         break;
     }
     observeArray(inserted);
+    this.__ob__.dep.notify();
     return result;
   };
 });

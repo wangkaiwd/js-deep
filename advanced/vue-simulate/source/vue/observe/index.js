@@ -8,6 +8,9 @@ export function observe (data) {
   if (typeof data !== 'object' || data == null) { // 用 == 也会将undefined排除，不过这里没有用到
     return;
   }
+  if (data.__ob__) { // 已经被观测过了，不会进行重新观测了
+    return data.__ob__;
+  }
   return new Observer(data);
 }
 

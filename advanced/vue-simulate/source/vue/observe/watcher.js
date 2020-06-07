@@ -50,7 +50,7 @@ class Watcher {
       // 将watcher添加到第一次出现的属性的dep中，方便在之后notify的时候执行
       this.depsId.add(id);
       this.deps.push(dep);
-      dep.addSubscribe(this);
+      dep.addSub(this);
     }
   }
 }
