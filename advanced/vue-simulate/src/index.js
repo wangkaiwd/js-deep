@@ -51,5 +51,10 @@ const vm = new Vue({
 
 // 依赖收集
 setTimeout(() => {
+// 这样会调用4次set方法
+// vue的特点是批量更新dom，而不是每次都进行更新
   vm.msg = 'xxx';
-}, 2000);
+  vm.msg = 'hello1';
+  vm.msg = 'hello2';
+  vm.msg = 'hello3';
+}, 3000);

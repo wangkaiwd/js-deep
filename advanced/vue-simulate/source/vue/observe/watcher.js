@@ -25,12 +25,17 @@ class Watcher {
   }
 
   get () {
+    console.log('update');
     pushTarget(this); // 记录当前的渲染用的watcher
     this.getter(); // 文本编译，然后重新渲染
     popTarget();
   }
 
   update () {
+    queueWatcher(this);
+  }
+
+  run () {
     this.get();
   }
 
@@ -46,6 +51,28 @@ class Watcher {
       this.deps.push(dep);
       dep.addSubscribe(this);
     }
+  }
+}
+
+let queue = [];
+
+let has = {};
+
+function flushQueue () {
+  queue.forEach(watcher => watcher.run());
+  queue = [];
+  has = {};
+}
+
+function queueWatcher (watcher) {
+  const { id } = watcher;
+  if (has[id] == null) { // 去重
+    has[id] = true;
+    queue.push(watcher);
+    // nextTick()
+    setTimeout(() => {
+      flushQueue(); // 只有在所有主线程代码完成后才会清空队列和has,而只有has和queue在清空后才会执行watcher的更新方法
+    }, 0);
   }
 }
 
