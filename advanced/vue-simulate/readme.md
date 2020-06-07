@@ -10,4 +10,5 @@
 
 ### 依赖收集
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020-6-7-5-19-dependence-collect.png)
-
+#### knowledge point
+* [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set)
