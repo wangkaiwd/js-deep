@@ -111,8 +111,7 @@ Fn.prototype.getY = function () {
   console.log(this.y);
 };
 
-const f1 = new Fn();
-const f2 = new Fn();
+const fn = new Fn()
 ```
 
 我们画图来描述一下实例、构造函数、以及`prototype`和`__proto__`之间的关系：
@@ -135,6 +134,8 @@ const f2 = new Fn();
 
 在理解了原型链和原型的指向关系后，我们看看以下代码会输出什么：
 ```javascript
+const f1 = new Fn();
+const f2 = new Fn();
 console.log(f1.getX === f2.getX);
 console.log(f1.getY === f2.getY);
 
@@ -148,12 +149,28 @@ f1.getX();
 f1.__proto__.getX();
 f2.getY();
 Fn.prototype.getY();
+// false
+// true
+
+// true
+// false
+// false
+// Fn
+// Object
+
+// 100
+// undefined
+// 200
+// undefined
 ```
 
 到这里，我们已经初步理解了原型和原型链的一些相关概念，下面让我们通过一些实际例子来应用一下吧！
 
 ### 借用原型方法
-在`JavaScript`中，我们可以通过`call/bind/apply`来更改`this`指向，
+在`JavaScript`中，我们可以通过`call/bind/apply`来更改函数中`this`指向，原型上方法的`this`也可以通过这些`api`来进行更改。比如我们要将一个伪数组转换为真实数组，可以这样做：
+```javascript
+
+```
 
 ### 实现构造函数之间的继承
 
