@@ -207,4 +207,139 @@ Object.prototype.toString.call(function() {}) // [object Number]
 通过借用原型方法，我们可以让变量调用自身以及自己原型上没有的方法，增加了代码的灵活性，也避免了一些不必要的重复工作。
 
 ### 实现构造函数之间的继承
+通过`JavaScript`中的原型和原型链关系，我们可以实现构造函数的继承关系。假设有如下`A`,`B`俩个构造函数：
+```javascript
+function A () {
+  this.a = 100;
+}
 
+A.prototype.getA = function () {
+  console.log(this.a);
+};
+
+function B () {
+  this.b = 200;
+}
+
+B.prototype.getB = function () {
+  console.log(this.b);
+};
+```
+
+#### 方案一
+这里我们可以让`B.prototype`成为`A`的实例，那么`B.prototype`中就拥有了私有方法`a`,以及原型对象上的方法`B.prototype.__proto__`即`A.prototype`上的方法`getA`。最后记得要修正`B.prototype`的`constructor`属性，因为此时它变成了`B.prototype.constructor`，也就是`B`。
+```javascript
+function A () {
+  this.a = 100;
+}
+
+A.prototype.getA = function () {
+  console.log(this.a);
+};
+B.prototype = new A();
+B.prototype.constructor = B;
+function B () {
+  this.b = 200;
+}
+
+B.prototype.getB = function () {
+  console.log(this.b);
+};
+```
+画图理解一下：
+
+
+下面我们创建`B`的实例，看下是否成功继承了`A`中的属性和方法。
+```javascript
+const b = new B();
+console.log('b', b.a);
+b.getA();
+console.log('b', b.b);
+b.getB();
+// b 100
+// 100
+// b 200
+// 200
+```
+
+#### 方案二
+我们也可以通过将父构造函数当做普通函数来执行，并通过`call`指定`this`，从而实现实例自身属性的继承，然后再通过`Object.create`指定子构造函数的原型对象。
+```javascript
+function A () {
+  this.a = 100;
+}
+
+A.prototype.getA = function () {
+  console.log(this.a);
+};
+// 继承原型方法
+// 创建一个新对象，使用一个已经存在的对象作为新创建对象的原型
+B.prototype = Object.create(A.prototype);
+B.prototype.constructor = B;
+
+function B () {
+  // 继承私有方法
+  A.call(this); // 如果有参数的话可以在这里传入
+  this.b = 200;
+}
+
+B.prototype.getB = function () {
+  console.log(this.b);
+};
+```
+
+下面我们创建`B`的实例，看下是否成功继承了`A`中的属性和方法。
+```javascript
+const b = new B();
+console.log('b', b.a);
+b.getA();
+console.log('b', b.b);
+b.getB();
+// b 100
+// 100
+// b 200
+// 200
+```
+
+#### `class extends`实现继承
+在`es6`中为开发提供了`extends`关键字，可以很方便的实现类之间的继承：
+```javascript
+function A () {
+  this.a = 100;
+}
+
+A.prototype.getA = function () {
+  console.log(this.a);
+};
+// 继承原型方法
+// 创建一个新对象，使用一个已经存在的对象作为新创建对象的原型
+B.prototype = Object.create(A.prototype);
+B.prototype.constructor = B;
+
+function B () {
+  // 继承私有方法
+  A.call(this); // 如果有参数的话可以在这里传入
+  this.b = 200;
+}
+
+B.prototype.getB = function () {
+  console.log(this.b);
+};
+```
+
+下面我们创建`B`的实例，看下是否成功继承了`A`中的属性和方法。
+```javascript
+const b = new B();
+console.log('b', b.a);
+b.getA();
+console.log('b', b.b);
+b.getB();
+// b 100
+// 100
+// b 200
+// 200
+```
+我们可以通过`babel`编译后，简单看下对应的`es5`实现方式：
+````javascript
+
+````
