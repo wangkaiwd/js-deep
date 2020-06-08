@@ -169,8 +169,42 @@ Fn.prototype.getY();
 ### 借用原型方法
 在`JavaScript`中，我们可以通过`call/bind/apply`来更改函数中`this`指向，原型上方法的`this`也可以通过这些`api`来进行更改。比如我们要将一个伪数组转换为真实数组，可以这样做：
 ```javascript
-
+function fn() {
+  return Array.prototype.slice.call(arguments)
+}
+fn(1,2,3) // [ 1, 2, 3]
 ```
+这里我们使用`arguments`调用了数组原型上的`slice`，这是怎么做到的呢？我们先简单模拟下`slice`方法的实现：
+> `arguments`是一个类似数组的对象，有`length`属性和从零开始的索引，它可以调用`Object.prototype`上的方法，但是不能调用`Array.prototype`上的方法。
+```javascript
+Array.prototype.mySlice = function (start = 0, end = this.length) {
+  const array = [];
+  // 一般会通过Array的实例(数组)调用该方法，所以this指向调用该方法的数组
+  // 这里我们将this指向了arguments = {0: 1, 1: 2, 2: 3, length: 3}
+  for (let i = 0; i < end; i++) {
+    array[i] = this[i];
+  }
+  return array;
+};
+
+function fn () {
+  return Array.prototype.mySlice.call(arguments);
+}
+
+console.log(fn(1, 2, 3)); // [1, 2, 3]
+```
+可能你想直接调用`arguments.slice()`方法，但是遗憾的是`arguments`是一个对象，不能调用数组原型上的方法。
+
+当我们将`Array.prototype.slice`方法的`this`指向`agruments`对象时，由于`arguments`拥有索引属性以及`length`属性，所以可以像数组一样根据`length`和索引来进行遍历，从而相当于用`arguments`调用了数组原型上的方法。
+
+下面是另一个借用原型方法常见的例子：
+```javascript
+Object.prototype.toString.call([1,2,3]) // [object Array]
+Object.prototype.toString.call(function() {}) // [object Number]
+```
+这里将`Object.prototype.toString`的`this`由对象(`Object`的实例)改为了数组(`Array`的实例)和函数(`Function`的实例)，相当于为数组和函数调用了对象上的`toString`方法，而不是调用它们自身的`toString`方法。
+
+通过借用原型方法，我们可以让变量调用自身以及自己原型上没有的方法，增加了代码的灵活性，也避免了一些不必要的重复工作。
 
 ### 实现构造函数之间的继承
 
