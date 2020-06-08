@@ -207,4 +207,6 @@ Object.prototype.toString.call(function() {}) // [object Number]
 通过借用原型方法，我们可以让变量调用自身以及自己原型上没有的方法，增加了代码的灵活性，也避免了一些不必要的重复工作。
 
 ### 实现构造函数之间的继承
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020-6-8-10-08prototype-inhert.png)
+> [在线地址](https://excalidraw.com/#json=6312301430833152,HtjCT5CzNaK1OwyRBO3yUA)
 
