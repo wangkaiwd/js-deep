@@ -8,6 +8,10 @@ class A {
   }
 }
 
+A.say = function () {
+  console.log('say');
+};
+
 class B extends A {
   constructor () {
     // 继承私有方法
@@ -20,8 +24,4 @@ class B extends A {
   }
 }
 
-const b = new B();
-console.log('b', b.a);
-b.getA();
-console.log('b', b.b);
-b.getB();
+B.say();

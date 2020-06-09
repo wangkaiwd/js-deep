@@ -247,7 +247,8 @@ B.prototype.getB = function () {
 };
 ```
 画图理解一下：
-
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020-6-8-10-08prototype-inhert.png)
+> [在线地址](https://excalidraw.com/#json=6312301430833152,HtjCT5CzNaK1OwyRBO3yUA)
 
 下面我们创建`B`的实例，看下是否成功继承了`A`中的属性和方法。
 ```javascript
@@ -287,6 +288,9 @@ B.prototype.getB = function () {
   console.log(this.b);
 };
 ```
+这里我们再次通过画图的形式梳理一下逻辑：
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020-6-8-10-52-call-Object.create-inherit.png)
+> [在线地址](https://excalidraw.com/#json=5667238111608832,nDfoMSfgCXPTFbHiXcKSsQ)
 
 下面我们创建`B`的实例，看下是否成功继承了`A`中的属性和方法。
 ```javascript
@@ -339,13 +343,45 @@ b.getB();
 // b 200
 // 200
 ```
-我们可以通过`babel`编译后，简单看下对应的`es5`实现方式：
-````javascript
+大家可能会好奇`class`的`extends`关键字是如何实现继承的呢？下面我们用[`babel`](https://babeljs.io/) 编译代码，看下其源码中比较重要的几个点：
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200609110822.png)
+看下这俩个方法的实现：
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200609111043.png)
 
-````
+值得留意的一个地方是：`extends`将父类的静态方法也继承到了子类中
+```javascript
+class A {
+  constructor () {
+    this.a = 100;
+  }
 
-![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020-6-8-10-08prototype-inhert.png)
-> [在线地址](https://excalidraw.com/#json=6312301430833152,HtjCT5CzNaK1OwyRBO3yUA)
+  getA () {
+    console.log(this.a);
+  }
+}
 
-> [在线地址](https://excalidraw.com/#json=5667238111608832,nDfoMSfgCXPTFbHiXcKSsQ)
-![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020-6-8-10-52-call-Object.create-inherit.png)
+A.say = function () {
+  console.log('say');
+};
+
+class B extends A {
+  constructor () {
+    // 继承私有方法
+    super();
+    this.b = 200;
+  }
+
+  getB () {
+    console.log(this.b);
+  }
+}
+
+B.say(); // say
+```
+
+具体的细节小伙伴们可以自己研究`babel`编译后的源码，地址在这里：[传送门](https://babeljs.io/repl#?browsers=defaults%2C%20not%20ie%2011%2C%20not%20ie_mob%2011&build=&builtIns=false&spec=false&loose=false&code_lz=MYGwhgzhAECC0G8BQ1rAPYDsIBcBOArsDuntABQCUiKq0OAFgJYQB0Y0AvNAIwAMfANy0AvkloBzAKY54VGnTRYI6EFNYh0E8oxbtKw1GLFJQkGACFoUgB44pmACYx4yVBmz4iJMvLd0AegDoQHO_QH8jQEHPQEhzQE7TQFWbWlQIAgAHKTwqQzpdNgAjLmgAJgEsk1RpHCs_RKVsVXVNbRzWXINRJBMPXGh87kwpAHdoC0zTZXqNLXIAclzpgBoe_WFc1grYUa6Jxpm5xdXWlbWZEYMgA&debug=false&forceAllTransforms=false&shippedProposals=false&circleciRepo=&evaluate=false&fileSize=false&timeTravel=false&sourceType=module&lineWrap=true&presets=env%2Ces2015%2Creact%2Cstage-2%2Cenv&prettier=false&targets=&version=7.10.2&externalPlugins=)
+
+### 结语
+理解`JavaScript`的原型原型链可能并不会直接提升你的`JavaScrit`变成能力，但是它可以帮助我们更好的理解`JavaScript`中一些知识点，想明白一些之前不太理解的东西。在各个流行库或者框架中也有对于原型或原型链的相关应用，学习这些知识也可以为我们阅读框架源码奠定一些基础。
+
+如果文章内容有帮到你的话，请点赞鼓励一下作者，这将是你对作者最大的鼓励！

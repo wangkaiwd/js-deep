@@ -48,6 +48,7 @@ function _createSuper (Derived) { // B
       // A.apply(b, {length:0}) => A.call(b, ...arguments)
       result = Super.apply(this, arguments);
     }
+    // new的机制4： 如果A中返回的是一个对象，那么B中的this为这个对象
     return _possibleConstructorReturn(this, result);
   };
 }
@@ -126,6 +127,7 @@ var B = /*#__PURE__*/function (_A) {
   function B () {
     var _this;
 
+    // 类调用检查，如果不是使用new的话会进行错误提示
     _classCallCheck(this, B);
 
     // 继承私有方法
@@ -135,7 +137,7 @@ var B = /*#__PURE__*/function (_A) {
     return _this;
   }
 
-  //
+  // 循环数组，通过Object.defineProperty将每一项指定为不可枚举属性
   _createClass(B, [{
     key: 'getB',
     value: function getB () {
