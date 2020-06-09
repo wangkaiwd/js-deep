@@ -33,7 +33,7 @@ person.say(); // say
 接下来，让我们带着这些问题一步步深入学习。
 
 ### `new`对函数做了什么？
-当我们使用`new`关键字执行一个函数时，除了具有所有函数直接执行的所有特性之外，`new`还帮我们做了如下的事情：
+当我们使用`new`关键字执行一个函数时，除了具有函数直接执行的所有特性之外，`new`还帮我们做了如下的事情：
 * 创建一个空的简单`JavaScript`对象(即`{}`)
 * 将空对象的`__proto__`连接到(赋值为)该函数的`prototype`
 * 将函数的`this`指向新创建的对象
@@ -52,7 +52,7 @@ return this
 ```
 可以看到，当我们使用`new`执行函数的时候，`new`会帮我们在函数内部加工`this`，最终将`this`作为实例返回给我们，可以方便我们调用其中的属性和方法。
 
-下面，我们尝试实现以下`new`: 
+下面，我们尝试实现一下`new`: 
 ```javascript
 function _new (Constructor, ...args) {
   // const plainObject = {};
@@ -89,7 +89,7 @@ animal.say(); // say
 在学习原型和原型链之前，我们需要首先掌握以下三个属性：
 * `prototype`: 每一个函数都有一个特殊的属性，叫做**原型**(`prototype`)
 * `constructor`: 相比于普通对象的属性，**`prototype`属性本身会有一个属性`constructor`**，该属性的值为`prototype`所在的函数
-* `__proto__`: 每一个对象都有一个`__proto__`属性，该属性指向对象所属实例的原型`prototype`
+* `__proto__`: 每一个对象都有一个`__proto__`属性，该属性指向对象(实例)所属构造函数(类)的原型`prototype`
 
 > 以上的解释只针对于`JavaScript`语言
 
@@ -114,7 +114,7 @@ Fn.prototype.getY = function () {
 const fn = new Fn()
 ```
 
-我们画图来描述一下实例、构造函数、以及`prototype`和`__proto__`之间的关系：
+我们画图来描述一下上边代码中实例、构造函数、以及`prototype`和`__proto__`之间的关系：
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020-6-4-9-29prototype.png)
 
 我们再来看一下`Function`和`Object`以及其原型之间的关系：
