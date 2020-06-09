@@ -24,3 +24,16 @@
 * [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set)
 
 ### 异步批量更新
+
+### Watch
+* vm.$watch(exprOrFn, callback, [options])
+观察`Vue`实例上表达式或计算函数的变化。使用新的`value`和旧的`value`作为回调调用`callback`。
+* exprOrFn: 字符串或者函数，用来表示对象的键路径(keypath)
+* callback: Vue中观察的表达式或实例发生变化时，调用callback,参数为new value 和 old value
+* options:
+  * deep: 设置为true时，检测对象内嵌套值的变化，如`var obj = {c: {x:'x'}}`中`obj`中`c`对应的值发生变化。注意，**你不需要这样做来监听数组变化**(为什么？)。
+  * immediate: 在选项中传入`immediate: true`将会用当前表达式的值立即出发`callback`
+* return Function unwatch: 调用之后，停止出发`callback` 
+
+### Computed
+[Computed Properties and Watchers](https://vuejs.org/v2/guide/computed.html)

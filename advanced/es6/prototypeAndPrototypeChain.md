@@ -33,7 +33,7 @@ person.say(); // say
 接下来，让我们带着这些问题一步步深入学习。
 
 ### `new`对函数做了什么？
-当我们使用`new`关键字执行一个函数时，除了具有所有函数直接执行的所有特性之外，`new`还帮我们做了如下的事情：
+当我们使用`new`关键字执行一个函数时，除了具有函数直接执行的所有特性之外，`new`还帮我们做了如下的事情：
 * 创建一个空的简单`JavaScript`对象(即`{}`)
 * 将空对象的`__proto__`连接到(赋值为)该函数的`prototype`
 * 将函数的`this`指向新创建的对象
@@ -52,7 +52,7 @@ return this
 ```
 可以看到，当我们使用`new`执行函数的时候，`new`会帮我们在函数内部加工`this`，最终将`this`作为实例返回给我们，可以方便我们调用其中的属性和方法。
 
-下面，我们尝试实现以下`new`: 
+下面，我们尝试实现一下`new`: 
 ```javascript
 function _new (Constructor, ...args) {
   // const plainObject = {};
@@ -89,7 +89,7 @@ animal.say(); // say
 在学习原型和原型链之前，我们需要首先掌握以下三个属性：
 * `prototype`: 每一个函数都有一个特殊的属性，叫做**原型**(`prototype`)
 * `constructor`: 相比于普通对象的属性，**`prototype`属性本身会有一个属性`constructor`**，该属性的值为`prototype`所在的函数
-* `__proto__`: 每一个对象都有一个`__proto__`属性，该属性指向对象所属实例的原型`prototype`
+* `__proto__`: 每一个对象都有一个`__proto__`属性，该属性指向对象(实例)所属构造函数(类)的原型`prototype`
 
 > 以上的解释只针对于`JavaScript`语言
 
@@ -114,7 +114,7 @@ Fn.prototype.getY = function () {
 const fn = new Fn()
 ```
 
-我们画图来描述一下实例、构造函数、以及`prototype`和`__proto__`之间的关系：
+我们画图来描述一下上边代码中实例、构造函数、以及`prototype`和`__proto__`之间的关系：
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020-6-4-9-29prototype.png)
 
 我们再来看一下`Function`和`Object`以及其原型之间的关系：
@@ -207,8 +207,184 @@ Object.prototype.toString.call(function() {}) // [object Number]
 通过借用原型方法，我们可以让变量调用自身以及自己原型上没有的方法，增加了代码的灵活性，也避免了一些不必要的重复工作。
 
 ### 实现构造函数之间的继承
-![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020-6-8-10-08prototype-inhert.png)
-> [在线地址](https://excalidraw.com/#json=6312301430833152,HtjCT5CzNaK1OwyRBO3yUA)
+通过`JavaScript`中的原型和原型链，我们可以实现构造函数的继承关系。假设有如下`A`,`B`俩个构造函数：
+```javascript
+function A () {
+  this.a = 100;
+}
 
-> [在线地址](https://excalidraw.com/#json=5667238111608832,nDfoMSfgCXPTFbHiXcKSsQ)
+A.prototype.getA = function () {
+  console.log(this.a);
+};
+
+function B () {
+  this.b = 200;
+}
+
+B.prototype.getB = function () {
+  console.log(this.b);
+};
+```
+
+#### 方案一
+这里我们可以让`B.prototype`成为`A`的实例，那么`B.prototype`中就拥有了私有方法`a`,以及原型对象上的方法`B.prototype.__proto__`即`A.prototype`上的方法`getA`。最后记得要**修正`B.prototype`的`constructor`属性**，因为此时它变成了`B.prototype.constructor`，也就是`B`。
+```javascript
+function A () {
+  this.a = 100;
+}
+
+A.prototype.getA = function () {
+  console.log(this.a);
+};
+B.prototype = new A();
+B.prototype.constructor = B;
+function B () {
+  this.b = 200;
+}
+
+B.prototype.getB = function () {
+  console.log(this.b);
+};
+```
+画图理解一下：
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020-6-8-10-08prototype-inhert.png)
+
+下面我们创建`B`的实例，看下是否成功继承了`A`中的属性和方法。
+```javascript
+const b = new B();
+console.log('b', b.a);
+b.getA();
+console.log('b', b.b);
+b.getB();
+// b 100
+// 100
+// b 200
+// 200
+```
+
+#### 方案二
+我们也可以通过将父构造函数当做普通函数来执行，并通过`call`指定`this`，从而实现实例自身属性的继承，然后再通过`Object.create`指定子构造函数的原型对象。
+```javascript
+function A () {
+  this.a = 100;
+}
+
+A.prototype.getA = function () {
+  console.log(this.a);
+};
+// 继承原型方法
+// 创建一个新对象，使用一个已经存在的对象作为新创建对象的原型
+B.prototype = Object.create(A.prototype);
+B.prototype.constructor = B;
+
+function B () {
+  // 继承私有方法
+  A.call(this); // 如果有参数的话可以在这里传入
+  this.b = 200;
+}
+
+B.prototype.getB = function () {
+  console.log(this.b);
+};
+```
+这里我们再次通过画图的形式梳理一下逻辑：
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020-6-8-10-52-call-Object.create-inherit.png)
+
+下面我们创建`B`的实例，看下是否成功继承了`A`中的属性和方法。
+```javascript
+const b = new B();
+console.log('b', b.a);
+b.getA();
+console.log('b', b.b);
+b.getB();
+// b 100
+// 100
+// b 200
+// 200
+```
+
+#### `class extends`实现继承
+在`es6`中为开发者提供了`extends`关键字，可以很方便的实现类之间的继承：
+```javascript
+function A () {
+  this.a = 100;
+}
+
+A.prototype.getA = function () {
+  console.log(this.a);
+};
+// 继承原型方法
+// 创建一个新对象，使用一个已经存在的对象作为新创建对象的原型
+B.prototype = Object.create(A.prototype);
+B.prototype.constructor = B;
+
+function B () {
+  // 继承私有方法
+  A.call(this); // 如果有参数的话可以在这里传入
+  this.b = 200;
+}
+
+B.prototype.getB = function () {
+  console.log(this.b);
+};
+```
+
+下面我们创建`B`的实例，看下是否成功继承了`A`中的属性和方法。
+```javascript
+const b = new B();
+console.log('b', b.a);
+b.getA();
+console.log('b', b.b);
+b.getB();
+// b 100
+// 100
+// b 200
+// 200
+```
+大家可能会好奇`class`的`extends`关键字是如何实现继承的呢？下面我们用[`babel`](https://babeljs.io/) 编译代码，看下其源码中比较重要的几个点：
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200609110822.png)
+看下这俩个方法的实现：
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200609111043.png)
+
+值得留意的一个地方是：`extends`将父类的静态方法也继承到了子类中
+```javascript
+class A {
+  constructor () {
+    this.a = 100;
+  }
+
+  getA () {
+    console.log(this.a);
+  }
+}
+
+A.say = function () {
+  console.log('say');
+};
+
+class B extends A {
+  constructor () {
+    // 继承私有方法
+    super();
+    this.b = 200;
+  }
+
+  getB () {
+    console.log(this.b);
+  }
+}
+
+B.say(); // say
+```
+
+`extends`的实现类似于方案二:
+* `apply`方法更改父类`this`指向，继承私有属性
+* `Object.create`继承原型属性
+* `Object.setPrototypeOf`继承静态属性
+ 
+具体的细节小伙伴们可以自己研究`babel`编译后的源码，地址在这里：[传送门](https://babeljs.io/repl#?browsers=defaults%2C%20not%20ie%2011%2C%20not%20ie_mob%2011&build=&builtIns=false&spec=false&loose=false&code_lz=MYGwhgzhAECC0G8BQ1rAPYDsIBcBOArsDuntABQCUiKq0OAFgJYQB0Y0AvNAIwAMfANy0AvkloBzAKY54VGnTRYI6EFNYh0E8oxbtKw1GLFJQkGACFoUgB44pmACYx4yVBmz4iJMvLd0AegDoQHO_QH8jQEHPQEhzQE7TQFWbWlQIAgAHKTwqQzpdNgAjLmgAJgEsk1RpHCs_RKVsVXVNbRzWXINRJBMPXGh87kwpAHdoC0zTZXqNLXIAclzpgBoe_WFc1grYUa6Jxpm5xdXWlbWZEYMgA&debug=false&forceAllTransforms=false&shippedProposals=false&circleciRepo=&evaluate=false&fileSize=false&timeTravel=false&sourceType=module&lineWrap=true&presets=env%2Ces2015%2Creact%2Cstage-2%2Cenv&prettier=false&targets=&version=7.10.2&externalPlugins=)
+
+### 结语
+理解`JavaScript`的原型原型链可能并不会直接提升你的`JavaScrit`编程能力，但是它可以帮助我们更好的理解`JavaScript`中一些知识点，想明白一些之前不太理解的东西。在各个流行库或者框架中也有对于原型或原型链的相关应用，学习这些知识也可以为我们阅读框架源码奠定一些基础。
+
+如果文章内容有帮到你的话，请点赞鼓励一下作者，这将是作者创作的最大动力！
