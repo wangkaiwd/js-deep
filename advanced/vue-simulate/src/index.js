@@ -15,7 +15,11 @@ const vm = new Vue({
     };
   },
   computed: {},
-  watch: {}
+  watch: {
+    msg (newValue, oldValue) {
+      console.log(newValue, oldValue);
+    }
+  }
 });
 
 // Vue实例对象
@@ -61,6 +65,10 @@ const vm = new Vue({
 //   vm.msg = 'hello3';
 // vm.arr.push(4);
 // vm.arr[0].a = 100;
-vm.arr[1] = 'x';
-vm.msg = 'world';
+// vm.arr[1] = 'x';
+// vm.msg = 'world';
+
+// watch
+
+vm.msg = 'xxx';
 // }, 3000);
