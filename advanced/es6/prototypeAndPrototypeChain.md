@@ -88,7 +88,7 @@ animal.say(); // say
 ### 原型和原型链
 在学习原型和原型链之前，我们需要首先掌握以下三个属性：
 * `prototype`: 每一个函数都有一个特殊的属性，叫做**原型**(`prototype`)
-* `constructor`: 相比于普通对象的属性，`prototype`属性本身会有一个属性`constructor`，该属性的值为`prototype`所在的函数
+* `constructor`: 相比于普通对象的属性，**`prototype`属性本身会有一个属性`constructor`**，该属性的值为`prototype`所在的函数
 * `__proto__`: 每一个对象都有一个`__proto__`属性，该属性指向对象所属实例的原型`prototype`
 
 > 以上的解释只针对于`JavaScript`语言
@@ -343,3 +343,9 @@ b.getB();
 ````javascript
 
 ````
+
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020-6-8-10-08prototype-inhert.png)
+> [在线地址](https://excalidraw.com/#json=6312301430833152,HtjCT5CzNaK1OwyRBO3yUA)
+
+> [在线地址](https://excalidraw.com/#json=5667238111608832,nDfoMSfgCXPTFbHiXcKSsQ)
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020-6-8-10-52-call-Object.create-inherit.png)
