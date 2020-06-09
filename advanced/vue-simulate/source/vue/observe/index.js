@@ -55,8 +55,8 @@ function initData (vm) {
   observe(vm._data);
 }
 
-function initComputed () {
-
+function initComputed (vm) {
+  const { computed } = vm.$options;
 }
 
 function createWatcher (vm, key, handler, options) {
@@ -85,7 +85,7 @@ function initState (vm) {
     initData(vm);
   }
   if (opts.computed) {
-    initComputed();
+    initComputed(vm);
   }
   if (opts.watch) {
     initWatch(vm);
