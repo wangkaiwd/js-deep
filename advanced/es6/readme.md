@@ -1,3 +1,4 @@
+
 ## 知识点记录
 * 原型 + 原型链 + `class`
 * 装饰器
@@ -13,3 +14,6 @@
 * `es5`实现`class`的`extends`
 
 
+### 图解
+* [方案一在线地址](https://excalidraw.com/#json=6312301430833152,HtjCT5CzNaK1OwyRBO3yUA)
+* [方案二在线地址](https://excalidraw.com/#json=5667238111608832,nDfoMSfgCXPTFbHiXcKSsQ)

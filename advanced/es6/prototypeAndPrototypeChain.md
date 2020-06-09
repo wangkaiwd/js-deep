@@ -207,7 +207,7 @@ Object.prototype.toString.call(function() {}) // [object Number]
 通过借用原型方法，我们可以让变量调用自身以及自己原型上没有的方法，增加了代码的灵活性，也避免了一些不必要的重复工作。
 
 ### 实现构造函数之间的继承
-通过`JavaScript`中的原型和原型链关系，我们可以实现构造函数的继承关系。假设有如下`A`,`B`俩个构造函数：
+通过`JavaScript`中的原型和原型链，我们可以实现构造函数的继承关系。假设有如下`A`,`B`俩个构造函数：
 ```javascript
 function A () {
   this.a = 100;
@@ -227,7 +227,7 @@ B.prototype.getB = function () {
 ```
 
 #### 方案一
-这里我们可以让`B.prototype`成为`A`的实例，那么`B.prototype`中就拥有了私有方法`a`,以及原型对象上的方法`B.prototype.__proto__`即`A.prototype`上的方法`getA`。最后记得要修正`B.prototype`的`constructor`属性，因为此时它变成了`B.prototype.constructor`，也就是`B`。
+这里我们可以让`B.prototype`成为`A`的实例，那么`B.prototype`中就拥有了私有方法`a`,以及原型对象上的方法`B.prototype.__proto__`即`A.prototype`上的方法`getA`。最后记得要**修正`B.prototype`的`constructor`属性**，因为此时它变成了`B.prototype.constructor`，也就是`B`。
 ```javascript
 function A () {
   this.a = 100;
@@ -248,7 +248,6 @@ B.prototype.getB = function () {
 ```
 画图理解一下：
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020-6-8-10-08prototype-inhert.png)
-> [在线地址](https://excalidraw.com/#json=6312301430833152,HtjCT5CzNaK1OwyRBO3yUA)
 
 下面我们创建`B`的实例，看下是否成功继承了`A`中的属性和方法。
 ```javascript
@@ -290,7 +289,6 @@ B.prototype.getB = function () {
 ```
 这里我们再次通过画图的形式梳理一下逻辑：
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/2020-6-8-10-52-call-Object.create-inherit.png)
-> [在线地址](https://excalidraw.com/#json=5667238111608832,nDfoMSfgCXPTFbHiXcKSsQ)
 
 下面我们创建`B`的实例，看下是否成功继承了`A`中的属性和方法。
 ```javascript
@@ -306,7 +304,7 @@ b.getB();
 ```
 
 #### `class extends`实现继承
-在`es6`中为开发提供了`extends`关键字，可以很方便的实现类之间的继承：
+在`es6`中为开发者提供了`extends`关键字，可以很方便的实现类之间的继承：
 ```javascript
 function A () {
   this.a = 100;
@@ -379,9 +377,14 @@ class B extends A {
 B.say(); // say
 ```
 
+`extends`的实现类似于方案二:
+* `apply`方法更改父类`this`指向，继承私有属性
+* `Object.create`继承原型属性
+* `Object.setPrototypeOf`继承静态属性
+ 
 具体的细节小伙伴们可以自己研究`babel`编译后的源码，地址在这里：[传送门](https://babeljs.io/repl#?browsers=defaults%2C%20not%20ie%2011%2C%20not%20ie_mob%2011&build=&builtIns=false&spec=false&loose=false&code_lz=MYGwhgzhAECC0G8BQ1rAPYDsIBcBOArsDuntABQCUiKq0OAFgJYQB0Y0AvNAIwAMfANy0AvkloBzAKY54VGnTRYI6EFNYh0E8oxbtKw1GLFJQkGACFoUgB44pmACYx4yVBmz4iJMvLd0AegDoQHO_QH8jQEHPQEhzQE7TQFWbWlQIAgAHKTwqQzpdNgAjLmgAJgEsk1RpHCs_RKVsVXVNbRzWXINRJBMPXGh87kwpAHdoC0zTZXqNLXIAclzpgBoe_WFc1grYUa6Jxpm5xdXWlbWZEYMgA&debug=false&forceAllTransforms=false&shippedProposals=false&circleciRepo=&evaluate=false&fileSize=false&timeTravel=false&sourceType=module&lineWrap=true&presets=env%2Ces2015%2Creact%2Cstage-2%2Cenv&prettier=false&targets=&version=7.10.2&externalPlugins=)
 
 ### 结语
-理解`JavaScript`的原型原型链可能并不会直接提升你的`JavaScrit`变成能力，但是它可以帮助我们更好的理解`JavaScript`中一些知识点，想明白一些之前不太理解的东西。在各个流行库或者框架中也有对于原型或原型链的相关应用，学习这些知识也可以为我们阅读框架源码奠定一些基础。
+理解`JavaScript`的原型原型链可能并不会直接提升你的`JavaScrit`编程能力，但是它可以帮助我们更好的理解`JavaScript`中一些知识点，想明白一些之前不太理解的东西。在各个流行库或者框架中也有对于原型或原型链的相关应用，学习这些知识也可以为我们阅读框架源码奠定一些基础。
 
-如果文章内容有帮到你的话，请点赞鼓励一下作者，这将是你对作者最大的鼓励！
+如果文章内容有帮到你的话，请点赞鼓励一下作者，这将是对作者创作的最大动力！
