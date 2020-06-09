@@ -59,8 +59,24 @@ function initComputed () {
 
 }
 
-function initWatch () {
+function createWatcher (vm, key, handler, options) {
+  return vm.$watch(key, handler, options);
+}
 
+function initWatch (vm) {
+  const { watch } = vm.$options;
+  for (const key in watch) {
+    // watch[key]可能是对象
+    let value = watch[key];
+    let handler, userOpts = {};
+    if (typeof value === 'function') {
+      handler = value;
+    } else {
+      handler = value.handler;
+      userOpts = value;
+    }
+    createWatcher(vm, key, handler, userOpts);
+  }
 }
 
 function initState (vm) {
@@ -72,7 +88,7 @@ function initState (vm) {
     initComputed();
   }
   if (opts.watch) {
-    initWatch();
+    initWatch(vm);
   }
 }
 

@@ -7,17 +7,24 @@ const vm = new Vue({
   data () {
     return {
       msg: 'hello',
-      person: { name: 'zs', age: 10 },
-      arr: [{ a: 1 }, 1, 2, 3],
-      f: function () {
-        console.log(f);
-      }
+      // person: { name: 'zs', age: 10 },
+      // arr: [{ a: 1 }, 1, 2, 3],
+      // f: function () {
+      //   console.log(f);
+      // }
     };
   },
   computed: {},
   watch: {
-    msg (newValue, oldValue) {
-      console.log(newValue, oldValue);
+    // msg (newValue, oldValue) {
+    //   console.log(newValue, oldValue);
+    // }
+    // 传入的key对应的值为对象
+    msg: {
+      handler: function (newVal, oldVal) {
+        console.log(newVal, oldVal);
+      },
+      immediate: true
     }
   }
 });

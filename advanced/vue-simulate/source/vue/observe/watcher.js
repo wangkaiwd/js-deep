@@ -1,5 +1,6 @@
 import { popTarget, pushTarget } from './dep';
 import { observe } from './index';
+import { getValue } from '../utils';
 
 let id = 0; // 没产生一个watcher都要有一个唯一标识
 // 渲染 计算属性 vm.watch 都会用到watcher
@@ -10,34 +11,51 @@ class Watcher {
    * @param cb 用户传入的回调函数 vm.$watch('msg', cb)
    * @param opts 一些其他参数
    */
-  constructor (vm, exprOrFn, cb = () => {}, opts) {
+  constructor (vm, exprOrFn, cb = () => {}, opts = {}) {
     this.vm = vm;
     this.exprOrFn = exprOrFn;
     if (typeof exprOrFn === 'function') {
       this.getter = exprOrFn;
+    } else {
+      this.getter = function () {// 通过watch的key直接获取旧的值，然后之后在key设置值的时候会更新视图
+        // 用户watcher在获取值时会被收集到dep中
+        return getValue(vm, exprOrFn);
+      };
+    }
+    if (opts.user) {
+      this.user = true;
     }
     this.cb = cb;
+    // 每个watcher都有自己单独的依赖
     this.deps = [];
     // 存储任何类型的唯一值，即使添加了重复值，也不会生效
     this.depsId = new Set();
     this.opts = opts;
     this.id = id++;
-    this.get();
+    this.value = this.get();
+    if (this.opts.immediate) {
+      this.cb.call(vm, this.value);
+    }
   }
 
   get () {
     console.log('update');
+    // 当添加watch属性后，会为每一个属性都创建一个watcher,该watcher为用户watcher
     pushTarget(this); // 记录当前的渲染用的watcher
-    this.getter(); // 文本编译，然后重新渲染
+    const value = this.getter(); // 文本编译，然后重新渲染
     popTarget();
+    return value;
   }
 
   update () {
     queueWatcher(this);
   }
 
-  run () {
-    this.get();
+  run () { // 用户watcher调用run方法并不会更新视图，只是去获取值而已
+    const value = this.get();
+    if (this.value !== value) {
+      this.cb.call(this.vm, this.value, value);
+    }
   }
 
   addDep (dep) { // 同一个watcher 不应该重复记录多个dep

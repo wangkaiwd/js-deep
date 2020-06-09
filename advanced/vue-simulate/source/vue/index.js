@@ -69,6 +69,9 @@ Vue.prototype.$mount = function () {
 
   // 每个数据更改了，需要重新渲染
 };
+Vue.prototype.$watch = function (exprOrFn, callback, options) {
+  new Watcher(this, exprOrFn, callback, { user: true,...options });
+};
 // vue初始化，可以具体再细分初始化各个配置
 Vue.prototype._init = function (options) {
   // 将this重新取一个可以理解的名字，方便理解
