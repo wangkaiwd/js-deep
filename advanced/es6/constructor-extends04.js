@@ -8,6 +8,11 @@ function _typeof (obj) {
 // subClass: B, superClass: A
 function _inherits (subClass, superClass) {
   if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function'); }
+  // B.prototype = Object.create(superClass.prototype,{
+  //    value: B,
+  //    writable: true,
+  //    configurable: true
+  // })
   subClass.prototype = Object.create(superClass && superClass.prototype, {
     constructor: {
       value: subClass,
@@ -16,11 +21,13 @@ function _inherits (subClass, superClass) {
     }
   });
   // subClass.__proto__ = superClass
-  // A.__proto = B 继承了静态方法
+  // B.__proto = A 继承了静态方法
   if (superClass) _setPrototypeOf(subClass, superClass);
 }
 
 function _setPrototypeOf (o, p) {
+  // 通过惰性函数，将函数进行重新赋值
+  // 下次调用时直接执行重新赋值的函数，而不用再进行判断函数Object.setPrototypeOf是否存在
   _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf (o, p) {
     o.__proto__ = p;
     return o;
@@ -28,19 +35,25 @@ function _setPrototypeOf (o, p) {
   return _setPrototypeOf(o, p);
 }
 
-function _createSuper (Derived) {
+function _createSuper (Derived) { // B
   var hasNativeReflectConstruct = _isNativeReflectConstruct();
   return function _createSuperInternal () {
+    // B 从A中继承了静态方法
+    // Super  = B.__proto__ = A
     var Super = _getPrototypeOf(Derived), result;
     if (hasNativeReflectConstruct) {
       var NewTarget = _getPrototypeOf(this).constructor;
       result = Reflect.construct(Super, arguments, NewTarget);
-    } else { result = Super.apply(this, arguments); }
+    } else {
+      // A.apply(b, {length:0}) => A.call(b, ...arguments)
+      result = Super.apply(this, arguments);
+    }
     return _possibleConstructorReturn(this, result);
   };
 }
 
-function _possibleConstructorReturn (self, call) {
+// call: A的返回值，如果A返回了一个对象，那么会返回该对象作为子类的this，然后返回
+function _possibleConstructorReturn (self, call) { // b undefined
   if (call && (_typeof(call) === 'object' || typeof call === 'function')) { return call; }
   return _assertThisInitialized(self);
 }
@@ -72,7 +85,7 @@ function _classCallCheck (instance, Constructor) { if (!_instanceof(instance, Co
 function _defineProperties (target, props) {
   for (var i = 0; i < props.length; i++) {
     var descriptor = props[i];
-    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.enumerable = descriptor.enumerable || false; // 不可枚举
     descriptor.configurable = true;
     if ('value' in descriptor) descriptor.writable = true;
     Object.defineProperty(target, descriptor.key, descriptor);
@@ -103,6 +116,9 @@ var A = /*#__PURE__*/function () {
 }();
 
 var B = /*#__PURE__*/function (_A) {
+  // 继承原型方法以及静态方法:
+  //  1. 继承原型方法： Object.create()
+  //  2. 继承静态方法： Object.setPrototypeOf()
   _inherits(B, _A);
 
   var _super = _createSuper(B);
@@ -113,11 +129,13 @@ var B = /*#__PURE__*/function (_A) {
     _classCallCheck(this, B);
 
     // 继承私有方法
+    //  A.apply(this,arguments)
     _this = _super.call(this);
     _this.b = 200;
     return _this;
   }
 
+  //
   _createClass(B, [{
     key: 'getB',
     value: function getB () {
