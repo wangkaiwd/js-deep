@@ -61,6 +61,7 @@ function createComputedGetter (vm, key) {
   const watcher = vm._watchersComputed[key];
   // 用户获取计算属性的值时调用
   return function () {
+    // 计算属性默认不执行，当用户取值的时候才会执行，会缓存取值的结果。如果依赖的值变化了，会更新dirty属性，这样在再次取值时才会重新计算最新的值
     if (watcher.dirty) {
       watcher.evaluate();
       // 此时渲染watcher还在执行vm._update方法中，所以Dep.target = [渲染watcher]
@@ -114,6 +115,7 @@ function initState (vm) {
     initWatch(vm);
   }
   if (opts.computed) {
+    // watcher: 渲染watcher, 用户watcher， 计算属性watcher
     initComputed(vm);
   }
 }
