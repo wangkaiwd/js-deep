@@ -35,3 +35,5 @@
   * immediate: 在选项中传入`immediate: true`将会用当前表达式的值立即出发`callback`
 * return Function unwatch: 调用之后，停止出发`callback` 
 
+### Computed
+[Computed Properties and Watchers](https://vuejs.org/v2/guide/computed.html)
