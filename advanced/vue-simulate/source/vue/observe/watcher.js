@@ -14,6 +14,7 @@ class Watcher {
   constructor (vm, exprOrFn, cb = () => {}, opts = {}) {
     this.vm = vm;
     this.exprOrFn = exprOrFn;
+    this.lazy = opts.lazy;
     if (typeof exprOrFn === 'function') {
       this.getter = exprOrFn;
     } else {
@@ -25,6 +26,9 @@ class Watcher {
     if (opts.user) {
       this.user = true;
     }
+    if (this.lazy) {
+      this.dirty = this.lazy;
+    }
     this.cb = cb;
     // 每个watcher都有自己单独的依赖
     this.deps = [];
@@ -32,7 +36,8 @@ class Watcher {
     this.depsId = new Set();
     this.opts = opts;
     this.id = id++;
-    this.value = this.get();
+    // 计算属性不会立即执行，只有在属性在页面中使用的时候才会执行
+    this.value = this.lazy ? undefined : this.get();
     if (this.opts.immediate) {
       this.cb.call(vm, this.value);
     }
@@ -42,13 +47,32 @@ class Watcher {
     console.log('update');
     // 当添加watch属性后，会为每一个属性都创建一个watcher,该watcher为用户watcher
     pushTarget(this); // 记录当前的渲染用的watcher
-    const value = this.getter(); // 文本编译，然后重新渲染
+    const value = this.getter.call(this.vm); // 文本编译，然后重新渲染
     popTarget();
     return value;
   }
 
+  evaluate () {
+    // 执行计算属性方法，获得他的返回值，赋值到this.value上
+    this.value = this.get();
+    this.dirty = false;
+  }
+
   update () {
-    queueWatcher(this);
+    if (this.lazy) {
+      this.dirty = true;
+    } else {
+      queueWatcher(this);
+    }
+  }
+
+  depend () {
+    // fullName中的deps有2个，分别为firstName dep, lastName dep。在求值的时候会执行defineReactive中的get方法
+    let i = this.deps.length;
+    while (i--) {
+      // 订阅渲染watcher
+      this.deps[i].depend();
+    }
   }
 
   run () { // 用户watcher调用run方法并不会更新视图，只是去获取值而已

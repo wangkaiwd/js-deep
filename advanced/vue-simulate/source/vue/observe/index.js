@@ -1,4 +1,6 @@
 import Observer from './observer';
+import Watcher from './watcher';
+import Dep from './dep';
 
 export function observe (data) {
   // note: null == undefined
@@ -55,8 +57,32 @@ function initData (vm) {
   observe(vm._data);
 }
 
+function createComputedGetter (vm, key) {
+  const watcher = vm._watchersComputed[key];
+  // 用户获取计算属性的值时调用
+  return function () {
+    if (watcher.dirty) {
+      watcher.evaluate();
+      // 此时渲染watcher还在执行vm._update方法中，所以Dep.target = [渲染watcher]
+      if (Dep.target) {
+        watcher.depend();
+      }
+    }
+    return watcher.value;
+  };
+}
+
 function initComputed (vm) {
   const { computed } = vm.$options;
+  // 将计算属性的配置放到vm上
+  const watchers = vm._watchersComputed = Object.create(null);
+  for (const key in computed) {
+    watchers[key] = new Watcher(vm, computed[key], () => {}, { lazy: true });
+    // 要设置计算属性key对应的set,get方法
+    Object.defineProperty(vm, key, {
+      get: createComputedGetter(vm, key)
+    });
+  }
 }
 
 function createWatcher (vm, key, handler, options) {
@@ -84,11 +110,11 @@ function initState (vm) {
   if (opts.data) {
     initData(vm);
   }
-  if (opts.computed) {
-    initComputed(vm);
-  }
   if (opts.watch) {
     initWatch(vm);
+  }
+  if (opts.computed) {
+    initComputed(vm);
   }
 }
 

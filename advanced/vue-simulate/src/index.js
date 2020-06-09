@@ -85,4 +85,5 @@ const vm = new Vue({
 // vm.msg = 'xxx';
 
 // computed
+vm.firstName = '四';
 // }, 3000);
