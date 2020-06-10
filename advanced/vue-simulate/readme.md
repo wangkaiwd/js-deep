@@ -37,3 +37,6 @@
 
 ### Computed
 [Computed Properties and Watchers](https://vuejs.org/v2/guide/computed.html)
+
+* computed vs methods
+`computed`基于它的响应依赖进行缓存，当它的某个响应依赖发生改变的时候才会重新求值。

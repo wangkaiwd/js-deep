@@ -15,8 +15,8 @@ class Watcher {
     this.vm = vm;
     this.exprOrFn = exprOrFn;
     this.lazy = opts.lazy;
-    if (typeof exprOrFn === 'function') {
-      this.getter = exprOrFn;
+    if (typeof this.exprOrFn === 'function') {
+      this.getter = this.exprOrFn;
     } else {
       this.getter = function () {// 通过watch的key直接获取旧的值，然后之后在key设置值的时候会更新视图
         // 用户watcher在获取值时会被收集到dep中
@@ -37,6 +37,8 @@ class Watcher {
     this.opts = opts;
     this.id = id++;
     // 计算属性不会立即执行，只有在属性在页面中使用的时候才会执行
+    // 初始化watch的时候，执行this.get方法，获取到当前watch中keypath对应的值，然后记录到this.value中，现在这个值是添加watch后就从vm实例中获取的，属于旧值
+    // 而在获取值的时候，会调用key对应的get方法，key对应的dep会收集当前的用户定义的watcher，在之后调用run方法时调用该watcher的update方法
     this.value = this.lazy ? undefined : this.get();
     if (this.opts.immediate) {
       this.cb.call(vm, this.value);

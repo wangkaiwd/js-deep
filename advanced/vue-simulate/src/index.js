@@ -16,23 +16,23 @@ const vm = new Vue({
       lastName: '张'
     };
   },
-  computed: {
-    fullName () {
-      return this.firstName + this.lastName;
-    }
-  },
-  // watch: {
-  //   // msg (newValue, oldValue) {
-  //   //   console.log(newValue, oldValue);
-  //   // }
-  //   // 传入的key对应的值为对象
-  //   msg: {
-  //     handler: function (newVal, oldVal) {
-  //       console.log(newVal, oldVal);
-  //     },
-  //     immediate: true
+  // computed: {
+  //   fullName () {
+  //     return this.firstName + this.lastName;
   //   }
-  // }
+  // },
+  watch: {
+    msg (newValue, oldValue) {
+      console.log(newValue, oldValue);
+    }
+    // 传入的key对应的值为对象
+    // msg: {
+    //   handler: function (newVal, oldVal) {
+    //     console.log(newVal, oldVal);
+    //   },
+    //   immediate: true
+    // }
+  }
 });
 
 // Vue实例对象
@@ -82,8 +82,8 @@ const vm = new Vue({
 // vm.msg = 'world';
 
 // watch
-// vm.msg = 'xxx';
+vm.msg = 'xxx';
 
 // computed
-vm.firstName = '四';
+// vm.firstName = '四';
 // }, 3000);

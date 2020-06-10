@@ -78,6 +78,7 @@ function initComputed (vm) {
   // 将计算属性的配置放到vm上
   const watchers = vm._watchersComputed = Object.create(null);
   for (const key in computed) {
+    if (!computed.hasOwnProperty(key)) return;
     watchers[key] = new Watcher(vm, computed[key], () => {}, { lazy: true });
     // 要设置计算属性key对应的set,get方法
     Object.defineProperty(vm, key, {
@@ -93,6 +94,7 @@ function createWatcher (vm, key, handler, options) {
 function initWatch (vm) {
   const { watch } = vm.$options;
   for (const key in watch) {
+    if (!watch.hasOwnProperty(key)) return;
     // watch[key]可能是对象
     let value = watch[key];
     let handler, userOpts = {};
@@ -102,6 +104,9 @@ function initWatch (vm) {
       handler = value.handler;
       userOpts = value;
     }
+    // watch对象中的每一项都创建一个watcher实例
+    // key: 监听的Vue实例中的属性，也可以是对象的属性vm.person.name
+    // handler: watch每个key对应的回调函数，在监听的属性发生变化时，handler执行
     createWatcher(vm, key, handler, userOpts);
   }
 }
