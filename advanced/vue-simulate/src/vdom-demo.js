@@ -1,4 +1,4 @@
-import { h } from '../source/vue/vdom';
+import { h, render } from '../source/vue/vdom';
 
 const app = document.getElementById('app');
 // app上的属性有很多,遍历起来会比较浪费性能
@@ -40,4 +40,6 @@ const oldVNode = h('div', { id: 'container', key: 1 },
   h('span', { style: { color: 'red' }, key: 2 }, 'hello'),
   'vue'
 );
-console.log('end', oldVNode);
+
+// 将虚拟dom渲染为真实dom
+render();
