@@ -30,3 +30,36 @@ const app = document.getElementById('app');
 //     return h('div',{},'hello')
 //   }
 // })
+
+// 将虚拟节点渲染到页面
+// <div id="container"><span style="color: red">hello</span>vue</div>
+// https://vuejs.org/v2/guide/render-function.html#createElement-Arguments
+function h (tag, props, ...children) {
+  const { key, ...restProps } = props;
+  // 处理children中的字符串
+  children = children.map(child => {
+    if (typeof child === 'object') {
+      return child;
+    } else {
+      return vnode(undefined, undefined, undefined, undefined, child);
+    }
+  });
+  return vnode(tag, key, restProps, children);
+}
+
+// 转换text属性
+function vnode (tag, key, props, children, text) {
+  return {
+    tag,
+    key,
+    props,
+    children,
+    text
+  };
+}
+
+const oldVNode = h('div', { id: 'container', key: 1 },
+  h('span', { style: { color: 'red' }, key: 2 }, 'hello'),
+  'vue'
+);
+console.log('end');

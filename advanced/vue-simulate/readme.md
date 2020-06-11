@@ -53,3 +53,8 @@
   * 能使用`computed`时尽量使用`computed`
   * computed setter
  
+### 虚拟`DOM`
+* 什么是虚拟`DOM`？
+  * 简单的虚拟`DOM`结构
+  * `render api`的用法
+* 初始化，将虚拟节点渲染到页面
