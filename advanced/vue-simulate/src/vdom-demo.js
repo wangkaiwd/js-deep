@@ -1,3 +1,5 @@
+import { h } from '../source/vue/vdom';
+
 const app = document.getElementById('app');
 // app上的属性有很多,遍历起来会比较浪费性能
 // 为了节约性能，我们可以用一个对象来表示一个dom 节点，然后通过对象将真实节点渲染到页面中
@@ -33,33 +35,9 @@ const app = document.getElementById('app');
 
 // 将虚拟节点渲染到页面
 // <div id="container"><span style="color: red">hello</span>vue</div>
-// https://vuejs.org/v2/guide/render-function.html#createElement-Arguments
-function h (tag, props, ...children) {
-  const { key, ...restProps } = props;
-  // 处理children中的字符串
-  children = children.map(child => {
-    if (typeof child === 'object') {
-      return child;
-    } else {
-      return vnode(undefined, undefined, undefined, undefined, child);
-    }
-  });
-  return vnode(tag, key, restProps, children);
-}
-
-// 转换text属性
-function vnode (tag, key, props, children, text) {
-  return {
-    tag,
-    key,
-    props,
-    children,
-    text
-  };
-}
 
 const oldVNode = h('div', { id: 'container', key: 1 },
   h('span', { style: { color: 'red' }, key: 2 }, 'hello'),
   'vue'
 );
-console.log('end');
+console.log('end', oldVNode);
