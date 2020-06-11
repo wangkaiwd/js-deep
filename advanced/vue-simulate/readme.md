@@ -38,6 +38,8 @@
 * watchers
   * 尽管计算属性在大多数情况下是更合适的，但是有些时候一个自定义`wather`是必须的。所以`Vue`通过`watch`选项，提供了一个更通用的方式来响应数据更改。
   * 当你想要执行异步的或昂贵的操作来响应数据的变化，`watch`选项是特别有用的
+  * `watch`双向绑定数据的属性，变化时发起`ajax`请求，而不是通过监听`change`事件。这样在手动直接更改该属性时，也会发起请求。
+
 ### Computed
 [Computed Properties and Watchers](https://vuejs.org/v2/guide/computed.html)
 
@@ -50,4 +52,4 @@
   * 书写代码时会引诱我们写`watch`属性
   * 能使用`computed`时尽量使用`computed`
   * computed setter
-  
+ 
