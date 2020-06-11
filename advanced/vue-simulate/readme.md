@@ -35,8 +35,19 @@
   * immediate: 在选项中传入`immediate: true`将会用当前表达式的值立即出发`callback`
 * return Function unwatch: 调用之后，停止出发`callback` 
 
+* watchers
+  * 尽管计算属性在大多数情况下是更合适的，但是有些时候一个自定义`wather`是必须的。所以`Vue`通过`watch`选项，提供了一个更通用的方式来响应数据更改。
+  * 当你想要执行异步的或昂贵的操作来响应数据的变化，`watch`选项是特别有用的
 ### Computed
 [Computed Properties and Watchers](https://vuejs.org/v2/guide/computed.html)
 
-* computed vs methods
-`computed`基于它的响应依赖进行缓存，当它的某个响应依赖发生改变的时候才会重新求值。
+* computed caching vs methods
+  * `computed`基于它的响应依赖进行缓存，当它的某个响应依赖发生改变的时候才会重新求值。
+  * 只要`message`没有被更改(`dirty: false`)，多次访问`reversedMessage`计算属性将会立即返回之前的计算结果(`wtach.value`不会重新计算)，没有必要再次运行函数。
+  * 每次重新渲染，`methods`总是会被调用
+
+* computed vs watched property
+  * 书写代码时会引诱我们写`watch`属性
+  * 能使用`computed`时尽量使用`computed`
+  * computed setter
+  
