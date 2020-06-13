@@ -1,6 +1,6 @@
 import { h, render } from '../source/vue/vdom';
 
-const app = document.getElementById('app');
+const container = document.getElementById('app');
 // app上的属性有很多,遍历起来会比较浪费性能
 // 为了节约性能，我们可以用一个对象来表示一个dom 节点，然后通过对象将真实节点渲染到页面中
 
@@ -42,4 +42,4 @@ const oldVNode = h('div', { id: 'container', key: 1 },
 );
 
 // 将虚拟dom渲染为真实dom
-render();
+render(oldVNode, container);
