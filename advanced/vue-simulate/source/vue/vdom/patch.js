@@ -24,7 +24,22 @@ export function createElement (vnode) {
 }
 
 function updateProperties (vnode, oldProps = {}) {
+  // old: { id: 'container', b:'c', style: { backgroundColor: 'yellow' } }
+  // new: { id: 'aa', class: 'new-vnode', style: { backgroundColor: 'red' } }
   const { props, el } = vnode;
+  for (const key in oldProps.style) {
+    if (!props.style[key]) {
+      el.style[key] = '';
+    }
+  }
+  // 新的props中没有，旧的props中有，删除该属性
+  for (const key in oldProps) {
+    if (!props[key]) {
+      delete el[key];
+    }
+  }
+
+  // 用新的props生成dom节点的属性
   for (const key in props) {
     if (props.hasOwnProperty(key)) {
       if (key === 'style') {
@@ -43,4 +58,20 @@ function updateProperties (vnode, oldProps = {}) {
       }
     }
   }
+}
+
+export function patch (oldVnode, newVnode) {
+  if (oldVnode.tag !== newVnode.tag) { // 标签不相等，直接用新节点替换旧节点
+    // 由于oldVnode在之前执行了render方法，所以它会有el属性，而newVnode是第一次执行，没有el属性
+    // 需要通过createElement将virtual node转换为real node
+    oldVnode.el.replaceWith(createElement(newVnode));
+  }
+  if (!oldVnode.tag) { // 标签相等且都tag为undefined，即文本节点
+    if (oldVnode.text !== newVnode.text) {
+      oldVnode.el.textContent = newVnode.text;
+    }
+  }
+  // 标签一样，属性不一样
+  const el = newVnode.el = oldVnode.el;
+  updateProperties(newVnode, oldVnode);
 }

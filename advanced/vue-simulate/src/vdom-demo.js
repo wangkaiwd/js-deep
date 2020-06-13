@@ -1,4 +1,4 @@
-import { h, render } from '../source/vue/vdom';
+import { h, patch, render } from '../source/vue/vdom';
 
 const container = document.getElementById('app');
 // app上的属性有很多,遍历起来会比较浪费性能
@@ -36,10 +36,19 @@ const container = document.getElementById('app');
 // 将虚拟节点渲染到页面
 // <div id="container"><span style="color: red">hello</span>vue</div>
 
-const oldVNode = h('div', { id: 'container', key: 1 },
-  h('span', { style: { color: 'red' }, key: 2 }, 'hello'),
+const oldVNode = h('div', { id: 'container', key: 1, style: { backgroundColor: 'yellow' } },
+  h('span', { style: { color: 'blue' }, key: 2 }, 'hello'),
   'vue'
 );
 
 // 将虚拟dom渲染为真实dom
 render(oldVNode, container);
+
+const newVNode = h('div', {
+  id: 'aa',
+  class: 'new-vnode',
+  style: { backgroundColor: 'red' }
+}, h('span', { style: { color: 'green' } }, 'world'), 'new vue');
+setTimeout(() => {
+  patch(oldVNode, newVNode);
+}, 2000);
