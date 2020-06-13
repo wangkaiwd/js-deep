@@ -36,19 +36,39 @@ const container = document.getElementById('app');
 // 将虚拟节点渲染到页面
 // <div id="container"><span style="color: red">hello</span>vue</div>
 
-const oldVNode = h('div', { id: 'container', key: 1, style: { backgroundColor: 'yellow' } },
-  h('span', { style: { color: 'blue' }, key: 2 }, 'hello'),
-  'vue'
+// const oldVNode = h('div', { id: 'container', key: 1, style: { backgroundColor: 'yellow' } },
+//   h('span', { style: { color: 'blue' }, key: 2 }, 'hello'),
+//   'vue'
+// );
+const oldVNode = h(
+  'ul', { id: 'container', key: 1, style: { backgroundColor: 'yellow' } },
+  h('li', { key: 'a', style: { background: 'red' } }, 'a'),
+  h('li', { key: 'a', style: { background: 'yellow' } }, 'b'),
+  h('li', { key: 'a', style: { background: 'blue' } }, 'c'),
+  h('li', { key: 'a', style: { background: 'pink' } }, 'd'),
 );
 
 // 将虚拟dom渲染为真实dom
 render(oldVNode, container);
 
+// const newVNode = h('div', {
+//   id: 'aa',
+//   class: 'new-vnode',
+//   style: { backgroundColor: 'red' }
+// }, h('span', { style: { color: 'green' } }, 'world'), 'new vue');
+
 const newVNode = h('div', {
-  id: 'aa',
-  class: 'new-vnode',
-  style: { backgroundColor: 'red' }
-}, h('span', { style: { color: 'green' } }, 'world'), 'new vue');
+    id: 'aa',
+    class: 'new-vnode',
+    style: { backgroundColor: 'red' },
+    key: 2
+  },
+  h('li', { key: 'a', style: { background: 'red' } }, 'a'),
+  h('li', { key: 'a', style: { background: 'yellow' } }, 'b'),
+  h('li', { key: 'a', style: { background: 'blue' } }, 'c'),
+  h('li', { key: 'a', style: { background: 'pink' } }, 'd'),
+  h('li', { key: 'a', style: { background: 'purple' } }, 'e'),
+);
 setTimeout(() => {
   patch(oldVNode, newVNode);
 }, 2000);

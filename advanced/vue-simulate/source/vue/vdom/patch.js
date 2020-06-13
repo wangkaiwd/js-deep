@@ -26,7 +26,7 @@ export function createElement (vnode) {
 function updateProperties (vnode, oldProps = {}) {
   // old: { id: 'container', b:'c', style: { backgroundColor: 'yellow' } }
   // new: { id: 'aa', class: 'new-vnode', style: { backgroundColor: 'red' } }
-  const { props, el } = vnode;
+  const { props = {}, el } = vnode;
   for (const key in oldProps.style) {
     if (!props.style[key]) {
       el.style[key] = '';
@@ -88,6 +88,9 @@ export function patch (oldVnode, newVnode) {
   }
 }
 
+// vue增加了很多优化策略 因为在浏览器中操做DOM最常见的方法时：
+// 开头或结尾插入
+// 涉及到正序和倒叙
 function updateChildren (parent, oldChildren, newChildren) {
 
 }
