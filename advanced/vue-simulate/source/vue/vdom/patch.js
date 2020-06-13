@@ -74,4 +74,20 @@ export function patch (oldVnode, newVnode) {
   // 标签一样，属性不一样
   const el = newVnode.el = oldVnode.el;
   updateProperties(newVnode, oldVnode);
+
+  // 比较孩子节点
+  if (oldVnode.length > 0 && newVnode.length > 0) { // 子节点都存在
+    updateChildren(el, oldVnode.children, newVnode.children);
+  } else if (oldVnode.length > 0) { // 旧节点的子节点存在
+    oldVnode.el.innerHTML = '';
+  } else if (newVnode.length > 0) { // 新节点的子节点存在
+    for (let i = 0; i < newVnode.childNodes.length; i++) {
+      const newChildEl = createElement(newVnode.childNodes[i]);
+      oldVnode.el.appendChild(newChildEl);
+    }
+  }
+}
+
+function updateChildren (parent, oldChildren, newChildren) {
+
 }
