@@ -65,11 +65,13 @@ export function patch (oldVnode, newVnode) {
     // 由于oldVnode在之前执行了render方法，所以它会有el属性，而newVnode是第一次执行，没有el属性
     // 需要通过createElement将virtual node转换为real node
     oldVnode.el.replaceWith(createElement(newVnode));
+    return;
   }
   if (!oldVnode.tag) { // 标签相等且都tag为undefined，即文本节点
     if (oldVnode.text !== newVnode.text) {
       oldVnode.el.textContent = newVnode.text;
     }
+    return;
   }
   // 标签一样，属性不一样
   const el = newVnode.el = oldVnode.el;
@@ -119,10 +121,11 @@ function updateChildren (parent, oldChildren, newChildren) {
   while (oldStartIndex <= oldEndIndex && newStartIndex <= newEndIndex) {
     if (!oldStartVNode) {
       oldStartVNode = oldChildren[++oldStartIndex];
-    } else if (!oldEndIndex) {
+    } else if (!oldEndVNode) {
       oldEndVNode = oldChildren[--oldEndIndex];
     } else if (isSameVNode(oldStartVNode, newStartVnode)) {
-      // 结尾插入
+      patch(oldStartVNode, newStartVnode);
+      // 开头插入
       // 1. 分别获取新节点和旧节点的开始和结尾索引
       // 2. 从第一项比较节点是否相同，如果相同，继续将新节点和老节点的索引后移再进行比较
       // 3. 老节点开始索引移动到结束索引后，停止循环
@@ -130,7 +133,7 @@ function updateChildren (parent, oldChildren, newChildren) {
       oldStartVNode = oldChildren[++oldStartIndex];
       newStartVnode = newChildren[++newStartIndex];
     } else if (isSameVNode(oldEndVNode, newEndVNode)) {
-      // 开头插入
+      patch(oldEndVNode, newEndVNode);
       // 1. 分别获取新节点和旧节点开始和结尾的索引
       // 2. 从最后一项开始比较，如果节点相同，索引前移
       // 3. 旧节点结尾索引如果等于开始索引，结束循环
@@ -138,21 +141,22 @@ function updateChildren (parent, oldChildren, newChildren) {
       oldEndVNode = oldChildren[--oldEndIndex];
       newEndVNode = newChildren[--newEndIndex];
     } else if (isSameVNode(oldStartVNode, newEndVNode)) {
-      // 倒序
+      patch(oldStartVNode, newEndVNode);
       // 1. 旧节点的头和新节点的头，旧节点的尾和新节点的尾都不相同
       // 2. 旧节点的头和新节点的尾相同，将旧节点的头移动到旧节点的尾节点之后
+      // let isSame = false;
       // 3. 重复1，2步骤
       const oldEl = oldStartVNode.el;
       parent.insertBefore(oldEl, oldEndVNode.el.nextSibling);
       oldStartVNode = oldChildren[++oldStartIndex];
       newEndVNode = newChildren[--newEndIndex];
     } else if (isSameVNode(oldEndVNode, newStartVnode)) { // 倒叙：最后一项移动到最前边
+      patch(oldEndVNode, newStartVnode);
       parent.insertBefore(oldEndVNode.el, oldStartVNode.el);
       oldEndVNode = oldChildren[--oldEndIndex];
       newStartVnode = newChildren[++newStartIndex];
     } else { // 乱序
       const newEl = createElement(newStartVnode);
-      // let isSame = false;
       // let moveIndex = 0;
       // for (let i = 0; i < oldChildren.length; i++) {
       //   if (isSameVNode(newStartVnode, oldChildren[i])) {
@@ -169,10 +173,12 @@ function updateChildren (parent, oldChildren, newChildren) {
       // for (let i = oldStartIndex; i < oldEndIndex; i++) {
       //   parent.removeChild(oldChildren[i].el);
       // }
+      // 结尾插入
       // newStartVnode = newChildren[++newStartIndex];
       const moveIndex = map[newStartVnode.key];
       if (moveIndex) {
         const moveNode = oldChildren[moveIndex];
+        patch(moveNode, oldStartVNode);
         // 这里真实节点发生了变化，但是虚拟节点并没有变化，还是会继续遍历到该虚拟节点，所以需要置空
         oldChildren[moveIndex] = null;
         parent.insertBefore(moveNode.el, oldStartVNode.el);
@@ -180,12 +186,6 @@ function updateChildren (parent, oldChildren, newChildren) {
         parent.insertBefore(newEl, oldStartVNode.el);
       }
       newStartVnode = newChildren[++newStartIndex];
-      if (oldStartIndex <= oldEndIndex) {
-        for (let i = oldStartIndex; i <= oldEndIndex; i++) {
-          let child = oldChildren[i];
-          if (child) {parent.removeChild(child.el);}
-        }
-      }
     }
   }
   // 将新节点中剩余节点插入到老节点中
@@ -198,5 +198,12 @@ function updateChildren (parent, oldChildren, newChildren) {
     // 如何找到参考元素？不好懂的逻辑可以画图
     const refEl = oldChildren[newEndIndex + 1] ? oldChildren[newEndIndex + 1].el : null;
     parent.insertBefore(newEl, refEl);
+  }
+  // 移动指针并比对完成后，老节点还有剩余节点，需要删除
+  if (oldStartIndex <= oldEndIndex) {
+    for (let i = oldStartIndex; i <= oldEndIndex; i++) {
+      let child = oldChildren[i];
+      if (child) {parent.removeChild(child.el);}
+    }
   }
 }
