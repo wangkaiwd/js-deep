@@ -57,7 +57,7 @@ render(oldVNode, container);
 //   style: { backgroundColor: 'red' }
 // }, h('span', { style: { color: 'green' } }, 'world'), 'new vue');
 
-const newVNode = h('div', {
+const newVNode = h('ul', {
     id: 'aa',
     class: 'new-vnode',
     style: { backgroundColor: 'red' },

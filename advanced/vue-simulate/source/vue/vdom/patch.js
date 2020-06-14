@@ -76,11 +76,11 @@ export function patch (oldVnode, newVnode) {
   updateProperties(newVnode, oldVnode);
 
   // 比较孩子节点
-  if (oldVnode.length > 0 && newVnode.length > 0) { // 子节点都存在
+  if (oldVnode.children.length > 0 && newVnode.children.length > 0) { // 子节点都存在
     updateChildren(el, oldVnode.children, newVnode.children);
-  } else if (oldVnode.length > 0) { // 旧节点的子节点存在
+  } else if (oldVnode.children.length > 0) { // 旧节点的子节点存在
     oldVnode.el.innerHTML = '';
-  } else if (newVnode.length > 0) { // 新节点的子节点存在
+  } else if (newVnode.children.length > 0) { // 新节点的子节点存在
     for (let i = 0; i < newVnode.childNodes.length; i++) {
       const newChildEl = createElement(newVnode.childNodes[i]);
       oldVnode.el.appendChild(newChildEl);
@@ -88,9 +88,37 @@ export function patch (oldVnode, newVnode) {
   }
 }
 
+function isSameVNode (oldVNode, newVNode) {
+  // 标签和key相同，认为是同一个节点
+  return (oldVNode.tag === newVNode.tag) || (oldVNode.key === newVNode.key);
+}
+
 // vue增加了很多优化策略 因为在浏览器中操做DOM最常见的方法时：
 // 开头或结尾插入
 // 涉及到正序和倒叙
 function updateChildren (parent, oldChildren, newChildren) {
-
+  // 结尾插入
+  // 1. 分别获取新节点和旧节点的开始和结尾索引
+  // 2. 从第一项比较节点是否相同，如果相同，继续将新节点和老节点的索引后移再进行比较
+  // 3. 老节点开始索引移动到结束索引后，停止循环
+  // 4. 将新节点中剩余的节点添加到老节点的末尾
+  let oldStartIndex = 0,
+    oldStartVNode = oldChildren[0],
+    oldEndIndex = oldChildren.length - 1,
+    oldEndVNode = oldChildren[oldEndIndex];
+  let newStartIndex = 0, newStartVnode = newChildren[0],
+    newEndIndex = newChildren.length - 1,
+    newEndVNode = newChildren[newEndIndex];
+  while (oldStartIndex <= oldEndIndex && newStartIndex <= newEndIndex) {
+    if (isSameVNode(oldStartVNode, newStartVnode)) {
+      oldStartVNode = oldChildren[++oldStartIndex];
+      newStartVnode = newChildren[++newStartIndex];
+    }
+  }
+  // 将新节点中剩余节点插入到老节点中
+  for (let i = newStartIndex; i <= newEndIndex; i++) {
+    const newEl = createElement(newChildren[i]);
+    parent.appendChild(newEl);
+  }
+  // 开头插入
 }
