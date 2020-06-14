@@ -95,7 +95,7 @@ function isSameVNode (oldVNode, newVNode) {
 
 // vue增加了很多优化策略 因为在浏览器中操做DOM最常见的方法时：
 // 开头或结尾插入
-// 涉及到正序和倒序
+// 涉及到正序和倒叙
 function updateChildren (parent, oldChildren, newChildren) {
   let oldStartIndex = 0,
     oldStartVNode = oldChildren[0],
@@ -104,8 +104,24 @@ function updateChildren (parent, oldChildren, newChildren) {
   let newStartIndex = 0, newStartVnode = newChildren[0],
     newEndIndex = newChildren.length - 1,
     newEndVNode = newChildren[newEndIndex];
+
+  // key 和 索引之间可以相互转换
+  function makeIndexByKey () {
+    const map = {};
+    oldChildren.forEach((child, i) => {
+      map[child.key] = i;
+    });
+    return map;
+  }
+
+  // {a:0,b:1,...}
+  const map = makeIndexByKey();
   while (oldStartIndex <= oldEndIndex && newStartIndex <= newEndIndex) {
-    if (isSameVNode(oldStartVNode, newStartVnode)) {
+    if (!oldStartVNode) {
+      oldStartVNode = oldChildren[++oldStartIndex];
+    } else if (!oldEndIndex) {
+      oldEndVNode = oldChildren[--oldEndIndex];
+    } else if (isSameVNode(oldStartVNode, newStartVnode)) {
       // 结尾插入
       // 1. 分别获取新节点和旧节点的开始和结尾索引
       // 2. 从第一项比较节点是否相同，如果相同，继续将新节点和老节点的索引后移再进行比较
@@ -130,8 +146,46 @@ function updateChildren (parent, oldChildren, newChildren) {
       parent.insertBefore(oldEl, oldEndVNode.el.nextSibling);
       oldStartVNode = oldChildren[++oldStartIndex];
       newEndVNode = newChildren[--newEndIndex];
-    } else {
-      break;
+    } else if (isSameVNode(oldEndVNode, newStartVnode)) { // 倒叙：最后一项移动到最前边
+      parent.insertBefore(oldEndVNode.el, oldStartVNode.el);
+      oldEndVNode = oldChildren[--oldEndIndex];
+      newStartVnode = newChildren[++newStartIndex];
+    } else { // 乱序
+      const newEl = createElement(newStartVnode);
+      // let isSame = false;
+      // let moveIndex = 0;
+      // for (let i = 0; i < oldChildren.length; i++) {
+      //   if (isSameVNode(newStartVnode, oldChildren[i])) {
+      //     isSame = true;
+      //     moveIndex = i;
+      //     break;
+      //   }
+      // }
+      // if (isSame) {
+      //   parent.insertBefore(oldChildren[moveIndex].el, oldStartVNode.el);
+      // } else {
+      //   parent.insertBefore(newEl, oldStartVNode.el);
+      // }
+      // for (let i = oldStartIndex; i < oldEndIndex; i++) {
+      //   parent.removeChild(oldChildren[i].el);
+      // }
+      // newStartVnode = newChildren[++newStartIndex];
+      const moveIndex = map[newStartVnode.key];
+      if (moveIndex) {
+        const moveNode = oldChildren[moveIndex];
+        // 这里真实节点发生了变化，但是虚拟节点并没有变化，还是会继续遍历到该虚拟节点，所以需要置空
+        oldChildren[moveIndex] = null;
+        parent.insertBefore(moveNode.el, oldStartVNode.el);
+      } else {
+        parent.insertBefore(newEl, oldStartVNode.el);
+      }
+      newStartVnode = newChildren[++newStartIndex];
+      if (oldStartIndex <= oldEndIndex) {
+        for (let i = oldStartIndex; i <= oldEndIndex; i++) {
+          let child = oldChildren[i];
+          if (child) {parent.removeChild(child.el);}
+        }
+      }
     }
   }
   // 将新节点中剩余节点插入到老节点中
