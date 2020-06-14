@@ -1,4 +1,4 @@
-import { h, patch, render } from '../source/vue/vdom';
+import { h, patch, render } from '../../source/vue/vdom';
 import { newVNode, oldVNode } from './diff-demo-random';
 
 const container = document.getElementById('app');

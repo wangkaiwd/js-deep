@@ -1,6 +1,7 @@
 import { initState } from './observe';
 import Watcher from './observe/watcher';
 import { compilerText } from './utils';
+import { h, patch, render } from './vdom';
 
 function Vue (options) {
   this._init(options);
@@ -29,30 +30,20 @@ function compiler (node, vm) {
   }
 }
 
-Vue.prototype._update = function () {
+Vue.prototype._update = function (vnode) {
   const vm = this;
-  // 用 用户传入的数据更新 视图
-  // 将el中的{{msg}} 替换为真实的数据
-  // 文档碎片会存在于内存中，而不是主DOM树的一部分。可以先创建文档碎片，然后追加元素到文档碎片中，最终追加文档碎片到DOM树中
-  // 在DOM树中，文档碎片被其所有子元素替换。
-  // 可以防止DOM的回流和重绘，提升性能
-  const node = document.createDocumentFragment();
-  let firstChild;
-  while (firstChild = vm.$el.firstChild) {
-    // 如果给定子节点是文档中已经存在的一个节点的引用，appendChild从当前的位置移动这个节点到新的位置(追加节点到某个其它节点之前，没有必要从节点的父节点移除该节点)
-    // appendChild:如果节点已经存在的话，移动这个节点
-    // 从el中移动到node对应的文档碎片中
-    node.appendChild(firstChild);
+  let preVNode = vm.preVNode;
+  if (!preVNode) {
+    vm.$el = render(vnode, vm.$el);
+  } else {
+    vm.$el = patch(preVNode, vnode);
   }
-  compiler(node, vm);
-  // @see:https://gist.github.com/gleuch/2475825#file-gistfile1-js-L10-L15
-  // const div = document.createElement('div');
-  // div.appendChild(node.cloneNode(true));
-  // outerHTML: 元素及其所有后代的HTML字符串
-  // innerHTML: 元素的所有后代HTML字符串,不包括该元素本身
-  // console.log(div.outerHTML);
-  // 替换完成后再重新移入到根元素中
-  vm.$el.appendChild(node);
+  vm.preVNode = vnode;
+};
+Vue.prototype._render = function () {
+  const vm = this;
+  const { render } = vm.$options;
+  return render.call(vm, h);
 };
 Vue.prototype.$mount = function () {
   const vm = this;
@@ -61,7 +52,7 @@ Vue.prototype.$mount = function () {
   // 实例被挂载之后，被解析的元素将作为vm.$el被访问
   el = vm.$el = query(el);
   const updateComponent = () => {
-    vm._update();
+    vm._update(vm._render());
   };
   // 渲染时通过watcher来渲染
   // vue2.0通过watcher来进行组件级更新

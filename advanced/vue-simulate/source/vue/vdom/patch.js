@@ -6,6 +6,7 @@ export function render (vnode, container) {
   // 递归创建
   const el = createElement(vnode);
   container.appendChild(el);
+  return el;
 }
 
 export function createElement (vnode) {
@@ -65,13 +66,13 @@ export function patch (oldVnode, newVnode) {
     // 由于oldVnode在之前执行了render方法，所以它会有el属性，而newVnode是第一次执行，没有el属性
     // 需要通过createElement将virtual node转换为real node
     oldVnode.el.replaceWith(createElement(newVnode));
-    return;
+    return oldVnode.el;
   }
   if (!oldVnode.tag) { // 标签相等且都tag为undefined，即文本节点
     if (oldVnode.text !== newVnode.text) {
       oldVnode.el.textContent = newVnode.text;
     }
-    return;
+    return oldVnode.el;
   }
   // 标签一样，属性不一样
   const el = newVnode.el = oldVnode.el;
@@ -88,6 +89,7 @@ export function patch (oldVnode, newVnode) {
       oldVnode.el.appendChild(newChildEl);
     }
   }
+  return oldVnode.el;
 }
 
 function isSameVNode (oldVNode, newVNode) {

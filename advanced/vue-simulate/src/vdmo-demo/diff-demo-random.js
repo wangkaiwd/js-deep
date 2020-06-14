@@ -1,4 +1,4 @@
-import { h } from '../source/vue/vdom';
+import { h } from '../../source/vue/vdom';
 // 新节点末尾插入元素
 export const oldVNode = h(
   'ul', { id: 'container', key: 1, style: { backgroundColor: 'yellow' } },

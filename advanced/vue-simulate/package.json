@@ -1,7 +1,7 @@
 {
   "name": "vue",
   "version": "1.0.0",
-  "main": "src/index.js",
+  "main": "src/vdmo-demo/index.js",
   "license": "MIT",
   "scripts": {
     "start": "webpack-dev-server",
