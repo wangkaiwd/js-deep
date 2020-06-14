@@ -95,13 +95,8 @@ function isSameVNode (oldVNode, newVNode) {
 
 // vue增加了很多优化策略 因为在浏览器中操做DOM最常见的方法时：
 // 开头或结尾插入
-// 涉及到正序和倒叙
+// 涉及到正序和倒序
 function updateChildren (parent, oldChildren, newChildren) {
-  // 结尾插入
-  // 1. 分别获取新节点和旧节点的开始和结尾索引
-  // 2. 从第一项比较节点是否相同，如果相同，继续将新节点和老节点的索引后移再进行比较
-  // 3. 老节点开始索引移动到结束索引后，停止循环
-  // 4. 将新节点中剩余的节点添加到老节点的末尾
   let oldStartIndex = 0,
     oldStartVNode = oldChildren[0],
     oldEndIndex = oldChildren.length - 1,
@@ -111,10 +106,29 @@ function updateChildren (parent, oldChildren, newChildren) {
     newEndVNode = newChildren[newEndIndex];
   while (oldStartIndex <= oldEndIndex && newStartIndex <= newEndIndex) {
     if (isSameVNode(oldStartVNode, newStartVnode)) {
+      // 结尾插入
+      // 1. 分别获取新节点和旧节点的开始和结尾索引
+      // 2. 从第一项比较节点是否相同，如果相同，继续将新节点和老节点的索引后移再进行比较
+      // 3. 老节点开始索引移动到结束索引后，停止循环
+      // 4. 将新节点中剩余的节点添加到老节点的末尾
       oldStartVNode = oldChildren[++oldStartIndex];
       newStartVnode = newChildren[++newStartIndex];
     } else if (isSameVNode(oldEndVNode, newEndVNode)) {
+      // 开头插入
+      // 1. 分别获取新节点和旧节点开始和结尾的索引
+      // 2. 从最后一项开始比较，如果节点相同，索引前移
+      // 3. 旧节点结尾索引如果等于开始索引，结束循环
+      // 4. 将新节点开始位置剩余的内容插入到旧节点开头
       oldEndVNode = oldChildren[--oldEndIndex];
+      newEndVNode = newChildren[--newEndIndex];
+    } else if (isSameVNode(oldStartVNode, newEndVNode)) {
+      // 倒序
+      // 1. 旧节点的头和新节点的头，旧节点的尾和新节点的尾都不相同
+      // 2. 旧节点的头和新节点的尾相同，将旧节点的头移动到旧节点的尾节点之后
+      // 3. 重复1，2步骤
+      const oldEl = oldStartVNode.el;
+      parent.insertBefore(oldEl, oldEndVNode.el.nextSibling);
+      oldStartVNode = oldChildren[++oldStartIndex];
       newEndVNode = newChildren[--newEndIndex];
     } else {
       break;
@@ -131,10 +145,4 @@ function updateChildren (parent, oldChildren, newChildren) {
     const refEl = oldChildren[newEndIndex + 1] ? oldChildren[newEndIndex + 1].el : null;
     parent.insertBefore(newEl, refEl);
   }
-  // 开头插入
-  // 1. 分别获取新节点和旧节点开始和结尾的索引
-  // 2. 从最后一项开始比较，如果节点相同，索引前移
-  // 3. 旧节点结尾索引如果等于开始索引，结束循环
-  // 4. 将新节点开始位置剩余的内容插入到旧节点开头
-
 }

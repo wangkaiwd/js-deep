@@ -1,5 +1,5 @@
 import { h, patch, render } from '../source/vue/vdom';
-import { newVNode, oldVNode } from './diff-demo-push';
+import { newVNode, oldVNode } from './diff-demo-reverse';
 
 const container = document.getElementById('app');
 // app上的属性有很多,遍历起来会比较浪费性能
