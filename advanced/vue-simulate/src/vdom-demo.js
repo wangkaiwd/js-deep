@@ -1,4 +1,5 @@
 import { h, patch, render } from '../source/vue/vdom';
+import { newVNode, oldVNode } from './diff-demo-push';
 
 const container = document.getElementById('app');
 // app上的属性有很多,遍历起来会比较浪费性能
@@ -40,16 +41,6 @@ const container = document.getElementById('app');
 //   h('span', { style: { color: 'blue' }, key: 2 }, 'hello'),
 //   'vue'
 // );
-const oldVNode = h(
-  'ul', { id: 'container', key: 1, style: { backgroundColor: 'yellow' } },
-  h('li', { key: 'a', style: { background: 'red' } }, 'a'),
-  h('li', { key: 'a', style: { background: 'yellow' } }, 'b'),
-  h('li', { key: 'a', style: { background: 'blue' } }, 'c'),
-  h('li', { key: 'a', style: { background: 'pink' } }, 'd'),
-);
-
-// 将虚拟dom渲染为真实dom
-render(oldVNode, container);
 
 // const newVNode = h('div', {
 //   id: 'aa',
@@ -57,18 +48,9 @@ render(oldVNode, container);
 //   style: { backgroundColor: 'red' }
 // }, h('span', { style: { color: 'green' } }, 'world'), 'new vue');
 
-const newVNode = h('ul', {
-    id: 'aa',
-    class: 'new-vnode',
-    style: { backgroundColor: 'red' },
-    key: 2
-  },
-  h('li', { key: 'a', style: { background: 'red' } }, 'a'),
-  h('li', { key: 'a', style: { background: 'yellow' } }, 'b'),
-  h('li', { key: 'a', style: { background: 'blue' } }, 'c'),
-  h('li', { key: 'a', style: { background: 'pink' } }, 'd'),
-  h('li', { key: 'a', style: { background: 'purple' } }, 'e'),
-);
+// 将虚拟dom渲染为真实dom
+render(oldVNode, container);
+
 setTimeout(() => {
   patch(oldVNode, newVNode);
 }, 2000);

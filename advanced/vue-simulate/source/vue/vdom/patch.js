@@ -90,7 +90,7 @@ export function patch (oldVnode, newVnode) {
 
 function isSameVNode (oldVNode, newVNode) {
   // 标签和key相同，认为是同一个节点
-  return (oldVNode.tag === newVNode.tag) || (oldVNode.key === newVNode.key);
+  return (oldVNode.tag === newVNode.tag) && (oldVNode.key === newVNode.key);
 }
 
 // vue增加了很多优化策略 因为在浏览器中操做DOM最常见的方法时：
@@ -113,12 +113,28 @@ function updateChildren (parent, oldChildren, newChildren) {
     if (isSameVNode(oldStartVNode, newStartVnode)) {
       oldStartVNode = oldChildren[++oldStartIndex];
       newStartVnode = newChildren[++newStartIndex];
+    } else if (isSameVNode(oldEndVNode, newEndVNode)) {
+      oldEndVNode = oldChildren[--oldEndIndex];
+      newEndVNode = newChildren[--newEndIndex];
+    } else {
+      break;
     }
   }
   // 将新节点中剩余节点插入到老节点中
   for (let i = newStartIndex; i <= newEndIndex; i++) {
     const newEl = createElement(newChildren[i]);
-    parent.appendChild(newEl);
+    // api不够灵活，这里可以使用insertBefore
+    // parent.appendChild(newEl);
+    // @see: https://developer.mozilla.org/en-US/docs/Web/API/Node/insertBefore
+    // parentNode.insertBefore(newNode, referenceNode)
+    // 如何找到参考元素？不好懂的逻辑可以画图
+    const refEl = oldChildren[newEndIndex + 1] ? oldChildren[newEndIndex + 1].el : null;
+    parent.insertBefore(newEl, refEl);
   }
   // 开头插入
+  // 1. 分别获取新节点和旧节点开始和结尾的索引
+  // 2. 从最后一项开始比较，如果节点相同，索引前移
+  // 3. 旧节点结尾索引如果等于开始索引，结束循环
+  // 4. 将新节点开始位置剩余的内容插入到旧节点开头
+
 }
