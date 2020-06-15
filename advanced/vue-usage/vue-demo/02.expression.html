@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<div id="app">
+  <!-- 只能放表达式，因为最终会将执行结果作为参数传给函数 -->
+  <!-- _xxx(msg) -->
+  <!-- _xxx(msg === 'hello' ? true : false) -->
+  <!-- _xxx(if(msg) {}else{}) 参数不能是语句-->
+  {{person}}
+
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+  const vm = new Vue({
+    el: '#app',
+    data () {
+      return {
+        msg: 'hello',
+        person: {
+          name: 'a',
+          age: 12
+        }
+      };
+    }
+  });
+  // vm.$set()
+  // vm.$delete() 对象删除并没有进行监测，所以不会触发视图更新
+  // 删除新增对象都不会触发视图更新
+  // delete vm.person.age;
+  // vm.person.say = 'say';
+</script>
+</html>
