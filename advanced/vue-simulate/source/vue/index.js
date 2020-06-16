@@ -34,6 +34,7 @@ Vue.prototype._update = function (vnode) {
   const vm = this;
   let preVNode = vm.preVNode;
   if (!preVNode) {
+    // 根据虚拟节点生成真实dom，并append到vm.$el中
     vm.$el = render(vnode, vm.$el);
   } else {
     vm.$el = patch(preVNode, vnode);
