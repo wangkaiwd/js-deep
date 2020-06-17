@@ -196,9 +196,9 @@
 
 函数体继续执行，将我们带到第二行。最终，我们看到一个`await`关键字！🎉
 
-最先发生的事是被等待的值执行：在这个例子中是函数`one`。它被弹入调用栈，并且最终返回一个解决状态的`promise`。一旦`Promise`被解决并且`one`返回一个值，`JavaScript`遇到了`await`关键字。
+最先发生的事是被等待的值执行：在这个例子中是函数`one`。它被弹入调用栈，并且最终返回一个解决状态的`promise`。
 
-当遇到`await`关键字的时候，异步函数被暂停。函数体的执行被暂停，`async`函数中剩余的代码会在微任务中运行而不是一个常规任务！
+`await`关键字会使异步函数在执行`promise`的时候被暂停，之后在`promise`被解决后调用`then`调用时继续执行， 所以`async`函数中剩余的代码会在微任务中运行而不是一个常规任务！
 ![](https://res.cloudinary.com/practicaldev/image/fetch/s--UC78HoCO--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_66%2Cw_880/https://dev-to-uploads.s3.amazonaws.com/i/b6l3psgewvtrtmrr60tg.gif)
 
 现在，因为遇到了`await`关键字，异步函数`myFunc`被暂停，`JavaScript`引擎跳出异步函数，并且在异步函数被调用的执行上下文中继续执行代码：在这个例子中是**全局执行上下文**！🏃🏽‍♀️
