@@ -50,7 +50,15 @@ v-for和v-if 不要使用在同一个元素上，可能会导致性能浪费
 * 手动挂载组件
 * 组件通信
   * props
+  * emit
+  * 双向绑定 v-model/.sync
   * custom event
+  * provide/inject(自己实现工具库)
+  * $children/$parent 直接触发儿子或父亲的事件
+  * $attrs/$listeners
+* 原型自定义方法，实现快速跨级通信：
+  * $dispatch
+  * $broadcast
 
 #### 快速原型开发
 * [instant prototyping](https://cli.vuejs.org/guide/prototyping.html#instant-prototyping)
