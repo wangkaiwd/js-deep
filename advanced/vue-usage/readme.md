@@ -42,5 +42,16 @@ v-for和v-if 不要使用在同一个元素上，可能会导致性能浪费
 * mixins
 
 ### 动画
-* 添加购物车
+* 添加购物车动画
 * v-leave 没有用，只是为了设计美感
+
+### 组件
+* `Vue.extend`用法
+* 手动挂载组件
+* 组件通信
+  * props
+  * custom event
+
+#### 快速原型开发
+* [instant prototyping](https://cli.vuejs.org/guide/prototyping.html#instant-prototyping)
+* `yarn`的[全局安装命令](https://classic.yarnpkg.com/en/docs/cli/global/) 没有类似于`npm`一样的缩写： `yarn global add package-name`
