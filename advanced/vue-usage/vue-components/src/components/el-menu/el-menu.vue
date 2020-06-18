@@ -5,9 +5,11 @@
 </template>
 
 <script>
-  export default {};
+  export default {
+    name: 'ElMenu'
+  };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 </style>
