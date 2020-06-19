@@ -1,17 +1,17 @@
 <template>
   <div id="app">
-    <el-form></el-form>
-    <el-menu></el-menu>
+    <communicate></communicate>
   </div>
 </template>
 
 <script>
-  import ElForm from '@/components/el-form/el-form';
-  import ElMenu from '@/components/el-menu/el-menu';
+  import communicate from '@/view/communicate';
 
   export default {
     name: 'App',
-    components: { ElForm, ElMenu }
+    components: {
+      communicate
+    }
   };
 </script>
 

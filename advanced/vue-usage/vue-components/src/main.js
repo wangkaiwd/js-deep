@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import App from './App.vue';
+import './extend-prorotype';
 
 Vue.config.productionTip = false;
 
