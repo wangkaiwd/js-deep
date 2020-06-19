@@ -1,19 +1,15 @@
 <template>
   <div>
-    App
+    el-menu
   </div>
 </template>
 
 <script>
   export default {
-    data () {
-      return {
-        msg: '1'
-      };
-    }
+    name: 'ElMenu'
   };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 </style>

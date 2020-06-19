@@ -59,6 +59,9 @@ v-for和v-if 不要使用在同一个元素上，可能会导致性能浪费
 * 原型自定义方法，实现快速跨级通信：
   * $dispatch
   * $broadcast
+* eventBus 
+* 子组件如何监听父组件的`mounted`事件(`eventBus`)
+* slot
 
 #### 快速原型开发
 * [instant prototyping](https://cli.vuejs.org/guide/prototyping.html#instant-prototyping)
