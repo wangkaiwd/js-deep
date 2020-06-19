@@ -8,6 +8,7 @@
     <!--    <button @click="$emit('change',money+1)">update money</button>-->
     <!--  封装$dispatch方法，递归查找想要触发事件的父级  -->
     <button @click="$dispatch('change','TestChild',money + 1)">update money</button>
+    <!--  $broadcast: 使用场景?  -->
     grand-son
   </div>
 </template>
