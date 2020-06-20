@@ -1,7 +1,7 @@
 <template>
-  <div>
-    el-menu
-  </div>
+  <ul>
+    <slot></slot>
+  </ul>
 </template>
 
 <script>

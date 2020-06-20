@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <!--    <communicate></communicate>-->
-    <my-form></my-form>
+    <!--    <my-form></my-form>-->
+    <my-menu></my-menu>
   </div>
 </template>
 
@@ -16,7 +17,7 @@
       communicate,
       MyMenu,
       MyForm
-    }
+    },
   };
 </script>
 
