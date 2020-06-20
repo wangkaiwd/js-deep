@@ -7,6 +7,9 @@
       <el-form-item label="密码" prop="password">
         <el-input v-model="ruleForm.password"></el-input>
       </el-form-item>
+      <el-form-item>
+        <button type="submit" @click="submitForm">提交</button>
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -37,6 +40,7 @@
     methods: {
       submitForm () {
         this.$refs.ruleForm.validate((valid) => {
+          console.log('valid', valid);
           if (valid) {
             alert('submit!');
           } else {

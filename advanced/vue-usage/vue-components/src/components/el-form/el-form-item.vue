@@ -35,14 +35,17 @@
     },
     methods: {
       validate () {
+        const { prop } = this;
+        // 当传入的内容formItem中没有prop，
+        // 如<el-form-item><button>提交</button></el-form-item>，
+        // 或表单不需要校验时不传入prop
+        if (!prop) return;
         this.errorMessage = '';
         const { rules, model } = this.form;
-        const { prop } = this;
         const validator = new schema({ [prop]: rules[prop] });
-        validator.validate({ [prop]: model[prop] }, (error, fields) => {
-          if (error) {
-            this.errorMessage = error[0].message;
-          }
+        return validator.validate({ [prop]: model[prop] }).catch(({ error, fields }) => {
+          this.errorMessage = fields[prop][0].message;
+          return Promise.reject(fields);
         });
       }
     }

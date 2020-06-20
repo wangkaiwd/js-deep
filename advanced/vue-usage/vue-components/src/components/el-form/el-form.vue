@@ -1,5 +1,5 @@
 <template>
-  <form>
+  <form @submit.prevent>
     <slot></slot>
   </form>
 </template>
@@ -20,8 +20,25 @@
       return {};
     },
     methods: {
-      ruleForm () {
+      validate (cb) {
+        const children = this.$children;
+        const formItems = [];
 
+        function findFormItems (children) {
+          for (let i = 0; i < children.length; i++) {
+            const child = children[i];
+            if (child.$options.name === 'ElFormItem') {
+              formItems.push(child);
+            }
+            if (Array.isArray(child.$children)) {
+              findFormItems(child.$children);
+            }
+          }
+        }
+
+        findFormItems(children);
+        return Promise.all(formItems.map(item => item.validate()))
+          .then(() => cb(true), () => cb(false));
       }
     }
   };
