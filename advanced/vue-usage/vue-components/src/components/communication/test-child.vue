@@ -20,6 +20,10 @@
       TestGrandson
     },
     mounted () {
+      // 包含了父作用域没有被识别为props的绑定属性。可以通过v-bind="$attrs"向下传入一个内部组件
+      console.log('attrs', this.$attrs);
+      // 包含了父作用域中没有.native的v-on事件监听器。可以通过v-on="$listeners"向下传递到一个内部组件
+      console.log('listeners', this.$listeners);
     }
   };
 </script>

@@ -1,6 +1,13 @@
 <template>
   <div class="test-parent">
-    <test-child :reset-money="onResetMoney" @change="onChange" :money="money"></test-child>
+    <test-child
+      a="xxx"
+      b="yyy"
+      :reset-money="onResetMoney"
+      @change="onChange"
+      :money="money"
+    >
+    </test-child>
   </div>
 </template>
 
