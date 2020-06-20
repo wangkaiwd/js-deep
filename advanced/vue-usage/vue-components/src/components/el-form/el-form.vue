@@ -5,7 +5,26 @@
 </template>
 
 <script>
-  export default {};
+  export default {
+    provide () {
+      return {
+        form: this
+      };
+    },
+    name: 'ElForm',
+    props: {
+      model: { type: Object },
+      rules: { type: Object }
+    },
+    data () {
+      return {};
+    },
+    methods: {
+      ruleForm () {
+
+      }
+    }
+  };
 </script>
 
 <style lang="scss" scoped>
