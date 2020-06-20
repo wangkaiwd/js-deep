@@ -31,3 +31,11 @@ Vue.prototype.$broadcast = function (eventName, ComponentName, params) {
 
   iterate(children);
 };
+
+// 基于根实例的发布订阅来进行组件通信
+Vue.prototype.$bus = new Vue();
+// 组件内使用
+// this.$bus.on('xxx',(params) => {
+//    console.log(params)
+// })
+// this.$bus.emit('xxx',{name:'xxx'})

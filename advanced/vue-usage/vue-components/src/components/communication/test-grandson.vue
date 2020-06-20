@@ -24,6 +24,9 @@
     },
     mounted () {
       console.log('parent', this.parent.money);
+      this.$bus.$on('xxx', (params) => {
+        console.log('params', params);
+      });
     }
   };
 </script>

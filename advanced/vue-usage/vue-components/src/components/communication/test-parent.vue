@@ -31,6 +31,7 @@
       TestChild
     },
     mounted () {
+      this.$bus.$emit('xxx', 'hh');
     },
     methods: {
       onChange (money) {
