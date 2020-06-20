@@ -8,6 +8,7 @@
       :money="money"
     >
     </test-child>
+    <button @click="$broadcast('drink','TestGrandson')">触发grandson中的drink方法</button>
   </div>
 </template>
 
