@@ -13,7 +13,9 @@
       TestParent
     },
     data () {
-      return {};
+      return {
+        msg: 'hello'
+      };
     },
   };
 </script>

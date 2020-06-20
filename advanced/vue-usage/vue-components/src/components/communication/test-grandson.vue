@@ -15,11 +15,16 @@
 
 <script>
   export default {
+    // provide/inject不具备响应性
+    inject: ['parent'],
     name: 'TestGrandson',
     props: ['money'],
     data () {
       return {};
     },
+    mounted () {
+      console.log('parent', this.parent.money);
+    }
   };
 </script>
 

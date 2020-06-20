@@ -8,6 +8,11 @@
   import TestChild from '@/components/communication/test-child';
 
   export default {
+    provide () { // 当该值为一个函数时，才会获取到this。对象会立即执行this为undeinfed
+      return {
+        parent: this
+      };
+    },
     name: 'TestParent',
     data () {
       return {
