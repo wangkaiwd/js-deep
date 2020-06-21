@@ -4,7 +4,8 @@
     <!--    <my-form></my-form>-->
     <!--    <my-menu></my-menu>-->
     <!--    <render-jsx></render-jsx>-->
-    <manually-mount></manually-mount>
+    <!--    <manually-mount></manually-mount>-->
+    <my-lazy></my-lazy>
   </div>
 </template>
 
@@ -14,6 +15,7 @@
   import MyForm from '@/view/my-form';
   import RenderJsx from '@/view/render-jsx';
   import ManuallyMount from '@/view/manually-mount';
+  import MyLazy from '@/view/my-lazy';
 
   export default {
     name: 'App',
@@ -22,7 +24,8 @@
       MyMenu,
       MyForm,
       RenderJsx,
-      ManuallyMount
+      ManuallyMount,
+      MyLazy
     },
   };
 </script>
