@@ -1,9 +1,10 @@
 import Vue from 'vue';
 import App from './App.vue';
+import LazyLoad from '@/components/lazy-load/index';
 import './extend-prorotype';
 
 Vue.config.productionTip = false;
-console.log('App', App);
+Vue.use(LazyLoad);
 new Vue({
   render: h => h(App),
 }).$mount('#app');
