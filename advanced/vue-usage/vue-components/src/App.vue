@@ -2,8 +2,8 @@
   <div id="app">
     <!--    <communicate></communicate>-->
     <!--    <my-form></my-form>-->
-    <!--    <my-menu></my-menu>-->
-    <render-jsx></render-jsx>
+    <my-menu></my-menu>
+    <!--    <render-jsx></render-jsx>-->
   </div>
 </template>
 

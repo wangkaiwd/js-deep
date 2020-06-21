@@ -7,43 +7,7 @@
         :key="data.key">
       </reuse-menu>
     </el-menu>
-    <!--    <el-menu>
-          <el-submenu title="0">
-            <el-menu-item>
-              0-1
-            </el-menu-item>
-            <el-menu-item>
-              0-2
-            </el-menu-item>
-            <el-submenu title="0-3">
-              <el-menu-item>
-                0-3-1
-              </el-menu-item>
-              <el-menu-item>
-                0-3-2
-              </el-menu-item>
-            </el-submenu>
-          </el-submenu>
-          <el-submenu title="1">
-            <el-menu-item>
-              1-1
-            </el-menu-item>
-            <el-menu-item>
-              1-2
-            </el-menu-item>
-            <el-submenu title="1-3">
-              <el-menu-item>
-                1-3-1
-              </el-menu-item>
-              <el-menu-item>
-                1-3-2
-              </el-menu-item>
-            </el-submenu>
-          </el-submenu>
-          <el-menu-item>
-            3
-          </el-menu-item>
-        </el-menu>-->
+    <render-menu :data-source="dataSource"></render-menu>
   </div>
 </template>
 
@@ -52,6 +16,7 @@
   import ElMenuItem from '@/components/el-menu/el-menu-item';
   import ElSubmenu from '@/components/el-menu/el-submenu';
   import ReuseMenu from '@/view/reuse-menu';
+  import RenderMenu from '@/view/render-menu';
 
   export default {
     name: 'MyMenu',
@@ -59,7 +24,8 @@
       ElMenu,
       ElMenuItem,
       ElSubmenu,
-      ReuseMenu
+      ReuseMenu,
+      RenderMenu
     },
     data () {
       return {
