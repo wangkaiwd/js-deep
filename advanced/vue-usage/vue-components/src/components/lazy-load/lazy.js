@@ -12,6 +12,7 @@ const Lazy = (Vue) => {
     }
 
     checkInView () {
+      // 必须为图片指定宽高，否则可能获取不到图片的dimension
       const { top } = this.el.getBoundingClientRect();
       return top <= window.innerHeight * this.options.preload;
     }
@@ -26,6 +27,7 @@ const Lazy = (Vue) => {
       });
     }
 
+    // 创建一个假的image模拟加载过程，对应的事件触发后，为真实的img设置属性
     loadImage (resolve, reject) {
       const image = new Image();
       image.src = this.src;
@@ -54,6 +56,9 @@ const Lazy = (Vue) => {
       // 检测滚动，看图片是否出现在可视区域
 
       // 这里并不能获取到真实DOM，在inserted钩子调用时可以获取到真实DOM
+      // 首次渲染会直接渲染
+      // 之后再更新vm中的值的时候，会先将watcher去重后放入队列
+      // 同一个watcher会在所有的数据更新完成后，再统一更新视图
       Vue.nextTick(() => {
         const parent = this.getScrollParent(el);
         const listener = new ReactiveListener({
@@ -106,6 +111,7 @@ const Lazy = (Vue) => {
           src = listener.src;
           break;
       }
+      // 修改图片的真实路径
       listener.el.setAttribute('src', src);
     }
   };

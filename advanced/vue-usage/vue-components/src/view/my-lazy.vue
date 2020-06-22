@@ -1,6 +1,7 @@
 <template>
   <div class="my-lazy">
     <ul class="lazy-box">
+      <!--   images 会在请求到结果时才会遍历   -->
       <li v-for="image in images" :key="image.id">
         <img v-lazy="image.url" alt="">
       </li>
@@ -34,7 +35,6 @@
       },
       getImages () {
         this.request().then(res => {
-          // console.log(res);
           this.images = res;
         });
       }
