@@ -29,6 +29,7 @@ const Lazy = (Vue) => {
 
     // 创建一个假的image模拟加载过程，对应的事件触发后，为真实的img设置属性
     loadImage (resolve, reject) {
+      // 这会同一个图片加载2次
       const image = new Image();
       image.src = this.src;
       image.addEventListener('load', () => {
