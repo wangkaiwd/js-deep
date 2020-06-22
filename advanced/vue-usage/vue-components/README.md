@@ -14,3 +14,6 @@
 
 ### `lazy-load`
 * `Vue.use`
+* `Vue.directive`(custom directive)
+* `window.getComputedStyle`
+* [Get the size of the screen, current web page and browser window](https://stackoverflow.com/questions/3437786/get-the-size-of-the-screen-current-web-page-and-browser-window)

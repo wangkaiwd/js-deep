@@ -2,9 +2,13 @@ import Vue from 'vue';
 import App from './App.vue';
 import LazyLoad from '@/components/lazy-load/index';
 import './extend-prorotype';
+import loading from '@/assets/loading-1.gif';
 
 Vue.config.productionTip = false;
-Vue.use(LazyLoad);
+Vue.use(LazyLoad, {
+  preload: 1.3,
+  loading
+});
 new Vue({
   render: h => h(App),
 }).$mount('#app');

@@ -2,7 +2,7 @@
   <div class="my-lazy">
     <ul class="lazy-box">
       <li v-for="image in images" :key="image.id">
-        <img :src="image.url" alt="">
+        <img v-lazy="image.url" alt="">
       </li>
     </ul>
   </div>
