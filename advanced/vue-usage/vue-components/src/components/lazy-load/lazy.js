@@ -1,5 +1,5 @@
 import { _Vue } from '@/components/lazy-load/index';
-
+import { throttle } from 'lodash';
 // console.log('vue', _Vue);
 const Lazy = (Vue) => {
   class ReactiveListener {
@@ -50,6 +50,7 @@ const Lazy = (Vue) => {
       this.options = options;
       this.listenerQueue = [];
       this.isBindScrollEvent = false;
+      this.lazyHandler = throttle(this.lazyHandler.bind(this), 300);
     }
 
     add (el, binding, vnode) {
@@ -69,8 +70,9 @@ const Lazy = (Vue) => {
           options: this.options
         });
         this.listenerQueue.push(listener);
+        // throttle 在指定间隔内执行函数
         if (!this.isBindScrollEvent) {
-          parent.addEventListener('scroll', this.lazyHandler.bind(this));
+          parent.addEventListener('scroll', this.lazyHandler);
           this.isBindScrollEvent = true;
         }
         // 这一行代码会极大的影响到性能
