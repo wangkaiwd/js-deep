@@ -14,7 +14,9 @@ export default new Vuex.Store({
   },
   actions: {
     asyncChange ({ commit }, payload) {
-
+      setTimeout(() => {
+        commit('syncChange', payload);
+      }, 1000);
     }
   },
   modules: {}
