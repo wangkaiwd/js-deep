@@ -17,3 +17,7 @@
 * `Vue.directive`(custom directive)
 * `window.getComputedStyle`
 * [Get the size of the screen, current web page and browser window](https://stackoverflow.com/questions/3437786/get-the-size-of-the-screen-current-web-page-and-browser-window)
+* core idea: 
+  * recursive find has overflow property parent node
+  * check every img who added v-lazy directive whether in viewport multiply preload
+  * simulate error and loading image async load progress and tip according to image load type
