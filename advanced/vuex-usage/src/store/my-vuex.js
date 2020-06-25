@@ -1,5 +1,11 @@
 let Vue;
 
+const forEach = (obj, cb) => {
+  Object.keys(obj).forEach(key => {
+    cb(key, obj[key], obj);
+  });
+};
+
 class Store {
   constructor (options) {
     // this.state = options.state;
@@ -9,8 +15,17 @@ class Store {
     this.vm = new Vue({
       data: { state: options.state }
     });
+    this.getters = options.getters;
+    forEach(this.getters, (key, value) => {
+      Object.defineProperty(this.getters, key, {
+        get: () => {
+          return value(this.state);
+        }
+      });
+    });
   }
 
+  // 使用get关键字，属性将被定义在实例的原型上
   get state () {
     return this.vm.state;
   }

@@ -4,6 +4,7 @@
     <!--    <button @click="onAsyncAdd">async add</button>-->
     <!--    <button @click="onAdd">add</button>-->
     <button @click="$store.state.age = 100">click</button>
+    姓名{{$store.getters.personName}}
   </div>
 </template>
 

@@ -6,7 +6,15 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    age: 18
+    age: 18,
+    person: {
+      name: 'zs'
+    }
+  },
+  getters: {
+    personName (state) {
+      return state.person.name;
+    }
   },
   mutations: {
     syncChange (state, payload) {
