@@ -1,8 +1,9 @@
 <template>
   <div id="app">
-    年龄{{$store.state.age}}
-    <button @click="onAsyncAdd">async add</button>
-    <button @click="onAdd">add</button>
+    <!--    年龄{{$store.state.age}}-->
+    <!--    <button @click="onAsyncAdd">async add</button>-->
+    <!--    <button @click="onAdd">add</button>-->
+    store
   </div>
 </template>
 
@@ -11,15 +12,18 @@
   export default {
     name: 'App',
     components: {},
+    beforeCreate () {
+      console.log('App');
+    },
     data () {
       return {};
     },
     methods: {
       onAsyncAdd () {
-        this.$store.dispatch('asyncChange', 10);
+        // this.$store.dispatch('asyncChange', 10);
       },
       onAdd () {
-        this.$store.commit('syncChange', 10);
+        // this.$store.commit('syncChange', 10);
       }
     }
   };
