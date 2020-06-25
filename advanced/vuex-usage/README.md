@@ -1,19 +1,5 @@
-# vuex-usage
+## Vuex
 
-## Project setup
-```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+* 为什么在`_data`和`$data`属性中没有`$store`属性?
+* `Vuex`内部的`Vue`实例是如何知道更新哪个地方的视图的？
+### 实现`Vuex`的`state`响应式

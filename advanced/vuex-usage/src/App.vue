@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <!--    年龄{{$store.state.age}}-->
+    年龄{{$store.state.age}}
     <!--    <button @click="onAsyncAdd">async add</button>-->
     <!--    <button @click="onAdd">add</button>-->
-    store
+    <button @click="$store.state.age = 100">click</button>
   </div>
 </template>
 
@@ -12,11 +12,11 @@
   export default {
     name: 'App',
     components: {},
-    beforeCreate () {
-      console.log('App');
-    },
     data () {
       return {};
+    },
+    mounted () {
+      console.log('store', this);
     },
     methods: {
       onAsyncAdd () {
