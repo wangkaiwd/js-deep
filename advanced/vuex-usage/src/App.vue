@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     年龄{{$store.state.age}}
-    <!--    <button @click="onAsyncAdd">async add</button>-->
-    <!--    <button @click="onAdd">add</button>-->
+    <button @click="onAsyncAdd">async add</button>
+    <button @click="onAdd">add</button>
     <button @click="$store.state.age = 100">click</button>
     姓名{{$store.getters.personName}}
   </div>
@@ -21,10 +21,10 @@
     },
     methods: {
       onAsyncAdd () {
-        // this.$store.dispatch('asyncChange', 10);
+        this.$store.dispatch('asyncChange', 10);
       },
       onAdd () {
-        // this.$store.commit('syncChange', 10);
+        this.$store.commit('syncChange', 10);
       }
     }
   };
