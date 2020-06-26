@@ -1,6 +1,6 @@
 import Vue from 'vue';
-// import Vuex from 'vuex';
-import Vuex from './my-vuex';
+import Vuex from 'vuex';
+// import Vuex from './my-vuex';
 
 Vue.use(Vuex);
 
@@ -18,6 +18,7 @@ export default new Vuex.Store({
   },
   mutations: {
     syncChange (state, payload) {
+      console.log('root', state);
       state.age += payload;
     }
   },
@@ -28,5 +29,35 @@ export default new Vuex.Store({
       }, 1000);
     }
   },
-  modules: {}
+  // 不加命名空间时，模块都会被注册到全局命名空间之下，
+  // 这将会导致多个modules的mutations和actions都响应同一个type
+  modules: {
+    a: {
+      state: {
+        name: 'a-state'
+      },
+      mutations: {
+        syncChange (state) {
+          console.log('a', state);
+        }
+      }
+    },
+    b: {
+      state: {
+        name: 'b-state',
+      },
+      mutations: {
+        syncChange (state) {
+          console.log('b', state);
+        }
+      },
+      modules: {
+        c: {
+          state: {
+            name: 'c-state'
+          }
+        }
+      }
+    }
+  }
 });

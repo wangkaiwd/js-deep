@@ -15,25 +15,10 @@ class Store {
     this.vm = new Vue({
       data: { state: options.state }
     });
-    const getters = options.getters;
     this.getters = {};
-    forEach(getters, (key, value) => {
-      // 如果对象中不存在指定的属性，Object.defineProperty()会创建这个属性。
-      Object.defineProperty(this.getters, key, {
-        get: () => {
-          return value(this.state);
-        }
-      });
-    });
     this.mutations = {};
-    const mutations = options.mutations;
-    forEach(mutations, (key, value) => {
-      this.mutations[key] = value;
-    });
     this.actions = {};
-    forEach(options.actions, (key, value) => {
-      this.actions[key] = value;
-    });
+    // 由于涉及到了模块的概念，所以需要递归格式化数据结构
   }
 
   // 使用get关键字，属性将被定义在实例的原型上
@@ -44,17 +29,17 @@ class Store {
   // 通过bind赋值为this的属性来更改this指向的简写
   // this.commit = this.commit.bind(this)
   commit = (type, payload) => {
-    if (this.mutations[type]) {
-      this.mutations[type](this.state, payload);
-    }
+    // if (this.mutations[type]) {
+    //   this.mutations[type](this.state, payload);
+    // }
   };
 
   dispatch (type, payload) {
-    if (this.actions[type]) {
-      // 传入的参数为store实例，可以通过解构赋值取出commit属性
-      // 这里commit在执行的时候，this指向了undefined
-      this.actions[type](this, payload);
-    }
+    // if (this.actions[type]) {
+    //   // 传入的参数为store实例，可以通过解构赋值取出commit属性
+    //   // 这里commit在执行的时候，this指向了undefined
+    //   this.actions[type](this, payload);
+    // }
   }
 }
 

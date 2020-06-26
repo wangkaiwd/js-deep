@@ -1,6 +1,14 @@
 <template>
   <div id="app">
-    年龄{{$store.state.age}}
+    <h2>
+      root年龄{{$store.state.age}}
+    </h2>
+    <h3>
+<!--      a姓名{{$store.state.a.name}}-->
+    </h3>
+    <h3>
+<!--      b姓名{{$store.state.b.name}}-->
+    </h3>
     <button @click="onAsyncAdd">async add</button>
     <button @click="onAdd">add</button>
     <button @click="$store.state.age = 100">click</button>
