@@ -1,6 +1,8 @@
+import ModuleCollection from './moduleCollection';
+
 let Vue;
 
-const forEach = (obj, cb) => {
+export const forEach = (obj, cb) => {
   Object.keys(obj).forEach(key => {
     cb(key, obj[key], obj);
   });
@@ -19,6 +21,14 @@ class Store {
     this.mutations = {};
     this.actions = {};
     // 由于涉及到了模块的概念，所以需要递归格式化数据结构
+    // 为什么要处理成这样？好处是什么？
+    // const root = {
+    //   _raw: rootModule,
+    //   _children: rootModule.modules,
+    //   state: rootModule.state
+    // };
+    this.modules = new ModuleCollection(options);
+    console.log('modules', this.modules);
   }
 
   // 使用get关键字，属性将被定义在实例的原型上

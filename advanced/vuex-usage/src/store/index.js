@@ -1,6 +1,6 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
-// import Vuex from './my-vuex';
+// import Vuex from 'vuex';
+import Vuex from './my-vuex';
 
 Vue.use(Vuex);
 
@@ -18,7 +18,6 @@ export default new Vuex.Store({
   },
   mutations: {
     syncChange (state, payload) {
-      console.log('root', state);
       state.age += payload;
     }
   },
@@ -55,6 +54,13 @@ export default new Vuex.Store({
         c: {
           state: {
             name: 'c-state'
+          },
+          modules: {
+            d: {
+              state: {
+                name: 'd-state'
+              }
+            }
           }
         }
       }
