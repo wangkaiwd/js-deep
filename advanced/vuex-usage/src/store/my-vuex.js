@@ -1,4 +1,4 @@
-import ModuleCollection from './moduleCollection';
+import ModuleCollection from './module-collection';
 
 let Vue;
 
@@ -76,7 +76,6 @@ const install = (_Vue) => {
         // 这样直接赋值不具有响应式，新增和删除对象属性都不具有响应式
         this.$store = store;
       } else { // 子实例
-        console.log('inject');
         // 在组件渲染的时候会进行递归渲染，先渲染父组件，然后再渲染所有的子组件
         // 这样可以通过$parent.$store一级一级获取到父组件的$store属性
         this.$store = this.$parent && this.$parent.$store;
