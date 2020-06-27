@@ -59,6 +59,11 @@ export default new Vuex.Store({
             d: {
               state: {
                 name: 'd-state'
+              },
+              getters: {
+                stateName (state) {
+                  return state.name + 'xxx';
+                }
               }
             }
           }

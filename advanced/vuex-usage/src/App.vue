@@ -25,6 +25,7 @@
       return {};
     },
     mounted () {
+      console.log(this.$store);
     },
     methods: {
       onAsyncAdd () {

@@ -3,10 +3,57 @@ import ModuleCollection from './module-collection';
 let Vue;
 
 export const forEach = (obj, cb) => {
+  if (Object.prototype.toString.call(obj) !== '[object Object]') return;
   Object.keys(obj).forEach(key => {
     cb(key, obj[key], obj);
   });
 };
+
+// 初始化getters, mutations, actions内容
+function installModule (store, rootState, path, rawModule) {
+  // getters,mutations,actions都放到了一起根store中，
+  // 所以在不使用命名空间的情况下不同module下的getters,mutations,actions会被放到一起
+  // mutations和actions中会将对应type的函数存到数组中
+  // 而getters会存放到同一个对象中，所以key重复即定义同名getters时，会有问题
+  const { getters, mutations, actions } = rawModule._raw;
+  // 初始化state
+  if (rawModule.state) {
+    // rootState
+    const parentState = path.slice(0, -1).reduce((module, key) => {
+      return module[key];
+    }, rootState);
+    const lastKey = path[path.length - 1];
+    parentState[lastKey] = rawModule.state;
+  }
+  // 初始化getters
+  forEach(getters, (key, value) => {
+    Object.defineProperty(store.getters, key, {
+      get: () => {
+        return value(rawModule.state);
+      }
+    });
+  });
+
+  // 订阅mutations和actions
+  forEach(mutations, (key, value) => {
+    store.mutations[key] = store.mutations[key] || [];
+    store.mutations[key].push((payload) => {
+      value(rawModule.state, payload);
+    });
+  });
+
+  forEach(actions, (key, value) => {
+    store.actions[key] = store.actions[key] || [];
+    store.actions[key].push((payload) => {
+      value(rawModule.state, payload);
+    });
+  });
+  if (rawModule._children) {
+    forEach(rawModule._children, (key, value) => {
+      installModule(store, rootState, path.concat(key), value);
+    });
+  }
+}
 
 class Store {
   constructor (options) {
@@ -28,7 +75,9 @@ class Store {
     //   state: rootModule.state
     // };
     this.modules = new ModuleCollection(options);
-    console.log('modules', this.modules);
+    // console.log('modules', this.modules);
+    installModule(this, this.state, [], this.modules.root);
+    console.log(this);
   }
 
   // 使用get关键字，属性将被定义在实例的原型上
@@ -39,9 +88,7 @@ class Store {
   // 通过bind赋值为this的属性来更改this指向的简写
   // this.commit = this.commit.bind(this)
   commit = (type, payload) => {
-    // if (this.mutations[type]) {
-    //   this.mutations[type](this.state, payload);
-    // }
+    this.mutations[type].forEach(fn => fn(payload));
   };
 
   dispatch (type, payload) {
