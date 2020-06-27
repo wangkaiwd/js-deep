@@ -48,6 +48,7 @@ class ModuleCollection {
       _children: {},
       state: originModule.state
     };
+    rawModule.rawModule = rawModule;
     if (!this.root) {
       this.root = rawModule;
     } else {

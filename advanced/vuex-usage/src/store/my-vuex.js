@@ -15,9 +15,29 @@ function installModule (store, rootState, path, rawModule) {
   // 所以在不使用命名空间的情况下不同module下的getters,mutations,actions会被放到一起
   // mutations和actions中会将对应type的函数存到数组中
   // 而getters会存放到同一个对象中，所以key重复即定义同名getters时，会有问题
-  const { getters, mutations, actions } = rawModule._raw;
+  const { getters, mutations, actions, namespaced } = rawModule._raw;
+  // [b,c,d]
+  const root = store.modules.root;
+  // let children = root._children;
+  // let str = '';
+  // path.forEach((key) => {
+  //   const target = children[key];
+  //   if (target._raw.namespaced) {
+  //     str += key + '/';
+  //   }
+  //   children = children[key]._children;
+  // });
+  let children = root._children;
+  const prefix = path.reduce((previous, current) => {
+    const target = children[current];
+    children = target._children;
+    if (target._raw.namespaced) {
+      return previous + current + '/';
+    }
+    return previous;
+  }, '');
   // 初始化state
-  if (rawModule.state) {
+  if (rawModule.state && path.length > 0) {
     // rootState
     const parentState = path.slice(0, -1).reduce((module, key) => {
       return module[key];
@@ -26,9 +46,7 @@ function installModule (store, rootState, path, rawModule) {
     // 这种直接赋值新属性不会具有响应式
     // parentState[lastKey] = rawModule.state
     // 通过set方法赋值，保证响应性
-    if (lastKey) {
-      Vue.set(parentState, lastKey, rawModule.state);
-    }
+    Vue.set(parentState, lastKey, rawModule.state);
   }
   // 初始化getters
   forEach(getters, (key, value) => {
@@ -41,16 +59,18 @@ function installModule (store, rootState, path, rawModule) {
 
   // 订阅mutations和actions
   forEach(mutations, (key, value) => {
-    store.mutations[key] = store.mutations[key] || [];
-    store.mutations[key].push((payload) => {
+    const finalKey = prefix + key;
+    store.mutations[finalKey] = store.mutations[finalKey] || [];
+    store.mutations[finalKey].push((payload) => {
       value(rawModule.state, payload);
     });
   });
 
   forEach(actions, (key, value) => {
-    store.actions[key] = store.actions[key] || [];
-    store.actions[key].push((payload) => {
-      value(rawModule.state, payload);
+    const finalKey = prefix + key;
+    store.actions[finalKey] = store.actions[finalKey] || [];
+    store.actions[finalKey].push((payload) => {
+      value(store, payload);
     });
   });
   if (rawModule._children) {
@@ -96,14 +116,14 @@ class Store {
   };
 
   dispatch (type, payload) {
-    // if (this.actions[type]) {
-    //   // 传入的参数为store实例，可以通过解构赋值取出commit属性
-    //   // 这里commit在执行的时候，this指向了undefined
-    //   this.actions[type](this, payload);
-    // }
+    if (this.actions[type]) {
+      // 传入的参数为store实例，可以通过解构赋值取出commit属性
+      // 这里commit在执行的时候，this指向了undefined
+      this.actions[type].forEach(fn => fn(payload));
+    }
   }
 
-  register (names, options) {
+  registerModule (names, options) {
     if (!Array.isArray(names)) {
       names = [names];
     }

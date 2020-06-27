@@ -1,10 +1,12 @@
 import Vue from 'vue';
+import createLogger from 'vuex/dist/logger';
 // import Vuex from 'vuex';
 import Vuex from './my-vuex';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+  // plugins: [createLogger()],
   state: {
     age: 18,
     person: {
@@ -32,6 +34,7 @@ export default new Vuex.Store({
   // 这将会导致多个modules的mutations和actions都响应同一个type
   modules: {
     a: {
+      namespaced: true,
       state: {
         name: 'a-state'
       },
@@ -42,6 +45,7 @@ export default new Vuex.Store({
       }
     },
     b: {
+      namespaced: true,
       state: {
         name: 'b-state',
       },
@@ -55,8 +59,14 @@ export default new Vuex.Store({
           state: {
             name: 'c-state'
           },
+          mutations: {
+            syncChange (state) {
+              console.log('c', state);
+            }
+          },
           modules: {
             d: {
+              namespaced: true,
               state: {
                 name: 'd-state'
               },
@@ -64,7 +74,12 @@ export default new Vuex.Store({
                 stateName (state) {
                   return state.name + 'xxx';
                 }
-              }
+              },
+              mutations: {
+                syncChange (state) {
+                  console.log('d', state);
+                }
+              },
             }
           }
         }
