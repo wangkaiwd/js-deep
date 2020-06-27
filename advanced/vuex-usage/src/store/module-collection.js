@@ -64,9 +64,7 @@ class ModuleCollection {
       //   current = current._children[key] = rawModule;
       // }
       // });
-      const parent = path.slice(0, -1).reduce((module, key) => {
-        return module._children[key];
-      }, this.root);
+      const parent = this.get(path.slice(0, -1));
       const lastKey = path[path.length - 1];
       parent._children[lastKey] = rawModule;
     }
@@ -76,6 +74,12 @@ class ModuleCollection {
         this.register(path.concat(key), value);
       });
     }
+  }
+
+  get (path) {
+    return path.reduce((module, key) => {
+      return module._children[key];
+    }, this.root);
   }
 }
 

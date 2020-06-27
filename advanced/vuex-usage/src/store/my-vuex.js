@@ -23,7 +23,12 @@ function installModule (store, rootState, path, rawModule) {
       return module[key];
     }, rootState);
     const lastKey = path[path.length - 1];
-    parentState[lastKey] = rawModule.state;
+    // 这种直接赋值新属性不会具有响应式
+    // parentState[lastKey] = rawModule.state
+    // 通过set方法赋值，保证响应性
+    if (lastKey) {
+      Vue.set(parentState, lastKey, rawModule.state);
+    }
   }
   // 初始化getters
   forEach(getters, (key, value) => {
@@ -77,7 +82,6 @@ class Store {
     this.modules = new ModuleCollection(options);
     // console.log('modules', this.modules);
     installModule(this, this.state, [], this.modules.root);
-    console.log(this);
   }
 
   // 使用get关键字，属性将被定义在实例的原型上
@@ -97,6 +101,15 @@ class Store {
     //   // 这里commit在执行的时候，this指向了undefined
     //   this.actions[type](this, payload);
     // }
+  }
+
+  register (names, options) {
+    if (!Array.isArray(names)) {
+      names = [names];
+    }
+    this.modules.register(names, options);
+    // 由于已经register，所以可以通过get方法，通过names获取根模块中的当前模块
+    installModule(this, this.state, names, this.modules.get(names));
   }
 }
 
