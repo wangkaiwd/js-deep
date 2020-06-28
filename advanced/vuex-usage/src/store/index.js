@@ -1,12 +1,26 @@
 import Vue from 'vue';
-import createLogger from 'vuex/dist/logger';
+// import createLogger from 'vuex/dist/logger';
 // import Vuex from 'vuex';
 import Vuex from './my-vuex';
 
 Vue.use(Vuex);
 
+// A Vuex plugin is simply a function that receives the store as the only argument
+function logger (store) {
+  let preState = JSON.parse(JSON.stringify(store.state));
+  // 在mutation改变store中state之前记录值，值更新后更新preState
+  store.subscribe((mutation, state) => {
+    // called after every mutation.
+    console.log('preState', preState);
+    console.log('mutation', mutation);
+    const nextState = JSON.parse(JSON.stringify(state));
+    console.log('nextState', nextState);
+    preState = nextState;
+  });
+}
+
 export default new Vuex.Store({
-  // plugins: [createLogger()],
+  plugins: [logger],
   state: {
     age: 18,
     person: {

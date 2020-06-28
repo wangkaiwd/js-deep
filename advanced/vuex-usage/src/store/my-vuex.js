@@ -17,7 +17,6 @@ function installModule (store, rootState, path, rawModule) {
   // 而getters会存放到同一个对象中，所以key重复即定义同名getters时，会有问题
   const { getters, mutations, actions, namespaced } = rawModule._raw;
   // [b,c,d]
-  const root = store.modules.root;
   // let children = root._children;
   // let str = '';
   // path.forEach((key) => {
@@ -27,7 +26,7 @@ function installModule (store, rootState, path, rawModule) {
   //   }
   //   children = children[key]._children;
   // });
-  let children = root._children;
+  let children = store.modules.root._children;
   const prefix = path.reduce((previous, current) => {
     const target = children[current];
     children = target._children;
@@ -50,7 +49,7 @@ function installModule (store, rootState, path, rawModule) {
   }
   // 初始化getters
   forEach(getters, (key, value) => {
-    Object.defineProperty(store.getters, key, {
+    Object.defineProperty(store.getters, prefix + key, {
       get: () => {
         return value(rawModule.state);
       }
@@ -63,6 +62,8 @@ function installModule (store, rootState, path, rawModule) {
     store.mutations[finalKey] = store.mutations[finalKey] || [];
     store.mutations[finalKey].push((payload) => {
       value(rawModule.state, payload);
+      // 保证拿到命名空间
+      store.subs.forEach(fn => fn({ type: finalKey, payload }, rootState));
     });
   });
 
@@ -92,6 +93,7 @@ class Store {
     this.getters = {};
     this.mutations = {};
     this.actions = {};
+    this.subs = [];
     // 由于涉及到了模块的概念，所以需要递归格式化数据结构
     // 为什么要处理成这样？好处是什么？
     // const root = {
@@ -102,6 +104,13 @@ class Store {
     this.modules = new ModuleCollection(options);
     // console.log('modules', this.modules);
     installModule(this, this.state, [], this.modules.root);
+    if (options.plugins) {
+      options.plugins.forEach(plugin => plugin(this));
+    }
+  }
+
+  subscribe (fn) {
+    this.subs.push(fn);
   }
 
   // 使用get关键字，属性将被定义在实例的原型上

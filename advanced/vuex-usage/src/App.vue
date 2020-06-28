@@ -35,7 +35,7 @@
         // 没有设置命名空间将会继承父命名空间
         // 1. inherits the namespace from parent module
         // 2. further nest the namespace
-        this.$store.commit('b/d/syncChange', 10);
+        this.$store.commit('syncChange', 10);
       }
     }
   };
