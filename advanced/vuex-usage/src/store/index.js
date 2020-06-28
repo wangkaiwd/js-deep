@@ -19,8 +19,21 @@ function logger (store) {
   });
 }
 
+function persists (store) {
+  const local = localStorage.getItem('vuex:state');
+  const initialState = local == null ? store.state : JSON.parse(local);
+  store.replaceState(initialState);
+  store.subscribe((mutation, state) => {
+    // 这里可以做节流 throttle lodash
+    localStorage.setItem('vuex:state', JSON.stringify(state));
+  });
+}
+
 export default new Vuex.Store({
-  plugins: [logger],
+  plugins: [
+    // logger,
+    persists
+  ],
   state: {
     age: 18,
     person: {

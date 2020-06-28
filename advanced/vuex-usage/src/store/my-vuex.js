@@ -8,8 +8,22 @@ export const forEach = (obj, cb) => {
     cb(key, obj[key], obj);
   });
 };
+const getLatestState = (store, path) => {
+  return path.reduce((newState, current) => {
+    return newState[current];
+  }, store.state);
+};
 
 // 初始化getters, mutations, actions内容
+// 函数定义：
+//  1. 创建一块堆内存，并将变量指向堆内存对应的地址
+//  2. 确定函数的作用域
+// 函数执行：
+//  1. 确定this指向
+//  2. 初始化作用域链
+//  3. 实参对象(arguments)赋值
+//  4. 变量声明提升
+//  5. 形参赋值(复杂对象会将堆内存对应的地址赋值给变量，取值时通过地址查找对应的堆内存)
 function installModule (store, rootState, path, rawModule) {
   // getters,mutations,actions都放到了一起根store中，
   // 所以在不使用命名空间的情况下不同module下的getters,mutations,actions会被放到一起
@@ -40,7 +54,7 @@ function installModule (store, rootState, path, rawModule) {
     // rootState
     const parentState = path.slice(0, -1).reduce((module, key) => {
       return module[key];
-    }, rootState);
+    }, store.state);
     const lastKey = path[path.length - 1];
     // 这种直接赋值新属性不会具有响应式
     // parentState[lastKey] = rawModule.state
@@ -61,9 +75,11 @@ function installModule (store, rootState, path, rawModule) {
     const finalKey = prefix + key;
     store.mutations[finalKey] = store.mutations[finalKey] || [];
     store.mutations[finalKey].push((payload) => {
-      value(rawModule.state, payload);
+      const latestState = getLatestState(store, path);
+      // 这里要根据store.state重新获取state,而不是从store.modules.root.state中获取
+      value(latestState, payload);
       // 保证拿到命名空间
-      store.subs.forEach(fn => fn({ type: finalKey, payload }, rootState));
+      store.subs.forEach(fn => fn({ type: finalKey, payload }, store.state));
     });
   });
 
@@ -104,6 +120,9 @@ class Store {
     this.modules = new ModuleCollection(options);
     // console.log('modules', this.modules);
     installModule(this, this.state, [], this.modules.root);
+    // 为什么插件要在这个位置处理？
+    // 此时已经完成了module的注册和安装，可以直接获取到最终处理后，我们想要的store,
+    // 其上有处理好的state,getters,mutations,actions
     if (options.plugins) {
       options.plugins.forEach(plugin => plugin(this));
     }
@@ -111,6 +130,14 @@ class Store {
 
   subscribe (fn) {
     this.subs.push(fn);
+  }
+
+  replaceState (state) {
+    // 对象会指向一片堆内存空间，在赋值时会将堆内存的地址赋值给变量
+    // 之后取值时会根据地址查找对应堆内存中的属性值
+    // 这样赋值会导致指向新的堆内存，与旧的堆内存无关
+    // 而之前赋值为该变量的值的变量依旧指向旧的堆内存
+    this.vm.state = state;
   }
 
   // 使用get关键字，属性将被定义在实例的原型上
