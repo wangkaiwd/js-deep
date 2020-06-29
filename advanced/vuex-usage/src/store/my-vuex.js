@@ -204,4 +204,37 @@ const Vuex = {
   install
 };
 
+export function mapState (array) {
+  let obj = {};
+  array.forEach(key => {
+    // 这里对应的计算属性值对应的函数，会在计算属性的值用到时执行更改this指向
+    // 所以这里不能使用箭头函数
+    obj[key] = function () {
+      return this.$store.state[key];
+    };
+  });
+  return obj;
+}
+
+export function mapGetters (array) {
+  const obj = {};
+  array.forEach(key => {
+    obj[key] = function () {
+      return this.$store.getters[key];
+    };
+  });
+  return obj;
+}
+
+// 辅助函数只是从store中获取值的一种简写
+export function mapMutations (obj) {
+  let temporary = {};
+  forEach(obj, (key, value) => {
+    temporary[key] = function (payload) {
+      return this.$store.commit(value, payload);
+    };
+  });
+  return temporary;
+}
+
 export default Vuex;

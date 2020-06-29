@@ -11,23 +11,33 @@
     </h3>
     <button @click="onAsyncAdd">async add</button>
     <button @click="onAdd">add</button>
-    <button @click="$store.state.age = 100">click</button>
     姓名{{$store.getters.personName}}
+    {{age}}
+    {{personName}}
   </div>
 </template>
 
 <script>
+  import { mapGetters, mapMutations, mapState } from './store/my-vuex';
 
   export default {
     name: 'App',
     components: {},
+    computed: {
+      ...mapState(['age']),
+      // age () { // 辅助函数是这种方式的简写
+      //   return this.$store.state.age;
+      // }
+      ...mapGetters(['personName'])
+    },
     data () {
       return {};
     },
     mounted () {
-      console.log(this.$store);
+      // console.log('this.$store', this.$store);
     },
     methods: {
+      ...mapMutations({ a: 'syncChange' }),
       onAsyncAdd () {
         this.$store.dispatch('asyncChange', 10);
       },
@@ -35,7 +45,8 @@
         // 没有设置命名空间将会继承父命名空间
         // 1. inherits the namespace from parent module
         // 2. further nest the namespace
-        this.$store.commit('syncChange', 10);
+        // this.$store.commit('syncChange', 10);
+        this.a(10);
       }
     }
   };

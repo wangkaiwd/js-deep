@@ -1,7 +1,7 @@
 import Vue from 'vue';
 // import createLogger from 'vuex/dist/logger';
-// import Vuex from 'vuex';
-import Vuex from './my-vuex';
+import Vuex from 'vuex';
+// import Vuex from './my-vuex';
 
 Vue.use(Vuex);
 
