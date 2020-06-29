@@ -1,7 +1,7 @@
 import Vue from 'vue';
 // import createLogger from 'vuex/dist/logger';
-import Vuex from 'vuex';
-// import Vuex from './my-vuex';
+// import Vuex from 'vuex';
+import Vuex from './my-vuex';
 
 Vue.use(Vuex);
 
@@ -32,8 +32,9 @@ function persists (store) {
 export default new Vuex.Store({
   plugins: [
     // logger,
-    persists
+    // persists
   ],
+  strict: true,
   state: {
     age: 18,
     person: {
@@ -47,7 +48,9 @@ export default new Vuex.Store({
   },
   mutations: {
     syncChange (state, payload) {
+      // setTimeout(() => {
       state.age += payload;
+      // }, 1000);
     }
   },
   actions: {

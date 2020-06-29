@@ -106,6 +106,8 @@ class Store {
     this.vm = new Vue({
       data: { state: options.state }
     });
+    this.strict = options.strict;
+    this._committing = false;
     this.getters = {};
     this.mutations = {};
     this.actions = {};
@@ -126,6 +128,19 @@ class Store {
     if (options.plugins) {
       options.plugins.forEach(plugin => plugin(this));
     }
+    if (this.strict) {
+      this.vm.$watch('state', () => {
+        // 同步深度监听state的变化，在state中的属性赋值时，会调用set方法，
+        console.assert(this._committing, 'do not mutate vuex store state outside mutation');
+      }, { deep: true, sync: true });
+    }
+  }
+
+  _withCommit (fn) {
+    this._committing = true;
+    // 如果fn中包含异步，那么异步代码还在执行时，this._committing就会变成false
+    fn();
+    this._committing = false;
   }
 
   subscribe (fn) {
@@ -148,7 +163,9 @@ class Store {
   // 通过bind赋值为this的属性来更改this指向的简写
   // this.commit = this.commit.bind(this)
   commit = (type, payload) => {
-    this.mutations[type].forEach(fn => fn(payload));
+    this._withCommit(() => {
+      this.mutations[type].forEach(fn => fn(payload));
+    });
   };
 
   dispatch (type, payload) {
