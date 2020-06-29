@@ -34,6 +34,8 @@
   * `vuex-logger`
   * `vuex-persist`
   
+### `strict`模式检测`mutation`中异步更新`state`
+
   
 
 
