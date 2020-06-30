@@ -1,6 +1,8 @@
 ## `Vue Router`
 * `Vue.use`源码
 * (在同一个或不同文件)`import`同一个文件俩次，文件中的代码会执行俩次吗？
+* 组件加载过程为什么是先加载父组件，然后再加载子组件？过程具体是怎样的？
+
 ### `window history api`
 `Vue.use(plugin)`: 安装一个`Vue.js`插件，如果插件是一个对象，它必须暴露一个`install`方法。如果插件是一个函数，它将被作为`install`方法对待。`install`方法将用`Vue`作为参数被调用。
 
