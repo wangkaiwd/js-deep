@@ -1,6 +1,7 @@
 export const install = (Vue) => {
   Vue.mixin({
     beforeCreate () {
+      // 在根实例中传入了router选项
       if (this.$options.router) {
         this._routerRoot = this;
         this._router = this.$options.router;
