@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import VueRouter from 'vue-router';
+import VueRouter from '../vue-router';
 import Home from '../views/Home.vue';
 import About from '../views/About';
 
@@ -12,10 +12,7 @@ import About from '../views/About';
 Vue.use(VueRouter);
 
 const routes = [
-  {
-    path: '/',
-    component: Home
-  },
+  { path: '/', component: Home },
   {
     path: '/about',
     // route level code-splitting
@@ -25,24 +22,18 @@ const routes = [
     children: [
       {
         path: 'a',
-        component: {
-          render (h) {return h('h4', 'this is About/a');}
-        }
+        component: { render (h) {return h('h4', 'this is About/a');} }
       },
       {
         path: 'b',
         component: {
-          render (h) {
-            return h('h4', 'this is About/b');
-          }
+          render (h) {return h('h4', 'this is About/b');}
         }
       }
     ]
   }
 ];
 
-const router = new VueRouter({
-  routes
-});
+const router = new VueRouter({ routes });
 
 export default router;

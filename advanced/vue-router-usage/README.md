@@ -10,7 +10,7 @@
 
 当这个方法在同一个插件上调用多次时，插件只会被安装一次
 
-[源码如下](https://github.com/vuejs/vue/blob/dev/src/core/global-api/use.js)：
+[源码如下](https://github.com/vuejs/vue/blob/dev/src/core/global-api/use.js) ：
 ```javascript
 import { toArray } from '../util/index'
 
@@ -39,3 +39,7 @@ export function initUse (Vue) {
   }
 }
 ```
+
+### 树形结构处理
+* 对比`Vuex`的处理方法
+* 简述`vue-router`中处理`route`的过程
