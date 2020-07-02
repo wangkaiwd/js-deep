@@ -11,8 +11,8 @@ class VueRouter {
     this.history = new HashHistory(this);
   }
 
-  match (location) {
-    return this.matcher.match(location);
+  match (path) {
+    return this.matcher.match(path);
   }
 
   init (app) {
@@ -29,3 +29,4 @@ class VueRouter {
 VueRouter.install = install;
 
 export default VueRouter;
+

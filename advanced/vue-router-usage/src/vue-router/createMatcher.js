@@ -1,4 +1,5 @@
 import createRouteMap from './createRouteMap';
+import { createRoute } from './history/base';
 
 function createMatcher (routes) {
   // 将数据进行扁平化
@@ -7,8 +8,9 @@ function createMatcher (routes) {
   const { pathList, pathMap } = createRouteMap(routes);
   const addRoutes = () => {
   };
-  const match = (location) => {
-
+  const match = (path) => {
+    const record = pathMap[path];
+    return createRoute(record, { path });
   };
   return {
     addRoutes,
