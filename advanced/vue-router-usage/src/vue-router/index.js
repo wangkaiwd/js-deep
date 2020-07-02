@@ -22,7 +22,9 @@ class VueRouter {
       this.history.setupListeners();
     };
     this.history.transitionTo(this.history.getCurrentLocation(), setupHashListener());
-    console.log(app);
+    this.history.listen((route) => {
+      app._route = route;
+    });
   }
 }
 

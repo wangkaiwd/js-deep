@@ -16,10 +16,12 @@ class History {
     this.current = createRoute(null, {
       path: '/'
     });
+    this.listener = undefined;
   }
 
   transitionTo (path, callback) {
     this.current = this.router.match(path);
+    this.listener && this.listener(this.current);
     if (typeof callback === 'function') {
       callback();
     }
@@ -30,6 +32,10 @@ class History {
     window.addEventListener('hashchange', () => {
       this.transitionTo(window.location.hash.slice(1));
     });
+  }
+
+  listen (cb) {
+    this.listener = cb;
   }
 }
 
