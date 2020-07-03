@@ -43,3 +43,7 @@ export function initUse (Vue) {
 ### 树形结构处理
 * 对比`Vuex`的处理方法
 * 简述`vue-router`中处理`route`的过程
+
+### `Vue`中的函数式组件
+* `router-view`：实现思路
+* `router-link`
