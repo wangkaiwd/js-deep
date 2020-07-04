@@ -1,3 +1,4 @@
+// 记录当前路由信息，以及路由对应的所有组件信息
 export function createRoute (record, location) {
   const matched = [];
   while (record) {
@@ -13,6 +14,7 @@ export function createRoute (record, location) {
 class History {
   constructor (router) {
     this.router = router;
+    // 当前匹配到的地址及组件信息，即$route属性
     this.current = createRoute(null, {
       path: '/'
     });

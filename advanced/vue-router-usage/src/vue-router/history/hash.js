@@ -15,6 +15,7 @@ class HashHistory extends History {
   }
 
   getCurrentLocation () {
+    // 路径中去掉#
     return window.location.hash.slice(1);
   }
 }

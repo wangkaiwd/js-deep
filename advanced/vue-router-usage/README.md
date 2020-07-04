@@ -40,6 +40,17 @@ export function initUse (Vue) {
 }
 ```
 
+### 整体实现思路
+* 根据用法，推到`VueRouter`的书写结构
+* 在`Vue.mixin`中为所有组件混入内容
+* 扁平化传入的`routes`配置项，处理为`{'/about': {path:'/about',component: About}}`的格式
+* 通过传入的地址匹配地址对应的所有组件信息
+* 监听`hashChange`事件，保证之后地址更新时，根据地址重新匹配对应的组件
+* 为`Vue.prototype`原型挂载`$route`和`$router`属性（感觉也可以通过`Vue.mixin`进行混入）
+* `router-view`组件(复杂)
+* `router-link`组件
+* 路由钩子
+
 ### 树形结构处理
 * 对比`Vuex`的处理方法
 * 简述`vue-router`中处理`route`的过程
@@ -47,3 +58,7 @@ export function initUse (Vue) {
 ### `Vue`中的函数式组件
 * `router-view`：实现思路
 * `router-link`
+
+### 路由权限处理
+* 分别配置固定路由和动态路由，然后通过接口在动态路由中进行筛选有权限的路由，执行`addRoute`方法
+* `addRoute`会遇到的坑

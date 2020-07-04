@@ -35,6 +35,9 @@ const routes = [
   }
 ];
 
+// 自身拥有install方法的类：
+// 在JavaScript中的对象比较灵活，函数也可以有自己的属性，class本质上也是函数
+// VueRouter在实例化的时候将routes配置项作为参数进行传入
 const router = new VueRouter({ routes });
 
 export default router;
