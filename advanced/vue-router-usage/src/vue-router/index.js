@@ -6,6 +6,7 @@ class VueRouter {
   constructor (options) {
     // this.options = options;
     this.matcher = createMatcher(options.routes || []);
+    this.beforeEachs = [];
     // vue-router中有三种路由模式：
     // 1. hash 2. history 3. abstract
     this.history = new HashHistory(this);
@@ -22,6 +23,12 @@ class VueRouter {
     this.history.transitionTo(to, () => {
       window.location.hash = to;
     });
+  }
+
+  // beforeCreated 生命周期函数会在实例化后立即执行
+  // 而VueRouter是在创建Vue实例之前并完成了实例化，并且实例化后便将钩子添加到实例的数组中
+  beforeEach (cb) {
+    this.beforeEachs.push(cb);
   }
 
   init (app) {

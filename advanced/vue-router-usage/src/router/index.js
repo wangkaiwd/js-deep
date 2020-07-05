@@ -41,3 +41,11 @@ const routes = [
 const router = new VueRouter({ routes });
 
 export default router;
+router.beforeEach((to, from, next) => {
+  console.log(1);
+  next();
+});
+router.beforeEach((to, from, next) => {
+  console.log(2);
+  next();
+});

@@ -12,6 +12,21 @@ export function createRoute (record, location) {
   };
 }
 
+function runQueue (queue, iterator, callback) {
+  // 这里不能使用for循环
+  function step (index) {
+    if (queue.length === index) {
+      return callback();
+    }
+    let hook = queue[index];
+    iterator(hook, () => {
+      step(index + 1);
+    });
+  }
+
+  step(0);
+}
+
 class History {
   constructor (router) {
     this.router = router;
@@ -27,11 +42,21 @@ class History {
     if (path === this.current.path && route.matched.length === this.current.matched.length) {
       return;
     }
-    this.current = route;
-    this.listener && this.listener(this.current);
+    const queue = this.router.beforeEachs;
+    const iterator = (hook, next) => {
+      hook(route, this.current, next);
+    };
+    runQueue(queue, iterator, () => {
+      this.updateRoute(route);
+    });
     if (typeof callback === 'function') {
       callback();
     }
+  }
+
+  updateRoute (route) {
+    this.current = route;
+    this.listener && this.listener(this.current);
   }
 
   setupListeners () {
