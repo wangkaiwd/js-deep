@@ -15,8 +15,13 @@ class VueRouter {
     return this.matcher.match(path);
   }
 
+  // 当通过router.push进行跳转时，页面地址并不会更改，所以要为window.location.hash重新赋值
+  // 当赋值之后，又会调动window.onhashChange事件，此时多次调用transitionTo方法，地址和matched相同
+  // 这会导致重新匹配，需要屏蔽
   push (to) {
-    this.history.transitionTo(to);
+    this.history.transitionTo(to, () => {
+      window.location.hash = to;
+    });
   }
 
   init (app) {

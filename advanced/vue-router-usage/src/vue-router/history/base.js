@@ -23,7 +23,11 @@ class History {
   }
 
   transitionTo (path, callback) {
-    this.current = this.router.match(path);
+    const route = this.router.match(path);
+    if (path === this.current.path && route.matched.length === this.current.matched.length) {
+      return;
+    }
+    this.current = route;
     this.listener && this.listener(this.current);
     if (typeof callback === 'function') {
       callback();
