@@ -59,6 +59,21 @@ export function initUse (Vue) {
 * `router-view`：实现思路
 * `router-link`
 
+### 路由钩子实现
+* 让用户自己控制函数的执行(`next`)
+* 类似于`express`的`api`
+
 ### 路由权限处理
-* 分别配置固定路由和动态路由，然后通过接口在动态路由中进行筛选有权限的路由，执行`addRoute`方法
-* `addRoute`会遇到的坑
+* 将路由`routes`进行分开配置，根据权限动态添加的内容以及固定的数组内容
+* 通过接口动态获取菜单和权限列表
+  * 接口的`auth`可以和路由的`name`进行匹配
+* 通过接口过滤权限`routes`
+  * 如何实现递归`filter`
+* `addRoutes`存在的问题：
+  * [feature request](https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465)
+  * [rest routes](https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465)
+  * 具体实例尝试
+* 解决`addRoutes`的问题：
+  * 使用层面，不使用`addRoutes`
+  * 源码层面
+  * 如果能解决，写文章进行分析

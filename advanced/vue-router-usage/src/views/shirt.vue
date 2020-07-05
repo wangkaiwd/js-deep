@@ -1,6 +1,6 @@
 <template>
   <div class="shirt">
-    裙子
+    衬衫
   </div>
 </template>
 

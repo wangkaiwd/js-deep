@@ -1,22 +1,21 @@
 <template>
   <div id="app">
-    <router-link :to="{name: 'clothing'}">服装</router-link>
-    <br>
-    <router-link :to="{name: 'men-wear'}">男装</router-link>
-    -
-    <router-link :to="{name: 'shirt'}">衬衫</router-link>
-    <br>
-    <router-link :to="{name: 'women-wear'}">女装</router-link>
-    -
-    <router-link :to="{name: 'skirt'}">裙子</router-link>
-    <br>
-    <router-link :to="{name: 'liquor'}">酒类</router-link>
-    <br>
-    <router-link :to="{name: 'medicine'}">药类</router-link>
+    <!--    {{hasPermission}}-->
+    <!--    <div v-if="!hasPermission">-->
+    <!--      权限加载中...-->
+    <!--    </div>-->
     <router-view/>
   </div>
 </template>
+<script>
+  import { mapGetters } from 'vuex';
 
+  export default {
+    computed: {
+      ...mapGetters(['hasPermission'])
+    }
+  };
+</script>
 <style>
   #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
