@@ -1,9 +1,8 @@
 import Vue from 'vue';
-import VueRouter from '../vue-router';
-// import VueRouter from 'vue-router';
+// import VueRouter from '../vue-router';
+import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
-import About from '../views/About';
-
+import Clothing from '../views/clothing';
 // Vue.use会在install方法中做以下俩件事：
 //  1. $route: 路由的相关属性
 //  2. $router：路由的相关方法
@@ -13,25 +12,44 @@ import About from '../views/About';
 Vue.use(VueRouter);
 
 const routes = [
-  { path: '/', component: Home },
   {
-    path: '/about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: About,
+    path: '/clothing', name: 'clothing', component: () => import('../views/clothing'),
     children: [
       {
-        path: 'a',
-        component: { render (h) {return h('h4', 'this is About/a');} }
+        path: 'men-wear',
+        name: 'men-wear',
+        component: () => import('../views/men-wear'),
+        children: [
+          {
+            path: 'shirt',
+            name: 'shirt',
+            component: () => import('../views/shirt')
+          }
+        ]
       },
       {
-        path: 'b',
-        component: {
-          render (h) {return h('h4', 'this is About/b');}
-        }
+        path: 'women-wear',
+        name: 'women-wear',
+        component: () => import('../views/women-wear'),
+        children: [
+          {
+            path: 'skirt',
+            name: 'skirt',
+            component: () => import('../views/skirt')
+          }
+        ]
       }
     ]
+  },
+  {
+    path: '/liquor',
+    name: 'liquor',
+    component: () => import('../views/liquor')
+  },
+  {
+    path: '/medicine',
+    name: 'medicine',
+    component: () => import('../views/medicine')
   }
 ];
 
@@ -41,11 +59,3 @@ const routes = [
 const router = new VueRouter({ routes });
 
 export default router;
-router.beforeEach((to, from, next) => {
-  console.log(1);
-  next();
-});
-router.beforeEach((to, from, next) => {
-  console.log(2);
-  next();
-});
