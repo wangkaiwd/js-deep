@@ -16,7 +16,7 @@ const createRouteMap = (routes, oldPathList, oldPathMap) => {
       pathMap[path] = record;
     }
     if (route.children) {
-      // 记录每个组件的父级组件
+      // 记录每个组件的父级组件,方便查找该条记录的父级
       flatRoutes(route.children, record);
     }
   };
