@@ -15,6 +15,10 @@ class VueRouter {
     return this.matcher.match(path);
   }
 
+  push (to) {
+    this.history.transitionTo(to);
+  }
+
   init (app) {
     // 1. 首次输入路径时，根据路由地址，匹配对应的组件进行渲染
     // 2. 监听路由变化，完成之后的组件更新操作

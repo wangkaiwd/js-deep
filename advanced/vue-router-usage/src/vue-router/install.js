@@ -1,3 +1,6 @@
+import RouterView from './components/router-view';
+import RouterLink from './components/router-link';
+
 export const install = (Vue) => {
   Vue.mixin({
     beforeCreate () {
@@ -32,4 +35,7 @@ export const install = (Vue) => {
       return this._routerRoot._router;
     }
   });
+
+  Vue.component('router-view', RouterView);
+  Vue.component('router-link', RouterLink);
 };

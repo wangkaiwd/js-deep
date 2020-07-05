@@ -1,7 +1,8 @@
 export function createRoute (record, location) {
   const matched = [];
   while (record) {
-    matched.push(record);
+    // 这里要从父到子进行排列，而现在遍历的时候是从子到父
+    matched.unshift(record);
     record = record.parent;
   }
   return {
