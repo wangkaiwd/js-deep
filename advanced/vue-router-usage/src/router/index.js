@@ -75,9 +75,13 @@ router.beforeEach((to, from, next) => {
   if (!hasPermission) {
     store.dispatch('getAuthRoute').then((authRoutes) => {
       // addRoutes中新加的routes不会在当前页面生效
+      // 这里其实还存在一个问题，如何在用户退出重新登录时重置路由，否则会再次添加相同的路由
+      // @see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
       router.addRoutes(authRoutes);
-      console.log('to,from', to, from);
-      next({ ...to, replace: true });
+      // next()不传参数会执行管道中的下一个钩子函数
+      // next('/')传入参数，表示重定向到其它路由
+      // 这里重定向到当前路由，并且不会增加历史记录，否则回退会出现问题
+      next({ path: to.path, replace: true });
     });
   } else {
     next();

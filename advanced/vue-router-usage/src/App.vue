@@ -1,9 +1,8 @@
 <template>
   <div id="app">
-    <!--    {{hasPermission}}-->
-    <!--    <div v-if="!hasPermission">-->
-    <!--      权限加载中...-->
-    <!--    </div>-->
+    <div v-if="!hasPermission">
+      权限加载中...
+    </div>
     <router-view/>
   </div>
 </template>
