@@ -4,10 +4,10 @@ const Router = require('koa-router');
 const app = new Koa();
 const router = new Router();
 const Vue = require('vue');
-const vueServerRender = require('vue-server-renderer');
+const VueServerRender = require('vue-server-renderer');
 
 const template = fs.readFileSync('./index.template.html', 'utf8');
-const renderer = vueServerRender.createRenderer({ template });
+const renderer = VueServerRender.createRenderer({ template });
 const context = {
   title: 'vue ssr',
 };
@@ -24,9 +24,7 @@ app
 
 // response
 router.get('/', async (ctx) => {
-  renderer.renderToString(vm, context).then((response) => {
-    ctx.body = response;
-  });
+  ctx.body = await renderer.renderToString(vm, context);
 });
 
 app.listen(3000);
