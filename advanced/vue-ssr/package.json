@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "start": "nodemon ./back.js"
+  },
+  "dependencies": {
+    "koa": "^2.13.0",
+    "koa-router": "^9.1.0",
+    "nodemon": "^2.0.4",
+    "vue": "^2.6.11",
+    "vue-server-renderer": "^2.6.11"
+  }
+}
