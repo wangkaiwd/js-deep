@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <lt-icon></lt-icon>
+    <lt-button></lt-button>
   </div>
 </template>
 
