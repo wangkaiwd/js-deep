@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<script>
+  document.body.style.backgroundColor = 'red';
+  console.log(1);
+  Promise.resolve().then(() => { // 微任务触发后渲染ui
+    console.log(2);
+    document.body.style.backgroundColor = 'green';
+  });
+  console.log(3);
+</script>
+</body>
+</html>
