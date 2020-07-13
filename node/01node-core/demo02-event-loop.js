@@ -22,3 +22,16 @@ setImmediate(() => {
 setTimeout(() => {
   console.log('setTimeout');
 });
+
+const fs = require('fs');
+fs.readFile('./demo01.js', () => {
+  // i/o操作会处于poll阶段，之后会进入check阶段，所以会先执行setImmediate
+  setImmediate(() => {
+    console.log('immediate');
+  });
+  setTimeout(() => {
+    console.log('timeout');
+  });
+});
+
+// 阅读文档：https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/
