@@ -3,7 +3,7 @@ const fs = require('fs');
 const vm = require('vm');
 
 function Module (id) {
-  this.id = id; // 文件相对路径
+  this.id = id; // 文件绝对路径
   this.exports = {}; // 表示模块返回的结果
 }
 
@@ -32,11 +32,14 @@ Module._load = function () {
 
 };
 Module.wrapper = ['(function (exports,require,module,__filename,__dirname) {', '})'];
+Module._cache = {};
+
 Module._extensions = {
   '.js' (module) {
     let content = fs.readFileSync(module.id, 'utf8');
     const dirname = path.dirname(module.id);
     content = Module.wrapper[0] + content + Module.wrapper[1];
+    // vm.runInThisContext node中执行`js`代码
     const fn = vm.runInThisContext(content);
     fn.call(exports, exports, myRequire, module, module.id, dirname);
   },
@@ -46,16 +49,23 @@ Module._extensions = {
   }
 };
 const myRequire = function (filename) {
-  // 解析文件名，没有文件缀要添加
+  //将路径解析为绝对路径 ，如果没有文件后缀会按照`.js`,`.json`的顺序进行添加
   filename = Module._resolveFilename(filename);
+  // 模块引用过一次之后进行缓存，如果再次引用，不会再加载，而是直接将结果返回
+  const cacheModule = Module._cache[filename];
+  if (cacheModule) {
+    return cacheModule.exports;
+  }
   const module = new Module(filename);
+  Module._cache[filename] = module;
+  // 获取到文件后缀，然后加载对应后缀的文件
   module.load();
   return module.exports;
 };
 
 const a = myRequire('./a');
 
-console.log('a', a);
+myRequire('./a');
 
 // 1. 复习现有代码
 // 2. 实现多次加载缓存
