@@ -9,3 +9,8 @@
 * npm link
 * npm version: semver specification
 * relevant between npm version and git tag
+* script
+  * shortcut
+  * 执行命令 (如`{ start: webpack-dev-server }`)
+* npx
+* publish package
