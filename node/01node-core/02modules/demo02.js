@@ -43,9 +43,9 @@ Module._extensions = {
     const fn = vm.runInThisContext(content);
     fn.call(exports, exports, myRequire, module, module.id, dirname);
   },
-  '.json' () {
+  '.json' (module) {
     let content = fs.readFileSync(module.id, 'utf8');
-    const dirname = path.dirname(module.id);
+    module.exports = JSON.parse(content);
   }
 };
 const myRequire = function (filename) {
@@ -60,12 +60,14 @@ const myRequire = function (filename) {
   Module._cache[filename] = module;
   // 获取到文件后缀，然后加载对应后缀的文件
   module.load();
+  // load方法会更改module.exports
   return module.exports;
 };
 
 const a = myRequire('./a');
 
-myRequire('./a');
+const b = myRequire('./b');
+console.log(b);
 
 // 1. 复习现有代码
 // 2. 实现多次加载缓存

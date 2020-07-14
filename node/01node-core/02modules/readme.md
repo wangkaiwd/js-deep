@@ -21,3 +21,5 @@
 ### 简单实现`Node.js`模块化
 * 源码`debug`
 * 简易版实现
+
+`exports`和`module.exports`的关系：`exports = module.exports = {}`
