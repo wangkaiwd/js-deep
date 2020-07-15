@@ -16,3 +16,10 @@
 * `fs.readFile`(默认操作文件)都是二进制类型
 * `buffer`是16进制的
 
+### 前端
+* 前端下载`html`功能
+  * blob
+  * arrayBuffer：浏览器中的二进制
+  * FileReader
+* 预览文件功能
+* 下载上传
