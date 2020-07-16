@@ -8,17 +8,39 @@
   <title>Document</title>
 </head>
 <body>
+<button id="button">下载</button>
 <script>
-  const str = `<h1>Hello world!</h1>`;
-  // 参数： array, options
-  // https://developer.mozilla.org/zh-CN/docs/Web/API/Blob/Blob
-  const blob = new Blob([str], {
-    type: 'text/html'
-  });
-  // 参数中给出对象的URL
-  // https://developer.mozilla.org/zh-CN/docs/Web/API/URL/createObjectURL
-  const url = URL.createObjectURL(blob);
-  console.log('url', url);
+  const button = document.getElementById('button');
+  button.onclick = function () {
+    // 文件下载：https://stackoverflow.com/a/19328891
+    const str = `<h1>Hello world!</h1>`;
+    // 参数： array, options
+    // https://developer.mozilla.org/zh-CN/docs/Web/API/Blob/Blob
+    const blob = new Blob([str], {
+      type: 'text/html'
+    });
+    // 参数中给出对象的URL
+    // https://developer.mozilla.org/zh-CN/docs/Web/API/URL/createObjectURL
+    const url = URL.createObjectURL(blob);
+    const aLink = document.createElement('a');
+    aLink.href = url;
+    // download:
+    //   1. 提示用户保存链接地址而不是导航到链接
+    //   2. 有没有值都可以被使用：
+    //        1. 有值：定义一个值建议它作为文件名。浏览器可能会调整建议的文件名，如/ \ 会被转换为underscore
+    //        2. 没值：从不同的来源生成
+    //            1. Content-Disposition Http header
+    //            2. URL 路径的最终片段
+    //            3. 媒体类型
+    aLink.download = 'xx';
+    aLink.style.display = 'none';
+    document.body.appendChild(aLink);
+    aLink.click();
+    // 删除a标签
+    aLink.remove();
+    // 释放之前通过调用URL.createObjectURL()创建的地址
+    URL.revokeObjectURL(blob);
+  };
 </script>
 </body>
 </html>
