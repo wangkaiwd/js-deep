@@ -18,8 +18,8 @@
 
 ### 前端
 * 前端下载`html`功能
-  * blob
-  * arrayBuffer：浏览器中的二进制
-  * FileReader
-* 预览文件功能
+  * blob：
+  * arrayBuffer: 浏览器中的二进制
+  * FileReader: 读取`blob`中的内容
+* 预览文件功能(`FileReader`)
 * 下载上传

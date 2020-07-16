@@ -16,9 +16,7 @@
     const str = `<h1>Hello world!</h1>`;
     // 参数： array, options
     // https://developer.mozilla.org/zh-CN/docs/Web/API/Blob/Blob
-    const blob = new Blob([str], {
-      type: 'text/html'
-    });
+    const blob = new Blob([str], { type: 'text/html' });
     // 参数中给出对象的URL
     // https://developer.mozilla.org/zh-CN/docs/Web/API/URL/createObjectURL
     const url = URL.createObjectURL(blob);
@@ -41,6 +39,25 @@
     // 释放之前通过调用URL.createObjectURL()创建的地址
     URL.revokeObjectURL(blob);
   };
+
+  // 读取blob中的内容
+  // FileReader: 让web应用异步的读取存储于用户的电脑上的文件或原始数据`buffer`内容，
+  //             使用File或Blob对象来指定文件或读取的数据
+  const str = `<h2>I am data</h2>`;
+  const blob = new Blob([str], {
+    type: 'text/html'
+  });
+  const fileReader = new FileReader();
+  fileReader.addEventListener('load', (e) => {
+    console.log(e.target.result);
+    console.log('fileReader', fileReader);
+  });
+  fileReader.readAsText(blob);
+  // FileReader也可以生成文件地址
+  // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL
+  // 将File或Blob转换为base64，会导致字符串变大，最好使用URL.createObjectURL方法。但是该base64可以在任意位置访问
+  // fileReader.readAsDataURL(blob)
+
 </script>
 </body>
 </html>
