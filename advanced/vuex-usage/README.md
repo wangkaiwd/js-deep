@@ -15,6 +15,26 @@
 * 安装模块(installModule)
 * 动态注册(registerModule)
 
+处理递归的数组思路：
+```javascript
+const tree = [
+  { title: '1',
+    key: '1',
+    children: [
+      { title: '1-1', key: '1-1', children: [{ title: '1-1-1', key: '1-1-1' }] }],
+  },
+  {
+    title: '2',
+    key: '2',
+    children: [
+      { title: '2-1', key: '2-1', children: [{ title: '2-1-1', key: '2-1-1' }] },
+    ],
+  },
+]
+```
+遍历的为当前索引
+path[0,0]  查找 tree[0].children[0].children  => 当前遍历的children, 通过当前遍历时的索引可以找到对应的元素
+
 #### `reduce`方法在源码中的应用
 > * 尝试手写`reduce`
 > * 用其它方法实现对应的逻辑
