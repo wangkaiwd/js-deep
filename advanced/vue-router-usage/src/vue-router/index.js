@@ -6,6 +6,7 @@ class VueRouter {
   constructor (options) {
     // this.options = options;
     this.matcher = createMatcher(options.routes || []);
+    this.beforeEachs = [];
     // vue-router中有三种路由模式：
     // 1. hash 2. history 3. abstract
     this.history = new HashHistory(this);
@@ -13,6 +14,21 @@ class VueRouter {
 
   match (path) {
     return this.matcher.match(path);
+  }
+
+  // 当通过router.push进行跳转时，页面地址并不会更改，所以要为window.location.hash重新赋值
+  // 当赋值之后，又会调动window.onhashChange事件，此时多次调用transitionTo方法，地址和matched相同
+  // 这会导致重新匹配，需要屏蔽
+  push (to) {
+    this.history.transitionTo(to, () => {
+      window.location.hash = to;
+    });
+  }
+
+  // beforeCreated 生命周期函数会在实例化后立即执行
+  // 而VueRouter是在创建Vue实例之前并完成了实例化，并且实例化后便将钩子添加到实例的数组中
+  beforeEach (cb) {
+    this.beforeEachs.push(cb);
   }
 
   init (app) {

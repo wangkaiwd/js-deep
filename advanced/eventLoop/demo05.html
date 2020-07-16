@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<script>
+  console.log(1);
+
+  async function async () {
+    console.log(2);
+    // await后的console.log(3)会立即执行
+    // Promise.resolve(console.log(3)).then(() => {console.log(4)})
+    // 复习async/await原理
+    await console.log(3);
+    console.log(4);
+  }
+
+  setTimeout(() => {
+    console.log(5);
+  }, 0);
+
+  const promise = new Promise((resolve, reject) => {
+    console.log(6);
+    resolve(7);
+  });
+
+  promise.then((res) => {
+    console.log('res', res);
+  });
+
+  async();
+  console.log(8);
+  // 1, 6, 2, 3, 8, 7 , 4, 5
+  // 宏：5
+  // 微：7 3 4
+</script>
+</body>
+</html>

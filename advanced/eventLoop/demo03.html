@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<button id="button">点我</button>
+<script>
+  const buttonEl = document.getElementById('button');
+  buttonEl.addEventListener('click', () => {
+    console.log('listener1');
+    Promise.resolve().then(() => console.log('task1'));
+  });
+
+  buttonEl.addEventListener('click', () => {
+    console.log('listener2');
+    Promise.resolve().then(() => console.log('task2'));
+  });
+  // 直接执行时：listener1 listener2 task1 task2
+  // buttonEl.click();
+  // 点击按钮时：listener1 task1 listener2 task2
+</script>
+</body>
+</html>
