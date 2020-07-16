@@ -8,6 +8,17 @@
   <title>Document</title>
 </head>
 <body>
-
+<script>
+  const str = `<h1>Hello world!</h1>`;
+  // 参数： array, options
+  // https://developer.mozilla.org/zh-CN/docs/Web/API/Blob/Blob
+  const blob = new Blob([str], {
+    type: 'text/html'
+  });
+  // 参数中给出对象的URL
+  // https://developer.mozilla.org/zh-CN/docs/Web/API/URL/createObjectURL
+  const url = URL.createObjectURL(blob);
+  console.log('url', url);
+</script>
 </body>
 </html>
