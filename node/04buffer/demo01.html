@@ -18,7 +18,8 @@
     const img = document.createElement('img');
     img.src = url;
     document.body.appendChild(img);
-    URL.revokeObjectURL(file);
+    // 释放或当前窗口卸载(window.unload)后地址失效
+    // URL.revokeObjectURL(url);
   });
 </script>
 </body>

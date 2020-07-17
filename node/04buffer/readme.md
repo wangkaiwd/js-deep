@@ -18,8 +18,17 @@
 
 ### 前端
 * 前端下载`html`功能
-  * blob：
+  * blob：binary large object
   * arrayBuffer: 浏览器中的二进制
   * FileReader: 读取`blob`中的内容
 * 预览文件功能(`FileReader`)
 * 下载上传
+* TypedArray
+* buffer: 
+  * create
+  * **length**
+  * **slice**
+  * **isBuffer**
+  * copy
+  * **concat**
+  * split(需要自己实现)
