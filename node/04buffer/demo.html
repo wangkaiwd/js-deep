@@ -47,16 +47,19 @@
   const blob = new Blob([str], {
     type: 'text/html'
   });
+  const url = URL.createObjectURL(blob);
+  console.log('url', url);
   const fileReader = new FileReader();
   fileReader.addEventListener('load', (e) => {
     console.log(e.target.result);
     console.log('fileReader', fileReader);
   });
-  fileReader.readAsText(blob);
+  // fileReader.readAsText(blob);
   // FileReader也可以生成文件地址
   // https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL
   // 将File或Blob转换为base64，会导致字符串变大，最好使用URL.createObjectURL方法。但是该base64可以在任意位置访问
-  // fileReader.readAsDataURL(blob)
+  // 在Blob或File较小的时候可以使用readAsDataURL
+  fileReader.readAsDataURL(blob);
 
 </script>
 </body>
