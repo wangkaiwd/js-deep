@@ -9,7 +9,8 @@
 * npm link
   * 可以方便的在全局安装自己写的`package`，进行测试。而不用每次重新发布到`npm`，再进行全局安装
 * [npm version](https://classic.yarnpkg.com/en/docs/cli/version/): [semver specification](https://classic.yarnpkg.com/en/docs/dependency-versions/)
-  * relevant between npm version and git tag
+  * [relevant between npm version and git tag](https://classic.yarnpkg.com/en/docs/cli/version/#toc-git-tags)
+  * 如果你在一个`git`仓库内运行`yarn version`，一个`annotated git tag`将会被创建，`tag`的默认格式为`v0.0.0`  
 * script
   * shortcut
   * 执行命令 (如`{ start: webpack-dev-server }`)
