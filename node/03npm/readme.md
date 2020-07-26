@@ -7,7 +7,7 @@
   * package.json, bin
   * node shebang
 * npm link
-  * 可以方便的在全局安装自己写的`package`，而不用每次重新发布到`npm`，再进行全局安装
+  * 可以方便的在全局安装自己写的`package`，进行测试。而不用每次重新发布到`npm`，再进行全局安装
 * [npm version](https://classic.yarnpkg.com/en/docs/cli/version/): [semver specification](https://classic.yarnpkg.com/en/docs/dependency-versions/)
   * relevant between npm version and git tag
 * script
