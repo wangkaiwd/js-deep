@@ -3,7 +3,8 @@
     <my-upload
       action="localhost:3000/upload"
       multiple
-    >
+      :limit="4"
+      :on-exceed="onExceed">
       <template v-slot:default>
         <button>click to upload</button>
       </template>
@@ -27,6 +28,12 @@ export default {
         { url: 'temp2', name: 'test2' },
       ]
     };
+  },
+  methods: {
+    onExceed (files) {
+      console.log('files', files);
+      console.log('exceed max number of uploaded files');
+    }
   }
 };
 </script>

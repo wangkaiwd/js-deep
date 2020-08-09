@@ -14,3 +14,7 @@ reference material：
 
 ### read the official documentation of slot
 * [Why introduce new `v-slot` syntax ?](https://github.com/vuejs/rfcs/blob/master/active-rfcs/0001-new-slot-syntax.md) 
+
+### key step record
+* upload the same file for input
+* use component self `files` instead `fileList` that passed from parent to process upload file list
