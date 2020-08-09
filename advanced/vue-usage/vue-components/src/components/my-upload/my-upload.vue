@@ -7,13 +7,17 @@
       @change="onInputChange"
       :name="name"
       :multiple="multiple"
-      value=""
     >
     <div class="my-upload-button" @click="onClick">
       <slot></slot>
     </div>
     <div class="upload-tip">
       <slot name="tip"></slot>
+    </div>
+    <div class="file-list">
+      <div class="file-item" v-for="file in files" :key="file.uid">
+        {{ file.name }}
+      </div>
     </div>
   </div>
 </template>
@@ -28,7 +32,8 @@ export default {
     multiple: { type: Boolean, default: false },
     limit: { type: Number },
     onExceed: { type: Function },
-    fileList: { type: Array, default: () => [] }
+    fileList: { type: Array, default: () => [] },
+    beforeUpload: { type: Function }
   },
   data () {
     return {
@@ -48,6 +53,8 @@ export default {
     onInputChange (e) {
       const files = e.target.files;
       // How to upload multiple files ?
+      // 通过循环一个一个上传
+      console.log('files', files);
       this.uploadFiles(files);
     },
     uploadStart (rawFile) {
@@ -59,20 +66,30 @@ export default {
         name: rawFile.name,
         size: rawFile.size,
         uid: rawFile.uid,
+        type: rawFile.type,
         percentage: 0,
         raw: rawFile
       };
+      this.files.push(file);
     },
     uploadFiles (files) {
       const filesLen = files.length + this.fileList.length;
       if (this.limit && filesLen > this.limit) {
         return this.onExceed && this.onExceed(files);
       }
-      // files is a pseudo array
+      // need to convert actual array because files is a pseudo array
       [...files].forEach(rawFile => {
         this.uploadStart(rawFile);
+        this.upload(rawFile);
       });
-      // this.uploadStart()
+    },
+    upload (rawFile) {
+      if (!this.beforeUpload) {} else {
+        const go = this.beforeUpload(rawFile, this.files);
+        if (go) {
+
+        }
+      }
     }
   }
 };

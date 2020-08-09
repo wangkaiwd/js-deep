@@ -4,7 +4,9 @@
       action="localhost:3000/upload"
       multiple
       :limit="4"
-      :on-exceed="onExceed">
+      :on-exceed="onExceed"
+      :before-upload="onBeforeUpload"
+    >
       <template v-slot:default>
         <button>click to upload</button>
       </template>
@@ -33,6 +35,9 @@ export default {
     onExceed (files) {
       console.log('files', files);
       console.log('exceed max number of uploaded files');
+    },
+    onBeforeUpload (file, fileList) {
+      return false;
     }
   }
 };
