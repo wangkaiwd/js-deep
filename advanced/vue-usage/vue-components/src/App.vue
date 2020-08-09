@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <my-upload></my-upload>
+    <my-upload>
+      <button>click to upload</button>
+    </my-upload>
   </div>
 </template>
 
@@ -10,6 +12,14 @@ import MyUpload from './components/my-upload/my-upload';
 export default {
   name: 'App',
   components: { MyUpload },
+  data () {
+    return {
+      fileList: [
+        { url: 'temp1', name: 'test1' },
+        { url: 'temp2', name: 'test2' },
+      ]
+    };
+  }
 };
 </script>
 
