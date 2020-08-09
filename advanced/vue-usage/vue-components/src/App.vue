@@ -1,7 +1,12 @@
 <template>
   <div id="app">
     <my-upload>
-      <button>click to upload</button>
+      <template v-slot:default>
+        <button>click to upload</button>
+      </template>
+      <template v-slot:tip>
+        jpg/png files with a size less than 500kb
+      </template>
     </my-upload>
   </div>
 </template>

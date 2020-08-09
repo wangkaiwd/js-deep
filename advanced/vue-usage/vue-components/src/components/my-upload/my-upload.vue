@@ -4,6 +4,9 @@
     <div class="my-upload-button" @click="onClick">
       <slot></slot>
     </div>
+    <div class="upload-tip">
+      <slot name="tip"></slot>
+    </div>
   </div>
 </template>
 

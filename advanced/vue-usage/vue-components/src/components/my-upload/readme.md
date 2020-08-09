@@ -9,5 +9,8 @@
 * on-error
 * on-progress
 
-参考资料：
+reference material：
 * [Using files from web applications](https://developer.mozilla.org/en-US/docs/Web/API/File/Using_files_from_web_applications)
+
+### read the official documentation of slot
+* [Why introduce new `v-slot` syntax ?](https://github.com/vuejs/rfcs/blob/master/active-rfcs/0001-new-slot-syntax.md) 
