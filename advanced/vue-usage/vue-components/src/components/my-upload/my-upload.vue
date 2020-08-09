@@ -1,6 +1,13 @@
 <template>
   <div class="my-upload">
-    <input class="file-input" ref="fileInput" type="file" @change="onInputChange">
+    <input
+      class="file-input"
+      ref="fileInput"
+      type="file"
+      @change="onInputChange"
+      :name="name"
+      :multiple="multiple"
+    >
     <div class="my-upload-button" @click="onClick">
       <slot></slot>
     </div>
@@ -14,7 +21,10 @@
 export default {
   name: 'MyUpload',
   props: {
-    name: { type: String, default: 'file' }
+    // A string specifying a name for the input control
+    name: { type: String, default: 'file' },
+    action: { type: String, required: true },
+    multiple: { type: Boolean, default: false }
   },
   data () {
     return {};
@@ -25,7 +35,12 @@ export default {
       fileInput.click();
     },
     onInputChange (e) {
-      console.log('e', e);
+      const files = e.target.files;
+      // How to upload multiple files ?
+      console.log('files', files);
+    },
+    uploadFiles () {
+
     }
   }
 };
@@ -35,6 +50,9 @@ export default {
 .my-upload {
   .file-input {
     display: none;
+  }
+  .my-upload-button {
+    display: inline-block;
   }
 }
 </style>

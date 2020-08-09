@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <my-upload>
+    <my-upload
+      action="localhost:3000/upload"
+      multiple
+    >
       <template v-slot:default>
         <button>click to upload</button>
       </template>
