@@ -23,6 +23,8 @@
 </template>
 
 <script>
+import ajax from './ajax';
+
 export default {
   name: 'MyUpload',
   props: {
@@ -33,7 +35,8 @@ export default {
     limit: { type: Number },
     onExceed: { type: Function },
     fileList: { type: Array, default: () => [] },
-    beforeUpload: { type: Function }
+    beforeUpload: { type: Function },
+    httpRequest: { type: Function, default: ajax }
   },
   data () {
     return {
@@ -85,11 +88,32 @@ export default {
     },
     upload (rawFile) {
       if (!this.beforeUpload) {} else {
+        // do something such as check file type and size
+        // before actual upload
         const go = this.beforeUpload(rawFile, this.files);
         if (go) {
-
+          this.doUpload(rawFile);
         }
       }
+    },
+    doUpload (rawFile) {
+      // override default xhr behavior, allowing you to implement your own upload files request
+      // you can use any way you want to upload, such as axios library
+      const options = {
+        file: rawFile,
+        name: this.name,
+        action: this.action,
+        onProgress: (e) => {
+          console.log(e);
+        },
+        onSuccess: (res) => {
+          console.log('res', res);
+        },
+        onError: (err) => {
+          console.log(err);
+        }
+      };
+      this.httpRequest(options);
     }
   }
 };

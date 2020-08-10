@@ -12,9 +12,18 @@
 reference material：
 * [Using files from web applications](https://developer.mozilla.org/en-US/docs/Web/API/File/Using_files_from_web_applications)
 
+supply api: 
+* headers
+* data
+
 ### read the official documentation of slot
 * [Why introduce new `v-slot` syntax ?](https://github.com/vuejs/rfcs/blob/master/active-rfcs/0001-new-slot-syntax.md) 
 
 ### key step record
 * upload the same file for input
 * use component self `files` instead `fileList` that passed from parent to process upload file list
+
+### task
+* consult `ant-design-vue` and `element-ui` custom method of upload file http request
+* ant design [customRequest](https://github.com/react-component/upload#customrequest)
+* what is FormData
