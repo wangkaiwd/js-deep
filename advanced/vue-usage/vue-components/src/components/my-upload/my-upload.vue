@@ -57,7 +57,7 @@ export default {
       const files = e.target.files;
       // How to upload multiple files ?
       // 通过循环一个一个上传
-      console.log('files', files);
+      // console.log('files', files);
       this.uploadFiles(files);
     },
     uploadStart (rawFile) {
@@ -87,7 +87,9 @@ export default {
       });
     },
     upload (rawFile) {
-      if (!this.beforeUpload) {} else {
+      if (!this.beforeUpload) {
+
+      } else {
         // do something such as check file type and size
         // before actual upload
         const go = this.beforeUpload(rawFile, this.files);

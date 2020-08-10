@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <my-upload
-      action="localhost:3000/upload"
+      action="http://localhost:3000/upload"
       multiple
       :limit="4"
       :on-exceed="onExceed"
@@ -37,7 +37,7 @@ export default {
       console.log('exceed max number of uploaded files');
     },
     onBeforeUpload (file, fileList) {
-      return false;
+      return true;
     }
   }
 };

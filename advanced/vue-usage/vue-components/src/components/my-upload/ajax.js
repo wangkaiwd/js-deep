@@ -6,6 +6,7 @@ const ajax = (options) => {
   formData.append(name, file);
   xhr.open('POST', action);
   xhr.send(formData);
+  console.log('xhr');
   xhr.addEventListener('readystatechange', (e) => {
     // XMLHttpRequest.status http status code of response
     // successful responses(200-299)
