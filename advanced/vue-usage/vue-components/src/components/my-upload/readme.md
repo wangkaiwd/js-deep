@@ -36,3 +36,9 @@ supply api:
 
 ### server
 * [the best choice of koa middleware](https://github.com/koajs/koa/issues/952#issuecomment-290406035)
+
+### step on later
+* handle file status
+* implement progress component
+* delete file list item
+
