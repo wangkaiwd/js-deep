@@ -3,3 +3,4 @@
 node_modules
 build
 dist
+/advanced/vue-usage/vue-components/server/uploads/

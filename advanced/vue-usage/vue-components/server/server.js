@@ -18,10 +18,12 @@ router.post(
     }
   ]),
   ctx => {
-    console.log('ctx.request.files', ctx.request.files);
-    console.log('ctx.files', ctx.files);
-    console.log('ctx.request.body', ctx.request.body);
-    ctx.body = 'done';
+    ctx.body = ctx.files.file.map(file => {
+      return {
+        name: file.filename,
+        url: file.path
+      };
+    });
   }
 );
 

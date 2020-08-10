@@ -11,7 +11,7 @@ const ajax = (options) => {
     // XMLHttpRequest.status http status code of response
     // successful responses(200-299)
     if (xhr.readyState === 4 && xhr.status >= 200 && xhr.status <= 299) {
-      onSuccess(JSON.stringify(xhr.response));
+      onSuccess(JSON.parse(xhr.response));
     }
   });
   xhr.addEventListener('error', onError);
