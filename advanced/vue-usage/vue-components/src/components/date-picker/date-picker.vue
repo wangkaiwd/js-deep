@@ -1,9 +1,9 @@
 <template>
   <div class="date-picker">
-    <input type="text" @focus="visible=true">
+    <input type="text" :value="formatDate" @focus="visible=true">
     <div class="content" v-if="visible">
       <div class="header">
-        << < 2020 年 8 月 > >>
+        << < {{ time.year }} 年 {{ time.month }} 月 > >>
       </div>
       <div class="week">
         日 一 二 三 四 五 六
@@ -17,18 +17,42 @@
 </template>
 
 <script>
+const getYearMonthDate = (date = new Date()) => {
+  const year = date.getFullYear();
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  return { year, day, month };
+};
 export default {
   name: 'MyDate',
+  props: {
+    value: { type: Date }
+  },
   data () {
+    const time = getYearMonthDate(this.value);
     return {
-      visible: false
+      visible: false,
+      weeks: ['日', '一', '二', '三', '四', '五', '六'],
+      mode: 'date', // year month week
+      time,
+      tempTime: { ...time }
     };
   },
+  computed: {
+    formatDate () {
+      if (this.value) {
+        const { year, month, day } = this.tempTime;
+        return `${year}-${month}-${day}`;
+      }
+    }
+  }
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .date-picker {
-
+  .content {
+    border: 1px solid red;
+  }
 }
 </style>
