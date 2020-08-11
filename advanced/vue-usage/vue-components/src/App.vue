@@ -1,30 +1,17 @@
 <template>
   <div id="app">
-    <my-upload
-      drag
-      action="http://localhost:3000/upload"
-      multiple
-      :limit="4"
-      :on-exceed="onExceed"
-      :before-upload="onBeforeUpload"
-      :on-error="onError"
-    >
-      <template v-slot:default>
-        <button>click to upload</button>
-      </template>
-      <template v-slot:tip>
-        jpg/png files with a size less than 500kb
-      </template>
-    </my-upload>
+    <date-picker></date-picker>
+    <date-range-picker></date-range-picker>
   </div>
 </template>
 
 <script>
-import MyUpload from './components/my-upload/my-upload';
+import DatePicker from './components/date-picker/date-picker';
+import DateRangePicker from './components/date-picker/date-range-picker';
 
 export default {
   name: 'App',
-  components: { MyUpload },
+  components: { DatePicker, DateRangePicker },
   data () {
     return {
       fileList: [
