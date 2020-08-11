@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <date-picker></date-picker>
-    <date-range-picker></date-range-picker>
   </div>
 </template>
 
@@ -41,5 +40,6 @@ export default {
 
 <style lang="scss">
 #app {
+  margin: 100px;
 }
 </style>

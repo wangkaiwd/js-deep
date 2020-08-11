@@ -3,6 +3,7 @@ import App from './App.vue';
 import LazyLoad from '@/components/lazy-load/index';
 import './extend-prorotype';
 import loading from '@/assets/loading-1.gif';
+import './assets/styles/reset.scss';
 
 Vue.config.productionTip = false;
 Vue.use(LazyLoad, {
