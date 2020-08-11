@@ -6,6 +6,7 @@
       :limit="4"
       :on-exceed="onExceed"
       :before-upload="onBeforeUpload"
+      :on-error="onError"
     >
       <template v-slot:default>
         <button>click to upload</button>
@@ -37,11 +38,14 @@ export default {
       console.log('exceed max number of uploaded files');
     },
     onBeforeUpload (file, fileList) {
-      if (file.size / 1024 > 500) {
-        alert('上传的文件超过了500kb！');
-        return;
-      }
+      // if (file.size / 1024 > 500) {
+      //   alert('上传的文件超过了500kb！');
+      //   return;
+      // }
       return true;
+    },
+    onError (err) {
+      console.log('err', err);
     }
   }
 };

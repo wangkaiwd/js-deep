@@ -16,7 +16,9 @@
     </div>
     <div class="file-list">
       <div class="file-item" v-for="file in files" :key="file.uid">
-        {{ file.name }}
+        {{ file.name }} --- {{ file.status }}
+        <div>{{ file.percentage }}%</div>
+        <my-progress :percentage="file.percentage"></my-progress>
       </div>
     </div>
   </div>
@@ -24,9 +26,11 @@
 
 <script>
 import ajax from './ajax';
+import MyProgress from '@/components/my-upload/my-progress';
 
 export default {
   name: 'MyUpload',
+  components: { MyProgress },
   props: {
     // A string specifying a name for the input control
     name: { type: String, default: 'file' },
@@ -34,9 +38,13 @@ export default {
     multiple: { type: Boolean, default: false },
     limit: { type: Number },
     onExceed: { type: Function },
+    onProgress: { type: Function },
     fileList: { type: Array, default: () => [] },
     beforeUpload: { type: Function },
-    httpRequest: { type: Function, default: ajax }
+    httpRequest: { type: Function, default: ajax },
+    onChange: { type: Function },
+    onSuccess: { type: Function },
+    onError: { type: Function }
   },
   data () {
     return {
@@ -80,6 +88,7 @@ export default {
       //      2. 由于文件的信息可以直接就获取到，可以先放到页面中，然后在上传中为该文件展示Loading
       //         上传失败边框变红并提示失败信息，上传成功边框变蓝
       this.files.push(file);
+      this.onChange && this.onChange(file, this.files);
     },
     uploadFiles (files) {
       const filesLen = files.length + this.fileList.length;
@@ -104,21 +113,32 @@ export default {
         }
       }
     },
+    getFile (rawFile) {
+      return this.files.find(file => file.uid === rawFile.uid);
+    },
+    handleProgress (e, file) {
+      file.status = 'uploading';
+      file.percentage = e.percent || 0;
+      this.onProgress && this.onProgress(e, file, this.files);
+    },
     doUpload (rawFile) {
       // override default xhr behavior, allowing you to implement your own upload files request
       // you can use any way you want to upload, such as axios library
+      const file = this.getFile(rawFile);
       const options = {
         file: rawFile,
         name: this.name,
         action: this.action,
         onProgress: (e) => {
-          console.log(e);
+          this.handleProgress(e, file);
         },
         onSuccess: (res) => {
-          console.log('res', res);
+          file.status = 'success';
+          this.onSuccess && this.onSuccess(res, file, this.files);
         },
         onError: (err) => {
-          console.log(err);
+          file.status = 'fail';
+          this.onError && this.onError(err, file, this.files);
         }
       };
       this.httpRequest(options);
