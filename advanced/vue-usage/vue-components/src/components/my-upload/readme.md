@@ -36,7 +36,9 @@ supply api:
 
 ### server
 * [the best choice of koa middleware](https://github.com/koajs/koa/issues/952#issuecomment-290406035)
+* how to preview has uploaded files?
 
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20200811110944.png)
 ### step on later
 * handle file status
 * implement progress component

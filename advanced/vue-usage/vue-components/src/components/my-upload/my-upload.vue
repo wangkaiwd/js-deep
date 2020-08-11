@@ -51,6 +51,7 @@ export default {
       // resolve problem what
       // upload the same file with previous file not trigger onchange event
       fileInput.value = null;
+      // click input to trigger file input onchange event
       fileInput.click();
     },
     onInputChange (e) {
@@ -65,7 +66,7 @@ export default {
       // rawFile.uid = Math.random() + this.uid++;
       rawFile.uid = Date.now() + this.uid++;
       const file = {
-        status: 'ready',
+        status: 'ready', // ready uploading success fail
         name: rawFile.name,
         size: rawFile.size,
         uid: rawFile.uid,
@@ -73,6 +74,11 @@ export default {
         percentage: 0,
         raw: rawFile
       };
+      // 只要开始上传就会在页面中展示
+      //    可选的情况：
+      //      1. 在上传完成后再展示，成功页面显示，失败进行提示
+      //      2. 由于文件的信息可以直接就获取到，可以先放到页面中，然后在上传中为该文件展示Loading
+      //         上传失败边框变红并提示失败信息，上传成功边框变蓝
       this.files.push(file);
     },
     uploadFiles (files) {
@@ -88,7 +94,7 @@ export default {
     },
     upload (rawFile) {
       if (!this.beforeUpload) {
-
+        this.doUpload(rawFile);
       } else {
         // do something such as check file type and size
         // before actual upload

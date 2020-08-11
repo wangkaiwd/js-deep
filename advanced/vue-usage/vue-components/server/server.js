@@ -2,9 +2,10 @@ const Koa = require('koa');
 const Router = require('@koa/router');
 const multer = require('@koa/multer');
 const cors = require('@koa/cors');
+const path = require('path');
 const app = new Koa();
 const router = new Router();
-const upload = multer({ dest: 'uploads/' }); // note you can pass `multer` options here
+const upload = multer({ dest: path.resolve(__dirname, 'uploads/') }); // note you can pass `multer` options here
 const PORT = 3000;
 
 app.use(cors());

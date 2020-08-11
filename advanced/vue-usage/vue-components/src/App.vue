@@ -37,6 +37,10 @@ export default {
       console.log('exceed max number of uploaded files');
     },
     onBeforeUpload (file, fileList) {
+      if (file.size / 1024 > 500) {
+        alert('上传的文件超过了500kb！');
+        return;
+      }
       return true;
     }
   }
