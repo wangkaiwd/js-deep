@@ -8,7 +8,8 @@
       :name="name"
       :multiple="multiple"
     >
-    <div class="my-upload-button" @click="onClick">
+    <drag-area v-if="drag" @on-drop="uploadFiles"></drag-area>
+    <div v-else class="my-upload-button" @click="onClick">
       <slot></slot>
     </div>
     <div class="upload-tip">
@@ -17,8 +18,10 @@
     <div class="file-list">
       <div class="file-item" v-for="file in files" :key="file.uid">
         {{ file.name }} --- {{ file.status }}
-        <div>{{ file.percentage }}%</div>
-        <my-progress :percentage="file.percentage"></my-progress>
+        <template>
+          <div>{{ file.percentage }}%</div>
+          <my-progress :percentage="file.percentage"></my-progress>
+        </template>
       </div>
     </div>
   </div>
@@ -27,10 +30,11 @@
 <script>
 import ajax from './ajax';
 import MyProgress from '@/components/my-upload/my-progress';
+import DragArea from './drag-area';
 
 export default {
   name: 'MyUpload',
-  components: { MyProgress },
+  components: { MyProgress, DragArea },
   props: {
     // A string specifying a name for the input control
     name: { type: String, default: 'file' },
@@ -44,7 +48,11 @@ export default {
     httpRequest: { type: Function, default: ajax },
     onChange: { type: Function },
     onSuccess: { type: Function },
-    onError: { type: Function }
+    onError: { type: Function },
+    drag: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {

@@ -20,9 +20,21 @@ supply api:
 * headers
 * data
 
+question: 
+* [XHR progress event not firing until upload completes?](https://stackoverflow.com/a/39220072/12819402)
+
 ### read the official documentation of slot
 * [Why introduce new `v-slot` syntax ?](https://github.com/vuejs/rfcs/blob/master/active-rfcs/0001-new-slot-syntax.md) 
   * old syntax not immediately clear which component is providing which variable in this template
+  
+### drag and drop
+> following text can't jump to destination, you should use search in article
+
+how to use `-moz-drag-over` class for drag zone
+
+* [Selecting files using drag and drop](https://developer.mozilla.org/en-US/docs/Web/API/File/Using_files_from_web_applications)
+* [Drag Operations](https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/Drag_operations)
+* [DragEvent.dataTransfer](https://developer.mozilla.org/en-US/docs/Web/API/DragEvent/dataTransfer)
 
 ### key step record
 * upload the same file for input
@@ -44,3 +56,5 @@ supply api:
 * implement progress component
 * delete file list item
 
+### did not achieve function
+* preview thumbnail of images

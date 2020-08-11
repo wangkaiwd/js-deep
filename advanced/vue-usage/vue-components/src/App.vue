@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <my-upload
+      drag
       action="http://localhost:3000/upload"
       multiple
       :limit="4"
