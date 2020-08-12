@@ -5,10 +5,12 @@
       <div class="header">
         << < {{ time.year }} 年 {{ time.month }} 月 > >>
       </div>
-      <div class="week">
-        日 一 二 三 四 五 六
+      <div class="weeks">
+        <div class="week" v-for="week in weeks" :key="week">
+          {{ week }}
+        </div>
       </div>
-      <div class="day">
+      <div class="month">
         12345678
       </div>
       <button @click="visible=false">close</button>
@@ -51,8 +53,17 @@ export default {
 
 <style lang="scss" scoped>
 .date-picker {
+  display: inline-block;
   .content {
+    padding: 6px;
     border: 1px solid red;
+  }
+  .weeks {
+    display: flex;
+    border: 1px solid #000;
+  }
+  .week {
+    padding: 2px 8px;
   }
 }
 </style>
