@@ -11,7 +11,11 @@
         </div>
       </div>
       <div class="month">
-        12345678
+        <div v-for="i in 6" class="month-row" :key="`row_${i}`">
+          <div v-for="j in 7" class="month-col" :key="`col_${j}`">
+            1
+          </div>
+        </div>
       </div>
       <button @click="visible=false">close</button>
     </div>
@@ -60,10 +64,21 @@ export default {
   }
   .weeks {
     display: flex;
-    border: 1px solid #000;
+    border-bottom: 1px solid #ccc;
   }
   .week {
     padding: 2px 8px;
+    min-width: 2em;
+    text-align: center;
+  }
+  .month-row {
+    display: flex;
+  }
+  .month-col {
+    padding: 2px 8px;
+    min-width: 2em;
+    text-align: center;
+    border: 1px solid blue;
   }
 }
 </style>
