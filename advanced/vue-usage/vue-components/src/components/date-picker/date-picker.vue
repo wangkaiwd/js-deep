@@ -32,6 +32,7 @@ const getYearMonthDate = (date = new Date()) => {
   const month = date.getMonth() + 1;
   return { year, day, month };
 };
+
 export default {
   name: 'MyDate',
   props: {

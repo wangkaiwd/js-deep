@@ -14,3 +14,13 @@
   * 防止内容区域进行大小变化
   * 参考业界做法
 * 能否实现一个9*9乘法表出来？
+```javascript
+let str = '\n';
+for (let i = 1; i <= 9; i++) {
+  for (let j = 1; j <= i; j++) {
+    str += `${i}*${j} `;
+  }
+  str += '\n';
+}
+```
+* 自己实现一遍，参考其他人的实现，阅读`element-ui/ant-design`源码
