@@ -1,16 +1,24 @@
 <template>
   <div id="app">
     <date-picker></date-picker>
+    <my-upload
+      style="margin-top: 20px;"
+      :file-list="fileList"
+      action="http://localhost:3000/upload"
+    >
+      <button>click to upload</button>
+    </my-upload>
   </div>
 </template>
 
 <script>
 import DatePicker from './components/date-picker/date-picker';
 import DateRangePicker from './components/date-picker/date-range-picker';
+import MyUpload from './components/my-upload/my-upload';
 
 export default {
   name: 'App',
-  components: { DatePicker, DateRangePicker },
+  components: { DatePicker, DateRangePicker, MyUpload },
   data () {
     return {
       fileList: [

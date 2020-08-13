@@ -5,7 +5,7 @@
 * padStart/padEnd(targetLength[, padString])
 ### vue theory
 * Can I use variable in props?
-
+* Implement range picker
 
 ### 问题记录
 * 设计日历组件的样式：为什么是7*6?
@@ -34,3 +34,4 @@ for (let i = 1; i <= 9; i++) {
   * 分别计算30天和31天的月份，然后再根据平年还是闰年处理2月
 * [last day of the previous month](https://stackoverflow.com/a/7466176/12819402)
   * 自己手动计算前一个月的总天数
+ 

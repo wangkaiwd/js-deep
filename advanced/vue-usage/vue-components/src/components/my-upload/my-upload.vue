@@ -60,6 +60,15 @@ export default {
       files: []
     };
   },
+  watch: {
+    fileList: {
+      handler (val) {
+        this.files = val.map(file => ({ status: 'success', uid: new Date() + this.uid++, name: file.name }));
+      },
+      deep: true,
+      immediate: true
+    }
+  },
   methods: {
     onClick () {
       const { fileInput } = this.$refs;
@@ -128,6 +137,7 @@ export default {
       file.status = 'uploading';
       file.percentage = e.percent || 0;
       this.onProgress && this.onProgress(e, file, this.files);
+      this.onChange && this.onChange(file, this.files);
     },
     doUpload (rawFile) {
       // override default xhr behavior, allowing you to implement your own upload files request
@@ -143,10 +153,12 @@ export default {
         onSuccess: (res) => {
           file.status = 'success';
           this.onSuccess && this.onSuccess(res, file, this.files);
+          this.onChange && this.onChange(file, this.files);
         },
         onError: (err) => {
           file.status = 'fail';
           this.onError && this.onError(err, file, this.files);
+          this.onChange && this.onChange(file, this.files);
         }
       };
       this.httpRequest(options);
