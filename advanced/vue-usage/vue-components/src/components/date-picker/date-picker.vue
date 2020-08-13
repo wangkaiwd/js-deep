@@ -25,7 +25,8 @@
 <script>
 // 计算日期：
 //    1. 算出当月1号是周几，往前移
-//    2. 剩下的根据当前月算出当前的时间
+//    2. 计算出当月天数
+//    3. 总天数42减去开始的天数，再减去当月天数，得到剩余天数
 const getYearMonthDate = (date = new Date()) => {
   const year = date.getFullYear();
   const day = date.getDate();

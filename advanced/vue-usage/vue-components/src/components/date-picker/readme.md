@@ -24,3 +24,13 @@ for (let i = 1; i <= 9; i++) {
 }
 ```
 * 自己实现一遍，参考其他人的实现，阅读`element-ui/ant-design`源码
+
+
+### 日期计算
+> 完全可以使用消除重复的方法，利用笨办法进行计算
+
+* get total days of current month
+  * [simple method](https://stackoverflow.com/a/1184359/12819402)
+  * 分别计算30天和31天的月份，然后再根据平年还是闰年处理2月
+* [last day of the previous month](https://stackoverflow.com/a/7466176/12819402)
+  * 自己手动计算前一个月的总天数
