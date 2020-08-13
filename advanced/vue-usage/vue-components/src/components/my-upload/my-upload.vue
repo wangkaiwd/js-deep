@@ -18,7 +18,7 @@
     <div class="file-list">
       <div class="file-item" v-for="file in files" :key="file.uid">
         {{ file.name }} --- {{ file.status }}
-        <template>
+        <template v-if="file.status === 'uploading'">
           <div>{{ file.percentage }}%</div>
           <my-progress :percentage="file.percentage"></my-progress>
         </template>
@@ -61,9 +61,19 @@ export default {
     };
   },
   watch: {
+    //  1. 父组件fileList更新，会重置子组件files内容
+    //  2. 子组件更新不会影响到fileList
+    // 在初始化以及之后更新fileList后，会重置files，方便赋值
+    // 会造成数据流的不一致，维持了俩套数据
     fileList: {
       handler (val) {
-        this.files = val.map(file => ({ status: 'success', uid: new Date() + this.uid++, name: file.name }));
+        this.files = val.map(file => {
+          return {
+            uid: new Date() + this.uid++,
+            status: file.status || 'success',
+            name: file.name
+          };
+        });
       },
       deep: true,
       immediate: true

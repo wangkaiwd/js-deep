@@ -22,7 +22,7 @@ supply api:
 
 question: 
 * [XHR progress event not firing until upload completes?](https://stackoverflow.com/a/39220072/12819402)
-
+* [how to generate unique id ?](https://dev.to/rahmanfadhil/how-to-generate-unique-id-in-javascript-1b13)
 ### read the official documentation of slot
 * [Why introduce new `v-slot` syntax ?](https://github.com/vuejs/rfcs/blob/master/active-rfcs/0001-new-slot-syntax.md) 
   * old syntax not immediately clear which component is providing which variable in this template
