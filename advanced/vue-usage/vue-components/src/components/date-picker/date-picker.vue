@@ -11,9 +11,9 @@
         </div>
       </div>
       <div class="month">
-        <div v-for="i in 6" class="month-row" :key="`row_${i}`">
-          <div v-for="j in 7" class="month-col" :key="`col_${j}`">
-            {{ currentDays[i * 7 + j - 8] }}
+        <div v-for="row in 6" class="month-row" :key="`row_${row}`">
+          <div v-for="col in 7" class="month-col" :key="`col_${col}`">
+            {{ getDate(row, col).getDate() }}
           </div>
         </div>
       </div>
@@ -47,7 +47,6 @@ export default {
       mode: 'date', // year month week
       time,
       tempTime: { ...time },
-      currentDays: []
     };
   },
   computed: {
@@ -56,13 +55,15 @@ export default {
         const { year, month, day } = this.tempTime;
         return `${year}-${month}-${day}`;
       }
+    },
+    currentDays () {
+      return this.getAllDays();
     }
   },
   mounted () {
-    this.getAllDay();
   },
   methods: {
-    getAllDay () {
+    getAllDays () {
       let { year, month } = this.tempTime;
       month = month - 1;
       let startWeek = new Date(year, month, 1).getDay();
@@ -74,15 +75,18 @@ export default {
       const days2 = [];
       const days3 = [];
       for (let i = prevMonthLastDay - startWeek + 1; i <= prevMonthLastDay; i++) {
-        days1.push(i);
+        days1.push(new Date(year, month - 1, i));
       }
       for (let i = 1; i <= currentMonthDays; i++) {
-        days2.push(i);
+        days2.push(new Date(year, month, i));
       }
       for (let i = 1; i <= restDays; i++) {
-        days3.push(i);
+        days3.push(new Date(year, month + 1, i));
       }
-      this.currentDays = [...days1, ...days2, ...days3];
+      return [...days1, ...days2, ...days3];
+    },
+    getDate (row, col) {
+      return this.currentDays[row * 7 + col - 8];
     }
   }
 };
@@ -101,7 +105,7 @@ export default {
   }
   .week {
     padding: 2px 8px;
-    min-width: 2em;
+    width: 42px;
     text-align: center;
   }
   .month-row {
@@ -109,9 +113,8 @@ export default {
   }
   .month-col {
     padding: 2px 8px;
-    min-width: 2em;
+    width: 42px;
     text-align: center;
-    border: 1px solid blue;
   }
 }
 </style>
