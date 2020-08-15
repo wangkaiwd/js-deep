@@ -3,11 +3,11 @@
     <input type="text" :value="formatDate" @focus="visible=true">
     <div class="content" v-if="visible">
       <div class="header">
-        <span class="super-prev" @click="changeYear"><<</span>
+        <span class="super-prev" @click="changeYear(-1)"><<</span>
         <span class="prev" @click="changeMonth(-1)"><</span>
         {{ tempTime.year }} 年 {{ tempTime.month + 1 }} 月
         <span class="next" @click="changeMonth(1)">></span>
-        <span class="super-next" @click="changeYear">>></span>
+        <span class="super-next" @click="changeYear(1)">>></span>
       </div>
       <div class="weeks">
         <div class="week" v-for="week in weeks" :key="week">
@@ -105,8 +105,11 @@ export default {
       date.setMonth(month + n);
       this.tempTime = getYearMonthDay(date);
     },
-    changeYear () {
-
+    changeYear (n) {
+      const { year, month, day } = this.tempTime;
+      const date = new Date(year, month, day);
+      date.setFullYear(year + n);
+      this.tempTime = getYearMonthDay(date);
     }
   }
 };
