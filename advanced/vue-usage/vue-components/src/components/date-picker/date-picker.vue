@@ -3,7 +3,11 @@
     <input type="text" :value="formatDate" @focus="visible=true">
     <div class="content" v-if="visible">
       <div class="header">
-        << < {{ time.year }} 年 {{ time.month }} 月 > >>
+        <span class="super-prev" @click="changeYear"><<</span>
+        <span class="prev" @click="changeMonth(-1)"><</span>
+        {{ tempTime.year }} 年 {{ tempTime.month + 1 }} 月
+        <span class="next" @click="changeMonth(1)">></span>
+        <span class="super-next" @click="changeYear">>></span>
       </div>
       <div class="weeks">
         <div class="week" v-for="week in weeks" :key="week">
@@ -12,8 +16,13 @@
       </div>
       <div class="month">
         <div v-for="row in 6" class="month-row" :key="`row_${row}`">
-          <div v-for="col in 7" class="month-col" :key="`col_${col}`">
-            {{ getDate(row, col).getDate() }}
+          <div
+            v-for="col in 7"
+            class="month-col"
+            :class="getCurrent(row,col).type"
+            :key="`col_${col}`"
+          >
+            {{ getCurrent(row, col).date.getDate() }}
           </div>
         </div>
       </div>
@@ -27,10 +36,10 @@
 //    1. 算出当月1号是周几，往前移
 //    2. 计算出当月天数
 //    3. 总天数42减去开始的天数，再减去当月天数，得到剩余天数
-const getYearMonthDate = (date = new Date()) => {
+const getYearMonthDay = (date = new Date()) => {
   const year = date.getFullYear();
   const day = date.getDate();
-  const month = date.getMonth() + 1;
+  const month = date.getMonth();
   return { year, day, month };
 };
 
@@ -40,7 +49,7 @@ export default {
     value: { type: Date }
   },
   data () {
-    const time = getYearMonthDate(this.value);
+    const time = getYearMonthDay(this.value);
     return {
       visible: false,
       weeks: ['日', '一', '二', '三', '四', '五', '六'],
@@ -64,8 +73,7 @@ export default {
   },
   methods: {
     getAllDays () {
-      let { year, month } = this.tempTime;
-      month = month - 1;
+      const { year, month } = this.tempTime;
       let startWeek = new Date(year, month, 1).getDay();
       startWeek = startWeek === 0 ? 7 : startWeek;
       const prevMonthLastDay = new Date(year, month, 0).getDate();
@@ -75,18 +83,30 @@ export default {
       const days2 = [];
       const days3 = [];
       for (let i = prevMonthLastDay - startWeek + 1; i <= prevMonthLastDay; i++) {
-        days1.push(new Date(year, month - 1, i));
+        const date = new Date(year, month - 1, i);
+        days1.push({ type: 'prevMonth', date });
       }
       for (let i = 1; i <= currentMonthDays; i++) {
-        days2.push(new Date(year, month, i));
+        const date = new Date(year, month, i);
+        days2.push({ type: 'curMonth', date });
       }
       for (let i = 1; i <= restDays; i++) {
-        days3.push(new Date(year, month + 1, i));
+        const date = new Date(year, month + 1, i);
+        days3.push({ type: 'nextMonth', date });
       }
       return [...days1, ...days2, ...days3];
     },
-    getDate (row, col) {
+    getCurrent (row, col) {
       return this.currentDays[row * 7 + col - 8];
+    },
+    changeMonth (n) {
+      const { year, month, day } = this.tempTime;
+      const date = new Date(year, month, day);
+      date.setMonth(month + n);
+      this.tempTime = getYearMonthDay(date);
+    },
+    changeYear () {
+
     }
   }
 };
@@ -98,6 +118,12 @@ export default {
   .content {
     padding: 6px;
     border: 1px solid red;
+  }
+  .header {
+    text-align: center;
+  }
+  .prev, .next {
+    margin: 0 8px;
   }
   .weeks {
     display: flex;
@@ -115,6 +141,9 @@ export default {
     padding: 2px 8px;
     width: 42px;
     text-align: center;
+    &.prevMonth, &.nextMonth {
+      color: #c0c4cc;
+    }
   }
 }
 </style>
