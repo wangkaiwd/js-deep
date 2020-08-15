@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <date-picker></date-picker>
+    <date-picker v-model="date"></date-picker>
     <my-upload
       style="margin-top: 20px;"
       :file-list="fileList"
@@ -24,7 +24,8 @@ export default {
       fileList: [
         { url: 'temp1', name: 'test1' },
         { url: 'temp2', name: 'test2' },
-      ]
+      ],
+      date: new Date()
     };
   },
   methods: {

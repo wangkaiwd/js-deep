@@ -18,11 +18,13 @@
         <div v-for="row in 6" class="month-row" :key="`row_${row}`">
           <div
             v-for="col in 7"
-            class="month-col"
-            :class="getCurrent(row,col).type"
+            :class="getColClasses(row,col)"
             :key="`col_${col}`"
+            @click="onSelect(row,col)"
           >
-            {{ getCurrent(row, col).date.getDate() }}
+            <span class="text">
+              {{ getCurrent(row, col).date.getDate() }}
+            </span>
           </div>
         </div>
       </div>
@@ -61,13 +63,13 @@ export default {
   computed: {
     formatDate () {
       if (this.value) {
-        const { year, month, day } = this.tempTime;
-        return `${year}-${month}-${day}`;
+        const { year, month, day } = this.time;
+        return `${year}-${month + 1}-${day}`;
       }
     },
     currentDays () {
       return this.getAllDays();
-    }
+    },
   },
   mounted () {
   },
@@ -84,15 +86,20 @@ export default {
       const days3 = [];
       for (let i = prevMonthLastDay - startWeek + 1; i <= prevMonthLastDay; i++) {
         const date = new Date(year, month - 1, i);
-        days1.push({ type: 'prevMonth', date });
+        days1.push({ type: 'prevMonth', date, today: false });
       }
+      const { year: y, month: m, day: d } = getYearMonthDay();
       for (let i = 1; i <= currentMonthDays; i++) {
         const date = new Date(year, month, i);
-        days2.push({ type: 'curMonth', date });
+        let today = false;
+        if (year === y && month === m && i === d) {
+          today = true;
+        }
+        days2.push({ type: 'curMonth', date, today });
       }
       for (let i = 1; i <= restDays; i++) {
         const date = new Date(year, month + 1, i);
-        days3.push({ type: 'nextMonth', date });
+        days3.push({ type: 'nextMonth', date, today: false });
       }
       return [...days1, ...days2, ...days3];
     },
@@ -110,6 +117,23 @@ export default {
       const date = new Date(year, month, day);
       date.setFullYear(year + n);
       this.tempTime = getYearMonthDay(date);
+    },
+    getColClasses (row, col) {
+      const { type, today, date } = this.getCurrent(row, col);
+      let selected = false;
+      const { year, month, day } = getYearMonthDay(this.value);
+      const { year: y, month: m, day: d } = getYearMonthDay(date);
+      if (year === y && month === m & day === d) {
+        selected = true;
+      }
+      return ['month-col', type, { today, selected }];
+    },
+    onSelect (row, col) {
+      const { date } = this.getCurrent(row, col);
+      this.tempTime = getYearMonthDay(date);
+      this.time = { ...this.tempTime };
+      this.$emit('input', date);
+      this.visible = false;
     }
   }
 };
@@ -141,11 +165,32 @@ export default {
     display: flex;
   }
   .month-col {
-    padding: 2px 8px;
     width: 42px;
-    text-align: center;
+    height: 42px;
+    padding: 8px;
+    cursor: pointer;
     &.prevMonth, &.nextMonth {
       color: #c0c4cc;
+    }
+    &.today {
+      color: red;
+    }
+    &:hover {
+      color: red;
+    }
+    &.selected {
+      .text {
+        border-radius: 50%;
+        background-color: red;
+        color: #fff;
+      }
+    }
+    .text {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
     }
   }
 }
