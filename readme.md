@@ -1,4 +1,6 @@
 ## 前端进阶
+
+`JavaScript`基础：
 * `JavaScript`数据类型
 * `JavaScript`代码运行机制
 * 作用域和作用域链
@@ -9,10 +11,12 @@
 * 数据类型检测
 * `JavaScript`类的继承方案
 * `JavaScript`对象的浅/深拷贝
-* 手写发布订阅模式
-* 手写观察者模式
-* 浏览器渲染机制
 * `JavaScript`事件解析
+
+浏览器：
+* 浏览器渲染机制
+
+异步编程：
 * `Promise`和`Async/Await`入门[译]
 * `EventLoop`[译]
 * 翻译`Promise/A+`规范
@@ -24,5 +28,7 @@
 * `Node.js`中的`EventLoop`
 * 手写自己的`HTTP`请求库-`axios`源码分析
 
-
+设计模式：
+* 手写发布订阅模式
+* 手写观察者模式
 
