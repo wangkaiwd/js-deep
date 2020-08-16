@@ -8,6 +8,7 @@
     >
       <button>click to upload</button>
     </my-upload>
+    <button @click="date = new Date(2019,2,2)">change date</button>
   </div>
 </template>
 

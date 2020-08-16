@@ -5,27 +5,39 @@
       <div class="header">
         <span class="super-prev" @click="changeYear(-1)"><<</span>
         <span class="prev" @click="changeMonth(-1)"><</span>
-        {{ tempTime.year }} 年 {{ tempTime.month + 1 }} 月
+        <span @click="mode='year'">{{ tempTime.year }}</span> 年 <span @click="mode = 'month'">{{
+          tempTime.month + 1
+        }}</span> 月
         <span class="next" @click="changeMonth(1)">></span>
         <span class="super-next" @click="changeYear(1)">>></span>
       </div>
-      <div class="weeks">
-        <div class="week" v-for="week in weeks" :key="week">
-          {{ week }}
+      <template v-if="mode === 'date'">
+        <div class="weeks">
+          <div class="week" v-for="week in weeks" :key="week">
+            {{ week }}
+          </div>
         </div>
-      </div>
-      <div class="month">
-        <div v-for="row in 6" class="month-row" :key="`row_${row}`">
-          <div
-            v-for="col in 7"
-            :class="getColClasses(row,col)"
-            :key="`col_${col}`"
-            @click="onSelect(row,col)"
-          >
+        <div class="days">
+          <div v-for="row in 6" class="day-row" :key="`row_${row}`">
+            <div
+              v-for="col in 7"
+              :class="getColClasses(row,col)"
+              :key="`col_${col}`"
+              @click="onSelect(row,col)"
+            >
             <span class="text">
               {{ getCurrent(row, col).date.getDate() }}
             </span>
+            </div>
           </div>
+        </div>
+      </template>
+      <div class="year" v-if="mode === 'year'">
+        year
+      </div>
+      <div class="month" v-if="mode === 'month'">
+        <div class="month-item" v-for="item in months" :key="item">
+          {{ item }}
         </div>
       </div>
       <button @click="visible=false">close</button>
@@ -48,60 +60,84 @@ const getYearMonthDay = (date = new Date()) => {
 export default {
   name: 'MyDate',
   props: {
-    value: { type: Date }
+    value: { type: [String, Date] } // '' empty string represent non select date
   },
   data () {
     const time = getYearMonthDay(this.value);
     return {
       visible: false,
       weeks: ['日', '一', '二', '三', '四', '五', '六'],
+      months: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
       mode: 'date', // year month week
-      time,
       tempTime: { ...time },
     };
+  },
+  watch: {
+    value (newVal) {
+      this.tempTime = { ...getYearMonthDay(newVal) };
+    }
   },
   computed: {
     formatDate () {
       if (this.value) {
-        const { year, month, day } = this.time;
+        const { year, month, day } = getYearMonthDay(this.value);
         return `${year}-${month + 1}-${day}`;
       }
     },
     currentDays () {
       return this.getAllDays();
     },
+    curMonthDays () {
+      const { year, month } = this.tempTime;
+      return new Date(year, month + 1, 0).getDate();
+    }
   },
   mounted () {
   },
   methods: {
+    // 计算当前面板展示的天的逻辑：要保证向前和向后分别空一行
+    //    1. 计算当月第一天是星期几，根据星期数会向前偏移 0 -> 7 , 1->1 ,2 -> 2...
+    //    2. 计算出前一个月的最后一天是第几天，然后根据向前偏移的星期数，遍历出前一个月展示的天
+    //    3. 计算出当前月的总天数，并遍历出当月展示的天
+    //    4. 总天数42 - 前一个月的天数 - 当前月天数 计算出下一个月的天数，之后遍历出展示的天
     getAllDays () {
       const { year, month } = this.tempTime;
-      let startWeek = new Date(year, month, 1).getDay();
-      startWeek = startWeek === 0 ? 7 : startWeek;
+      let firstWeek = new Date(year, month, 1).getDay();
+      firstWeek = firstWeek === 0 ? 7 : firstWeek;
+      const prevMonthCols = this.getPrevMonthCols(firstWeek);
+      const curMonthCols = this.getCurMonthCols();
+      const nextMonthCols = this.getNextMonthCols(firstWeek);
+      return [...prevMonthCols, ...curMonthCols, ...nextMonthCols];
+    },
+    getPrevMonthCols (firstWeek) {
+      const { year, month } = this.tempTime;
       const prevMonthLastDay = new Date(year, month, 0).getDate();
-      const currentMonthDays = new Date(year, month + 1, 0).getDate();
-      const restDays = 42 - startWeek - currentMonthDays;
-      const days1 = [];
-      const days2 = [];
-      const days3 = [];
-      for (let i = prevMonthLastDay - startWeek + 1; i <= prevMonthLastDay; i++) {
+      const cols = [];
+      for (let i = prevMonthLastDay - firstWeek + 1; i <= prevMonthLastDay; i++) {
         const date = new Date(year, month - 1, i);
-        days1.push({ type: 'prevMonth', date, today: false });
+        cols.push({ type: 'prevMonth', date, today: false });
       }
-      const { year: y, month: m, day: d } = getYearMonthDay();
-      for (let i = 1; i <= currentMonthDays; i++) {
+      return cols;
+    },
+    getCurMonthCols () {
+      const { year, month } = this.tempTime;
+      const cols = [];
+      for (let i = 1; i <= this.curMonthDays; i++) {
         const date = new Date(year, month, i);
-        let today = false;
-        if (year === y && month === m && i === d) {
-          today = true;
-        }
-        days2.push({ type: 'curMonth', date, today });
+        const today = this.isSameDay(new Date(), date);
+        cols.push({ type: 'curMonth', date, today });
       }
-      for (let i = 1; i <= restDays; i++) {
+      return cols;
+    },
+    getNextMonthCols (firstWeek) {
+      const { year, month } = this.tempTime;
+      const nextMonthDays = 42 - firstWeek - this.curMonthDays;
+      const cols = [];
+      for (let i = 1; i <= nextMonthDays; i++) {
         const date = new Date(year, month + 1, i);
-        days3.push({ type: 'nextMonth', date, today: false });
+        cols.push({ type: 'nextMonth', date, today: false });
       }
-      return [...days1, ...days2, ...days3];
+      return cols;
     },
     getCurrent (row, col) {
       return this.currentDays[row * 7 + col - 8];
@@ -120,20 +156,19 @@ export default {
     },
     getColClasses (row, col) {
       const { type, today, date } = this.getCurrent(row, col);
-      let selected = false;
-      const { year, month, day } = getYearMonthDay(this.value);
-      const { year: y, month: m, day: d } = getYearMonthDay(date);
-      if (year === y && month === m & day === d) {
-        selected = true;
-      }
-      return ['month-col', type, { today, selected }];
+      const selected = this.isSameDay(this.value, date);
+      return ['day-col', type, { today, selected }];
     },
     onSelect (row, col) {
       const { date } = this.getCurrent(row, col);
       this.tempTime = getYearMonthDay(date);
-      this.time = { ...this.tempTime };
       this.$emit('input', date);
       this.visible = false;
+    },
+    isSameDay (date1, date2) {
+      const { year, month, day } = getYearMonthDay(date1);
+      const { year: year2, month: month2, day: day2 } = getYearMonthDay(date2);
+      return year === year2 && month === month2 && day === day2;
     }
   }
 };
@@ -161,10 +196,10 @@ export default {
     width: 42px;
     text-align: center;
   }
-  .month-row {
+  .day-row {
     display: flex;
   }
-  .month-col {
+  .day-col {
     width: 42px;
     height: 42px;
     padding: 8px;
