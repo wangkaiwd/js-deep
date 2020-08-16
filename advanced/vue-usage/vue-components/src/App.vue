@@ -1,14 +1,21 @@
 <template>
   <div id="app">
-    <date-picker v-model="date"></date-picker>
-    <my-upload
-      style="margin-top: 20px;"
-      :file-list="fileList"
-      action="http://localhost:3000/upload"
+    <!--    <date-picker v-model="date"></date-picker>-->
+    <!--    <date-pickermy-upload-->
+    <!--      style="margin-top: 20px;"-->
+    <!--      :file-list="fileList"-->
+    <!--      action="http://localhost:3000/upload"-->
+    <!--    >-->
+    <!--      <button>click to upload</button>-->
+    <!--    </date-pickermy-upload>-->
+    <!--    <button @click="date = new Date(2019,2,2)">change date</button>-->
+    <ul
+      v-infinite-scroll="load"
+      class="list"
+      style="overflow-y: auto"
     >
-      <button>click to upload</button>
-    </my-upload>
-    <button @click="date = new Date(2019,2,2)">change date</button>
+      <li v-for="i in count" :key="i" class="list-item">{{ i }}</li>
+    </ul>
   </div>
 </template>
 
@@ -26,7 +33,8 @@ export default {
         { url: 'temp1', name: 'test1' },
         { url: 'temp2', name: 'test2' },
       ],
-      date: new Date()
+      date: new Date(),
+      count: 12
     };
   },
   methods: {
@@ -41,6 +49,9 @@ export default {
       // }
       return true;
     },
+    load () {
+
+    },
     onError (err) {
       console.log('err', err);
     }
@@ -50,6 +61,20 @@ export default {
 
 <style lang="scss">
 #app {
-  margin: 100px;
+  padding: 100px;
+  .list {
+    width: 400px;
+    height: 400px;
+    border: 1px solid gray;
+  }
+  .list-item {
+    padding: 6px 2px;
+    text-align: center;
+    color: red;
+    background-color: pink;
+  }
+  .list-item + .list-item {
+    margin-top: 8px;
+  }
 }
 </style>

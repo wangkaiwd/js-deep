@@ -4,8 +4,10 @@ import LazyLoad from '@/components/lazy-load/index';
 import './extend-prorotype';
 import loading from '@/assets/loading-1.gif';
 import './assets/styles/reset.scss';
+import InfiniteScroll from './components/directives/infinite-scroll';
 
 Vue.config.productionTip = false;
+Vue.directive('infinite-scroll', InfiniteScroll);
 Vue.use(LazyLoad, {
   preload: 1.3,
   loading
