@@ -1,8 +1,14 @@
+const defaultProps = {
+  disabled: false,
+  delay: 200, // 滚动方法触发的节流时间
+  distance: 30, // 触发执行加载数据方法时距离底部的距离
+  immediate: true, // 初始状态内容没有填满时是否立即执行加载数据的方法
+};
 const getContainer = (el) => {
   let parent = el;
   while (parent) {
     if (parent === document) {
-      return document;
+      return document; // 返回document表示没有找到带有overflow的父级
     }
     const computedStyle = getComputedStyle(parent);
     const overflowY = computedStyle.getPropertyValue('overflow-y');
@@ -16,11 +22,30 @@ const getContainer = (el) => {
 const onScroll = function () {
   console.log('scroll');
 };
+const isEmpty = (value) => {
+  return value == null;
+};
+const getOptions = (el, vm) => {
+  return Object.entries(defaultProps).reduce((props, [key, val]) => {
+    // attributes and properties: https://javascript.info/dom-attributes-and-properties
+    const attr = el.getAttribute(`infinite-scroll-${key}`);
+    props[key] = isEmpty(vm[attr]) ? val : vm[attr];
+    return props;
+  }, {});
+};
 const scope = 'infinite-scroll';
 const infiniteScroll = {
   // When bound element is inserted into the DOM...
-  inserted (el) {
+  // vnode.context 表示组件实例
+  inserted (el, binding, vnode) {
+    const load = binding.value;
+    // 虚拟节点所在组件的实例
+    const vm = vnode.context;
     const container = getContainer(el);
+    const options = getOptions(el, vm);
+    console.log('options', options);
+    if (container === document) return;
+    // 这里为什么不能叫onScroll?
     const scroll = onScroll.bind(el);
     el[scope] = { // share information across hooks
       scroll,
@@ -30,8 +55,8 @@ const infiniteScroll = {
   },
   // called only once, when the directive is unbound from element
   unbind (el) {
-    const { onScroll, container } = el;
-    container.removeEventListener('scroll', onScroll);
+    const { scroll, container } = el[scope];
+    container.removeEventListener('scroll', scroll);
   }
 };
 

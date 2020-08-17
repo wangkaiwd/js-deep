@@ -9,10 +9,16 @@
     <!--      <button>click to upload</button>-->
     <!--    </date-pickermy-upload>-->
     <!--    <button @click="date = new Date(2019,2,2)">change date</button>-->
+
+    <!--  将指令的参数作为元素的自定义属性传入  -->
     <ul
       v-infinite-scroll="load"
       class="list"
       style="overflow-y: auto"
+      infinite-scroll-disabled="disabled"
+      infinite-scroll-delay="delay"
+      infinite-scroll-distance="distance"
+      infinite-scroll-immediate="immediate"
     >
       <li v-for="i in count" :key="i" class="list-item">{{ i }}</li>
     </ul>
@@ -34,7 +40,11 @@ export default {
         { url: 'temp2', name: 'test2' },
       ],
       date: new Date(),
-      count: 12
+      count: 0,
+      disabled: false,
+      delay: 300,
+      distance: 40,
+      immediate: false,
     };
   },
   methods: {
