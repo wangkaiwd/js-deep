@@ -19,7 +19,7 @@ const getContainer = (el) => {
     parent = parent.parentNode;
   }
 };
-const onScroll = function () {
+const handleScroll = function () {
   console.log('scroll');
 };
 const isEmpty = (value) => {
@@ -43,20 +43,20 @@ const infiniteScroll = {
     const vm = vnode.context;
     const container = getContainer(el);
     const options = getOptions(el, vm);
-    console.log('options', options);
     if (container === document) return;
     // 这里为什么不能叫onScroll?
-    const scroll = onScroll.bind(el);
-    el[scope] = { // share information across hooks
-      scroll,
+    const onScroll = handleScroll.bind(el, load);
+    el[scope] = {
+      // share information across hooks
+      onScroll,
       container
     };
-    container.addEventListener('scroll', scroll);
+    container.addEventListener('scroll', onScroll);
   },
   // called only once, when the directive is unbound from element
   unbind (el) {
-    const { scroll, container } = el[scope];
-    container.removeEventListener('scroll', scroll);
+    const { onScroll, container } = el[scope];
+    container.removeEventListener('scroll', onScroll);
   }
 };
 
