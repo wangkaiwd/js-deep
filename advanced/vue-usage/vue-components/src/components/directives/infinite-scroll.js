@@ -42,7 +42,7 @@ const infiniteScroll = {
     // 虚拟节点所在组件的实例
     const vm = vnode.context;
     const container = getContainer(el);
-    const options = getOptions(el, vm);
+    const { immediate } = getOptions(el, vm);
     if (container === document) return;
     // 这里为什么不能叫onScroll?
     const onScroll = handleScroll.bind(el, load);
@@ -56,7 +56,10 @@ const infiniteScroll = {
   // called only once, when the directive is unbound from element
   unbind (el) {
     const { onScroll, container } = el[scope];
-    container.removeEventListener('scroll', onScroll);
+    if (container) {
+      container.removeEventListener('scroll', onScroll);
+      el[scope] = null;
+    }
   }
 };
 
