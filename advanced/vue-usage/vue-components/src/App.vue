@@ -44,7 +44,7 @@ export default {
       disabled: false,
       delay: 300,
       distance: 40,
-      immediate: false,
+      immediate: true,
     };
   },
   methods: {
@@ -60,7 +60,7 @@ export default {
       return true;
     },
     load () {
-
+      this.count += 2;
     },
     onError (err) {
       console.log('err', err);

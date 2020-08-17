@@ -19,8 +19,11 @@ const getContainer = (el) => {
     parent = parent.parentNode;
   }
 };
-const handleScroll = function () {
+const handleScroll = function (load) {
   console.log('scroll');
+  if (this.style.height <= '200px') {
+    load();
+  }
 };
 const isEmpty = (value) => {
   return value == null;
@@ -51,6 +54,15 @@ const infiniteScroll = {
       onScroll,
       container
     };
+    if (immediate) {
+      // const observer = new MutationObserver(onScroll);
+      // observer.observe(container, {
+      //   childList: true,
+      //   attributes: true,
+      //   subtree: true
+      // });
+      onScroll();
+    }
     container.addEventListener('scroll', onScroll);
   },
   // called only once, when the directive is unbound from element
