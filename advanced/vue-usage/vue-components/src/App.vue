@@ -22,6 +22,8 @@
     >
       <li v-for="i in count" :key="i" class="list-item">{{ i }}</li>
     </ul>
+    <p v-if="loading">Loading</p>
+    <p v-if="noMore">No more</p>
   </div>
 </template>
 
@@ -41,11 +43,19 @@ export default {
       ],
       date: new Date(),
       count: 2,
-      disabled: false,
       delay: 200,
       distance: 40,
       immediate: true,
+      loading: true
     };
+  },
+  computed: {
+    noMore () {
+      return this.count >= 60;
+    },
+    disabled () {
+      return this.loading || this.noMore;
+    }
   },
   methods: {
     onExceed (files) {
@@ -60,7 +70,11 @@ export default {
       return true;
     },
     load () {
-      this.count += 2;
+      this.loading = true;
+      setTimeout(() => {
+        this.count += 2;
+        this.loading = false;
+      }, 2000);
     },
     onError (err) {
       console.log('err', err);

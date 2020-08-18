@@ -23,7 +23,8 @@ let timerId = null;
 const handleScroll = function (load, vm) {
   if (timerId) {return; }
   console.log('scroll');
-  const { distance, delay } = getOptions(this, vm);
+  const { distance, delay, disabled } = getOptions(this, vm);
+  if (disabled) {return;}
   timerId = setTimeout(() => {
     const scrollBottom = this.scrollHeight - this.clientHeight - this.scrollTop;
     if (scrollBottom <= distance) {
