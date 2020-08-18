@@ -19,11 +19,18 @@ const getContainer = (el) => {
     parent = parent.parentNode;
   }
 };
-const handleScroll = function (load) {
+let timerId = null;
+const handleScroll = function (load, vm) {
+  if (timerId) {return; }
   console.log('scroll');
-  if (this.style.height <= '200px') {
-    load();
-  }
+  const { distance, delay } = getOptions(this, vm);
+  timerId = setTimeout(() => {
+    const scrollBottom = this.scrollHeight - this.clientHeight - this.scrollTop;
+    if (scrollBottom <= distance) {
+      load();
+    }
+    timerId = null;
+  }, delay);
 };
 const isEmpty = (value) => {
   return value == null;
@@ -48,19 +55,19 @@ const infiniteScroll = {
     const { immediate } = getOptions(el, vm);
     if (container === document) return;
     // 这里为什么不能叫onScroll?
-    const onScroll = handleScroll.bind(el, load);
+    const onScroll = handleScroll.bind(el, load, vm);
     el[scope] = {
       // share information across hooks
       onScroll,
       container
     };
     if (immediate) {
-      // const observer = new MutationObserver(onScroll);
-      // observer.observe(container, {
-      //   childList: true,
-      //   attributes: true,
-      //   subtree: true
-      // });
+      const observer = new MutationObserver(onScroll);
+      observer.observe(container, {
+        childList: true,
+        attributes: true,
+        subtree: true
+      });
       onScroll();
     }
     container.addEventListener('scroll', onScroll);

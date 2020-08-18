@@ -40,9 +40,9 @@ export default {
         { url: 'temp2', name: 'test2' },
       ],
       date: new Date(),
-      count: 0,
+      count: 2,
       disabled: false,
-      delay: 300,
+      delay: 200,
       distance: 40,
       immediate: true,
     };
