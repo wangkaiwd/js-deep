@@ -11,19 +11,20 @@
     <!--    <button @click="date = new Date(2019,2,2)">change date</button>-->
 
     <!--  将指令的参数作为元素的自定义属性传入  -->
-    <ul
-      v-infinite-scroll="load"
-      class="list"
-      style="overflow-y: auto"
-      infinite-scroll-disabled="disabled"
-      infinite-scroll-delay="delay"
-      infinite-scroll-distance="distance"
-      infinite-scroll-immediate="immediate"
-    >
-      <li v-for="i in count" :key="i" class="list-item">{{ i }}</li>
-    </ul>
-    <p v-if="loading">Loading</p>
-    <p v-if="noMore">No more</p>
+    <div class="scroll-wrapper" style="overflow-y: auto">
+      <ul
+        v-infinite-scroll="load"
+        class="list"
+        infinite-scroll-disabled="disabled"
+        infinite-scroll-delay="delay"
+        infinite-scroll-distance="distance"
+        infinite-scroll-immediate="immediate"
+      >
+        <li v-for="i in count" :key="i" class="list-item">{{ i }}</li>
+      </ul>
+      <p v-if="loading">Loading</p>
+      <p v-if="noMore">No more</p>
+    </div>
   </div>
 </template>
 
@@ -43,15 +44,15 @@ export default {
       ],
       date: new Date(),
       count: 2,
-      delay: 200,
+      delay: 40,
       distance: 40,
       immediate: true,
-      loading: true
+      loading: false
     };
   },
   computed: {
     noMore () {
-      return this.count >= 60;
+      return this.count >= 20;
     },
     disabled () {
       return this.loading || this.noMore;
@@ -86,7 +87,7 @@ export default {
 <style lang="scss">
 #app {
   padding: 100px;
-  .list {
+  .scroll-wrapper {
     width: 400px;
     height: 400px;
     border: 1px solid gray;

@@ -22,7 +22,6 @@ const getContainer = (el) => {
 let timerId = null;
 const handleScroll = function (load, vm) {
   if (timerId) {return; }
-  console.log('scroll');
   const { distance, delay, disabled } = getOptions(this, vm);
   if (disabled) {return;}
   timerId = setTimeout(() => {
