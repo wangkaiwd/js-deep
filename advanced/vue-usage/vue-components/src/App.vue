@@ -25,7 +25,7 @@
       <p v-if="loading">Loading</p>
       <p v-if="noMore">No more</p>
     </div>-->
-    <my-pagination></my-pagination>
+    <my-pagination :current="5" :total="1000"></my-pagination>
   </div>
 </template>
 
