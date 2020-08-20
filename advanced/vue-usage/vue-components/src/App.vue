@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <!--    <date-picker v-model="date"></date-picker>-->
+    <date-picker v-model="date"></date-picker>
     <!--    <date-pickermy-upload-->
     <!--      style="margin-top: 20px;"-->
     <!--      :file-list="fileList"-->
@@ -11,7 +11,7 @@
     <!--    <button @click="date = new Date(2019,2,2)">change date</button>-->
 
     <!--  将指令的参数作为元素的自定义属性传入  -->
-    <div class="scroll-wrapper" style="overflow-y: auto">
+    <!--<div class="scroll-wrapper" style="overflow-y: auto">
       <ul
         v-infinite-scroll="load"
         class="list"
@@ -24,7 +24,7 @@
       </ul>
       <p v-if="loading">Loading</p>
       <p v-if="noMore">No more</p>
-    </div>
+    </div>-->
   </div>
 </template>
 
