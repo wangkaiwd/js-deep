@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <date-picker v-model="date"></date-picker>
+    <!--    <date-picker v-model="date"></date-picker>-->
     <!--    <date-pickermy-upload-->
     <!--      style="margin-top: 20px;"-->
     <!--      :file-list="fileList"-->
@@ -25,6 +25,7 @@
       <p v-if="loading">Loading</p>
       <p v-if="noMore">No more</p>
     </div>-->
+    <my-pagination></my-pagination>
   </div>
 </template>
 
@@ -32,10 +33,11 @@
 import DatePicker from './components/date-picker/date-picker';
 import DateRangePicker from './components/date-picker/date-range-picker';
 import MyUpload from './components/my-upload/my-upload';
+import MyPagination from './components/my-pagination/my-pagination';
 
 export default {
   name: 'App',
-  components: { DatePicker, DateRangePicker, MyUpload },
+  components: { DatePicker, DateRangePicker, MyUpload, MyPagination },
   data () {
     return {
       fileList: [
