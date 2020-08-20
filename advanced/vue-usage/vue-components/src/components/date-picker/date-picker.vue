@@ -5,9 +5,9 @@
       <div class="header">
         <span class="super-prev" @click="changeYear(-1)"><<</span>
         <span class="prev" @click="changeMonth(-1)"><</span>
-        <span @click="mode='year'">{{ tempTime.year }}</span> 年 <span @click="mode = 'month'">{{
-          tempTime.month + 1
-        }}</span> 月
+        <span @click="mode='year'">{{ tempTime.year }}</span> 年 <span @click="mode = 'month'">
+          {{ tempTime.month + 1 }}
+        </span> 月
         <span class="next" @click="changeMonth(1)">></span>
         <span class="super-next" @click="changeYear(1)">>></span>
       </div>
@@ -33,7 +33,9 @@
         </div>
       </template>
       <div class="year" v-if="mode === 'year'">
-        year
+        <div class="year-item" v-for="year in years" :key="year">
+          {{ year }}
+        </div>
       </div>
       <div class="month" v-if="mode === 'month'">
         <div class="month-item" v-for="item in months" :key="item">
@@ -90,6 +92,15 @@ export default {
     curMonthDays () {
       const { year, month } = this.tempTime;
       return new Date(year, month + 1, 0).getDate();
+    },
+    years () {
+      const { year } = this.tempTime;
+      const start = year - year % 10;
+      const array = [];
+      for (let i = start; i <= start + 10; i++) {
+        array.push(i);
+      }
+      return array;
     }
   },
   mounted () {
@@ -195,6 +206,9 @@ export default {
     padding: 2px 8px;
     width: 42px;
     text-align: center;
+  }
+  .month, .year {
+    display: flex;
   }
   .day-row {
     display: flex;
