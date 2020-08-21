@@ -1,6 +1,6 @@
 <template>
   <div class="date-picker">
-    <input type="text" :value="formatDate" @focus="visible=true">
+    <input type="text" :value="formatDate" @input="onInputChange" @focus="visible=true">
     <div class="content" v-if="visible">
       <template v-if="mode === 'date'">
         <div class="header">
@@ -40,19 +40,24 @@
           <span class="super-next" @click="changeYear(10)">>></span>
         </div>
         <div class="year-row" v-for="(row,i) in years" :key="`row_${i}`">
-          <div class="year-col" v-for="col in row" :key="`col_${col}`">
+          <div
+            class="year-col"
+            v-for="col in row"
+            :key="`col_${col}`"
+            @click="onSelectYear(col)"
+          >
             {{ col }}
           </div>
         </div>
       </template>
       <template v-if="mode === 'month'">
         <div class="header">
-          <span class="prev" @click="changeMonth(-1)"><</span>
+          <span class="prev" @click="changeYear(-1)"><</span>
           <span @click="mode='year'">{{ tempTime.year }}年</span>
-          <span class="next" @click="changeMonth(1)">></span>
+          <span class="next" @click="changeYear(1)">></span>
         </div>
         <div class="month-row" v-for="(row,i) in months" :key="`row_${i}`">
-          <div class="month-col" v-for="col in row" :key="`col_${col}`">
+          <div class="month-col" v-for="(col,j) in row" :key="`col_${col}`" @click="onSelectMonth(i, j)">
             {{ col }}
           </div>
         </div>
@@ -211,6 +216,23 @@ export default {
         matrix[k].push(list[i]);
       }
       return matrix;
+    },
+    onSelectMonth (i, j) {
+      this.tempTime.month = i * 4 + j;
+      this.mode = 'date';
+    },
+    onSelectYear (year) {
+      this.tempTime.year = year;
+      this.mode = 'month';
+    },
+    onInputChange (e) {
+      // https://stackoverflow.com/a/22061879/12819402
+      const reg = /(^\d{4})-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$/;
+      const val = e.target.value;
+      const matched = val.match(reg);
+      if (matched) {
+        this.$emit('input', new Date(matched[1], matched[2], matched[3]));
+      }
     }
   }
 };
