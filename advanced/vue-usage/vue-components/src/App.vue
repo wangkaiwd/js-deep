@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <!--    <date-picker v-model="date"></date-picker>-->
+    <date-picker v-model="date"></date-picker>
     <!--    <date-pickermy-upload-->
     <!--      style="margin-top: 20px;"-->
     <!--      :file-list="fileList"-->
@@ -25,7 +25,7 @@
       <p v-if="loading">Loading</p>
       <p v-if="noMore">No more</p>
     </div>-->
-    <my-pagination :current="5" :total="1000"></my-pagination>
+    <!--    <my-pagination :current="5" :total="1000"></my-pagination>-->
   </div>
 </template>
 
