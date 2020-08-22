@@ -53,8 +53,8 @@ export default {
       immediate: true,
       loading: false,
       columns: [
-        { title: '姓名', dataIndex: 'name' },
-        { title: '年龄', dataIndex: 'age' }
+        { title: '姓名', key: 'name', type: 'selection' },
+        { title: '年龄', key: 'age' }
       ],
       dataSource: [
         { name: 'zs', age: 11, key: 1 },

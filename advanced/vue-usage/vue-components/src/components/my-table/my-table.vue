@@ -3,15 +3,21 @@
     <table>
       <thead>
       <tr>
-        <th v-for="col in columns" :key="col.dataIndex">
+        <th v-if="enableCheck">
+          <input type="checkbox">
+        </th>
+        <th v-for="col in columns" :key="col.key">
           {{ col.title }}
         </th>
       </tr>
       </thead>
       <tbody>
       <tr v-for="row in dataSource" :key="row[rowId]">
-        <td v-for="col in columns" :key="col.dataIndex">
-          {{ row[col.dataIndex] }}
+        <td v-if="enableCheck">
+          <input type="checkbox">
+        </td>
+        <td v-for="col in columns" :key="col.key">
+          {{ row[col.key] }}
         </td>
       </tr>
       </tbody>
@@ -37,8 +43,22 @@ export default {
     }
   },
   data () {
-    return {};
+    const enableCheck = this.getColumnsType() === 'selection';
+    return {
+      enableCheck
+    };
   },
+  methods: {
+    getColumnsType () {
+      for (let i = 0; i < this.columns.length; i++) {
+        const col = this.columns[i];
+        console.log(col);
+        if (col.type) {
+          return col.type;
+        }
+      }
+    }
+  }
 };
 </script>
 
