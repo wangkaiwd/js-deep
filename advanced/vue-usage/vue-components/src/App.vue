@@ -26,7 +26,8 @@
       <p v-if="noMore">No more</p>
     </div>-->
     <!--    <my-pagination :current="5" :total="1000"></my-pagination>-->
-    <my-table @select="onSelect" :row-selection.sync="rowSelection" :columns="columns" :data-source="dataSource"></my-table>
+    <my-table @select="onSelect" :row-selection.sync="rowSelection" :columns="columns"
+              :data-source="dataSource"></my-table>
   </div>
 </template>
 
@@ -61,7 +62,7 @@ export default {
         { name: 'ls', age: 12, key: 2 },
         { name: 'ww', age: 13, key: 3 },
       ],
-      rowSelection: []
+      rowSelection: [1, 2]
     };
   },
   computed: {
