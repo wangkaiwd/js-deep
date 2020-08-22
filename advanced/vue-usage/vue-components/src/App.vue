@@ -26,7 +26,7 @@
       <p v-if="noMore">No more</p>
     </div>-->
     <!--    <my-pagination :current="5" :total="1000"></my-pagination>-->
-    <my-table :columns="columns" :data-source="dataSource"></my-table>
+    <my-table @select="onSelect" :columns="columns" :data-source="dataSource"></my-table>
   </div>
 </template>
 
@@ -92,6 +92,9 @@ export default {
     },
     onError (err) {
       console.log('err', err);
+    },
+    onSelect () {
+
     }
   }
 };

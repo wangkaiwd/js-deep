@@ -6,17 +6,17 @@
         <th v-if="enableCheck">
           <input type="checkbox">
         </th>
-        <th v-for="col in columns" :key="col.key">
+        <th v-for="col in cloneColumns" :key="col.key">
           {{ col.title }}
         </th>
       </tr>
       </thead>
       <tbody>
-      <tr v-for="row in dataSource" :key="row[rowId]">
-        <td v-if="enableCheck">
+      <tr v-for="(row,i) in cloneData" :key="row[rowId]">
+        <td v-if="enableCheck" @click="onClickCheck(i)">
           <input type="checkbox">
         </td>
-        <td v-for="col in columns" :key="col.key">
+        <td v-for="col in cloneColumns" :key="col.key">
           {{ row[col.key] }}
         </td>
       </tr>
@@ -45,7 +45,9 @@ export default {
   data () {
     const enableCheck = this.getColumnsType() === 'selection';
     return {
-      enableCheck
+      enableCheck,
+      cloneColumns: JSON.parse(JSON.stringify(this.columns)),
+      cloneData: JSON.parse(JSON.stringify(this.dataSource))
     };
   },
   methods: {
@@ -57,6 +59,9 @@ export default {
           return col.type;
         }
       }
+    },
+    onClickCheck () {
+
     }
   }
 };
