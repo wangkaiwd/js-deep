@@ -3,8 +3,8 @@
     <table>
       <thead>
       <tr>
-        <th v-if="enableCheck">
-          <input type="checkbox">
+        <th v-if="enableCheck" @click="checkAll">
+          <input ref="checkAll" type="checkbox" :checked="rowSelection.length === dataSource.length">
         </th>
         <th v-for="col in cloneColumns" :key="col.key">
           {{ col.title }}
@@ -14,7 +14,7 @@
       <tbody>
       <tr v-for="(row,i) in cloneData" :key="row[rowId]">
         <td v-if="enableCheck" @click="onClickCheck(i)">
-          <input type="checkbox">
+          <input type="checkbox" :checked="rowSelection.indexOf(i) !== -1">
         </td>
         <td v-for="col in cloneColumns" :key="col.key">
           {{ row[col.key] }}
@@ -40,7 +40,8 @@ export default {
     dataSource: {
       type: Array,
       default: () => []
-    }
+    },
+    rowSelection: { type: Array }
   },
   data () {
     const enableCheck = this.getColumnsType() === 'selection';
@@ -50,18 +51,41 @@ export default {
       cloneData: JSON.parse(JSON.stringify(this.dataSource))
     };
   },
+  watch: {
+    rowSelection: {
+      handler (val) {
+        this.$nextTick(() => {
+          this.$refs.checkAll.indeterminate = val.length > 0 && val.length < this.dataSource.length;
+        });
+      },
+      immediate: true
+    }
+  },
   methods: {
     getColumnsType () {
       for (let i = 0; i < this.columns.length; i++) {
         const col = this.columns[i];
-        console.log(col);
         if (col.type) {
           return col.type;
         }
       }
     },
-    onClickCheck () {
-
+    onClickCheck (i) {
+      const rowSelection = JSON.parse(JSON.stringify(this.rowSelection));
+      const index = rowSelection.indexOf(i);
+      if (index !== -1) {
+        rowSelection.splice(index, 1);
+      } else {
+        rowSelection.push(i);
+      }
+      this.$emit('update:rowSelection', rowSelection);
+    },
+    checkAll () {
+      let rowSelection = [];
+      if (this.rowSelection.length !== this.dataSource.length) {
+        rowSelection = this.dataSource.map((item, i) => i);
+      }
+      this.$emit('update:rowSelection', rowSelection);
     }
   }
 };
