@@ -26,7 +26,7 @@
       <p v-if="noMore">No more</p>
     </div>-->
     <!--    <my-pagination :current="5" :total="1000"></my-pagination>-->
-    <my-table></my-table>
+    <my-table :columns="columns" :data-source="dataSource"></my-table>
   </div>
 </template>
 
@@ -51,7 +51,16 @@ export default {
       delay: 40,
       distance: 40,
       immediate: true,
-      loading: false
+      loading: false,
+      columns: [
+        { title: '姓名', dataIndex: 'name' },
+        { title: '年龄', dataIndex: 'age' }
+      ],
+      dataSource: [
+        { name: 'zs', age: 11, key: 1 },
+        { name: 'ls', age: 12, key: 2 },
+        { name: 'ww', age: 13, key: 3 },
+      ]
     };
   },
   computed: {
