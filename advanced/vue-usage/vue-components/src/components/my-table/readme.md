@@ -11,3 +11,4 @@
 * slot for table item
 * fixed header
   * [How to set tbody height with overflow scroll](https://stackoverflow.com/a/23989771)
+  * arrange all fixed header method
