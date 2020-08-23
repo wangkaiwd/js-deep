@@ -30,9 +30,14 @@
         <td v-if="enableCheck" @click="onClickCheck(i)">
           <input type="checkbox" :checked="rowSelection.indexOf(i) !== -1">
         </td>
-        <td v-for="col in cloneColumns" :key="col.key">
-          {{ row[col.key] }}
-        </td>
+        <template v-for="col in cloneColumns">
+          <td v-if="col.scopedSlot">
+            <slot :name="col.scopedSlot" v-bind="{text:row[col.key],row,i}"></slot>
+          </td>
+          <td v-else :key="col.key">
+            {{ row[col.key] }}
+          </td>
+        </template>
       </tr>
       </tbody>
     </table>

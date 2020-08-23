@@ -27,7 +27,11 @@
     </div>-->
     <!--    <my-pagination :current="5" :total="1000"></my-pagination>-->
     <my-table @select="onSelect" :row-selection.sync="rowSelection" :columns="columns"
-              :data-source="dataSource"></my-table>
+              :data-source="dataSource">
+      <template v-slot:name="{text,row,i}">
+        <h3> {{ text }}</h3>
+      </template>
+    </my-table>
   </div>
 </template>
 
@@ -56,7 +60,13 @@ export default {
       columns: [
         // 并不是在已有数据中添加{type: 'selection'}，而是为columns最开始新添加一个对象，来单独配置type
         // {type: 'selection'},
-        { title: '姓名', key: 'name', type: 'selection', sort: true },
+        {
+          title: '姓名',
+          key: 'name',
+          type: 'selection',
+          sort: true,
+          scopedSlot: 'name'
+        },
         { title: '年龄', key: 'age', sort: true },
         { title: '关键字', key: 'key' }
       ],
