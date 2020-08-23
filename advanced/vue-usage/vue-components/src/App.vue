@@ -26,7 +26,7 @@
       <p v-if="noMore">No more</p>
     </div>-->
     <!--    <my-pagination :current="5" :total="1000"></my-pagination>-->
-    <my-table @select="onSelect" :row-selection.sync="rowSelection" :columns="columns"
+    <my-table :height="200" @select="onSelect" :row-selection.sync="rowSelection" :columns="columns"
               :data-source="dataSource">
       <template v-slot:name="{text,row,i}">
         <h3> {{ text }}</h3>
@@ -78,6 +78,12 @@ export default {
         { name: 'zs', age: 11, key: 1 },
         { name: 'ls', age: 12, key: 2 },
         { name: 'ww', age: 13, key: 3 },
+        { name: 'zs1', age: 14, key: 4 },
+        { name: 'ls2', age: 15, key: 5 },
+        { name: 'ww3', age: 16, key: 6 },
+        { name: 'zs11', age: 17, key: 7 },
+        { name: 'ls12', age: 18, key: 8 },
+        { name: 'ww13', age: 19, key: 9 },
       ],
       rowSelection: [1, 2]
     };

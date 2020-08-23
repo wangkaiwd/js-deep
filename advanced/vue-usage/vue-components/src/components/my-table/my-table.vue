@@ -1,5 +1,5 @@
 <template>
-  <div class="my-table">
+  <div class="my-table" :class="{'fixed-header': height}">
     <table>
       <thead>
       <tr>
@@ -25,7 +25,7 @@
         </th>
       </tr>
       </thead>
-      <tbody>
+      <tbody :style="tbodyStyle">
       <tr v-for="(row,i) in cloneData" :key="row[rowId]">
         <td v-if="enableCheck" @click="onClickCheck(i)">
           <input type="checkbox" :checked="rowSelection.indexOf(i) !== -1">
@@ -60,7 +60,17 @@ export default {
       type: Array,
       default: () => []
     },
-    rowSelection: { type: Array }
+    rowSelection: { type: Array },
+    height: {
+      type: Number,
+    }
+  },
+  computed: {
+    tbodyStyle () {
+      const { height } = this;
+      console.log('height', height);
+      return { height: height ? height + 'px' : 'auto' };
+    }
   },
   data () {
     const enableCheck = this.getColumnsType() === 'selection';
@@ -139,6 +149,17 @@ export default {
   }
   th, td {
     border: 1px solid #000;
+  }
+  &.fixed-header {
+    tbody {
+      display: block;
+      overflow: auto;
+    }
+    thead, tbody tr {
+      display: table;
+      width: 100%;
+      table-layout: fixed;
+    }
   }
   .text {
     font-size: 12px;
