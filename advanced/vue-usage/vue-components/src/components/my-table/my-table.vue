@@ -11,13 +11,13 @@
           <div class="sorter" v-if="col.sort">
             <span
               :class="sorterCls('ascend',col)"
-              @click="onSort('ascend', col.sort,col.key)"
+              @click="onSort('ascend', col)"
             >
               升序
             </span>
             <span
               :class="sorterCls('descend',col)"
-              @click="onSort('descend',col.sort, col.key)"
+              @click="onSort('descend',col)"
             >
               降序
             </span>
@@ -104,14 +104,15 @@ export default {
       }
       this.$emit('update:rowSelection', rowSelection);
     },
-    onSort (type, currentType, key) {
-      if (type === currentType) {
+    onSort (type, col) {
+      const { key } = col;
+      if (type === col.sort) {
         this.cloneColumns = JSON.parse(JSON.stringify(this.columns));
         this.cloneData = JSON.parse(JSON.stringify(this.dataSource));
         return;
       }
-      const target = this.cloneColumns.find(col => col.key === key);
-      target.sort = type;
+      // 需要注意：这里的col与cloneColumns中对应项指向的是同一片内存空间，并不用重新查找对应项
+      col.sort = type;
       this.cloneData.sort((a, b) => {
         if (a[key] < b[key]) {
           return type === 'ascend' ? -1 : 1;
