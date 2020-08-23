@@ -112,6 +112,7 @@ export default {
         return;
       }
       // 需要注意：这里的col与cloneColumns中对应项指向的是同一片内存空间，并不用重新查找对应项
+      // 图解： https://excalidraw.com/#json=5942638729494528,c_ao5xZrIQxXPOTMu4af3Q
       col.sort = type;
       this.cloneData.sort((a, b) => {
         if (a[key] < b[key]) {
