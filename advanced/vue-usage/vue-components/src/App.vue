@@ -31,6 +31,9 @@
       <template v-slot:name="{text,row,i}">
         <h3> {{ text }}</h3>
       </template>
+      <template v-slot:action="{row}">
+        <button @click="onDelete(row)">delete</button>
+      </template>
     </my-table>
   </div>
 </template>
@@ -68,7 +71,8 @@ export default {
           scopedSlot: 'name'
         },
         { title: '年龄', key: 'age', sort: true },
-        { title: '关键字', key: 'key' }
+        { title: '关键字', key: 'key' },
+        { title: 'Operate', key: 'action', scopedSlot: 'action' }
       ],
       dataSource: [
         { name: 'zs', age: 11, key: 1 },
@@ -110,6 +114,9 @@ export default {
     },
     onSelect () {
 
+    },
+    onDelete (row) {
+      console.log(row.key);
     }
   }
 };
