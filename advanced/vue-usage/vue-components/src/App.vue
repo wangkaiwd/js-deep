@@ -54,8 +54,11 @@ export default {
       immediate: true,
       loading: false,
       columns: [
-        { title: '姓名', key: 'name', type: 'selection' },
-        { title: '年龄', key: 'age' }
+        // 并不是在已有数据中添加{type: 'selection'}，而是为columns最开始新添加一个对象，来单独配置type
+        // {type: 'selection'},
+        { title: '姓名', key: 'name', type: 'selection', sort: true },
+        { title: '年龄', key: 'age', sort: true },
+        { title: '关键字', key: 'key' }
       ],
       dataSource: [
         { name: 'zs', age: 11, key: 1 },

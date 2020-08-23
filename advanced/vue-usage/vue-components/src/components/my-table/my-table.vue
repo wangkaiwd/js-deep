@@ -8,6 +8,20 @@
         </th>
         <th v-for="col in cloneColumns" :key="col.key">
           {{ col.title }}
+          <div class="sorter" v-if="col.sort">
+            <span
+              :class="sorterCls('ascend',col)"
+              @click="onSort('ascend', col.sort,col.key)"
+            >
+              升序
+            </span>
+            <span
+              :class="sorterCls('descend',col)"
+              @click="onSort('descend',col.sort, col.key)"
+            >
+              降序
+            </span>
+          </div>
         </th>
       </tr>
       </thead>
@@ -62,6 +76,9 @@ export default {
     }
   },
   methods: {
+    sorterCls (type, col) {
+      return ['text', { [type]: col.sort === type }];
+    },
     getColumnsType () {
       for (let i = 0; i < this.columns.length; i++) {
         const col = this.columns[i];
@@ -86,6 +103,23 @@ export default {
         rowSelection = this.dataSource.map((item, i) => i);
       }
       this.$emit('update:rowSelection', rowSelection);
+    },
+    onSort (type, currentType, key) {
+      if (type === currentType) {
+        this.cloneColumns = JSON.parse(JSON.stringify(this.columns));
+        this.cloneData = JSON.parse(JSON.stringify(this.dataSource));
+        return;
+      }
+      const target = this.cloneColumns.find(col => col.key === key);
+      target.sort = type;
+      this.cloneData.sort((a, b) => {
+        if (a[key] < b[key]) {
+          return type === 'ascend' ? -1 : 1;
+        } else if (a[key] > b[key]) {
+          return type === 'descend' ? -1 : 1;
+        }
+        return 0;
+      });
     }
   }
 };
@@ -98,6 +132,13 @@ export default {
   }
   th, td {
     border: 1px solid #000;
+  }
+  .text {
+    font-size: 12px;
+    color: gray;
+  }
+  .ascend, .descend {
+    color: red;
   }
 }
 </style>

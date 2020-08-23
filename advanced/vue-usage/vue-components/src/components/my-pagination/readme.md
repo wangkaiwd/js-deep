@@ -5,7 +5,8 @@
 * pagerCount
 
 #### pager render logic
-![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/Pagination2020-8-23-5-40.png)
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/Pagination2020-8-23-5-46.png)
+
 * pager count is odd(current need to locate in center)
   * exclude start and end pager
   * current in center of reset pager
