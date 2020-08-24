@@ -1,46 +1,48 @@
 <template>
   <div class="my-table" :class="{'fixed-header': height}">
-    <table>
-      <thead>
-      <tr>
-        <th v-if="enableCheck" @click="checkAll">
-          <input ref="checkAll" type="checkbox" :checked="rowSelection.length === dataSource.length">
-        </th>
-        <th v-for="col in cloneColumns" :key="col.key">
-          {{ col.title }}
-          <div class="sorter" v-if="col.sort">
+    <div class="table-wrapper" ref="tableWrapper" :style="tbodyStyle">
+      <table ref="table">
+        <thead ref="thead">
+        <tr>
+          <th v-if="enableCheck" @click="checkAll">
+            <input ref="checkAll" type="checkbox" :checked="rowSelection.length === dataSource.length">
+          </th>
+          <th v-for="col in cloneColumns" :key="col.key">
+            {{ col.title }}
+            <div class="sorter" v-if="col.sort">
             <span
               :class="sorterCls('ascend',col)"
               @click="onSort('ascend', col)"
             >
               升序
             </span>
-            <span
-              :class="sorterCls('descend',col)"
-              @click="onSort('descend',col)"
-            >
+              <span
+                :class="sorterCls('descend',col)"
+                @click="onSort('descend',col)"
+              >
               降序
             </span>
-          </div>
-        </th>
-      </tr>
-      </thead>
-      <tbody :style="tbodyStyle">
-      <tr v-for="(row,i) in cloneData" :key="row[rowId]">
-        <td v-if="enableCheck" @click="onClickCheck(i)">
-          <input type="checkbox" :checked="rowSelection.indexOf(i) !== -1">
-        </td>
-        <template v-for="col in cloneColumns">
-          <td v-if="col.scopedSlot">
-            <slot :name="col.scopedSlot" v-bind="{text:row[col.key],row,i}"></slot>
+            </div>
+          </th>
+        </tr>
+        </thead>
+        <tbody ref="tbody">
+        <tr v-for="(row,i) in cloneData" :key="row[rowId]">
+          <td v-if="enableCheck" @click="onClickCheck(i)">
+            <input type="checkbox" :checked="rowSelection.indexOf(i) !== -1">
           </td>
-          <td v-else :key="col.key">
-            {{ row[col.key] }}
-          </td>
-        </template>
-      </tr>
-      </tbody>
-    </table>
+          <template v-for="col in cloneColumns">
+            <td v-if="col.scopedSlot">
+              <slot :name="col.scopedSlot" v-bind="{text:row[col.key],row,i}"></slot>
+            </td>
+            <td v-else :key="col.key">
+              {{ row[col.key] }}
+            </td>
+          </template>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -68,7 +70,6 @@ export default {
   computed: {
     tbodyStyle () {
       const { height } = this;
-      console.log('height', height);
       return { height: height ? height + 'px' : 'auto' };
     }
   },
@@ -79,6 +80,9 @@ export default {
       cloneColumns: JSON.parse(JSON.stringify(this.columns)),
       cloneData: JSON.parse(JSON.stringify(this.dataSource))
     };
+  },
+  mounted () {
+    this.fixedHeader();
   },
   watch: {
     rowSelection: {
@@ -137,6 +141,23 @@ export default {
         }
         return 0;
       });
+    },
+    fixedHeader () {
+      if (this.height) {
+        const { thead, tbody, table, tableWrapper } = this.$refs;
+        // 新创建的内容没有css scoped对应的随机字符串
+        // 克隆的节点会保留vue增加的css scoped随机数
+        const cloneTable = table.cloneNode(false);
+        cloneTable.appendChild(thead);
+        this.$el.insertBefore(cloneTable, tableWrapper);
+        const tds = tbody.children[0].children;
+        const ths = thead.children[0].children;
+        for (let i = 0; i < tds.length; i++) {
+          const td = tds[i];
+          const th = ths[i];
+          th.style.width = td.offsetWidth + 'px';
+        }
+      }
     }
   }
 };
@@ -145,21 +166,29 @@ export default {
 <style lang="scss" scoped>
 .my-table {
   table {
+    width: 100%;
     border-collapse: collapse;
-  }
-  th, td {
-    border: 1px solid #000;
+    border-spacing: 0;
   }
   &.fixed-header {
-    tbody {
-      display: block;
+    .table-wrapper {
       overflow: auto;
+      border-bottom: 1px solid gray;
+      tr:first-child {
+        td {
+          border-top: none;
+        }
+      }
+      tr:last-child {
+        td {
+          border-bottom: none;
+        }
+      }
     }
-    thead, tbody tr {
-      display: table;
-      width: 100%;
-      table-layout: fixed;
-    }
+  }
+  th, td {
+    text-align: left;
+    border: 1px solid #000;
   }
   .text {
     font-size: 12px;
