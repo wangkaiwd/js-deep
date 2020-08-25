@@ -6,7 +6,7 @@ module.exports = {
   devtool: 'eval-cheap-source-map',
   output: { path: path.resolve(__dirname, 'dist') },
   resolve: {
-    modules: ['./node_modules', './source'],
+    modules: [path.resolve(__dirname, 'node_modules'), path.resolve('source')],
     extensions: ['.js']
   },
   plugins: [

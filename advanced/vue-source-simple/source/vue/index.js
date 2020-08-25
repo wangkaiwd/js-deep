@@ -18,10 +18,13 @@ function defineProperty (target, key, value) {
 function initData (vm) {
   let data = vm.$options.data;
   data = typeof data === 'function' ? data() : data;
+  vm._data = {};
   for (const key in data) {
     if (data.hasOwnProperty(key)) {
       defineProperty(vm._data, key, data[key]);
     }
   }
 }
+
+export default Vue;
 
