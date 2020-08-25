@@ -1,3 +1,11 @@
-import a from './demo01';
+import Vue from 'vue';
 
-console.log(a);
+const vm = new Vue({
+  el: 'root',
+  data () {
+    return {
+      msg: 'hello vue'
+    };
+  }
+});
+console.log('vm', vm);
