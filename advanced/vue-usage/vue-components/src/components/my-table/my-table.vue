@@ -4,35 +4,37 @@
       <table ref="table">
         <thead ref="thead">
         <tr>
-          <th v-if="enableCheck" @click="checkAll">
-            <input ref="checkAll" type="checkbox" :checked="rowSelection.length === dataSource.length">
-          </th>
-          <th v-for="col in cloneColumns" :key="col.key">
-            {{ col.title }}
-            <div class="sorter" v-if="col.sort">
+          <template v-for="col in cloneColumns">
+            <th v-if="col.type === 'selection'" @click="checkAll">
+              <input ref="checkAll" type="checkbox" :checked="rowSelection.length === dataSource.length">
+            </th>
+            <th v-else :key="col.key">
+              {{ col.title }}
+              <div class="sorter" v-if="col.sort">
             <span
               :class="sorterCls('ascend',col)"
               @click="onSort('ascend', col)"
             >
               升序
             </span>
-              <span
-                :class="sorterCls('descend',col)"
-                @click="onSort('descend',col)"
-              >
+                <span
+                  :class="sorterCls('descend',col)"
+                  @click="onSort('descend',col)"
+                >
               降序
             </span>
-            </div>
-          </th>
+              </div>
+            </th>
+          </template>
         </tr>
         </thead>
         <tbody ref="tbody">
         <tr v-for="(row,i) in cloneData" :key="row[rowId]">
-          <td v-if="enableCheck" @click="onClickCheck(i)">
-            <input type="checkbox" :checked="rowSelection.indexOf(i) !== -1">
-          </td>
           <template v-for="col in cloneColumns">
-            <td v-if="col.scopedSlot">
+            <td v-if="col.type === 'selection'" @click="onClickCheck(i,row,col)">
+              <input type="checkbox" :checked="rowSelection.indexOf(i) !== -1">
+            </td>
+            <td v-else-if="col.scopedSlot">
               <slot :name="col.scopedSlot" v-bind="{text:row[col.key],row,i}"></slot>
             </td>
             <td v-else :key="col.key">
@@ -88,7 +90,7 @@ export default {
     rowSelection: {
       handler (val) {
         this.$nextTick(() => {
-          this.$refs.checkAll.indeterminate = val.length > 0 && val.length < this.dataSource.length;
+          this.$refs.checkAll[0].indeterminate = val.length > 0 && val.length < this.dataSource.length;
         });
       },
       immediate: true
@@ -106,7 +108,7 @@ export default {
         }
       }
     },
-    onClickCheck (i) {
+    onClickCheck (i, col, row) {
       const rowSelection = JSON.parse(JSON.stringify(this.rowSelection));
       const index = rowSelection.indexOf(i);
       if (index !== -1) {
@@ -115,6 +117,7 @@ export default {
         rowSelection.push(i);
       }
       this.$emit('update:rowSelection', rowSelection);
+      this.$emit('select', rowSelection, col, row, i);
     },
     checkAll () {
       let rowSelection = [];
@@ -122,6 +125,7 @@ export default {
         rowSelection = this.dataSource.map((item, i) => i);
       }
       this.$emit('update:rowSelection', rowSelection);
+      this.$emit('select-all', rowSelection);
     },
     onSort (type, col) {
       const { key } = col;

@@ -35,6 +35,7 @@
         <button @click="onDelete(row)">delete</button>
       </template>
     </my-table>
+
   </div>
 </template>
 
@@ -62,11 +63,10 @@ export default {
       loading: false,
       columns: [
         // 并不是在已有数据中添加{type: 'selection'}，而是为columns最开始新添加一个对象，来单独配置type
-        // {type: 'selection'},
+        { type: 'selection' },
         {
           title: '姓名',
           key: 'name',
-          type: 'selection',
           sort: true,
           scopedSlot: 'name'
         },
