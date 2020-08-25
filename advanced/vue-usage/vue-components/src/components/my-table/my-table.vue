@@ -11,18 +11,18 @@
             <th v-else :key="col.key">
               {{ col.title }}
               <div class="sorter" v-if="col.sort">
-            <span
-              :class="sorterCls('ascend',col)"
-              @click="onSort('ascend', col)"
-            >
-              升序
-            </span>
+                <span
+                  :class="sorterCls('ascend',col)"
+                  @click="onSort('ascend', col)"
+                >
+                  升序
+                </span>
                 <span
                   :class="sorterCls('descend',col)"
                   @click="onSort('descend',col)"
                 >
-              降序
-            </span>
+                  降序
+                </span>
               </div>
             </th>
           </template>
