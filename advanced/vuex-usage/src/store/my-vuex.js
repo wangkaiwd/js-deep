@@ -59,7 +59,7 @@ function installModule (store, rootState, path, rawModule) {
     // 这种直接赋值新属性不会具有响应式
     // parentState[lastKey] = rawModule.state
     // 通过set方法赋值，保证响应性
-    Vue.set(parentState, lastKey, rawModule.state);
+    Vue.set(val, val, val, parentState, lastKey, rawModule.state);
   }
   // 初始化getters
   forEach(getters, (key, value) => {

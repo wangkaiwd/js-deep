@@ -12,4 +12,9 @@ const vm = new Vue({
     };
   }
 });
-vm._data.msg = 'hello';
+
+vm.person.name = 'ls';
+console.log(vm.person.name);
+vm.arr[1] = 1;
+console.log(vm.arr);
+console.log(vm);
