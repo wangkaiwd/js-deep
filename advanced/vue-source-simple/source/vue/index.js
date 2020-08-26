@@ -4,13 +4,20 @@ function Vue (options) {
   initData(vm);
 }
 
-function defineProperty (target, key, value) {
+function defineProperty (target, key, origin) {
   Object.defineProperty(target, key, {
     get: () => {
-      return value;
+      if (Object.prototype.toString.call(origin[key]) === '[object Object]') {
+        for (const subKey in value) {
+          if (value.hasOwnProperty(subKey)) {
+            defineProperty(value, subKey, value);
+          }
+        }
+      }
+      return origin[key];
     },
     set: (val) => {
-      target[key] = val;
+      origin[key] = val;
     }
   });
 }
@@ -21,7 +28,7 @@ function initData (vm) {
   vm._data = {};
   for (const key in data) {
     if (data.hasOwnProperty(key)) {
-      defineProperty(vm._data, key, data[key]);
+      defineProperty(vm._data, key, data);
     }
   }
 }

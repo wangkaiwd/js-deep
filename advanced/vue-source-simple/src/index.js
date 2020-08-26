@@ -1,7 +1,6 @@
 import Vue from 'vue';
 
 const vm = new Vue({
-  el: '#app',
   data () {
     return {
       msg: 'hello vue',
@@ -13,4 +12,4 @@ const vm = new Vue({
     };
   }
 });
-console.log('vm', vm);
+vm._data.msg = 'hello';
