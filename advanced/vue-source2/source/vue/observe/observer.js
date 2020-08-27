@@ -1,4 +1,7 @@
+import { observe } from 'vue/observe/index';
+
 function defineReactive (data, key, value) {
+  observe(value); // 如果value是对象的话，继续观测
   Object.defineProperty(data, key, {
     get () {
       return value;
@@ -12,6 +15,8 @@ function defineReactive (data, key, value) {
 
 class Observer {
   constructor (data) {
+    // 数组先不做处理
+    if (Array.isArray(data)) return;
     this.walk(data);
   }
 
