@@ -30,10 +30,9 @@ const obj = { x: 100 };
 * string
 * number
 * boolean
+* symbol
 * null
 * undefined
-* symbol
-* bigint
 
 所有基本类型的值都是**不可改变**的。而变量是可以变的，它可以通过指针重新指向一个新的基本类型的值
 

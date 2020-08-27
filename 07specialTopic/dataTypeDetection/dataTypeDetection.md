@@ -1,6 +1,6 @@
 ## 数据类型检测
 在`JavaScript`中，数据类型检测有如下方法：
-
+![](https://static01.imgkr.com/temp/f7febf4d5dbc4395a2b723f263bd2ac3.png)
 * typeof
 * instanceof
 * constructor
