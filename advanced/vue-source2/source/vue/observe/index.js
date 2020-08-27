@@ -26,8 +26,7 @@ function initData (vm) {
   let { data } = vm.$options;
   // data: 函数；对象(根组件)；不传
   // operator precedence: conditional 5 , logic OR 6
-  // 定义vm._data的意义何在？
-  //  1. 方便之后直接通过vm来访问到数据
+  //  vm._data: 方便之后直接通过vm来访问到数据
   data = vm._data = typeof data === 'function' ? data.call(vm) : data || {};
   observe(data);
   for (const key in data) {

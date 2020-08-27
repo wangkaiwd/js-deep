@@ -14,3 +14,5 @@ const vm = new Vue({
   }
 });
 console.log('vm', vm);
+vm.person.name = 'ls';
+
