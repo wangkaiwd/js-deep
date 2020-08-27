@@ -15,6 +15,3 @@ const vm = new Vue({
 
 vm.person.name = 'ls';
 console.log(vm.person.name);
-vm.arr[1] = 1;
-console.log(vm.arr);
-console.log(vm);

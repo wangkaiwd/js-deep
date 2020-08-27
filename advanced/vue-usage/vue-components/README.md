@@ -11,6 +11,8 @@
 ### `message`
 * `create mutilple ways of invoke`
 * `manually mount component to page`
+  * way 1(has complete)
+  * way 2(new Vue, need to study)
 
 ### `lazy-load`
 * `Vue.use`
