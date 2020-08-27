@@ -200,7 +200,7 @@ var ObjectFunctionString = fnToString.call(Object);
 });
 
 function toType (obj) {
-  // null/undefined === null
+  // null/undefined == null
   // 若果obj是null或者undefined，返回其对应的字符串('null'或者'undefined')
   if (obj == null) {
     return obj + ''; // return 'null' / return 'undefined'
