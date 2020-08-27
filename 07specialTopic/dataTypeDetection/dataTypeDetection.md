@@ -170,10 +170,10 @@ console.log(toString.call(arr)); // '[object Array]'
 
 如果你不知道选择哪种方式来检测数据类型的话，使用`Object.prototype.toString.call`方法准没错！
 
-### `JQuery`源码数据类型检测
-在掌握了`JavaScript`中关于数据类型检测的相关知识后，我们看一下在`JQuery`中是如何进行数据类型检测的。
+### `jQuery`源码数据类型检测
+在掌握了`JavaScript`中关于数据类型检测的相关知识后，我们看一下在`jQuery`中是如何进行数据类型检测的。
 
-先看下如何使用`JQuery`中的数据类型检测方法： 
+先看下如何使用`jQuery`中的数据类型检测方法： 
 ```javascript
 jQuery.type( true ) === "boolean"
 jQuery.type( 3 ) === "number"
@@ -183,7 +183,7 @@ jQuery.type( [] ) === "array"
 jQuery.type( undefined ) === "undefined"
 ```
 
-下面是笔者整理的`JQuery`中的类型检测相关代码：
+下面是笔者整理的`jQuery`中的类型检测相关代码：
 ```javascript
 var class2type = {};
 var toString = class2type.toString; // Object.prototype.toString
@@ -215,9 +215,9 @@ function toType (obj) {
   return typeof obj === 'object' || typeof obj === 'function' ? class2type[toString.call(obj)] || 'object' : typeof obj;
 }
 ```
-`JQuery`会将类型经过`Object.prototype.toString`方法转换后的结果作为`key`放到`class2type`中，并将类型的小写值作为属性值，最终在调用时返回
+`jQuery`会将类型经过`Object.prototype.toString`方法转换后的结果作为`key`放到`class2type`中，并将类型的小写值作为属性值，最终在调用时返回
 
-`JQuery`还为我们封装了一些工具方法方便进行类型判断：
+`jQuery`还为我们封装了一些工具方法方便进行类型判断：
 ```javascript
 var isWindow = function isWindow (obj) {
   // null和undefined返回false, window = window.window
@@ -262,7 +262,7 @@ var isEmptyObject = function isEmptyObject (obj) {
 };
 ```
 
-在日常开发中，我们可以结合`JQuery`源码封装自己的类型判断函数。
+在日常开发中，我们可以结合`jQuery`源码封装自己的类型判断函数。
 
 ### 总结
 `JavaScript`中的类型检测方法各有特点，对于其用法我们做一下小结：
