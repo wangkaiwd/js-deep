@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <date-picker v-model="date"></date-picker>
+    <!--    <date-picker v-model="date"></date-picker>-->
     <!--    <date-pickermy-upload-->
     <!--      style="margin-top: 20px;"-->
     <!--      :file-list="fileList"-->
@@ -26,6 +26,16 @@
       <p v-if="noMore">No more</p>
     </div>-->
     <!--    <my-pagination :current="5" :total="1000"></my-pagination>-->
+    <my-table :height="200" @select="onSelect" :row-selection.sync="rowSelection" :columns="columns"
+              :data-source="dataSource">
+      <template v-slot:name="{text,row,i}">
+        <h3> {{ text }}</h3>
+      </template>
+      <template v-slot:action="{row}">
+        <button @click="onDelete(row)">delete</button>
+      </template>
+    </my-table>
+
   </div>
 </template>
 
@@ -34,10 +44,11 @@ import DatePicker from './components/date-picker/date-picker';
 import DateRangePicker from './components/date-picker/date-range-picker';
 import MyUpload from './components/my-upload/my-upload';
 import MyPagination from './components/my-pagination/my-pagination';
+import MyTable from './components/my-table/my-table';
 
 export default {
   name: 'App',
-  components: { DatePicker, DateRangePicker, MyUpload, MyPagination },
+  components: { DatePicker, DateRangePicker, MyUpload, MyPagination, MyTable },
   data () {
     return {
       fileList: [
@@ -49,7 +60,32 @@ export default {
       delay: 40,
       distance: 40,
       immediate: true,
-      loading: false
+      loading: false,
+      columns: [
+        // 并不是在已有数据中添加{type: 'selection'}，而是为columns最开始新添加一个对象，来单独配置type
+        { type: 'selection' },
+        {
+          title: '姓名',
+          key: 'name',
+          sort: true,
+          scopedSlot: 'name'
+        },
+        { title: '年龄', key: 'age', sort: true },
+        { title: '关键字', key: 'key' },
+        { title: 'Operate', key: 'action', scopedSlot: 'action' }
+      ],
+      dataSource: [
+        { name: 'zs', age: 11, key: 1 },
+        { name: 'ls', age: 12, key: 2 },
+        { name: 'ww', age: 13, key: 3 },
+        { name: 'zs1', age: 14, key: 4 },
+        { name: 'ls2', age: 15, key: 5 },
+        { name: 'ww3', age: 16, key: 6 },
+        { name: 'zs11', age: 17, key: 7 },
+        { name: 'ls12', age: 18, key: 8 },
+        { name: 'ww13', age: 19, key: 9 },
+      ],
+      rowSelection: [1, 2]
     };
   },
   computed: {
@@ -81,6 +117,12 @@ export default {
     },
     onError (err) {
       console.log('err', err);
+    },
+    onSelect () {
+
+    },
+    onDelete (row) {
+      console.log(row.key);
     }
   }
 };

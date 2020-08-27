@@ -38,6 +38,7 @@ export default {
     const { current } = this;
     const totalPage = Math.ceil(this.total / this.pageSize);
     if (totalPage <= 7) {
+      // https://stackoverflow.com/a/33352604
       this.pagers = [...Array(totalPage).keys()];
     } else {
       const array = [1, current - 2, current - 1, current, current + 1, current + 2, totalPage];

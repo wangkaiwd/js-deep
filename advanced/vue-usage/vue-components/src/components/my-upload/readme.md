@@ -58,3 +58,17 @@ how to use `-moz-drag-over` class for drag zone
 
 ### did not achieve function
 * preview thumbnail of images
+
+### How to use custom http request
+> resolve problem by read source code
+* [element ui](https://github.com/ElemeFE/element/blob/04b5f0d2c042fb1efabaebe40749287761c14a21/packages/upload/src/upload.vue#L156)
+* [ant design vue](https://github.com/vueComponent/ant-design-vue/blob/648b026166f1c5c8be806a009953bea4796b7d3a/components/vc-upload/src/AjaxUploader.jsx#L146)
+
+benefit of use custom upload request:
+* unify request config option with axios, such as request header, timeout time and so on
+* unify response schema
+* unify error handle
+
+If not do so, you will set the same http config option with axios. Once http config option change, you will update http request/response relevant code in upload component and axios. If you forget update someone, bug will appear. We can only update axios config if use custom request so that can reduce bug.
+
+如果为上传组件使用自定义请求的话，可以使用同一封装好的`axios`，这样可以统一请求配置，而不用再修改某些`http`相关内容时需要更改多个位置，导致遗漏更改而引发bug。

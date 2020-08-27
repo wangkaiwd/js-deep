@@ -44,3 +44,7 @@ for (let i = 1; i <= 9; i++) {
 * 手动生成一个二维数组，然后遍历二维数组，生成行列结构
 * 在遍历时，通过模板的双重循环中的`i,j`值，从中找到规律，然后从一维数组中根据索引取出对应的值
 * 直接通过一次循环遍历出一维数组的所有元素，然后通过`CSS`来处理换行(此方法样式处理会稍微有些复杂，在扩展性上会差一些)
+
+### some knowledge record
+* [How to convert simple array into two-dimensional array (matrix) with javascript](https://stackoverflow.com/a/4492417)
+* [Regex date validation for yyyy-mm-dd](https://stackoverflow.com/a/22061879)
