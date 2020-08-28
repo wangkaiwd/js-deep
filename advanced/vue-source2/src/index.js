@@ -14,6 +14,5 @@ const vm = new Vue({
     };
   }
 });
-console.log('vm', vm);
-vm.person.name = 'ls';
 
+// vm.arr[0] = 0;

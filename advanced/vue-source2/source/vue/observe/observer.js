@@ -1,12 +1,15 @@
 import { observe } from 'vue/observe/index';
+import arrayMethods, { observeArray } from 'vue/observe/array';
 
 function defineReactive (data, key, value) {
   observe(value); // 如果value是对象的话，继续观测
   Object.defineProperty(data, key, {
     get () {
+      console.log('获取值');
       return value;
     },
     set (newValue) {
+      console.log('设置值');
       if (value === newValue) return;
       value = newValue;
     }
@@ -16,8 +19,14 @@ function defineReactive (data, key, value) {
 class Observer {
   constructor (data) {
     // 数组先不做处理
-    if (Array.isArray(data)) return;
-    this.walk(data);
+    if (Array.isArray(data)) {
+      console.log('arrayMethods', arrayMethods);
+      data.__proto__ = arrayMethods;
+      // 继续监控数组的每一项
+      observeArray(data);
+    } else {
+      this.walk(data);
+    }
   }
 
   walk (data) {
