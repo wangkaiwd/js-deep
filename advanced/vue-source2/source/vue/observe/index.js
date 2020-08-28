@@ -4,6 +4,7 @@ export function observe (data) {
   // JavaScript data types and data structures:
   //  String,Number,Boolean,Undefined,Symbol
   //  Null,Object
+  // native objects and prototype properties are ignored
   if (typeof data !== 'object' || data === null) { // typeof null === 'object'
     return;
   }
