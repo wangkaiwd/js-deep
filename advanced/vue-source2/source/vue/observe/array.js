@@ -13,6 +13,7 @@ const methods = [
 // Object.create: method create a new object, using an exiting object as prototype of newly create object.
 // Object.create将会创建一个新对象，新对象的原型为Array.prototype
 // arrayMethods.__proto__ = Array.prototype
+// 这里还可以怎样做？
 const arrayMethods = Object.create(Array.prototype);
 
 export function observeArray (inserted) {
