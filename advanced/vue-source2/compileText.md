@@ -12,6 +12,22 @@
 ### 记录
 * `reduce`方法的考虑
   * 手写实现`reduce`方法
+    ```javascript
+    function reduce (array, fn, initial) {
+      let accumulator = initial || array[0];
+      for (let i = 0; i < array.length; i++) {
+        const k = initial ? i : i + 1;
+        if (k < array.length) {
+          accumulator = fn(accumulator, array[i + 1], i + 1);
+        } else break;
+      }
+      return accumulator;
+    }
+    
+    console.log('my-reduce', reduce([1, 2, 3], function (a, b) {
+      return a + b;
+    }));
+    ```
 * 正则学习
 * `DocumentFragment`没有`outerHTML/innerHTML`属性
   * `DocumentFragment`继承自`Node`，而不是拥有`.innerHTML/outerHTML`属性的`Element`
