@@ -23,6 +23,49 @@ function query (el) {
   return el;
 }
 
+const reg = /\{\{((?:.|\r?\n)+?)\}\}/g;
+const utils = {
+  getValue (vm, expr) {
+    // expr: person.name
+    const keys = expr.split('.');
+    // [person,name]
+    return keys.reduce((memo, cur) => {
+      return memo[cur];
+    }, vm);
+  },
+  replaceText (vm, node) {
+    node.textContent = node.textContent.replace(reg, function (...args) {
+      return utils.getValue(vm, args[1]);
+    });
+  }
+};
+
+function compileText (node, vm) {
+  const childNodes = node.childNodes;
+  [...childNodes].forEach(child => {
+    // 文本节点进行替换
+    if (child.nodeType === child.TEXT_NODE) {
+      utils.replaceText(vm, child);
+    }
+    // 标签节点继续遍历
+    if (child.nodeType === child.ELEMENT_NODE) {
+      compileText(child, vm);
+    }
+  });
+}
+
+function compiler (vm) {
+  const fragment = document.createDocumentFragment();
+  const { $el } = vm;
+  let firstChild = $el.firstChild;
+  while (firstChild) {
+    fragment.appendChild(firstChild);
+    firstChild = $el.firstChild;
+  }
+  compileText(fragment, vm);
+  $el.appendChild(fragment);
+}
+
 Vue.prototype.$mount = function () {
   const vm = this;
   let { el } = vm.$options;
@@ -33,7 +76,7 @@ Vue.prototype.$mount = function () {
   el = vm.$el = query(el);
 
   function updateComponent () {
-
+    compiler(vm);
   }
 
   new Watcher(vm, updateComponent);
