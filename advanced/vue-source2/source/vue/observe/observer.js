@@ -20,7 +20,6 @@ class Observer {
   constructor (data) {
     // 数组先不做处理
     if (Array.isArray(data)) {
-      console.log('arrayMethods', arrayMethods);
       data.__proto__ = arrayMethods;
       // 继续监控数组的每一项
       observeArray(data);
