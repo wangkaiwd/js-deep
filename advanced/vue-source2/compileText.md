@@ -13,3 +13,9 @@
 * `reduce`方法的考虑
   * 手写实现`reduce`方法
 * 正则学习
+* `DocumentFragment`没有`outerHTML/innerHTML`属性
+  * `DocumentFragment`继承自`Node`，而不是拥有`.innerHTML/outerHTML`属性的`Element`
+  * 我们可以创建一个临时`div`，然后将`fragment`插入到`div`中，然后通过`div`的`innerHTML/outerHTML`来查看`fragment`中的内容
+  * [inherit](https://stackoverflow.com/a/54806517)
+  * [code snippet](https://gist.github.com/gleuch/2475825#file-gistfile1-js-L10-L15)
+  * [browser reflow](https://developers.google.com/speed/docs/insights/browser-reflow)
