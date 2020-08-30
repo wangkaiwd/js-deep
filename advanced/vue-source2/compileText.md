@@ -10,7 +10,7 @@
 * 使用watcher执行更新视图函数
 
 ### 记录
-* 正则学习
+* 正则学习(不会)
 * `reduce`方法的考虑
   * 手写实现`reduce`方法
     ```javascript
