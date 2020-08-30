@@ -16,7 +16,10 @@ const utils = {
     }, vm);
   },
   compileText (vm, node) {
-    node.textContent = node.textContent.replace(reg, function (...args) {
+    if (!node.originText) {
+      node.originText = node.textContent;
+    }
+    node.textContent = node.originText.replace(reg, function (...args) {
       return utils.getValue(vm, args[1]);
     });
   }

@@ -20,3 +20,5 @@ const vm = new Vue({
 // console.log(vm.arr[0]);
 // vm.arr.push({ a: 1 });
 // console.log(vm.arr[3].a);
+
+vm.msg = 'hhh';
