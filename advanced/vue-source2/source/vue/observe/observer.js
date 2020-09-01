@@ -1,5 +1,5 @@
 import { observe } from './index';
-import arrayMethods, { observeArray } from 'vue/observe/array';
+import arrayMethods, { dependArray, observeArray } from 'vue/observe/array';
 import Dep from 'vue/observe/dep';
 
 function defineReactive (data, key, value) {
@@ -16,7 +16,9 @@ function defineReactive (data, key, value) {
         // watcher <-> dep
         dep.depend();
         if (childOb) { // 注意：数组和对象用的是不同的dep
+          // 这里用来收集专门为array定义的dep
           childOb.dep.depend();
+          dependArray(value);
         }
       }
       return value;

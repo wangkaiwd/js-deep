@@ -23,6 +23,15 @@ export function observeArray (inserted) {
   }
 }
 
+export function dependArray (array) {
+  if (!Array.isArray(array)) {return; }
+  for (let i = 0; i < array.length; i++) {
+    const item = array[i];
+    item.__ob__ && item.__ob__.dep.depend();
+    dependArray(item);
+  }
+}
+
 methods.forEach((method) => {
   // 需要注意：这里是为arrayMethods自身添加属性，而不再使用原型上的属性
   const oldArrayMethod = arrayMethods[method];

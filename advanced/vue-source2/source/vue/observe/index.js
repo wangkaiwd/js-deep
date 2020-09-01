@@ -8,6 +8,9 @@ export function observe (data) {
   if (typeof data !== 'object' || data === null) { // typeof null === 'object'
     return;
   }
+  if (data.__ob__) {
+    return;
+  }
   // 复杂数据类型将会被观测
   return new Observer(data);
 }
