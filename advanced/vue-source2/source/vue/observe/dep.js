@@ -7,6 +7,7 @@ let id = 0;
 class Dep {
   constructor () {
     this.subs = [];
+    this.id = id++;
   }
 
   addSub (watcher) {

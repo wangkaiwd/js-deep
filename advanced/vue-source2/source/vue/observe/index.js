@@ -9,7 +9,7 @@ export function observe (data) {
     return;
   }
   // 复杂数据类型将会被观测
-  new Observer(data);
+  return new Observer(data);
 }
 
 function proxy (vm, source, key) {

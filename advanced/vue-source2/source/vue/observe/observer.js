@@ -1,9 +1,9 @@
-import { observe } from 'vue/observe/index';
+import { observe } from './index';
 import arrayMethods, { observeArray } from 'vue/observe/array';
 import Dep from 'vue/observe/dep';
 
 function defineReactive (data, key, value) {
-  observe(value); // 如果value是对象的话，继续观测
+  const childOb = observe(value); // 如果value是对象的话，继续观测
   const dep = new Dep();
   Object.defineProperty(data, key, {
     get () {
@@ -15,6 +15,9 @@ function defineReactive (data, key, value) {
         // watcher会对dep进行去重，然后将dep保存到watcher中，也会将当前的watcher保存到dep中
         // watcher <-> dep
         dep.depend();
+        if (childOb) { // 注意：数组和对象用的是不同的dep
+          childOb.dep.depend();
+        }
       }
       return value;
     },
@@ -30,7 +33,11 @@ function defineReactive (data, key, value) {
 class Observer {
   constructor (data) {
     // 数组先不做处理
+    this.dep = new Dep();
     if (Array.isArray(data)) {
+      Object.defineProperty(data, '__ob__', {
+        get: () => this
+      });
       data.__proto__ = arrayMethods;
       // 继续监控数组的每一项
       observeArray(data);

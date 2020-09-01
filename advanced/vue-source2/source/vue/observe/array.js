@@ -1,4 +1,4 @@
-import { observe } from 'vue/observe/index';
+import { observe } from './index';
 
 const methods = [
   'push',
@@ -38,6 +38,7 @@ methods.forEach((method) => {
         observeArray(args.slice(2));
         break;
     }
+    this.__ob__.dep.notify();
     return result;
   };
 });

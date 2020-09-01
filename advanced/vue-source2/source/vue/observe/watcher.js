@@ -17,6 +17,7 @@ class Watcher {
   }
 
   addDep (dep) {
+    console.log('dep', dep);
     // 去重可以使用Set
     const target = this.deps.find(item => item.id === dep.id);
     if (target) return;

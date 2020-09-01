@@ -20,7 +20,8 @@ const utils = {
       node.originText = node.textContent;
     }
     node.textContent = node.originText.replace(reg, function (...args) {
-      return utils.getValue(vm, args[1]);
+      // 否则会调用Object.toString方法来显示内容，会出现 '[object Object]'的情况
+      return JSON.stringify(utils.getValue(vm, args[1]));
     });
   }
 };
