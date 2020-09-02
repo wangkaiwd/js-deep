@@ -1,23 +1,29 @@
 import { popTarget, pushTarget } from 'vue/observe/dep';
+import utils from '../utils';
 
 let id = 0;
-
+// watch 会单独 new 用户watcher,
+// 而渲染时会再次new 一个 watcher
 class Watcher {
   constructor (vm, exprOrFn, cb = () => {}, opts = {}) {
     this.vm = vm;
     this.exprOrFn = exprOrFn;
-    if (typeof this.exprOrFn === 'function') {
-      this.getter = exprOrFn;
-    }
     this.cb = cb;
     this.opts = opts;
     this.id = id++;
     this.deps = [];
-    this.get();
+    if (typeof this.exprOrFn === 'function') {
+      this.getter = exprOrFn;
+    }
+    if (this.opts.user) {
+      this.getter = function () {
+        return utils.getValue(vm, exprOrFn);
+      };
+    }
+    this.value = this.get();
   }
 
   addDep (dep) {
-    console.log('dep', dep);
     // 去重可以使用Set
     const target = this.deps.find(item => item.id === dep.id);
     if (target) return;
@@ -27,8 +33,11 @@ class Watcher {
 
   get () {
     pushTarget(this);
-    this.getter();
+    // 传入内容的初始值
+    // 取值时会在get方法收集用户定义的watcher以及之后的渲染watcher
+    const value = this.getter();
     popTarget();
+    return value;
   }
 
   update () {
@@ -36,8 +45,11 @@ class Watcher {
   }
 
   run () {
-    console.log('run');
-    this.get();
+    // 新值
+    const value = this.get();
+    if (value !== this.value) {
+      this.cb.call(this.vm, value, this.value);
+    }
   }
 }
 

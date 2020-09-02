@@ -16,6 +16,9 @@ Vue.prototype._init = function (options) {
     vm.$mount();
   }
 };
+Vue.prototype.$watch = function (expr, cb, opts) {
+  new Watcher(this, expr, cb, opts);
+};
 
 function query (el) {
   if (typeof el === 'string') {

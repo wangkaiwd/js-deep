@@ -42,8 +42,18 @@ function initData (vm) {
   }
 }
 
-function initWatch (vm) {
+function createWatcher (vm, expr, cb) {
+  vm.$watch(expr, cb, { user: true });
+}
 
+function initWatch (vm) {
+  const { watch } = vm.$options;
+  for (const key in watch) {
+    if (watch.hasOwnProperty(key)) {
+      const handler = watch[key];
+      createWatcher(vm, key, handler);
+    }
+  }
 }
 
 function initComputed (vm) {
