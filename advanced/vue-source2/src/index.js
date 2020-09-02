@@ -12,8 +12,14 @@ const vm = new Vue({
     };
   },
   watch: {
-    msg (newVal, oldVal) {
-      console.log('val', newVal, oldVal);
+    // msg (newVal, oldVal) {
+    //   console.log('val', newVal, oldVal);
+    // }
+    msg: {
+      handler (newVal, oldVal) {
+        console.log('watch val', newVal, oldVal);
+      },
+      immediate: true
     }
   }
 });

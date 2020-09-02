@@ -20,6 +20,10 @@ class Watcher {
       };
     }
     this.value = this.get();
+    if (opts.immediate) {
+      // immediate: 立即执行回调函数
+      this.cb.call(vm, this.value);
+    }
   }
 
   addDep (dep) {
@@ -44,7 +48,6 @@ class Watcher {
   }
 
   run () {
-    console.log('deps', this.deps);
     // 新值
     const value = this.get();
     if (value !== this.value) {

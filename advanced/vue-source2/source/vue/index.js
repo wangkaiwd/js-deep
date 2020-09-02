@@ -17,7 +17,7 @@ Vue.prototype._init = function (options) {
   }
 };
 Vue.prototype.$watch = function (expr, cb, opts) {
-  new Watcher(this, expr, cb, opts);
+  new Watcher(this, expr, cb, { user: true, ...opts });
 };
 
 function query (el) {

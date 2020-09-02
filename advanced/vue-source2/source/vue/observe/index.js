@@ -42,16 +42,21 @@ function initData (vm) {
   }
 }
 
-function createWatcher (vm, expr, cb) {
-  vm.$watch(expr, cb, { user: true });
+function createWatcher (vm, expr, cb, opts) {
+  vm.$watch(expr, cb, opts);
 }
 
 function initWatch (vm) {
   const { watch } = vm.$options;
   for (const key in watch) {
     if (watch.hasOwnProperty(key)) {
-      const handler = watch[key];
-      createWatcher(vm, key, handler);
+      const userDefine = watch[key];
+      if (userDefine.handler) {
+        const { handler, ...opts } = userDefine;
+        createWatcher(vm, key, handler, opts);
+      } else {
+        createWatcher(vm, key, userDefine);
+      }
     }
   }
 }
