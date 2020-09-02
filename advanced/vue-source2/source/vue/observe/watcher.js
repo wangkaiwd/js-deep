@@ -14,8 +14,7 @@ class Watcher {
     this.deps = [];
     if (typeof this.exprOrFn === 'function') {
       this.getter = exprOrFn;
-    }
-    if (this.opts.user) {
+    } else {
       this.getter = function () {
         return utils.getValue(vm, exprOrFn);
       };
@@ -45,6 +44,7 @@ class Watcher {
   }
 
   run () {
+    console.log('deps', this.deps);
     // 新值
     const value = this.get();
     if (value !== this.value) {
