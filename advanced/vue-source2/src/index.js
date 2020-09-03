@@ -8,23 +8,31 @@ const vm = new Vue({
   data () {
     return {
       arr: [[1], 2, 3],
-      msg: 'hello'
+      msg: 'hello',
+      firstName: '西门',
+      lastName: '吹雪'
     };
   },
-  watch: {
-    // msg (newVal, oldVal) {
-    //   console.log('val', newVal, oldVal);
-    // }
-    msg: {
-      handler (newVal, oldVal) {
-        console.log('watch val', newVal, oldVal);
-      },
-      immediate: true
+  computed: {
+    fullName () {
+      return this.firstName + this.lastName;
     }
-  }
+  },
+  // watch: {
+  //   // msg (newVal, oldVal) {
+  //   //   console.log('val', newVal, oldVal);
+  //   // }
+  //   msg: {
+  //     handler (newVal, oldVal) {
+  //       console.log('watch val', newVal, oldVal);
+  //     },
+  //     immediate: true
+  //   }
+  // }
 });
 
 // asyncUpdateTest(vm);
 // console.log('vm', vm);
 // dependenceCollectionArray(vm);
-vm.msg = 'world';
+// vm.msg = 'world';
+vm.firstName = '东门';

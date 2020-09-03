@@ -1,4 +1,6 @@
 import Observer from 'vue/observe/observer';
+import Watcher from './watcher';
+import Dep from './dep';
 
 export function observe (data) {
   // JavaScript data types and data structures:
@@ -61,8 +63,37 @@ function initWatch (vm) {
   }
 }
 
-function initComputed (vm) {
+// 计算属性的get方法收集计算属性对应的watcher：计算属性watcher以及渲染watcher
+function createComputedGetter (vm, watcher) {
+  // 获取到计算属性的watcher
+  return function () {
+    if (watcher) {
+      if (watcher.dirty) {
+        // 渲染watcher出栈
+        watcher.evaluate();
+      }
+      if (Dep.target) {
+        // 在计算属性watcher中，收集firstName和lastName的dep
+        watcher.depend();
+      }
+      return watcher.value;
+    }
+  };
+}
 
+function initComputed (vm) {
+  const computed = vm.$options.computed;
+  // const watcher = vm._watchersComputed = Object.create(null);
+  for (const key in computed) {
+    if (computed.hasOwnProperty(key)) {
+      // 计算属性callback什么都不传
+      // computed[key]: fullName() => this.firstName + this.lastName
+      const watcher = new Watcher(vm, computed[key], () => {}, { lazy: true });
+      Object.defineProperty(vm, key, {
+        get: createComputedGetter(vm, watcher)
+      });
+    }
+  }
 }
 
 export default function initState (vm) {

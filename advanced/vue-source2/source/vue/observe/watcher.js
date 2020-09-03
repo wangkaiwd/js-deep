@@ -19,7 +19,9 @@ class Watcher {
         return utils.getValue(vm, exprOrFn);
       };
     }
-    this.value = this.get();
+    this.lazy = opts.lazy;
+    this.dirty = this.lazy;
+    this.value = this.lazy ? undefined : this.get();
     if (opts.immediate) {
       // immediate: 立即执行回调函数
       this.cb.call(vm, this.value);
@@ -34,13 +36,23 @@ class Watcher {
     dep.addSub(this);
   }
 
+  evaluate () {
+    this.value = this.get();
+    this.dirty = false;
+  }
+
   get () {
     pushTarget(this);
     // 传入内容的初始值
     // 取值时会在get方法收集用户定义的watcher以及之后的渲染watcher
-    const value = this.getter();
+    // computed: 会取fullName的值，进而触发computed中在vm实例中代理的属性
+    const value = this.getter.call(this.vm);
     popTarget();
     return value;
+  }
+
+  depend () {
+    this.deps.forEach(dep => dep.depend());
   }
 
   update () {
@@ -48,10 +60,14 @@ class Watcher {
   }
 
   run () {
-    // 新值
-    const value = this.get();
-    if (value !== this.value) {
-      this.cb.call(this.vm, value, this.value);
+    if (this.lazy) {
+      this.dirty = true;
+    } else {
+      // 新值
+      const value = this.get();
+      if (value !== this.value) {
+        this.cb.call(this.vm, value, this.value);
+      }
     }
   }
 }
