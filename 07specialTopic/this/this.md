@@ -272,7 +272,7 @@ Function.prototype.call.call(fn1);
 
 这里我们根据`call`的源码来进行推导一下`Function.prototype.call.call(fn1)`，其它的执行过程类似：
 ```javascript
-// 1. 首先会将Function.prototype.call作为一个对象来执行它原型上的call方法
+// 1. 首先会将Function.prototype.call作为一个函数来执行它原型上的call方法
 // 所以call方法内部：
 //    this => Function.prototype.call
 //    context => fn1
