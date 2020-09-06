@@ -1,1 +1,2 @@
-export h from './create-element';
+export * from './h';
+export * from './patch';

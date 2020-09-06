@@ -1,8 +1,8 @@
 // 生成虚拟DOM
 // 虚拟DOM是用对象来模拟一个真实的DOM,方便对其进行操作和使用
-// const app = document.querySelector('#app');
+const app = document.querySelector('#app');
 
-import { h } from '../../source/vue/v-dom/h';
+import { h, render } from '../../source/vue/v-dom';
 
 // <div id="container">
 //   <span style="color:red">hello</span>
@@ -15,11 +15,12 @@ const oldVNode = h(
   h(
     'span',
     { style: { color: 'red' } },
-    'hello'
+    'hello',
   ),
   'world'
 );
-console.log('oldVNode', oldVNode);
+render(oldVNode, app);
+// console.log('oldVNode', oldVNode);
 
 // new Vue({
 //   el: '#app',
