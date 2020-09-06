@@ -3,6 +3,7 @@ import { vnode } from './create-element';
 
 export function h (tag, props, ...children) {
   const { key, ...restProps } = props;
+  delete props.key;
   children = children.map(child => {
     if (typeof child === 'string') {
       return vnode({ text: child });

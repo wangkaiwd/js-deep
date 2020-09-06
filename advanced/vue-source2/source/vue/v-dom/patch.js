@@ -1,18 +1,42 @@
-export const render = (vnode, container) => {
-  const el = createElement(vnode);
+export const render = (vNode, container) => {
+  const el = createElement(vNode);
   container.appendChild(el);
 };
 
-const createElement = (vnode) => {
-  const { key, tag, props, text, children } = vnode;
+// 老： {tag: 'div', props: {id: 'container'}, text: 'hello'}
+// 新； {tag: 'div', props: {id: 'hh'}, text: 'hh'}
+// 如果标签不同的话直接替换老节点
+// 如果标签相同，需要判断更新props以及text
+//
+function updateProperties (vNode, oldProps = {}) {
+  const { props, el } = vNode;
+  for (const key in props) {
+    if (props.hasOwnProperty(key)) {
+      const value = props[key];
+      if (key === 'style') {
+        for (const styleKey in value) {
+          if (value.hasOwnProperty(styleKey)) {
+            el.style[styleKey] = value[styleKey];
+          }
+        }
+      }
+    } else {
+      el[key] = value;
+    }
+  }
+}
+
+const createElement = (vNode) => {
+  const { key, tag, props, text, children } = vNode;
   // 标签为字符串：元素
   if (typeof tag === 'string') {
-    vnode.el = document.createElement(tag);
+    vNode.el = document.createElement(tag);
+    updateProperties(vNode);
     children.forEach(child => {
-      render(child, vnode.el);
+      render(child, vNode.el);
     });
   } else { // 文本节点
-    vnode.el = document.createTextNode(text);
+    vNode.el = document.createTextNode(text);
   }
-  return vnode.el;
+  return vNode.el;
 };
