@@ -2,35 +2,7 @@
 // 虚拟DOM是用对象来模拟一个真实的DOM,方便对其进行操作和使用
 // const app = document.querySelector('#app');
 
-import Vue from 'vue';
-
-// create v-dom
-function h (tag, props, ...children) {
-  const { key, ...restProps } = props;
-  children = children.map(child => {
-    if (typeof child === 'string') {
-      return vnode({ text: child });
-    } else { // 调用h生成的virtual node
-      return child;
-    }
-  });
-  return vnode({
-    tag,
-    props: restProps,
-    key,
-    children
-  });
-}
-
-function vnode ({ tag, props, key, children, text }) {
-  return {
-    tag,
-    props,
-    key,
-    text,
-    children,
-  };
-}
+import { h } from '../../source/vue/v-dom/h';
 
 // <div id="container">
 //   <span style="color:red">hello</span>
