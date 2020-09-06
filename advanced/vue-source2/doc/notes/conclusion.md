@@ -11,9 +11,22 @@
 3. 渲染页面函数逻辑如下：
     1. 创建文档碎片
     2. 将真实`DOM`中的内容移动到文档碎片中
-    3. 通过这则将文档碎片中的`{{}}`替换为`data`中对应属性的值
+    3. 通过正则将文档碎片中的`{{}}`替换为`data`中对应属性的值
     4. 将文档碎片中替换后的内容重新放入页面真实`DOM`中 
-
+### 异步批量更新
 ### 依赖收集
+注意：对象和数组分别是不同的`Dep`实例
+
+对象依赖收集：  
+1. 为对象的每一个属性都`new Dep`，并且在其`getter`方法中收集其依赖的`Watcher`
+2. 创建`Dep`类，可以通过`depend`调用`watcher`的`addSub`方法，来将`dep`去重后收集到`watcher`，然后再调用`dep.addSub`将`watcher`添加到对应的`Dep`中
+3. 更改`data`中的值时，会调用`dep.notify`，通过`dep`中收集的所有`watcher`调用`update`方法，更新页面
+
+数组：  
+1. 为数组添加`__ob__`属性，该属性是`data`中的属性定义`getter/setter`时的`Observer`类
+2. 为`Observer`类的实例添加属性: `this.dep = new Dep()`
+3. 为每一个对象的属性添加`getter`时，如果该属性的值为数组，会通过`value.__ob__.dep.depend()`来收集数组的依赖
+4. 如果`value`依旧是对象的话，会递归的为其收集依赖
+5. 在调用更改数组的方法时会执行`value.__ob__.dep.notify`方法来更新视图
 ### watch
 ### computed
