@@ -38,4 +38,11 @@
 4. 如果`value`依旧是对象的话，会递归的为其收集依赖
 5. 在调用更改数组的方法时会执行`value.__ob__.dep.notify`方法来更新视图
 ### watch
+1. pass watch object in vue instance options
+2. create `user: true` watcher, exprOrFn => key of watch, callback(newVal, oldVal) => value of watch
+3. get method equal get current value by exprOrFn from vm
+4. execute get method, return init value and assign it to `this.value`
+5. key of watch assigned, first invoke user watcher get newly value and pass init obtain value as old value, current value as newly value to callback, then invoke render watcher to update view  
+
 ### computed
+
