@@ -1,3 +1,3 @@
-// import './main';
+// import './observe-demo';
+import './v-dom';
 
-import './v-dom/demo03';

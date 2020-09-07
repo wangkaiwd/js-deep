@@ -12,26 +12,12 @@ const app = document.querySelector('#app');
 const oldVNode = h(
   'div',
   { id: 'container', key: 1 },
-  h(
-    'span',
-    { style: { color: 'red' } },
-    'hello',
-  ),
-  'world'
-);
-const oldVNode2 = h(
-  'div',
-  { id: 'container', key: 1 },
 );
 
 // render(oldVNode, app);
-render(oldVNode2, app);
-const newVNode = h(
-  'div',
-  { id: 'dd', key: 1 },
-);
+render(oldVNode, app);
 
-const newVNode2 = h(
+const newVNode = h(
   'div',
   { id: 'dd', key: 1 },
   h(
@@ -42,7 +28,5 @@ const newVNode2 = h(
   'world'
 );
 
-// 新节点没有子节点
-// patch(oldVNode, newVNode);
 // 老节点没有子节点
-patch(oldVNode2, newVNode2);
+patch(oldVNode, newVNode);
