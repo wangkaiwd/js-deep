@@ -45,4 +45,12 @@
 5. key of watch assigned, first invoke user watcher get newly value and pass init obtain value as old value, current value as newly value to callback, then invoke render watcher to update view  
 
 ### computed
-
+1. 在`Vue`实例化中作为配置项`{computed: {key: fn}}`传入
+2. `initComputed`: 在配置项中获取到`key,fn`, 并在`vm`中代理`key`对应的属性，方便进行取值
+3. `new`计算属性`watcher`，`exprOrFn: fn`, `options: {lazy: true}`
+4. 初始化时只是进行赋值，并不会执行`fn`。计算属性只有在用到时才会执行
+5. 开始文本替换，对`computed`中的`key`进行取值，此时会调用之前在`vm`上为其定义的`get`方法
+6. 这里会用到`computed`的值，所以会执行`fn`进行取值，由于计算属性是依赖于其它属性，所以会触发依赖属性的`get/set`方法
+7. 依赖属性的`get/set`方法会通过`Dep`来收集其对应的计算属性`watcher`，然后获取到最新的计算属性`key`对应的值
+8. 将`dirty`置为`false`,所以再次获取值时不会再进行求值，直接将之前的计算结果返回
+9. 之后，`Dep.target = render watcher`, 需要为计算属性中的`watcher`再收集`Dep.target`，以在为其设置值时会执行计算属性`watcher`和渲染`watcher`
