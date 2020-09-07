@@ -3,7 +3,10 @@ export const render = (vNode, container) => {
   container.appendChild(el);
 };
 
-function updateChildren () {
+/**
+ * Vue 针对常见的DOM操作进行了优化
+ */
+function updateChildren (newChildren, oldChildren) {
 
 }
 
