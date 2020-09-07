@@ -1,3 +1,3 @@
 // import './main';
 
-import './v-dom/demo01';
+import './v-dom/demo02';

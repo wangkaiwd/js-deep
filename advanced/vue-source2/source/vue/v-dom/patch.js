@@ -3,11 +3,23 @@ export const render = (vNode, container) => {
   container.appendChild(el);
 };
 
+// 用新节点为旧节点打补丁
+export const patch = (oldVNode, newVNode) => {
+  if (oldVNode.tag !== newVNode.tag) {
+    // 老节点通过render方法调用createElement,为其设置了el属性为真实dom节点
+    // 而新节点并没有el属性，需要执行createElement，为其创建相应的真实dom节点
+    oldVNode.el.replaceWith(createElement(newVNode));
+  }
+  if (!newVNode.tag) {
+    oldVNode.el.textContent = newVNode.text;
+  }
+//
+};
 // 老： {tag: 'div', props: {id: 'container'}, text: 'hello'}
 // 新； {tag: 'div', props: {id: 'hh'}, text: 'hh'}
-// 如果标签不同的话直接替换老节点
-// 如果标签相同，需要判断更新props以及text
-//
+// 1. 如果标签不同的话直接替换老节点
+// 2. 如果新节点为文本节点，用新节点文本替换老节点
+// 3. 如果标签相同，需要判断更新props以及text
 function updateProperties (vNode, oldProps = {}) {
   const { props, el } = vNode;
   const oldStyle = oldProps.style || {};
@@ -58,3 +70,5 @@ const createElement = (vNode) => {
   }
   return vNode.el;
 };
+
+
