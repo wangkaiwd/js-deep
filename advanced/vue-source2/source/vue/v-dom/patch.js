@@ -3,6 +3,10 @@ export const render = (vNode, container) => {
   container.appendChild(el);
 };
 
+function updateChildren () {
+
+}
+
 // 用新节点为旧节点打补丁
 export const patch = (oldVNode, newVNode) => {
   if (oldVNode.tag !== newVNode.tag) {
@@ -13,7 +17,23 @@ export const patch = (oldVNode, newVNode) => {
   if (!newVNode.tag) {
     oldVNode.el.textContent = newVNode.text;
   }
-//
+  // 元素相同，属性不同，需要进行属性替换
+  const el = newVNode.el = oldVNode.el;
+  updateProperties(newVNode, oldVNode.props);
+  const oldChildren = oldVNode.children;
+  const newChildren = newVNode.children;
+  // 老的节点有孩子，新节点没有
+  // 老节点没有孩子，新节点有孩子
+  // 新节点和老节点都有孩子
+  if (oldChildren.length > 0 && newChildren.length > 0) {
+    updateChildren(newChildren, oldChildren);
+  } else if (oldChildren.length > 0) {
+    el.innerHTML = '';
+  } else if (newChildren.length > 0) {
+    for (let i = 0; i < newChildren.length; i++) {
+      el.appendChild(createElement(newChildren[i]));
+    }
+  }
 };
 // 老： {tag: 'div', props: {id: 'container'}, text: 'hello'}
 // 新； {tag: 'div', props: {id: 'hh'}, text: 'hh'}
