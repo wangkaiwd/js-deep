@@ -9,8 +9,8 @@ function isSameVNode (oldVNode, newVNode) {
 
 /**
  * Vue 针对常见的DOM操作进行了优化
- *  1. 开头插入
- *  2. 结尾插入
+ *  1. 开头插入: https://excalidraw.com/#json=4923045688901632,-Uuzpm-2ECi2BfiYa-nfzQ
+ *  2. 结尾插入: https://excalidraw.com/#json=4776455569408000,-OWWGd4HPZ9kgDuSTyVWMw
  *  3. 正序
  *  4. 倒序
  */
@@ -30,11 +30,19 @@ function updateChildren (newChildren, oldChildren, parent) {
       // 将新老节点的开始索引和节点后移
       oldStartVNode = oldChildren[++oldStartIndex];
       newStartVNode = newChildren[++newStartIndex];
+    } else if (isSameVNode(oldEndVNode, newEndVNode)) {
+      patch(oldEndVNode, newEndVNode);
+      oldEndVNode = oldChildren[--oldEndIndex];
+      newEndVNode = newChildren[--newEndIndex];
     }
   }
+  // 将新节点剩余部分直接插入
   if (newStartIndex <= newEndIndex) {
     for (let i = newStartIndex; i <= newEndIndex; i++) {
-      parent.appendChild(createElement(newChildren[i]));
+      const refVNode = newChildren[newEndIndex + 1];
+      // 这里要使用el属性
+      const refEle = refVNode ? refVNode.el : null;
+      parent.insertBefore(createElement(newChildren[i]), refEle);
     }
   }
 }
@@ -50,6 +58,8 @@ export const patch = (oldVNode, newVNode) => {
     oldVNode.el.textContent = newVNode.text;
   }
   // 元素相同，属性不同，需要进行属性替换
+  // 将老的el进行保存，方便通过el进行获取，并进行dom操作
+  // 而且我们一般会对新节点执行`createElement`方法
   const el = newVNode.el = oldVNode.el;
   updateProperties(newVNode, oldVNode.props);
   const oldChildren = oldVNode.children || [];
