@@ -1,5 +1,6 @@
 import { h, patch, render } from '../../source/vue/v-dom';
 
+// https://excalidraw.com/#json=4776455569408000,-OWWGd4HPZ9kgDuSTyVWMw
 // 生成虚拟DOM
 // 虚拟DOM是用对象来模拟一个真实的DOM,方便对其进行操作和使用
 const app = document.querySelector('#app');
@@ -12,19 +13,20 @@ const app = document.querySelector('#app');
 const oldVNode = h(
   'ul',
   { id: 'container', key: 1 },
-  h('li', { key: 'a', background: 'red' }, 'a'),
-  h('li', { key: 'b', background: 'yellow' }, 'b'),
-  h('li', { key: 'c', background: 'blue' }, 'c'),
-  h('li', { key: 'd', background: 'pink' }, 'd')
+  h('li', { key: 'a', style: { background: 'red' } }, 'a'),
+  h('li', { key: 'b', style: { background: 'yellow' } }, 'b'),
+  h('li', { key: 'c', style: { background: 'blue' } }, 'c'),
+  h('li', { key: 'd', style: { background: 'pink' } }, 'd')
 );
 render(oldVNode, app);
 
 const newVNode = h('ul', { id: 'id', key: 1 },
-  h('li', { key: 'a', background: 'red' }, 'a'),
-  h('li', { key: 'b', background: 'yellow' }, 'b'),
-  h('li', { key: 'c', background: 'blue' }, 'c'),
-  h('li', { key: 'd', background: 'pink' }, 'd'),
-  h('li', { key: 'e', background: 'purple' }, 'e'),
+  h('li', { key: 'a', style: { background: 'red' } }, 'a'),
+  h('li', { key: 'b', style: { background: 'yellow' } }, 'b'),
+  h('li', { key: 'c', style: { background: 'blue' } }, 'c'),
+  h('li', { key: 'd', style: { background: 'pink' } }, 'd'),
+  h('li', { key: 'e', style: { background: 'purple' } }, 'e'),
 );
-
-patch(oldVNode, newVNode);
+setTimeout(() => {
+  patch(oldVNode, newVNode);
+}, 2000);

@@ -1,1 +1,1 @@
-import './diff-no-old-children';
+import './diff-children-push';

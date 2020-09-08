@@ -3,11 +3,40 @@ export const render = (vNode, container) => {
   container.appendChild(el);
 };
 
+function isSameVNode (oldVNode, newVNode) {
+  return (oldVNode.tag === newVNode.tag) && (oldVNode.key === newVNode.key);
+}
+
 /**
  * Vue 针对常见的DOM操作进行了优化
+ *  1. 开头插入
+ *  2. 结尾插入
+ *  3. 正序
+ *  4. 倒序
  */
-function updateChildren (newChildren, oldChildren) {
-
+function updateChildren (newChildren, oldChildren, parent) {
+  let oldStartIndex = 0;
+  let oldStartVNode = oldChildren[oldStartIndex];
+  let oldEndIndex = oldChildren.length - 1;
+  let oldEndVNode = oldChildren[oldEndIndex];
+  let newStartIndex = 0;
+  let newStartVNode = newChildren[newStartIndex];
+  let newEndIndex = newChildren.length - 1;
+  let newEndVNode = newChildren[newEndIndex];
+  while (oldStartIndex <= oldEndIndex && newStartIndex <= newEndIndex) {
+    if (isSameVNode(oldStartVNode, newStartVNode)) {
+      // 如果父节点相同的话继续比较子节点
+      patch(oldStartVNode, newStartVNode);
+      // 将新老节点的开始索引和节点后移
+      oldStartVNode = oldChildren[++oldStartIndex];
+      newStartVNode = newChildren[++newStartIndex];
+    }
+  }
+  if (newStartIndex <= newEndIndex) {
+    for (let i = newStartIndex; i <= newEndIndex; i++) {
+      parent.appendChild(createElement(newChildren[i]));
+    }
+  }
 }
 
 // 用新节点为旧节点打补丁
@@ -23,13 +52,13 @@ export const patch = (oldVNode, newVNode) => {
   // 元素相同，属性不同，需要进行属性替换
   const el = newVNode.el = oldVNode.el;
   updateProperties(newVNode, oldVNode.props);
-  const oldChildren = oldVNode.children;
-  const newChildren = newVNode.children;
+  const oldChildren = oldVNode.children || [];
+  const newChildren = newVNode.children || [];
   // 老的节点有孩子，新节点没有
   // 老节点没有孩子，新节点有孩子
   // 新节点和老节点都有孩子
   if (oldChildren.length > 0 && newChildren.length > 0) {
-    updateChildren(newChildren, oldChildren);
+    updateChildren(newChildren, oldChildren, el);
   } else if (oldChildren.length > 0) {
     el.innerHTML = '';
   } else if (newChildren.length > 0) {
@@ -44,7 +73,7 @@ export const patch = (oldVNode, newVNode) => {
 // 2. 如果新节点为文本节点，用新节点文本替换老节点
 // 3. 如果标签相同，需要判断更新props以及text
 function updateProperties (vNode, oldProps = {}) {
-  const { props, el } = vNode;
+  const { props = {}, el } = vNode;
   const oldStyle = oldProps.style || {};
   const style = props.style || {};
   for (const oldStyleKey in oldStyle) {
