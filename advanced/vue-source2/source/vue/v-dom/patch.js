@@ -11,7 +11,7 @@ function isSameVNode (oldVNode, newVNode) {
  * Vue 针对常见的DOM操作进行了优化
  *  1. 开头插入: https://excalidraw.com/#json=4923045688901632,-Uuzpm-2ECi2BfiYa-nfzQ
  *  2. 结尾插入: https://excalidraw.com/#json=4776455569408000,-OWWGd4HPZ9kgDuSTyVWMw
- *  3. 正序
+ *  3. 倒序：https://excalidraw.com/#json=5934571036082176,mC6zQOy1-kvppw7jLM_nZQ
  *  4. 倒序
  */
 function updateChildren (newChildren, oldChildren, parent) {
@@ -34,6 +34,11 @@ function updateChildren (newChildren, oldChildren, parent) {
       patch(oldEndVNode, newEndVNode);
       oldEndVNode = oldChildren[--oldEndIndex];
       newEndVNode = newChildren[--newEndIndex];
+    } else if (isSameVNode(oldStartVNode, newEndVNode)) {
+      patch(oldStartVNode, newEndVNode);
+      parent.insertBefore(oldStartVNode.el, oldEndVNode.el.nextSibling);
+      newEndVNode = newChildren[--newEndIndex];
+      oldStartVNode = oldChildren[++oldStartIndex];
     }
   }
   // 将新节点剩余部分直接插入
