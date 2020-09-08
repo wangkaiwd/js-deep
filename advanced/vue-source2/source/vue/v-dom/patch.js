@@ -12,7 +12,7 @@ function isSameVNode (oldVNode, newVNode) {
  *  1. 开头插入: https://excalidraw.com/#json=4923045688901632,-Uuzpm-2ECi2BfiYa-nfzQ
  *  2. 结尾插入: https://excalidraw.com/#json=4776455569408000,-OWWGd4HPZ9kgDuSTyVWMw
  *  3. 倒序：https://excalidraw.com/#json=5934571036082176,mC6zQOy1-kvppw7jLM_nZQ
- *  4. 倒序
+ *  4. 倒叙: https://excalidraw.com/#json=5413565313843200,l71NPnUSYcvaR-07cE_s_Q
  */
 function updateChildren (newChildren, oldChildren, parent) {
   let oldStartIndex = 0;
@@ -39,6 +39,11 @@ function updateChildren (newChildren, oldChildren, parent) {
       parent.insertBefore(oldStartVNode.el, oldEndVNode.el.nextSibling);
       newEndVNode = newChildren[--newEndIndex];
       oldStartVNode = oldChildren[++oldStartIndex];
+    } else if (isSameVNode(oldEndVNode, newStartVNode)) {
+      parent.insertBefore(oldEndVNode.el, oldStartVNode.el);
+      patch(oldEndVNode, newStartVNode);
+      oldEndVNode = oldChildren[--oldEndIndex];
+      newStartVNode = newChildren[++newStartIndex];
     }
   }
   // 将新节点剩余部分直接插入
