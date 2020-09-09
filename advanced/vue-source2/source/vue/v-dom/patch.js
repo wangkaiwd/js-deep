@@ -125,12 +125,14 @@ export const patch = (oldVNode, newVNode) => {
       el.appendChild(createElement(newChildren[i]));
     }
   }
+  return el;
 };
 // 老： {tag: 'div', props: {id: 'container'}, text: 'hello'}
 // 新； {tag: 'div', props: {id: 'hh'}, text: 'hh'}
 // 1. 如果标签不同的话直接替换老节点
 // 2. 如果新节点为文本节点，用新节点文本替换老节点
 // 3. 如果标签相同，需要判断更新props以及text
+// 属性更新逻辑：用新节点的属性替换老节点的属性，然后将老节点中多余的属性删除
 function updateProperties (vNode, oldProps = {}) {
   const { props = {}, el } = vNode;
   const oldStyle = oldProps.style || {};

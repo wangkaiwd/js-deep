@@ -1,6 +1,7 @@
 import initState from 'vue/observe';
 import Watcher from 'vue/observe/watcher';
 import utils from './utils';
+import { h, patch, render } from './v-dom';
 
 function Vue (options) {
   this._init(options);
@@ -41,19 +42,21 @@ function compiler (node, vm) {
   });
 }
 
-Vue.prototype._update = function (vm) {
-  const fragment = document.createDocumentFragment();
-  const { $el } = vm;
-  let firstChild = $el.firstChild;
-  while (firstChild) {
-    fragment.appendChild(firstChild);
-    firstChild = $el.firstChild;
+Vue.prototype._update = function (vNode) {
+  const vm = this;
+  let { preVNode, $el } = vm;
+  if (!preVNode) {
+    vm.preVNode = vNode;
+    render(vNode, $el);
+  } else {
+    $el = patch(preVNode, vNode);
   }
-  // fragment 不是Element
-  compiler(fragment, vm);
-  $el.appendChild(fragment);
 };
-
+Vue.prototype._render = function () {
+  const vm = this;
+  const { render } = vm.$options;
+  return render.call(vm, h);
+};
 Vue.prototype.$mount = function () {
   const vm = this;
   let { el } = vm.$options;
@@ -64,7 +67,7 @@ Vue.prototype.$mount = function () {
   el = vm.$el = query(el);
 
   function updateComponent () {
-    vm._update(vm);
+    vm._update(vm._render());
   }
 
   new Watcher(vm, updateComponent);
