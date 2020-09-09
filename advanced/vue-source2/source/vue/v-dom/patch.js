@@ -13,6 +13,7 @@ function isSameVNode (oldVNode, newVNode) {
  *  2. 结尾插入: https://excalidraw.com/#json=4776455569408000,-OWWGd4HPZ9kgDuSTyVWMw
  *  3. 倒序：https://excalidraw.com/#json=5934571036082176,mC6zQOy1-kvppw7jLM_nZQ
  *  4. 倒叙: https://excalidraw.com/#json=5413565313843200,l71NPnUSYcvaR-07cE_s_Q
+ *  5. 乱序：https://excalidraw.com/#json=6516278504194048,2Bon20n-hZrwTzfs5mMnZg
  */
 function updateChildren (newChildren, oldChildren, parent) {
   let oldStartIndex = 0;
@@ -23,8 +24,21 @@ function updateChildren (newChildren, oldChildren, parent) {
   let newStartVNode = newChildren[newStartIndex];
   let newEndIndex = newChildren.length - 1;
   let newEndVNode = newChildren[newEndIndex];
+
+  function makeKeyMapByIndex (children) {
+    return children.reduce((accumulator, current, i) => {
+      accumulator[current.key] = i;
+      return accumulator;
+    }, {});
+  }
+
+  const map = makeKeyMapByIndex(oldChildren);
   while (oldStartIndex <= oldEndIndex && newStartIndex <= newEndIndex) {
-    if (isSameVNode(oldStartVNode, newStartVNode)) {
+    if (oldStartVNode == null) {
+      oldStartVNode = oldChildren[++oldStartIndex];
+    } else if (oldEndVNode == null) {
+      oldEndVNode = oldChildren[--oldEndIndex];
+    } else if (isSameVNode(oldStartVNode, newStartVNode)) {
       // 如果父节点相同的话继续比较子节点
       patch(oldStartVNode, newStartVNode);
       // 将新老节点的开始索引和节点后移
@@ -44,6 +58,22 @@ function updateChildren (newChildren, oldChildren, parent) {
       patch(oldEndVNode, newStartVNode);
       oldEndVNode = oldChildren[--oldEndIndex];
       newStartVNode = newChildren[++newStartIndex];
+    } else {
+      // newStartVNode
+      // 1. 新节点和老节点进行匹配
+      // 2. 匹配不到，将新节点移动到老开始节点之前
+      // 3. 匹配到，将匹配到的老节点移动到开始节点之前
+      // 4. 新节点向后移动
+      // 5. 删除老节点中的剩余节点
+      const moveIndex = map[newStartVNode.key];
+      if (moveIndex == null) { // 没有找到
+        parent.insertBefore(createElement(newStartVNode), oldStartVNode.el);
+      } else { // 找到
+        let moveVNode = oldChildren[moveIndex];
+        parent.insertBefore(moveVNode.el, oldStartVNode.el);
+        moveVNode = null;
+      }
+      newStartVNode = newChildren[++newStartIndex];
     }
   }
   // 将新节点剩余部分直接插入
@@ -53,6 +83,15 @@ function updateChildren (newChildren, oldChildren, parent) {
       // 这里要使用el属性
       const refEle = refVNode ? refVNode.el : null;
       parent.insertBefore(createElement(newChildren[i]), refEle);
+    }
+  }
+  // 删除剩余的老节点
+  if (oldStartIndex <= oldEndIndex) {
+    for (let i = oldStartIndex; i <= oldEndIndex; i++) {
+      const child = oldChildren[i];
+      if (child != null) {
+        parent.removeChild(child.el);
+      }
     }
   }
 }
