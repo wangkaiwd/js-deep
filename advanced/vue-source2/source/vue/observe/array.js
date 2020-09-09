@@ -35,6 +35,18 @@ export function dependArray (array) {
 methods.forEach((method) => {
   // 需要注意：这里是为arrayMethods自身添加属性，而不再使用原型上的属性
   const oldArrayMethod = arrayMethods[method];
+  // 要为原有的同名方法进行切片编程，可以先缓存旧有方法，然后为旧有方法重新赋值
+  // 此时会重新开辟内存空间，不会影响缓存内容，然后在重新赋值的函数逻辑中可以根据情况来执行缓存函数
+  // 举例： 这样可以在不改变变量名的情况下重写原有函数
+  // function fn () {console.log('1');}
+  // const fn1 = fn;
+  // fn = function () { // 这里会重新开辟内存空间，不会影响
+  //   console.log('before');
+  //   const result = fn1();
+  //   console.log('after');
+  //   return result;
+  // };
+  // 参考Vue源码：https://github.com/vuejs/vue/blob/635e669f64560f084f6cb97fdd90880e3d33d363/src/platforms/web/entry-runtime-with-compiler.js#L17-L18
   arrayMethods[method] = function () {
     const args = [...arguments];
     const result = oldArrayMethod.apply(this, args);
