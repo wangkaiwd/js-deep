@@ -13,4 +13,11 @@
 * Object.setPrototypeOf(Girl.prototype,EventEmitter.prototype)
 * class extends
 * util.inherit(make use of `uitl` built-in module)
-
+* implement EventEmitter:
+  * on
+  * emit
+  * **once**
+    * how to implement
+  * **off**
+    * how to remove once bound listeners
+  * newListener
