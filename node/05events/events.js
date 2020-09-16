@@ -18,6 +18,9 @@ EventEmitter.prototype.emit = function (eventName, ...args) {
 
 EventEmitter.prototype.on = function (eventName, callback) {
   if (!this._events) {this._events = {};}
+  if (this._events.newListener) {
+    this.emit('newListener', eventName, callback);
+  }
   if (!this._events[eventName]) {
     this._events[eventName] = [];
   }
