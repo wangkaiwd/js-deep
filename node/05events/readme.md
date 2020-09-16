@@ -21,6 +21,7 @@
   * **off**
     * how to remove once bound listeners
   * newListener
+    * 事件一监听就被触发
 
 ### fs
 操作文件：  

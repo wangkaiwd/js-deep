@@ -28,9 +28,6 @@ Girl.prototype = Object.create(EventEmitter.prototype);
 // Object.setPrototypeOf(Girl.prototype, EventEmitter.prototype);
 // Object.setPrototypeOf(Girl, EventEmitter.prototype) why not work?
 const girl = new Girl();
-// girl.on('newListener', (eventName, listener) => {
-//   console.log('event', eventName, listener);
-// });
 
 function say (what) {
   console.log('say ' + what);
