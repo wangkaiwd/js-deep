@@ -19,54 +19,28 @@ const EventEmitter = require('./events');
 
 // const util = require('util');
 
-// function Girl () {
-//
-// }
-//
-// // util.inherits(Girl, EventEmitter);
-// Girl.prototype = Object.create(EventEmitter.prototype);
-// // Object.setPrototypeOf(Girl.prototype, EventEmitter.prototype);
-// // Object.setPrototypeOf(Girl, EventEmitter.prototype) why not work?
-// const girl = new Girl();
-// girl.on('say', (what) => {
-//   console.log('say ' + what);
-// });
-//
-// function eat (what) {
-//   console.log('eat ' + what);
-// }
-//
-// girl.on('say', eat);
-// girl.off('say', eat);
-// girl.emit('say', 'me');
+function Girl () {
 
-const eventBus = new EventEmitter();
+}
 
-const fn1 = (x, y) => {
-  console.log('fn1', x, y);
-};
-const fn2 = (x, y) => {
-  console.log('fn2', x, y);
-};
-const fn3 = (x, y) => {
-  console.log('fn3', x, y);
-  eventBus.off('AA', fn1);
-  eventBus.off('AA', fn2);
-};
-const fn4 = (x, y) => {
-  console.log('fn4', x, y);
-};
-const fn5 = (x, y) => {
-  console.log('fn5', x, y);
-};
-const fn6 = (x, y) => {
-  console.log('fn6', x, y);
-};
-eventBus.on('AA', fn1);
-eventBus.on('AA', fn2);
-eventBus.on('AA', fn3);
-eventBus.on('AA', fn4);
-eventBus.on('AA', fn5);
-eventBus.on('AA', fn6);
-eventBus.emit('AA', 1, 23);
-eventBus.emit('AA', 1, 23);
+// util.inherits(Girl, EventEmitter);
+Girl.prototype = Object.create(EventEmitter.prototype);
+// Object.setPrototypeOf(Girl.prototype, EventEmitter.prototype);
+// Object.setPrototypeOf(Girl, EventEmitter.prototype) why not work?
+const girl = new Girl();
+
+function say (what) {
+  console.log('say ' + what);
+}
+
+girl.once('say', say);
+
+function eat (what) {
+  console.log('eat ' + what);
+}
+
+girl.on('say', eat);
+girl.off('say', eat);
+girl.emit('say', 'me');
+// 再次emit不会触发：$once
+girl.emit('say', 'you');

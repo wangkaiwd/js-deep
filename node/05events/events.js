@@ -31,4 +31,11 @@ EventEmitter.prototype.off = function (eventName, callback) {
     this._events[eventName] = events.filter(event => event !== callback);
   }
 };
+EventEmitter.prototype.once = function (eventName, callback) {
+  const one = (...args) => {
+    callback(...args);
+    this.off(eventName, one);
+  };
+  this.on(eventName, one);
+};
 module.exports = EventEmitter;
