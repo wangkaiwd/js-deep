@@ -15,7 +15,7 @@
 //   '/Users/node_modules',
 //   '/node_modules'
 // ]
-const EventEmitter = require('events');
+const EventEmitter = require('./events');
 
 // const util = require('util');
 
@@ -28,9 +28,9 @@ Girl.prototype = Object.create(EventEmitter.prototype);
 // Object.setPrototypeOf(Girl.prototype, EventEmitter.prototype);
 // Object.setPrototypeOf(Girl, EventEmitter.prototype) why not work?
 const girl = new Girl();
-girl.on('newListener', (eventName, listener) => {
-  console.log('event', eventName, listener);
-});
+// girl.on('newListener', (eventName, listener) => {
+//   console.log('event', eventName, listener);
+// });
 
 function say (what) {
   console.log('say ' + what);
@@ -40,10 +40,9 @@ function eat (what) {
   console.log('eat ' + what);
 }
 
-girl.on('say', say);
-
+girl.once('say', say);
 girl.on('say', eat);
-// girl.off('say', eat);
+girl.off('say', say);
 girl.emit('say', 'me');
 // 再次emit不会触发：$once
 // girl.emit('say', 'you');

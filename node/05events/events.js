@@ -28,7 +28,7 @@ EventEmitter.prototype.off = function (eventName, callback) {
   const events = this._events[eventName];
   if (events) {
     // 通过splice删除时，会更改原数组，导致循环时索引发生变化
-    this._events[eventName] = events.filter(event => event !== callback);
+    this._events[eventName] = events.filter(event => (event !== callback) && (event.cb !== callback));
   }
 };
 EventEmitter.prototype.once = function (eventName, callback) {
@@ -36,6 +36,8 @@ EventEmitter.prototype.once = function (eventName, callback) {
     callback(...args);
     this.off(eventName, one);
   };
+  // 使绑定的函数和传入的回调函数之间产生关联
+  one.cb = callback;
   this.on(eventName, one);
 };
 module.exports = EventEmitter;
