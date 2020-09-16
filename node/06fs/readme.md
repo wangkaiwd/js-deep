@@ -2,8 +2,9 @@
 
 ### 任务
 操作文件：  
-* readFile: 读取编码没有都指定都为`buffer`类型
-* writeFile: 默认写都会转化成`utf8`格式来进行存储(并且会将文件清空，如果文件没有会创建)
+* readFile: if no encoding is specified, then the raw buffer is returned.
+* writeFile: replacing the file if it already exists. `data` can be a string or buffer.
+  * 文件写入为什么会默认有换行？
 * appendFile
 * feature: 实现代码拷贝(大文件操作：Stream)，文件超过64K，使用流；如果文件小于64K，直接read + write
 
