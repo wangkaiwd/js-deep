@@ -18,21 +18,37 @@ function mkdirSync (pathStr) {
 
 // mkdirSync('a/b/c/d');
 
+// 目前想到的解决方法：前一次执行完毕，才能进行下一次执行
 function mkdirAsync (pathStr) {
   const dirs = pathStr.split('/');
-  dirs.forEach((dir, i) => {
-    const parentDir = dirs.slice(0, i).join('/');
-    const dirPath = path.resolve(__dirname, parentDir, dir);
-    // 由于是异步创建，可能存在的问题: 前一个创建还未完成，后一个创建已经开始了。
-    // 而对应的创建是有先后顺序的
+
+  function next (index = 0) {
+    console.log('index', index);
+    const parentDir = dirs.slice(0, index).join('/');
+    const dirPath = path.resolve(__dirname, parentDir, dirs[index]);
+    const mkdir = (dir) => {
+      fs.mkdir(dir, (err) => {
+        if (!err) {
+          console.log('创建成功');
+          console.log('length', dirs.length);
+          if (index < dirs.length - 1) {
+            next(++index);
+          }
+        }
+      });
+    };
     fs.access(dirPath, (err) => {
       if (err) {
-        fs.mkdir(dirPath, (err) => {
-          if (!err) {console.log('创建成功');}
-        });
+        mkdir(dirPath);
+      } else { // 已经存在直接进行下一次创建
+        if (index < dirs.length - 1) {
+          next(++index);
+        }
       }
     });
-  });
+  }
+
+  next();
 }
 
 mkdirAsync('a/b/c/d');
