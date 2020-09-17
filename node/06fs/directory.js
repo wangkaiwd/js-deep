@@ -18,19 +18,18 @@ function mkdirSync (pathStr) {
 
 // mkdirSync('a/b/c/d');
 
-// 目前想到的解决方法：前一次执行完毕，才能进行下一次执行
+// 相互关联的异步循环；前一次执行完毕，才能进行下一次执行
+// 而for循环会一次性直接执行完毕
 function mkdirAsync (pathStr) {
   const dirs = pathStr.split('/');
 
   function next (index = 0) {
-    console.log('index', index);
     const parentDir = dirs.slice(0, index).join('/');
     const dirPath = path.resolve(__dirname, parentDir, dirs[index]);
     const mkdir = (dir) => {
       fs.mkdir(dir, (err) => {
         if (!err) {
           console.log('创建成功');
-          console.log('length', dirs.length);
           if (index < dirs.length - 1) {
             next(++index);
           }
