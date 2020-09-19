@@ -6,7 +6,6 @@ const path = require('path');
 // 深度遍历删除
 // 'a/b'
 // 有一点想不太明白
-// todo: 43:02
 function rmdirSync (p) {
   const stat = fs.statSync(p);
   if (stat.isDirectory()) {
