@@ -34,3 +34,5 @@ function rmdirAsync (p, cb) {
 rmdirAsync('a', () => {
   console.log('delete success');
 });
+
+// 并行删除

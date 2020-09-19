@@ -24,3 +24,11 @@
   * 异步串行执行，整个节点串在一起
   * 异步并行执行，多个子节点同时开始遍历 Promise.all
   * 异步广度删除
+* `Promise + async/await` 删除目录
+* 当文件过大的时候，一点一点读和写文件，防止内存淹没
+  * fs.open
+    * 权限：读取权限；写入权限；执行权限
+    * mode: 0o666
+  * fs.read
+  * fs.write
+  * fs.close
