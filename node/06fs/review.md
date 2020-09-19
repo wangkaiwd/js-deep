@@ -8,3 +8,6 @@
     * next
     * index
     * invoke next method when previous async task complete and index increase
+* delete directory
+  * sync delete directory
+  * deep first algorithm
