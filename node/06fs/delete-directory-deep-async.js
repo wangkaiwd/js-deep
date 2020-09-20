@@ -36,8 +36,39 @@ function rmdirAsync (p, cb) {
   });
 }
 
-rmdirAsync('a', () => {
-  console.log('delete success');
-});
+// rmdirAsync('a', () => {
+//   console.log('delete success');
+// });
 
-// 并行删除
+// 异步并行删除
+function rmdirAsync1 (p, cb) {
+  fs.stat(p, (err, stats) => {
+    if (stats.isDirectory()) {
+      fs.readdir(p, (err, files) => {
+        let index = 0;
+        if (files.length === 0) {
+          return fs.rmdir(p, cb);
+        }
+
+        function done () {
+          index++;
+          if (index === files.length) {
+            fs.rmdir(p, cb);
+          }
+        }
+
+        const fullFiles = files.map(file => path.resolve(p, file));
+        for (let i = 0; i < fullFiles.length; i++) {
+          const fullFile = fullFiles[i];
+          rmdirAsync1(fullFile, done);
+        }
+      });
+    } else {
+      fs.unlink(p, cb);
+    }
+  });
+}
+
+rmdirAsync1('a', () => {
+  console.log('删除成功');
+});
