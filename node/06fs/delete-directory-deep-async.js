@@ -8,14 +8,19 @@ function rmdirAsync (p, cb) {
     if (stats.isDirectory()) {
       fs.readdir(p, (err, files) => {
         const fullFiles = files.map(file => path.resolve(p, file));
-        let index = 0;
+        // a/b
+        // let index = 0;
 
-        function next () {
+        function next (index = 0) {
+          // index = 0; fullFiles.length = 1
           if (index === fullFiles.length) {
+            // a/b , cb 是什么时候的cb? 目录为a的时候
             return fs.rmdir(p, cb);
           }
+
           const fullFile = fullFiles[index++];
-          rmdirAsync(fullFile, next);
+          // a/b
+          rmdirAsync(fullFile, () => next(index));
         }
 
         next();
