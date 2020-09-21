@@ -4,19 +4,10 @@ const path = require('path');
 async function rmdir (p) {
   const stat = await fs.stat(p);
   if (stat.isDirectory()) {
-    const dirs = fs.readdir(p);
-    const fullDirs = dirs.map(dir => path.resolve(dir));
-    let index = 0;
-
-    async function next () {
-      if (index === fullDirs.length) {
-        return fs.rmdir(p);
-      }
-      const fullDir = fullDirs[index++];
-      return await rmdir(fullDir);
-    }
-
-    next().then();
+    const dirs = await fs.readdir(p);
+    const fullDirs = dirs.map(dir => rmdir(path.resolve(p, dir)));
+    await Promise.all(fullDirs);
+    await fs.rmdir(p);
   } else {
     return fs.unlink(p);
   }

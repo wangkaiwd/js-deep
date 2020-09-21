@@ -11,3 +11,4 @@
 * delete directory
   * sync delete directory
   * deep first algorithm
+  * wide first algorithm
