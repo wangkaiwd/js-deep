@@ -11,5 +11,8 @@ const buf = Buffer.alloc(3);
 // fd: 文件描述符，它代表了文件name.txt拥有了读取这个文件的权限，类型是一个number类型
 // https://stackoverflow.com/a/36771339/11720536
 fs.open(path.resolve(__dirname, 'name.txt'), (err, fd) => {
-  console.log('open1', fd);
+  fs.read(fd, buf, 0, 3, 0, (err, bytesRead) => {
+    console.log('bytesRead', bytesRead);
+    console.log(buf.toString());
+  });
 });
