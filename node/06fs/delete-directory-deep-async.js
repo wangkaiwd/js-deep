@@ -3,6 +3,7 @@ const path = require('path');
 
 // a a/b a/b/c
 // so difficult to think
+// 异步串行删除
 function rmdirAsync (p, cb) {
   fs.stat(p, (err, stats) => {
     if (stats.isDirectory()) {
@@ -52,6 +53,7 @@ function rmdirAsync1 (p, cb) {
 
         function done () {
           index++;
+          // 注意：这里如果有多个子节点的话，多余的删除操作不会执行
           if (index === files.length) {
             fs.rmdir(p, cb);
           }
