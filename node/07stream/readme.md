@@ -1,4 +1,6 @@
 ## Stream
+
+* buffer
 * fs.copy
 
 * fs.open
@@ -6,3 +8,5 @@
 * fs.write
 * fs.close
 
+实现`fs.copy`:  
+* 为什么读取的时候，每次都会多一个空行？
