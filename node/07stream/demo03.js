@@ -15,4 +15,26 @@ const rs = fs.createReadStream('./name.txt', {
   highWaterMark: 3, // 表示每次读几个
 });
 
+rs.on('open', (fd) => {
+  console.log('文件打开了', fd);
+});
+let str = '';
+// 数据拼接要使用buffer
+const arr = [];
+// 默认可读流是暂停模式的，
+// 当监听data事件后会自动变成流动模式
+rs.on('data', (data) => {
+  console.log('data', data);
+  str += data; // 当是文字的时候会读取出错
+  arr.push(data);
+});
 
+rs.on('end', () => {
+  console.log('end', str);
+  console.log('end1', Buffer.concat(arr).toString());
+});
+
+// 文件读取完毕才会触发
+rs.on('close', (fd) => {
+  console.log('文件关闭了');
+});
