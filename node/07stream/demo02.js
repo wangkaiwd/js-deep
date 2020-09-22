@@ -7,15 +7,17 @@ let position = 0;
 fs.open('./name.txt', (err, rfd) => {
   fs.open('./name1.txt', 'w', (err, wfd) => {
     function readAndWrite () {
-      fs.read(rfd, buffer, 0, size, position, (err, bytesRead, buffer) => {
+      // buffer: 123 position: 0
+      // buffer:     position: 3
+      fs.read(rfd, buffer, 0, size, position, (err, bytesRead) => {
         console.log('position', position, buffer.toString(), bytesRead);
         if (!bytesRead) {
           fs.close(rfd, () => {});
           fs.close(wfd, () => {});
           return;
         }
-        fs.write(wfd, buffer, 0, size, position, (err, bytesWritten) => {
-          position += bytesRead;
+        position += bytesRead;
+        fs.write(wfd, buffer, 0, bytesRead, (err, bytesWritten) => {
           readAndWrite();
         });
       });
