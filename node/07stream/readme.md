@@ -30,3 +30,7 @@
 * `buffer.slice`截取已经写入到`buffer`中的内容
 
 使用可写流：
+* ws.write: 异步操作，会在内部进行排对，一次调用(画图)
+* ws.end
+* event: drain
+* highWaterMark + return value of ws.write(), 实现逐个写入
