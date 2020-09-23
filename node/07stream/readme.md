@@ -20,3 +20,6 @@
   * end: 数组拼接要使用`Buffer.concat`方法，不能使用字符串累加，有乱码问题
   * error
   * close
+
+实现可读流：
+* 核心：newListener事件 + once监听事件

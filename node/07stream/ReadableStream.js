@@ -40,7 +40,12 @@ class ReadableStream extends EventEmitter {
       return this.once('open', this.read);
     }
     const buffer = Buffer.alloc(this.highWaterMark);
-    fs.read(this.fd, buffer, 0, this.highWaterMark, this.pos, (err, bytesRead) => {
+    const readLength = this.end
+      ?
+      Math.min(this.end - this.pos + 1, this.highWaterMark)
+      :
+      this.highWaterMark;
+    fs.read(this.fd, buffer, 0, readLength, this.pos, (err, bytesRead) => {
       if (!bytesRead) {
         this.emit('end');
         return this.close();
