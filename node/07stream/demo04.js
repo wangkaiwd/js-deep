@@ -31,3 +31,9 @@ const flag3 = ws.write('3', () => {
 // 每次write写入都会占用内存，而highWaterMark是对于当前所有write方法写入字节的总和预估量
 console.log('flag3', flag3);
 
+// write + close
+ws.end('hello');
+// end 事件 触发才会调用close事件
+// ws.on('close', () => {
+//   console.log('close');
+// });
