@@ -29,7 +29,11 @@ rs.on('data', (data) => {
   console.log('data', data, data.toString());
   str += data; // 当是文字的时候会读取出错
   arr.push(data);
+  rs.pause();
 });
+setTimeout(() => {
+  rs.resume();
+}, 2000);
 
 rs.on('end', () => {
   console.log('end', str);

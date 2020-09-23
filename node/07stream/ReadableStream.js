@@ -15,10 +15,12 @@ class ReadableStream extends EventEmitter {
     this.end = options.end;
     this.highWaterMark = options.highWaterMark || 64 * 1024;
     this.pos = 0;
+    this.flowing = false;
     this.open();
     this.on('newListener', (type) => {
       // 监听'data'事件流是暂停模式的，监听data事件后会自动变成流动模式
       if (type === 'data') {
+        this.flowing = true;
         this.read();
       }
     });
@@ -51,8 +53,11 @@ class ReadableStream extends EventEmitter {
         return this.close();
       }
       this.pos += bytesRead;
-      this.emit('data', buffer);
-      this.read();
+      // 需要截取出写入的内存，最后写入的内容可能会小于buffer分配的内存
+      this.emit('data', buffer.slice(0, bytesRead));
+      if (this.flowing) {
+        this.read();
+      }
     });
   }
 
@@ -60,6 +65,15 @@ class ReadableStream extends EventEmitter {
     fs.close(this.fd, () => {
       this.emit('close');
     });
+  }
+
+  pause () {
+    this.flowing = false;
+  }
+
+  resume () {
+    this.flowing = true;
+    this.read();
   }
 }
 

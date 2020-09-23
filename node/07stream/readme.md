@@ -20,6 +20,13 @@
   * end: 数组拼接要使用`Buffer.concat`方法，不能使用字符串累加，有乱码问题
   * error
   * close
+* pause(): 暂停流
+* resume(): 恢复流动
+* 自己实现的流为什么在`pause`后没有触发`close`事件？
 
 实现可读流：
 * 核心：newListener事件 + once监听事件
+* end 与 position 的计算
+* `buffer.slice`截取已经写入到`buffer`中的内容
+
+使用可写流：
