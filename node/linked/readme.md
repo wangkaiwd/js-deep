@@ -12,3 +12,9 @@
   * 双向列表
   * 双向循环列表
   * 环形链表
+
+
+
+### 实现单向链表
+* [diagram](https://excalidraw.com/#json=6144232465104896,9xeg4w8ILZ4uXyyw3naIdw)
+* **新增节点**

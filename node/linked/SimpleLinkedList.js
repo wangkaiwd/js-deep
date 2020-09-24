@@ -29,22 +29,26 @@ class LinkedList {
       this.head = new Node(element, head);
     } else {
       const prevNode = this.get(index - 1);
-      const next = prevNode.next;
-      prevNode.next = new Node(element, next);
+      prevNode.next = new Node(element, prevNode.next);
     }
     // 每次插入一个，链表的长度加1
     this.size++;
   }
 
   get (index) {
-    if (index < 0 || index >= this.size) {
+    if (index < 0 || index > this.size) {
       throw new Error('exceed corner case!');
     }
-    const list = [this.head];
-    for (let i = 0; i < this.size; i++) {
-      list.push(list[i].next);
+    let current = this.head;
+    for (let i = 0; i < index; i++) {
+      current = current.next;
     }
-    return list[index];
+    return current;
+  }
+
+  set (index, element) {
+    const node = this.get(index);
+    node.element = element;
   }
 
   remove (index) {
@@ -68,5 +72,5 @@ ll.add(0);
 ll.add(1);
 ll.add(2);
 ll.remove(0);
-ll.clear();
+ll.set(1, 1000);
 console.log(ll);
