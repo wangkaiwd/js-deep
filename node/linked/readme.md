@@ -18,3 +18,12 @@
 ### 实现单向链表
 * [diagram](https://excalidraw.com/#json=6144232465104896,9xeg4w8ILZ4uXyyw3naIdw)
 * **新增节点**
+* 链表反转
+* 单向循环链表
+  * add
+  * remove
+* 双向链表
+  * 比单向链表更好
+  * 常用
+  * 添加 + 删除
+* 实现双向循环链表
