@@ -35,3 +35,13 @@
 * ws.on('close')
 * event: drain
 * highWaterMark + return value of ws.write(), 实现逐个写入
+
+
+通过流读取数据：
+* 源码断点调试阅读(`fs.createReadableStream()`)
+* 父类如何触发子类的方法？`this`指向问题
+
+自定义流：  
+* 双工流
+* 转换流(Transform)
+* **pipe**(拷贝，异步，看不到读取的过程)
