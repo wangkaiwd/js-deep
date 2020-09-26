@@ -19,6 +19,10 @@
 * [diagram](https://excalidraw.com/#json=6144232465104896,9xeg4w8ILZ4uXyyw3naIdw)
 * **新增节点**
 * [链表反转](https://excalidraw.com/#json=5705992725594112,nIVa8JuumIUyhI16MoLkVQ)
+  * 为什么不循环来直接进行修改？
+  * 遍历
+  * 递归函数
+  * while循环
 * 单向循环链表
   * add
   * remove

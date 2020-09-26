@@ -65,23 +65,42 @@ class LinkedList {
     this.size = 0;
   }
 
-  // 链表翻转
-  reverse () {
-    // 如何找到前一个节点？
-    const head = this.get(this.size - 1); // 将head更改之后，遍历会发生问题
-    for (let i = this.size - 1; i >= 0; i--) {
+  loop () {
+    // // 如何找到前一个节点？
+    // const head = this.get(this.size - 1); // 将head更改之后，遍历会发生问题
+    // for (let i = this.size - 1; i >= 0; i--) {
+    //   let prev = undefined;
+    //   const current = this.get(i);
+    //   if (i - 1 >= 0) {
+    //     prev = this.get(i - 1);
+    //   }
+    //   if (prev) {
+    //     current.next = prev;
+    //   } else {
+    //     current.next = null;
+    //   }
+    // }
+    // this.head = head;
+    let newHead = null;
+    for (let i = 0; i < this.size; i++) {
       let prev = undefined;
       const current = this.get(i);
       if (i - 1 >= 0) {
         prev = this.get(i - 1);
       }
+      newHead = JSON.parse(JSON.stringify(current));
       if (prev) {
-        current.next = prev;
+        newHead.next = prev;
       } else {
-        current.next = null;
+        newHead.next = null;
       }
     }
-    this.head = head;
+    this.head = newHead;
+  }
+
+  // 链表翻转
+  reverse () {
+    this.loop();
   }
 }
 
