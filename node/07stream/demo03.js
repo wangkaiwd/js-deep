@@ -5,8 +5,8 @@
 // 文件流：特有，打开和关闭方法
 const fs = require('fs');
 const ReadableStream = require('./ReadableStream');
-// const rs = fs.createReadStream('./name.txt', {
-const rs = new ReadableStream('./name.txt', {
+const rs = fs.createReadStream('./name.txt', {
+// const rs = new ReadableStream('./name.txt', {
   flags: 'r', // 文件系统标识
   encoding: null, // 编码， 默认是buffer
   fd: null, // 文件描述符，表示打开的文件
