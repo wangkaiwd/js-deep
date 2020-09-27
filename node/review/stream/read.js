@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const absPath = (...dir) => path.resolve(__dirname, ...dir);
 const ReadableStream = require('./readableStream');
-// const rs = fs.createReadStream(absPath('name.txt'), {
-const rs = new ReadableStream(absPath('name.txt'), {
+const rs = fs.createReadStream(absPath('name.txt'), {
+// const rs = new ReadableStream(absPath('name.txt'), {
   flags: 'r', // 文件系统标识符
   encoding: null, // 默认为buffer
   mode: 0o666, // 设置文件权限和粘滞位(permission and sticky bits)的模式, 但是只会在文件在被创建之后
@@ -24,11 +24,15 @@ const arr = [];
 rs.on('data', (data) => {
   // push return new length of the array
   console.log('data', arr, arr.push(data));
+  rs.pause();
+  setTimeout(() => {
+    rs.resume();
+  }, 2000);
 });
-
 rs.on('end', () => {
   console.log('end', Buffer.concat(arr).toString());
 });
+
 rs.on('error', (err) => {
   console.log('err', err);
 });
