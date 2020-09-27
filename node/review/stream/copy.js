@@ -17,6 +17,56 @@ const path = require('path');
 
 // fs.open method is used to allocate a new file descriptor. Once allocated, the file descriptor may be used to read data from, write data to , or request information about the file
 const absPath = (...dir) => path.resolve(__dirname, ...dir);
-fs.open(absPath('name.txt'), 'r', 0O666, (err, fd) => {
+// const size = 3;
+// const buffer = Buffer.alloc(size);
+// fs.open(absPath('name.txt'), 'r', 0o666, (err, fd) => {
+//   console.log('fd', fd);
+//   // fd: file descriptor
+//   // buffer: data will be written to
+//   // offset: the offset in the buffer to start writing at
+//   // length: is an integer specifying the number of bytes to read
+//   // position: is an argument specifying where to begin reading from in the file.
+//   // 将打开的文件的内容写入到buffer中
+//   fs.read(fd, buffer, 0, size, 0, (err, bytesRead) => {
+//     console.log('bytesRead', bytesRead);
+//     console.log('buffer', buffer.toString());
+//   });
+// });
 
-});
+// write data to file, must specify flags to 'w'
+// const buffer = Buffer.from('123');
+// fs.open(absPath('name1.txt'), 'w', 0o666, (err, fd) => {
+//   // 将buffer中的数组写入文件
+//   fs.write(fd, buffer, 0, 3, 0, (err, written) => {
+//     console.log('written', written);
+//   });
+// });
+
+function copy () {
+  const size = 3;
+  const buffer = Buffer.alloc(size);
+  let pos = 0;
+  fs.open(absPath('name.txt'), 'r', 0o666, (err, rfd) => {
+    fs.open('name1.txt', 'w', 0o666, (err, wfd) => {
+      function next () {
+        fs.read(rfd, buffer, 0, size, pos, (err, bytesRead) => {
+          if (!bytesRead) {
+            // 关闭
+            fs.close(rfd, () => {});
+            fs.close(wfd, () => {});
+            return;
+          }
+          // 当读到最后的时候，可能剩余的不满足指定的个数，这时候需要根据实际读取的内容来进行调整
+          pos += bytesRead;
+          fs.write(wfd, buffer, 0, bytesRead, (err, written) => {
+            next();
+          });
+        });
+      }
+
+      next();
+    });
+  });
+}
+
+copy();
