@@ -36,6 +36,13 @@
 * event: drain
 * highWaterMark + return value of ws.write(), 实现逐个写入
 
+实现可写流：  
+> 为什么要用链表，直接用数组感觉操作会更简单 
+
+* 核心：将异步任务放到队列中，等到前一个完成，才会去进行下一个
+* 当写入内容的数量超过`highWaterMark`的时候，`write`会返回值为`false`，否则为`true`
+* 当队列中的内容清空后，会调用`drain`事件
+* 可读流的`drain`事件触发时机？(自己实现的好像是错的)
 
 通过流读取数据：
 * 源码断点调试阅读(`fs.createReadableStream()`)
