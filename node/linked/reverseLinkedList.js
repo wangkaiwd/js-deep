@@ -65,6 +65,7 @@ class LinkedList {
     this.size = 0;
   }
 
+  // 根据索引进行翻转会有什么问题吗？
   loop () {
     // // 如何找到前一个节点？
     // const head = this.get(this.size - 1); // 将head更改之后，遍历会发生问题
@@ -100,7 +101,37 @@ class LinkedList {
 
   // 链表翻转
   reverse () {
-    this.loop();
+    if (this.head == null || this.head.next == null) {
+      return this.head;
+    }
+    let newHead = null;
+    while (this.head) {
+      const temp = this.head.next; // 在重新赋值之前先进行缓存2
+      this.head.next = newHead;
+      newHead = this.head;
+      this.head = temp;
+    }
+    this.head = newHead;
+    return newHead;
+  }
+
+  // 递归实现
+  recursive () {
+    let head = this.head;
+
+    function iterate (head) {
+      if (head == null || head.next == null) {
+        return head;
+      }
+      const newHead = iterate(head.next);
+      head.next.next = head;
+      head.next = null;
+      return newHead;
+    }
+
+    const newHead = iterate(head);
+    this.head = newHead;
+    return newHead;
   }
 }
 
