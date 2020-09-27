@@ -25,7 +25,18 @@ flag = ws.write('2', () => {
   console.log(2);
 });
 console.log(flag);
+
 flag = ws.write('3', () => {
   console.log(3);
 });
 console.log(flag);
+
+flag = ws.write('4', () => {
+  console.log(4);
+});
+
+console.log(flag);
+
+ws.on('drain', () => {
+  console.log('drain');
+});

@@ -5,14 +5,15 @@ const LinkedList = require('../linked/SimpleLinkedList');
 
 class Queue {
   constructor () {
+    this.linkedList = new LinkedList();
   }
 
-  enQueue () {
-
+  enQueue (node) {
+    this.linkedList.add(node);
   }
 
   deQueue () {
-
+    return this.linkedList.remove(0);
   }
 }
 
@@ -33,8 +34,9 @@ class WriteableStream extends EventEmitter {
     this.start = options.start || 0;
     this.highWaterMark = options.highWaterMark || 16 * 1024;
 
-    this.caches = new LinkedList();
+    this.caches = new Queue();
     this.writing = false;
+    this.needDrain = false;
     // 总共写入的Buffer的length，如果超过
     this.len = 0;
   }
@@ -49,26 +51,42 @@ class WriteableStream extends EventEmitter {
     });
   }
 
+  clearBuffer () {
+    const node = this.caches.deQueue();
+    if (node) { // 取出队列中第一个元素，继续进行写入
+      const { chunk, encoding, cb } = node.element;
+      // 一个接一个写入
+      this._write(chunk, encoding, cb);
+    } else { // 缓存清空了
+      this.writing = false;
+      if (this.needDrain) {
+        // 触发drain事件
+        this.needDrain = false;
+        this.emit('drain');
+      }
+    }
+  }
+
   write (chunk, encoding, cb) {
     if (typeof encoding === 'function') {
       cb = encoding;
       encoding = 'utf8';
     }
-    console.log('chunk', chunk);
     chunk = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
     this.len += chunk.length;
     if (this.writing) { // 正在写入需要存到队列中
-      this.caches.add({
+      this.caches.enQueue({
         chunk,
         encoding,
         cb
       });
-      console.log('caches', this.caches);
     } else {
       this.writing = true;
       this._write(chunk, encoding, cb);
     }
-    return this.len < this.highWaterMark;
+    const flag = this.len < this.highWaterMark;
+    this.needDrain = !flag;
+    return flag;
   }
 
   _write (chunk, encoding, cb) {
@@ -80,6 +98,7 @@ class WriteableStream extends EventEmitter {
       this.writing = false;
       // 写完之后将对应的写入长度减去
       this.len -= written;
+      this.clearBuffer();
     });
   }
 }

@@ -51,6 +51,9 @@ class LinkedList {
   }
 
   remove (index) {
+    if (this.size === 0) {
+      return undefined;
+    }
     let deleteNode = undefined;
     if (index === 0) {
       deleteNode = this.head;
