@@ -18,7 +18,6 @@ class LinkedList {
       element = index;
       index = this.size;
     }
-    console.log('index', index);
     if (index < 0 || index > this.size) {
       throw new Error('exceed corner case!');
     }
@@ -52,13 +51,17 @@ class LinkedList {
   }
 
   remove (index) {
+    let deleteNode = undefined;
     if (index === 0) {
+      deleteNode = this.head;
       this.head = this.head.next;
     } else {
       const prevNode = this.get(index - 1);
+      deleteNode = prevNode.next;
       prevNode.next = prevNode.next.next;
     }
     this.size--;
+    return deleteNode;
   }
 
   clear () {
@@ -73,4 +76,4 @@ ll.add(1);
 ll.add(2);
 ll.remove(0);
 ll.set(1, 1000);
-console.log(ll);
+module.exports = LinkedList;

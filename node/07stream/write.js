@@ -16,14 +16,16 @@ ws.on('open', (fd) => {
 });
 // For streams not operating in object mode, chunk must be a string, Buffer or Unit8Array.
 // For object mode streams, chunk may any JavaScript value other than null
-ws.write('1', () => {
+// chunk 可能会传入汉字，需要统一使用Buffer来进行处理
+let flag = ws.write('1', () => {
   console.log(1);
 });
-
-ws.write('2', () => {
+console.log(flag);
+flag = ws.write('2', () => {
   console.log(2);
 });
-
-ws.write('3', () => {
+console.log(flag);
+flag = ws.write('3', () => {
   console.log(3);
 });
+console.log(flag);
