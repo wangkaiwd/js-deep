@@ -55,3 +55,8 @@
 * 双工流
 * 转换流(Transform)
 * **pipe**(拷贝，异步，看不到读取的过程)
+
+implement a readable stream
+* extends Readable
+* _read
+* _push
