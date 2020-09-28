@@ -1,5 +1,5 @@
-const { Readable } = require('stream');
-
+const { Readable, Writable } = require('stream');
+const path = require('path');
 // class MyReadable extends Readable {
 //   _read (size) {
 //     // 需要读取的数据
@@ -16,3 +16,22 @@ const { Readable } = require('stream');
 // my.on('end', () => {
 //   console.log('end');
 // });
+
+class MyWritable extends Writable {
+  // class extends another class and has no constructor: https://javascript.info/class-inheritance#overriding-constructor
+  _write (chunk, encoding, cb) {
+    console.log(chunk.toString());
+    cb();
+  }
+}
+
+const myWs = new MyWritable();
+myWs.write('123', () => {
+  console.log('ok');
+});
+myWs.write('456', () => {
+  console.log('ok');
+});
+myWs.write('789', () => {
+  console.log('ok');
+});
