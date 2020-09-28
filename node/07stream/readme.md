@@ -51,11 +51,6 @@
 * 源码断点调试阅读(`fs.createReadableStream()`)
 * 父类如何触发子类的方法？`this`指向问题
 
-自定义流：  
-* 双工流
-* 转换流(Transform)
-* **pipe**(拷贝，异步，看不到读取的过程)
-
 implement a readable stream
 * 源码流程：
   * 创建可读流后，会打开文件，内部会调用`Readable`中的`read`方法
@@ -72,3 +67,11 @@ writable steam:
   * 默认创建可写流后会打开文件，内部什么都不会做
   * 如果调用了`write`方法，内部会调用`writeStream`里的`_write`方法
   * `_write`方法中调用了`fs.write`方法
+
+自定义流：
+* readable stream
+* writable stream
+* 双工流
+* 转换流(Transform)
+* **pipe**(拷贝，异步，看不到读取的过程)
+
