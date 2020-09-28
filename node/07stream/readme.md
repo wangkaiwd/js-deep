@@ -73,5 +73,5 @@ writable steam:
 * writable stream
 * 双工流
 * 转换流(Transform)
-* **pipe**(拷贝，异步，看不到读取的过程)
+* [**pipe**(拷贝，异步，看不到读取的过程)](https://devdocs.io/node~10_lts/stream#stream_readable_pipe_destination_options)
 
