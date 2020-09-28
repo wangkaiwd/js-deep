@@ -1,4 +1,4 @@
-const { Readable, Writable } = require('stream');
+const { Readable, Writable, Duplex, Transform } = require('stream');
 const path = require('path');
 // class MyReadable extends Readable {
 //   _read (size) {
@@ -35,3 +35,20 @@ myWs.write('456', () => {
 myWs.write('789', () => {
   console.log('ok');
 });
+
+// 可读可写，内部继承了可读流和可写流
+class MyDuplex extends Duplex {
+  _read (size) {
+
+  }
+
+  _write (chunk, encoding, cb) {
+
+  }
+}
+
+// 转化流： 压缩
+class MyTransform extends Transform {
+  _transform (chunk, encoding, callback) {
+  }
+}
