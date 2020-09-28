@@ -57,6 +57,18 @@
 * **pipe**(拷贝，异步，看不到读取的过程)
 
 implement a readable stream
+* 源码流程：
+  * 创建可读流后，会打开文件，内部会调用`Readable`中的`read`方法
+  * 父类的`read`方法会调用子类的`_read`方法
+  * 由于`createReadStream`是一个文件流，需要用`fs.read`方法来读取文件内容
+  * 读取到的内容需要调用父类的`push`方法，将读取到的数据传入
+  * 最终触发`data`事件
 * extends Readable
 * _read
 * _push
+
+writable steam: 
+* 源码流程：
+  * 默认创建可写流后会打开文件，内部什么都不会做
+  * 如果调用了`write`方法，内部会调用`writeStream`里的`_write`方法
+  * `_write`方法中调用了`fs.write`方法
