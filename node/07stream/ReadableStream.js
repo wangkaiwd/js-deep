@@ -75,6 +75,21 @@ class ReadableStream extends EventEmitter {
     this.flowing = true;
     this.read();
   }
+
+  // 实现pipe
+  pipe (w) {
+    this.on('data', (data) => {
+      const flag = w.write(data);
+      if (!flag) {this.pause();}
+    });
+    // 等到可读流缓冲区内的所有数据都被写入后，触发drain事件
+    w.on('drain', () => {
+      this.resume();
+    });
+    this.on('end', () => {
+      console.log('end');
+    });
+  }
 }
 
 module.exports = ReadableStream;

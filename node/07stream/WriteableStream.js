@@ -94,7 +94,7 @@ class WriteableStream extends EventEmitter {
       return this.once('open', () => this._write(chunk, encoding, cb));
     }
     fs.write(this.fd, chunk, 0, chunk.length, (err, written) => {
-      cb();
+      cb && cb();
       this.writing = false;
       // 写完之后将对应的写入长度减去
       this.len -= written;
