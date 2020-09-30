@@ -2,6 +2,8 @@ const http = require('http');
 
 const options = {
   port: 3000,
+  method: 'POST',
+  path: '/?a=1'
 };
 
 const ws = http.request(options, (res) => {

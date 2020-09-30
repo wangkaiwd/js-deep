@@ -7,7 +7,6 @@ const server = http.createServer((req, res) => {
     arr.push(data);
   });
   req.on('end', () => {
-    console.log('end');
     console.log(Buffer.concat(arr).toString());
   });
   res.end('hello');

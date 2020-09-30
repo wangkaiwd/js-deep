@@ -13,4 +13,14 @@
   * url.parse
 * 服务端：req是可读流,res是可写流
 * 中间层: http.request,充当客户端
- 
+* 根据`header`来处理请求和响应的格式 
+
+querystring:  
+* querystring.parse(可以传入额外的参数，指定分隔符)
+
+
+静态服务:  
+* difference between path.join and path.resolve
+
+
+实现一个`http-server`库：  
