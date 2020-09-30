@@ -24,3 +24,9 @@ querystring:
 
 
 实现一个`http-server`库：  
+* try catch 可以处理try代码块中所有的错误，即如果try中有多个`await`，会捕获其中最先出现错误的那一个
+* 图片缓存
+  * expires
+  * cache-control
+    * no-cache
+    * no-store
