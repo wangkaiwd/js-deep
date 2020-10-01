@@ -25,8 +25,35 @@ querystring:
 
 实现一个`http-server`库：  
 * try catch 可以处理try代码块中所有的错误，即如果try中有多个`await`，会捕获其中最先出现错误的那一个
-* 图片缓存
-  * expires
+* 强制缓存
+  * expire
+  * 文件更新可能不是最新的
   * cache-control
     * no-cache
     * no-store
+* 协商缓存
+  * 根据更改时间来判断是否要缓存
+  * 同一个文件，服务端进行修改时间比对
+  * res.tatusCode = 304
+  * stat.ctime
+  * Last-Modify：不精准，值精确到秒
+  * If-Modify-Since
+  * etag: 不会直接取完整的文件
+    * 直接比对文件内容
+    * 摘要算法来实现计算一个唯一的hash戳
+    * 摘要算法不是加密算法，只能通过输入推断出输出
+    * 雪崩： 如果内容一旦发生变化，输出的结果是翻天覆地的变化
+  * If-None-Match
+
+crypto(包含各种算法 包含`md5，sha1，sha256`):  
+* 暴力比对来反解
+
+
+gzip:  
+* 浏览器支持(Accept-Encoding)
+* zlib
+* 文件重复性越高，压缩越多
+* 视频,图片重复性不高，不需要gzip压缩
+
+发布到`npm`：
+* `.npmignore`
