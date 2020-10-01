@@ -14,16 +14,36 @@ const port = 3000;
 //     For instance: path.resolve('/foo','/bar','baz') => '/bar/baz'
 const server = http.createServer((req, res) => {
   const { pathname } = url.parse(req.url);
-  // 这里不能使用path.resolve, 因为pathname是包含/的，path.resolve会从右向左查找绝对路径，找到就返回
-  fs.readFile(path.join(__dirname, pathname), (err, data) => {
+  const absPath = path.join(__dirname, pathname);
+  fs.stat(absPath, (err, stats) => {
     if (err) {
-      res.end('Not Found');
+      return res.end('Not Found');
+    }
+    if (stats.isFile()) {
+      fs.readFile(absPath, (err, data) => {
+        if (err) {
+          res.end('Not Found');
+        } else {
+          // 需要为特定的文件设置请求头浏览器以对应的方式解析
+          res.setHeader('Content-Type', `${mime.getType(pathname)};charset=utf8`);
+          res.end(data);
+        }
+      });
     } else {
-      // 需要为特定的文件设置请求头浏览器以对应的方式解析
-      res.setHeader('Content-Type', 'application/javascript;charset=utf8');
-      res.end(data);
+      fs.readdir(absPath, (err, dirs) => {
+        if (err) {
+          res.end('Not Found');
+        } else {
+          // 返回文件列表
+
+          res.end('dirs');
+        }
+      });
     }
   });
+  // 这里不能使用path.resolve, 因为pathname是包含/的，path.resolve会从右向左查找绝对路径，找到就返回
+  // 不用判断文件是否存在，直接调用open/read/write方法即可，文件不可访问会出错，处理错误即可
+
 });
 // listen事件底层将会发射listening事件，最后一个参数callback是listening事件的监听器
 server.listen(port, () => {
