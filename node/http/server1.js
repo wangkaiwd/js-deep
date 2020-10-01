@@ -10,9 +10,19 @@ const server = http.createServer((req, res) => {
   });
   req.on('end', () => {
     const msg = Buffer.concat(arr).toString();
-    console.log('msg', querystring.parse(msg));
+    // 只能写入字符串或者Buffer的实例
+    // 前后端通信一般通过json格式字符串
+    // message.headers: https://nodejs.org/dist/latest-v12.x/docs/api/http.html#http_message_headers
+    // key是小写的
+    // 根据不同的请求头来分别进行处理
+    if (req.headers['content-type'] === 'application/x-www-form-urlencoded') {
+      res.end(JSON.stringify(querystring.parse(msg)));
+    } else if (req.headers['content-type'] === 'application/json') {
+      const obj = JSON.parse(msg);
+      obj.age = 18;
+      res.end(JSON.stringify(obj));
+    }
   });
-  res.end('hello');
 });
 
 server.listen(port, () => {
