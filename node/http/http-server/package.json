@@ -5,5 +5,9 @@
   "license": "MIT",
   "bin": {
     "ts-static-server": "./bin/www"
+  },
+  "dependencies": {
+    "commander": "^6.1.0",
+    "mime": "^2.4.6"
   }
 }

@@ -1,3 +1,20 @@
 #!/usr/bin/env node
 
-console.log('http server');
+const { program } = require('commander');
+const pkg = require('../package.json');
+const map = {
+  '-p': {
+    description: 'set server start port',
+    example: '-p 3000'
+  }
+};
+program
+  .version(pkg.version)
+  .option('-p, --port', 'change the working directory');
+
+program
+  .command('setup [env]')
+  .description('run setup commands for all envs')
+  .option('-s, --setup_mode [mode]', 'Which setup mode to use');
+
+program.parse(process.argv);
