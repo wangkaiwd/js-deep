@@ -7,3 +7,4 @@
   * [diagram each component of url](https://devdocs.io/node~10_lts/url)
 * path
   * [path.resolve vs path.join](https://stackoverflow.com/a/39111164/11720536)
+* mime: a string sent along with a file indicating the type of file
