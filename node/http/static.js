@@ -15,13 +15,16 @@ const port = 3000;
 const server = http.createServer((req, res) => {
   const { pathname } = url.parse(req.url);
   const absPath = path.join(__dirname, pathname);
+  console.log('pathname', pathname);
   fs.stat(absPath, (err, stats) => {
     if (err) {
+      res.statusCode = 404;
       return res.end('Not Found');
     }
     if (stats.isFile()) {
       fs.readFile(absPath, (err, data) => {
         if (err) {
+          res.statusCode = 404;
           res.end('Not Found');
         } else {
           // 需要为特定的文件设置请求头浏览器以对应的方式解析
@@ -30,13 +33,13 @@ const server = http.createServer((req, res) => {
         }
       });
     } else {
-      fs.readdir(absPath, (err, dirs) => {
+      fs.readFile(path.join(absPath, 'index.html'), (err, data) => {
         if (err) {
+          res.statusCode = 404;
           res.end('Not Found');
         } else {
-          // 返回文件列表
-
-          res.end('dirs');
+          // 返回目录下的index.html
+          res.end(data);
         }
       });
     }
