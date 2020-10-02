@@ -49,7 +49,16 @@
       * no-cache: 在浏览器缓存，但是首先要通过服务器的校验
       * no-store: 不缓存
   * 协商缓存(对比缓存)
-
+    * cache-control: no-cache
+      * response header: Last-Modified
+      * request header: if-modified-since
+      
+缓存请求头和响应头： 
+* If-Modified-Since: 
+  * 只有当它在给定日期之后完成最后一次修改时，服务器将会返回请求资源，状态码为200
+  * 如果此后请求没有被修改，响应将会是没有任何主体的304
+  * 之前请求的`Last-Modified`响应头将会包含最后修改日期
+  * `If-Modified-Since`只能和`GET`或`HEAD`一起使用
 
 缓存相关文章:
 * [Prevent unnecessary network requests with the HTTP Cache](https://web.dev/http-cache/)

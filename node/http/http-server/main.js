@@ -29,24 +29,39 @@ class Server {
     fs.stat(absPath)
       .then((stat) => {
         if (stat.isFile()) {
-          return this.readFile(req, res, absPath);
+          return this.readFile(req, res, absPath, stat);
         }
         return this.readDir(req, res, absPath, pathname);
       })
       .catch(e => this.errHandle(req, res, e));
   }
 
-  readFile (req, res, absPath) {
-    // 1. 强制缓存：服务端设置，当前请求发送完毕后，如果再发送请求，可以设置在某段时间之内不会再向服务端发起请求，而是在浏览器缓存中查找
-    //    expires: 过期时间
-    //    cache-control
+  // 1. 强制缓存：服务端设置，当前请求发送完毕后，如果再发送请求，可以设置在某段时间之内不会再向服务端发起请求，而是在浏览器缓存中查找
+  //    expires: 过期时间
+  //    cache-control
+  // 2. 协商缓存：缓存期间，文件内容发生了变化
+  cache (req, res, stat) {
+    // 设置10s的缓存，为了保险起见，Expires和cache-control都会被设置
+    // 同时设置cache-control max-age与Expires时会忽略Expires
+    res.setHeader('Expires', new Date(Date.now() + 15 * 1000));
+    // res.setHeader('cache-control', 'max-age=15');
+    // 每次都会请求服务器，询问文件是否发生了变化
+    // 根据文件更改时间来判断文件是否发生更改
+    res.setHeader('cache-control', 'no-cache');
+    // Last-Modified
+    const ctime = stat.ctime; // 文件最后一次修改时间
+    res.setHeader('Last-Modified', ctime);
+  }
+
+  readFile (req, res, absPath, stat) {
     return new Promise((resolve, reject) => {
       const fileType = mime.getType(absPath);
-      // 设置10s的缓存，为了保险起见，Expires和cache-control都会被设置
-      // 同时设置cache-control max-age与Expires时会忽略Expires
-      res.setHeader('Expires', new Date(Date.now() + 10 * 1000));
-      res.setHeader('cache-control', 'max-age=10');
       res.setHeader('Content-Type', `${fileType};charset=utf-8`);
+      if (this.cache(req, res, stat)) {
+        res.statusCode = 304;
+        res.end();
+        return resolve();
+      }
       res.statusCode = 200;
       console.log(absPath);
       // 注意，这个过程是异步的,通过Promise处理成同步逻辑
