@@ -4,3 +4,22 @@
   * 在包文件夹中`npm link`将会在全局文件夹中创建一个符号链接，连接到`npm link`命令被执行位置的包
   * 它也链接任何在包中的`bins`到`prefix/bin/{name}`
 * commander
+  * Options
+    * [how to access passed option by command line?](https://github.com/tj/commander.js/#common-option-types-boolean-and-value)
+    * options 中 `--`后边的`long name`将会作为`program`的属性来方便访问
+        ```javascript
+        program
+          .option('-d, --debug', 'output extra debugging')
+          .option('-s, --small', 'small pizza size')
+          .option('-p, --pizza-type <type>', 'flavour of pizza');
+        
+        program.parse(process.argv);
+        // --debug,--small, --pizaa-type,会以驼峰命名的形式作为program的属性
+        if (program.debug) console.log(program.opts());
+        console.log('pizza details:');
+        if (program.small) console.log('- small pizza size');
+        if (program.pizzaType) console.log(`- ${program.pizzaType}`);
+        ```
+  * custom help
+  * version
+  * name

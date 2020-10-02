@@ -2,12 +2,14 @@
 
 const { program } = require('commander');
 const pkg = require('../package.json');
+
+// --port和--directory可以作为program的属性来访问
 const config = {
-  '-p': {
+  '-p, --port <port>': {
     description: 'set server start port',
     example: 'ts-static-server -p 3000'
   },
-  '-d': {
+  '-d, --directory <dir>': {
     description: 'set server start directory',
     example: 'ts-static-server -d d:'
   }
