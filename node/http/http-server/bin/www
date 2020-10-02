@@ -2,6 +2,7 @@
 
 const { program } = require('commander');
 const pkg = require('../package.json');
+const Server = require('../main');
 
 // --port和--directory可以作为program的属性来访问
 const config = {
@@ -36,3 +37,6 @@ program.on('--help', () => {
   });
 });
 program.parse(process.argv);
+
+// 启动服务
+new Server(program).start();
