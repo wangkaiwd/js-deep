@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "commander": "^6.1.0",
+    "ejs": "^3.1.5",
     "mime": "^2.4.6"
   }
 }
