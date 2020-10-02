@@ -37,11 +37,17 @@ class Server {
   }
 
   readFile (req, res, absPath) {
-    console.log(absPath);
+    // 1. 强制缓存：服务端设置，当前请求发送完毕后，如果再发送请求，可以设置在某段时间之内不会再向服务端发起请求，而是在浏览器缓存中查找
+    //    expires: 过期时间
+    //    cache-control
     return new Promise((resolve, reject) => {
       const fileType = mime.getType(absPath);
+      // 设置10s的缓存，为了保险起见，Expires和cache-control都会被设置
+      res.setHeader('Expires', new Date(Date.now() + 10 * 1000));
+      res.setHeader('cache-control', 'max-age=20');
       res.setHeader('Content-Type', `${fileType};charset=utf-8`);
       res.statusCode = 200;
+      console.log(absPath);
       // 注意，这个过程是异步的,通过Promise处理成同步逻辑
       createReadStream(absPath).pipe(res).on('finish', resolve);
     });

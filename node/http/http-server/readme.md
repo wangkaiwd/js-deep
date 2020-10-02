@@ -40,3 +40,10 @@
   * renderFile(filename,data,options,cb)
   * data是一个对象，在`html`中可以直接使用`data`中的属性
   * options是可选的
+* 缓存
+  * 强制缓存
+    * expires: 包含date/time
+    * cache-control
+      * max-age(second)
+      * no-cache: 在浏览器缓存，但是首先要通过服务器的校验
+      * no-store: 不缓存
