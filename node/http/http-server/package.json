@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "bin": {
-    "ts-static-server": "./bin/www"
+    "ts-static-server": "./bin/www",
+    "t-s": "./bin/www"
   },
   "dependencies": {
     "commander": "^6.1.0",

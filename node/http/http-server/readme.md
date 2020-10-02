@@ -23,3 +23,14 @@
   * custom help
   * version
   * name
+* 可以在`bin`中配置多个启动命令：
+    ```text
+    {
+      // ...
+      "bin": {
+        "ts-static-server": "./bin/www",
+        // 配置别名
+        "t-s": "./bin/www"
+      }
+    }
+    ```

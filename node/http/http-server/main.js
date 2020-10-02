@@ -20,7 +20,7 @@ class Server {
   start () {
     // 回调在调用时,this指向不确定
     const server = http.createServer(this.handleRequest.bind(this));
-    server.on(this.config.port, () => {
+    server.listen(this.config.port, () => {
       console.log(`server is listening on ${this.config.port}`);
     });
   }
