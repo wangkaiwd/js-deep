@@ -8,13 +8,13 @@ const map = {
     example: '-p 3000'
   }
 };
-program
-  .version(pkg.version)
-  .option('-p, --port', 'change the working directory');
+program.version(pkg.version);
+Object.keys(map).forEach(key => {
+  const { description } = map[key];
+  program.option(key, description);
+});
 
 program
-  .command('setup [env]')
-  .description('run setup commands for all envs')
-  .option('-s, --setup_mode [mode]', 'Which setup mode to use');
+  .command('ts-static-server', 'start server in current directory');
 
 program.parse(process.argv);
