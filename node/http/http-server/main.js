@@ -2,7 +2,10 @@ const http = require('http');
 const mime = require('mime');
 const path = require('path');
 const url = require('url');
+const { promisify } = require('util');
 const fs = require('fs').promises;
+const ejs = require('ejs');
+const renderFile = promisify(ejs.renderFile);
 const { createReadStream } = require('fs');
 const merge = function (config) {
   // process.cwd: 当前工作目录
@@ -28,6 +31,7 @@ class Server {
         if (stat.isFile()) {
           return this.readFile(req, res, absPath);
         }
+        return this.readDir(req, res, absPath, pathname);
       })
       .catch(e => this.errHandle(req, res, e));
   }
@@ -35,15 +39,24 @@ class Server {
   readFile (req, res, absPath) {
     return new Promise((resolve, reject) => {
       const fileType = mime.getType(absPath);
-      res.setHeader('Content-Type', `${fileType};charset=urf8`);
+      res.setHeader('Content-Type', `${fileType};charset=utf-8`);
       res.statusCode = 200;
       // 注意，这个过程是异步的,通过Promise处理成同步逻辑
       createReadStream(absPath).pipe(res).on('finish', resolve);
     });
   }
 
+  readDir (req, res, absPath, pathname) {
+    return fs.readdir(absPath).then((dirs) => {
+      dirs = dirs.map(dir => ({ name: dir, href: path.join(pathname, dir) }));
+      return renderFile(path.join(__dirname, 'template.ejs'), { dirs });
+    }).then((str) => {
+      res.statusCode = 200;
+      res.end(str);
+    });
+  }
+
   errHandle (req, res, r) {
-    console.log(r);
     res.statusCode = 404;
     res.end('Not Found!');
   }
