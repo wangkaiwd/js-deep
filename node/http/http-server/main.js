@@ -43,8 +43,9 @@ class Server {
     return new Promise((resolve, reject) => {
       const fileType = mime.getType(absPath);
       // 设置10s的缓存，为了保险起见，Expires和cache-control都会被设置
+      // 同时设置cache-control max-age与Expires时会忽略Expires
       res.setHeader('Expires', new Date(Date.now() + 10 * 1000));
-      res.setHeader('cache-control', 'max-age=20');
+      res.setHeader('cache-control', 'max-age=10');
       res.setHeader('Content-Type', `${fileType};charset=utf-8`);
       res.statusCode = 200;
       console.log(absPath);

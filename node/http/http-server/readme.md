@@ -41,9 +41,15 @@
   * data是一个对象，在`html`中可以直接使用`data`中的属性
   * options是可选的
 * 缓存
+  * `index.html`无法强制缓存，首页用到的资源可以强制缓存
   * 强制缓存
     * expires: 包含date/time
     * cache-control
       * max-age(second)
       * no-cache: 在浏览器缓存，但是首先要通过服务器的校验
       * no-store: 不缓存
+  * 协商缓存(对比缓存)
+
+
+缓存相关文章:
+* [Prevent unnecessary network requests with the HTTP Cache](https://web.dev/http-cache/)
