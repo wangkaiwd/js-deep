@@ -2,19 +2,35 @@
 
 const { program } = require('commander');
 const pkg = require('../package.json');
-const map = {
+const config = {
   '-p': {
     description: 'set server start port',
-    example: '-p 3000'
+    example: 'ts-static-server -p 3000'
+  },
+  '-d': {
+    description: 'set server start directory',
+    example: 'ts-static-server -d d:'
   }
 };
-program.version(pkg.version);
-Object.keys(map).forEach(key => {
-  const { description } = map[key];
-  program.option(key, description);
+const entry = (obj, cb) => {
+  Object.entries(obj).forEach(([key, val]) => {
+    cb(key, val);
+  });
+};
+
+// version and name
+program.version(pkg.version).name('ts-static-server');
+
+// options
+entry(config, (key, val) => {
+  program.option(key, val.description);
 });
 
-program
-  .command('ts-static-server', 'start server in current directory');
-
+// custom help
+program.on('--help', () => {
+  console.log('\nExample: ');
+  entry(config, (key, val) => {
+    console.log('  ' + val.example);
+  });
+});
 program.parse(process.argv);
