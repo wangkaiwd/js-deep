@@ -49,14 +49,22 @@ class Server {
     // 根据文件更改时间来判断文件是否发生更改
     res.setHeader('cache-control', 'no-cache');
     // Last-Modified
-    const ctime = stat.ctime; // 文件最后一次修改时间
+    // 要注意这里的事件要统一格式
+    const ctime = stat.ctime.toString(); // 文件最后一次修改时间
+    // 上一次的修改时间
+    // headers中 key是为小写
+    const ifModifiedSince = req.headers['if-modified-since'];
     res.setHeader('Last-Modified', ctime);
+    // 最后一次时间相同，说明使用缓存，否则要重新请求资源
+    console.log('time', ctime, ifModifiedSince);
+    return ctime === ifModifiedSince;
   }
 
   readFile (req, res, absPath, stat) {
     return new Promise((resolve, reject) => {
       const fileType = mime.getType(absPath);
       res.setHeader('Content-Type', `${fileType};charset=utf-8`);
+      console.log('absPath', absPath);
       if (this.cache(req, res, stat)) {
         res.statusCode = 304;
         res.end();
@@ -65,7 +73,9 @@ class Server {
       res.statusCode = 200;
       console.log(absPath);
       // 注意，这个过程是异步的,通过Promise处理成同步逻辑
-      createReadStream(absPath).pipe(res).on('finish', resolve);
+      createReadStream(absPath).pipe(res)
+        .on('finish', resolve)
+        .on('error', (e) => reject(e));
     });
   }
 
@@ -80,7 +90,8 @@ class Server {
     });
   }
 
-  errHandle (req, res, r) {
+  errHandle (req, res, e) {
+    console.log('err', e);
     res.statusCode = 404;
     res.end('Not Found!');
   }
