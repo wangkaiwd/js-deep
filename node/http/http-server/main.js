@@ -37,6 +37,7 @@ class Server {
   }
 
   readFile (req, res, absPath) {
+    console.log(absPath);
     return new Promise((resolve, reject) => {
       const fileType = mime.getType(absPath);
       res.setHeader('Content-Type', `${fileType};charset=utf-8`);
@@ -52,6 +53,7 @@ class Server {
       return renderFile(path.join(__dirname, 'template.ejs'), { dirs });
     }).then((str) => {
       res.statusCode = 200;
+      res.setHeader('Content-Type', 'text/html;charset=utf8');
       res.end(str);
     });
   }

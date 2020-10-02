@@ -36,3 +36,7 @@
     ```
 * 对请求路径进行解码，否则中文会乱码
 * 使用`stream`进行文件读取
+* ejs:
+  * renderFile(filename,data,options,cb)
+  * data是一个对象，在`html`中可以直接使用`data`中的属性
+  * options是可选的
