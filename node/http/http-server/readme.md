@@ -64,8 +64,9 @@
   * 如果此后请求没有被修改，响应将会是没有任何主体的304
   * 之前请求的`Last-Modified`响应头将会包含最后修改日期
   * `If-Modified-Since`只能和`GET`或`HEAD`一起使用
-* Etag: Last-Modified 并不精准
+* Etag: Last-Modified 并不精准(1s内的修改并不会察觉到)
   * 指纹，独一无二。一个资源特定版本的标识符
   * If-None-Match: 优先级高于If-Modified-Since
+  * crypto: digest algorithm
 缓存相关文章:
 * [Prevent unnecessary network requests with the HTTP Cache](https://web.dev/http-cache/)
