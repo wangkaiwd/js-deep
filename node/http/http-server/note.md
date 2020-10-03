@@ -3,6 +3,7 @@
 * [npm link](https://docs.npmjs.com/cli-commands/link.html)
   * 在包文件夹中`npm link`将会在全局文件夹中创建一个符号链接，连接到`npm link`命令被执行位置的包
   * 它也链接任何在包中的`bins`到`prefix/bin/{name}`
+  * npm unlink
 * commander
   * Options
     * [how to access passed option by command line?](https://github.com/tj/commander.js/#common-option-types-boolean-and-value)
@@ -91,6 +92,7 @@ Gzip: 文件重复性越高，压缩越多。 视频、图片重复性较小，�
 
 发布到`npm`:
 * [`files`](https://docs.npmjs.com/files/package.json#files) 或`.npmignore`忽略不需要的文件
+* 发布报错后改了一下包名，发现可以发布了？ 
 
 缓存相关文章:
 * [Prevent unnecessary network requests with the HTTP Cache](https://web.dev/http-cache/)
