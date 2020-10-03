@@ -68,5 +68,20 @@
   * 指纹，独一无二。一个资源特定版本的标识符
   * If-None-Match: 优先级高于If-Modified-Since
   * crypto: digest algorithm
+
+缓存过程：
+1. 强制缓存
+  * Expires
+  * cache-control: 'max-age=10' (单位seconds)
+  
+2. 协商缓存
+  * cache-control: 'no-cache'
+  1. 先比较 fingerprint (ETag)
+    * response header: ETag
+    * request header: If-None-Match
+  2. 比较修改时间
+    * response header: Last-Modified
+    * request header: If-Modified-Since
+
 缓存相关文章:
 * [Prevent unnecessary network requests with the HTTP Cache](https://web.dev/http-cache/)
