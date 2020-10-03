@@ -25,3 +25,20 @@ gzip:
 * 206 实现断点上传 上传可以暂停
 * 前端需要记录一个上传的位置(需要维护上传的位置)
 * client: range: bytes=0-3 (记录bytes的值并累加), server: Content-Range: bytes 4-7/2481 (当前读取范围为/总大小)
+
+### 正向代理和反向代理
+反向代理： 
+* nginx(缓存)
+* webpack proxy
+* cdn
+* 虚拟主机
+
+正向代理 可以在请求的时候增加一些属性 权限认证
+* vpn
+
+### 302
+* 301: 永久重定向
+* 302(常用)：临时重定向
+* Location: 响应头
+* User-Agent
+
