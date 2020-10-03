@@ -29,6 +29,7 @@ class Server {
     fs.stat(absPath)
       .then((stat) => {
         if (stat.isFile()) {
+          console.log('pathname', pathname);
           return this.readFile(req, res, absPath, stat);
         }
         return this.readDir(req, res, absPath, pathname);
@@ -47,7 +48,10 @@ class Server {
     // res.setHeader('cache-control', 'max-age=15');
     // 每次都会请求服务器，询问文件是否发生了变化
     // 根据文件更改时间来判断文件是否发生更改
-    res.setHeader('cache-control', 'no-cache');
+    // res.setHeader('cache-control', 'no-cache');
+    // 协商缓存和强制缓存一起设置，10s内从缓存中查找，10s后服务端进行修改时间比对
+    // 之后继续重复缓存步骤
+    res.setHeader('cache-control', 'max-age=10');
     // Last-Modified
     // 要注意这里的事件要统一格式
     const ctime = stat.ctime.toString(); // 文件最后一次修改时间
@@ -56,7 +60,6 @@ class Server {
     const ifModifiedSince = req.headers['if-modified-since'];
     res.setHeader('Last-Modified', ctime);
     // 最后一次时间相同，说明使用缓存，否则要重新请求资源
-    console.log('time', ctime, ifModifiedSince);
     return ctime === ifModifiedSince;
   }
 
@@ -64,14 +67,12 @@ class Server {
     return new Promise((resolve, reject) => {
       const fileType = mime.getType(absPath);
       res.setHeader('Content-Type', `${fileType};charset=utf-8`);
-      console.log('absPath', absPath);
       if (this.cache(req, res, stat)) {
         res.statusCode = 304;
         res.end();
         return resolve();
       }
       res.statusCode = 200;
-      console.log(absPath);
       // 注意，这个过程是异步的,通过Promise处理成同步逻辑
       createReadStream(absPath).pipe(res)
         .on('finish', resolve)

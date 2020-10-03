@@ -52,6 +52,11 @@
     * cache-control: no-cache
       * response header: Last-Modified
       * request header: if-modified-since
+  * 一起使用
+    * cache-control: max-age
+    * response header: Last-Modified
+    * request header: If-Modified-since
+    * max-age 时间内不进行文件比对
       
 缓存请求头和响应头： 
 * If-Modified-Since: 
