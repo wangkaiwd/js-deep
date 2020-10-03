@@ -1,6 +1,6 @@
 {
-  "name": "http-server",
-  "version": "0.0.1",
+  "name": "ts-static-server",
+  "version": "0.0.2",
   "main": "index.js",
   "license": "MIT",
   "bin": {
