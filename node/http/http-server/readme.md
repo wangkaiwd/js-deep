@@ -83,5 +83,11 @@
     * response header: Last-Modified
     * request header: If-Modified-Since
 
+
+Gzip: 文件重复性越高，压缩越多。 视频、图片重复性较小，不需要压缩
+* request header: Accept-Encoding
+* 浏览器会告诉服务器我支持哪些压缩操作，服务器会根据浏览器的支持情况做对应的压缩
+* response header: Content-Encoding
+
 缓存相关文章:
 * [Prevent unnecessary network requests with the HTTP Cache](https://web.dev/http-cache/)

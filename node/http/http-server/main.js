@@ -8,6 +8,8 @@ const fs = require('fs').promises;
 const ejs = require('ejs');
 const renderFile = promisify(ejs.renderFile);
 const { createReadStream } = require('fs');
+// zlib 模块提供了使用Gzip和Deflate/Inflate和Brotli实现的压缩功能
+const zlib = require('zlib');
 const merge = function (config) {
   // process.cwd: 当前工作目录
   return {
@@ -30,7 +32,6 @@ class Server {
     fs.stat(absPath)
       .then((stat) => {
         if (stat.isFile()) {
-          console.log('pathname', pathname);
           return this.readFile(req, res, absPath, stat);
         }
         return this.readDir(req, res, absPath, pathname);
@@ -62,8 +63,9 @@ class Server {
       return etag === ifNoneMatch;
     }).then((cacheable) => {
       if (cacheable) {return cacheable;}
-      const ctime = stat.ctime.toString(); // 文件最后一次修改时间
+      console.log('cache-control');
       const ifModifiedSince = req.headers['if-modified-since'];
+      const ctime = stat.ctime.toString(); // 文件最后一次修改时间
       res.setHeader('Last-Modified', ctime);
       return Promise.resolve(ctime === ifModifiedSince);
     });
@@ -90,9 +92,13 @@ class Server {
         }
         res.statusCode = 200;
         // 注意，这个过程是异步的,通过Promise处理成同步逻辑
-        createReadStream(absPath).pipe(res)
-          .on('finish', resolve)
-          .on('error', (e) => reject(e));
+        const gzip = this.gzip(req, res);
+        const readStream = createReadStream(absPath);
+        if (gzip) {
+          readStream.pipe(gzip).pipe(res);
+        } else {readStream.pipe(res);}
+        readStream.on('end', resolve);
+        readStream.on('error', reject);
       });
     });
   }
@@ -106,6 +112,21 @@ class Server {
       res.setHeader('Content-Type', 'text/html;charset=utf8');
       res.end(str);
     });
+  }
+
+  gzip (req, res) {
+    // return false;
+    // gzip是一个转换流
+    const encoding = req.headers['accept-encoding'];
+    if (encoding.includes('gzip')) {
+      // gzip对于重复性较高的内容效果较好
+      res.setHeader('Content-Encoding', 'gzip');
+      return zlib.createGzip();
+      res.setHeader('Content-Encoding', 'deflate');
+    } else if (encoding.includes('deflate')) {
+      return zlib.createDeflate();
+    }
+    return false;
   }
 
   errHandle (req, res, e) {
