@@ -28,7 +28,8 @@ Host:
 首先回去查找本机的hosts文件
 
 ### 多语言
-前端多语言：  
+前端多语言：
+* Accept-Language: 通知客户端能够理解那个语言，并且优先使用哪个语言环境变体。使用内容协商(content negotiation), 服务端会从建议的选项中选择一个，并且用`Content-Language`响应头通过客户端它的选择
 * 前端实现多语言
 * 通过路径实现
 * 通过请求来实现多语言(request header: accept language)
