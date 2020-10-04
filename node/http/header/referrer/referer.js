@@ -4,25 +4,27 @@ const url = require('url');
 const path = require('path');
 const server = http.createServer((req, res) => {
   const { pathname } = url.parse(req.url);
-  if (/\.jpg|\.png/.test(pathname)) {
+  const referrer = req.headers['referer'];
+  const errorHandle = (e) => {
+    console.log('err', e);
+    res.end('Not Found');
+  };
+  // referrer存在并且内容为图片时，会进行主机和referrer中的主机比对
+  const createReadStream = (dir) => fs.createReadStream(path.join(__dirname, dir));
+  const readStream = createReadStream(pathname);
+  readStream.on('error', errorHandle);
+  if (referrer && /\.jpg|\.png/.test(pathname)) {
     const host = req.headers['host'];
-    const referrer = req.headers['referer'];
+    // 只有在页面中引用图片才有referrer, 如果直接访问的话不会有referrer
     const referrerHost = url.parse(referrer).host;
-    console.log('req.headers', req.headers, host, referrerHost);
     if (host === referrerHost) {
-      fs.readFile(path.join(__dirname, pathname), (err, data) => {
-        res.end(data);
-      });
+      readStream.pipe(res);
     } else {
       // 不是相同域名下的来源地址访问时，返回特定的错误图片
-      fs.readFile(path.join(__dirname, '1.png'), (err, data) => {
-        res.end(data);
-      });
+      createReadStream('1.png').pipe(res);
     }
   } else {
-    fs.readFile(path.join(__dirname, pathname), (err, data) => {
-      res.end(data);
-    });
+    readStream.pipe(res);
   }
 });
 
