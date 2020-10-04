@@ -26,10 +26,7 @@ const server = http.createServer((req, res) => {
   const arr = acceptLanguage.split(',').map(item => {
     const [name, value = 'q=1'] = item.split(';');
     const [, q] = value.split('=');
-    return {
-      name,
-      q
-    };
+    return { name, q };
   }).sort((a, b) => b.q - a.q);
   // sort: 如果没有传入比较函数，元素会被转换为字符串
   // function compare(a,b) {
