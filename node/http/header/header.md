@@ -11,6 +11,13 @@ gzip:
 * client: accept-encoding 
 
 ### referer referrer
+
+正确的拼写 referrer: n.推荐人，上线；介绍人  
+
+referrer: 
+* 包含页面发起请求的地址。当跟随一个链接时，这是包含链接的页面的url。当向另一个域名发起`AJAX`请求时，这将会是你的页面的url。
+* `Referer`头允许服务器识别人们正在从哪里访问它们，并且可以使用那些数据进行分析、日志，或者优化缓存。
+
 * 安全判断
 * 防盗链(referer 和 host进行对比，如果不一致，说明资源被其它网站所引用)
 * host: usr/hosts
