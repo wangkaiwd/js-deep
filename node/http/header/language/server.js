@@ -14,7 +14,9 @@ const languages = {
     }
   },
   'zh-CN': {
-    hello: '你好，世界！'
+    message: {
+      hello: '你好，世界！'
+    }
   }
 };
 
@@ -22,10 +24,10 @@ const languages = {
 const server = http.createServer((req, res) => {
   const acceptLanguage = req.headers['accept-language'];
   const arr = acceptLanguage.split(',').map(item => {
-    const [language, value = 'q=1'] = item.split(';');
+    const [name, value = 'q=1'] = item.split(';');
     const [, q] = value.split('=');
     return {
-      language,
+      name,
       q
     };
   }).sort((a, b) => b.q - a.q);
@@ -39,7 +41,15 @@ const server = http.createServer((req, res) => {
   //    }
   //    return 0
   // }
-  console.log(arr);
+  for (let i = 0; i < arr.length; i++) {
+    const { name } = arr[i];
+    const language = languages[name];
+    if (language) {
+      res.setHeader('Content-Language', name);
+      return res.end(language.message.hello);
+    }
+  }
+  res.end('Have not support language!');
 });
 
 server.listen(3000, () => {
