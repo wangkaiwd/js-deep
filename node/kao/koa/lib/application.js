@@ -8,19 +8,9 @@ class Application {
   constructor () {
     this.callback = undefined;
     // 拷贝request/response/context, 通过原型链进行继承，实现拷贝
-    Object.assign(this, this.copyHttpInfo);
-  }
-
-  copyHttpInfo () {
-    // 通过原型链可以使用对应的方法，但是在添加新的方法时，会直接添加到自身属性
-    let requestSelf = Object.create(request);
-    const responseSelf = Object.create(response);
-    const contextSelf = Object.create(context);
-    return {
-      request: requestSelf,
-      response: responseSelf,
-      context: contextSelf
-    };
+    this.request = Object.create(request);
+    this.response = Object.create(response);
+    this.context = Object.create(context);
   }
 
   // proxy (source, target, key) {
@@ -44,7 +34,10 @@ class Application {
   //   return context;
   // }
   createContext (req, res) {
-    const { request, response, context } = this.copyHttpInfo();
+    // 请求的时候需要在次拷贝一次
+    const request = Object.create(this.request);
+    const response = Object.create(this.response);
+    const context = Object.create(this.context);
     context.request = request;
     context.req = request.req = req;
     return context;
