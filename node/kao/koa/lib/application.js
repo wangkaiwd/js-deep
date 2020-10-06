@@ -51,9 +51,11 @@ class Application {
 
   // 每次请求上下文都应该时独立的
   handleRequest (req, res) {
+    // 拿到新的ctx
     const ctx = this.createContext(req, res);
+    // 对新的ctx进行修改
     this.callback(ctx);
-    //
+    res.end(ctx.body);
   }
 
   listen (...args) {
