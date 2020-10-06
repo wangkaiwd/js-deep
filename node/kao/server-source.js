@@ -7,13 +7,14 @@ const app = new Koa();
 //     也包含了自己封装的请求和响应： request/response
 app.use((ctx) => {
   // 当前自己封装的request上有原生的req
-  console.log(ctx.request.req.path);
-  console.log(ctx.req.path); // 原生
-
-  console.log(ctx.request.path); // 自己封装
-  // 简写
-  console.log(ctx.path);
+  // console.log(ctx.request.req.path);
+  // console.log(ctx.req.path); // 原生
+  //
+  // console.log(ctx.request.path); // 自己封装
+  // // 简写
+  // console.log(ctx.path);
   // res.end('hello');
+  ctx.body = 'hello world'
 });
 
 app.listen(3000, () => {

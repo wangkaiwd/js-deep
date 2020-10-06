@@ -40,6 +40,8 @@ class Application {
     const context = Object.create(this.context);
     context.request = request;
     context.req = request.req = req;
+    context.response = response;
+    context.res = response.res = res;
     return context;
   }
 
