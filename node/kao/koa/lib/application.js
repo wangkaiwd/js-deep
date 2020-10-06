@@ -1,16 +1,19 @@
 const http = require('http');
+const EventEmitter = require('events');
 const request = require('./request');
 const response = require('./response');
 const context = require('./context');
 
 // 每个实例和每次请求之间都不会共享request,response,context
-class Application {
+class Application extends EventEmitter {
   constructor () {
+    super();
     this.callback = undefined;
     // 拷贝request/response/context, 通过原型链进行继承，实现拷贝
     this.request = Object.create(request);
     this.response = Object.create(response);
     this.context = Object.create(context);
+    this.middlewares = [];
   }
 
   // proxy (source, target, key) {
@@ -46,7 +49,29 @@ class Application {
   }
 
   use (cb) {
-    this.callback = cb;
+    this.middlewares.push(cb);
+  }
+
+  compose (ctx) {
+    let index = -1;
+    const dispatch = (i) => {
+      // index 是 3而i会变成1继续执行
+      if (i <= index) {
+        return Promise.reject(new Error('next can not called multiple time!'));
+      }
+      index = i;
+      if (i === this.middlewares.length) {return Promise.resolve();}
+      const middleware = this.middlewares[i];
+      try {
+        // Promise.resolve中的参数如果是Promise的话，会等到参数中的所有Promise处理完成后，并返回最终解决后promise的状态，可能是rejected
+        // 注意，这里middleware如果在执行过程中出错的话，Promise并不能捕获
+        // 因为执行结果会在执行后才放到Promise.resolve中
+        // 而在executor中的报错，可以捕获到，因为executor是在Promise内部执行的，如果执行出错，Promise就会在内部调用reject方法
+        // 再次调用dispatch时，还会用当前作用域中的i,所以同一个i会调用多次
+        return Promise.resolve(middleware(ctx, () => dispatch(i + 1)));
+      } catch (e) {return Promise.reject(e);}
+    };
+    return dispatch(0);
   }
 
   // 每次请求上下文都应该时独立的
@@ -54,8 +79,14 @@ class Application {
     // 拿到新的ctx
     const ctx = this.createContext(req, res);
     // 对新的ctx进行修改
-    this.callback(ctx);
-    res.end(ctx.body);
+    this.compose(ctx)
+      .then(() => {
+        res.end(ctx.body);
+      })
+      .catch((e) => {
+        console.log('error', e);
+        this.emit('error', e);
+      });
   }
 
   listen (...args) {

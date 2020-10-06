@@ -55,3 +55,5 @@ Host:
 * Location: 响应头
 * User-Agent
 
+### 文件下载
+* Content-Disposition
