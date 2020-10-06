@@ -1,4 +1,5 @@
 const http = require('http');
+const Stream = require('stream');
 const EventEmitter = require('events');
 const request = require('./request');
 const response = require('./response');
@@ -81,7 +82,22 @@ class Application extends EventEmitter {
     // 对新的ctx进行修改
     this.compose(ctx)
       .then(() => {
-        res.end(ctx.body);
+        const { body } = ctx;
+        console.log('body', body instanceof Stream);
+        if (body == null) {
+          res.statusCode = 404;
+          res.end('Not Found!');
+        } else if (typeof body === 'string' || Buffer.isBuffer(body)) {
+          res.end(body);
+        } else if (typeof body === 'number') {
+          res.end(body + '');
+        } else if (body instanceof Stream) {
+          // 这里的文件名需要动态获取
+          res.setHeader('Content-Disposition', 'attachment; filename="filename"');
+          body.pipe(res);
+        } else if (typeof body === 'object') {
+          res.end(JSON.stringify(body));
+        }
       })
       .catch((e) => {
         console.log('error', e);
