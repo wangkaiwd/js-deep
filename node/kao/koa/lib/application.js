@@ -70,6 +70,9 @@ class Application extends EventEmitter {
         // 而在executor中的报错，可以捕获到，因为executor是在Promise内部执行的，如果执行出错，Promise就会在内部调用reject方法
         // 再次调用dispatch时，还会用当前作用域中的i,所以同一个i会调用多次
         return Promise.resolve(middleware(ctx, () => dispatch(i + 1)));
+        // 注意：await next()
+        //  1. Promise.resolve会等到middleware中的返回的Promise执行完毕才会继续执行
+        //  2. Promise.resolve会等到middleware中的await后的Promise执行完毕后，继续执行
       } catch (e) {return Promise.reject(e);}
     };
     return dispatch(0);
@@ -83,10 +86,10 @@ class Application extends EventEmitter {
     this.compose(ctx)
       .then(() => {
         const { body } = ctx;
-        console.log('body', body instanceof Stream);
+        res.statusCode = 200;
         if (body == null) {
-          res.statusCode = 404;
-          res.end('Not Found!');
+          res.statusCode = 204;
+          res.end('No Content!');
         } else if (typeof body === 'string' || Buffer.isBuffer(body)) {
           res.end(body);
         } else if (typeof body === 'number') {
@@ -97,6 +100,9 @@ class Application extends EventEmitter {
           body.pipe(res);
         } else if (typeof body === 'object') {
           res.end(JSON.stringify(body));
+        } else {
+          res.statusCode = 404;
+          res.end('Not Found!');
         }
       })
       .catch((e) => {
