@@ -26,7 +26,7 @@ req/res为原生Node.js中的属性
     * with read object property
     * new Function
 * koa-router
-  * 405 allowedMethod
+* 405 allowedMethod
   * child routes
     * prefix
 ### 第三方中间键
