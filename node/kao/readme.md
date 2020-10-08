@@ -19,7 +19,12 @@ req/res为原生Node.js中的属性
   * buffer,stream
   * number
   * stream 
-
+* koa-views
+  * ejs theory
+    * string join
+    * regular expression match
+    * with read object property
+    * new Function
 ### 第三方中间键
 * bodyparser
 * koa-static
