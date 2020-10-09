@@ -1,9 +1,9 @@
 const http = require('http');
 // key,value
 // domain
-// path
-// expires/max-age
-// httpOnly
+// path: 为了发送Cookie头，path必须在请求URL中存在
+// expires/max-age： 生存时间
+// httpOnly：一个具有`HttpOnly`属性的`cookie`对于`JavaScript`的`Document.cookie`来说是无法访问的，只能被服务器发送。
 const server = http.createServer((req, res) => {
   if (req.url === '/write') {
     // Use an array of string here to send multiple headers with the same name
