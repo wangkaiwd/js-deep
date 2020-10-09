@@ -1,4 +1,7 @@
 const http = require('http');
+// cookie:
+//   请求每次都会带上cookie,最大 4k
+//   存到客户端，不安全,容易被篡改和拦截
 // key,value
 // domain: 指定那个主机允许接收cookie。默认为设置cookie的同源域名，不包括子域名
 // path: 为了发送Cookie头，path必须在请求URL中存在(以path开头的路径，默认为/，匹配所有请求路径)
