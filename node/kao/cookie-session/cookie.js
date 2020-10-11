@@ -13,6 +13,7 @@ const server = http.createServer((req, res) => {
     // 这里使用字符串数组来发送拥有相同名字的多个响应头
     // 不能使用中文？
     // 设置域名后，只有在指定域名及其子域名可以访问
+    // 一般要制定域名，防止cookie携带信息过多
     res.setHeader('Set-Cookie', [
         'name=zs; Domain=.b.cn',
         'age=10; httpOnly=true',
