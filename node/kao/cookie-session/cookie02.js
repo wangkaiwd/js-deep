@@ -13,23 +13,27 @@ const camelToKebabCase = (string) => {
 
 const http = require('http');
 const server = http.createServer((req, res) => {
-  // 封装设置cookie的方法
-  const array = [];
-  res.setCookie = function (key, value, options = {}) {
-    const settings = Object.keys(options).reduce((accumulator, current) => {
-      const val = options[current];
-      if (current === 'httpOnly') {
-        accumulator.push(`httpOnly=${val}`);
-      } else if (current === 'expires') {
-        accumulator.push(`expires=${val.toUTCString()}`);
-      } else {
-        accumulator.push(`${camelToKebabCase(current)}=${val}`);
-      }
-      return accumulator;
-    }, [`${key}=${value}`]);
-    array.push(settings.join('; '));
-    res.setHeader('Set-Cookie', array);
-  };
+  function myCookie () {
+    // 封装设置cookie的方法
+    const array = [];
+    return function (key, value, options = {}) {
+      const settings = Object.keys(options).reduce((accumulator, current) => {
+        const val = options[current];
+        if (current === 'httpOnly') {
+          accumulator.push(`httpOnly=${val}`);
+        } else if (current === 'expires') {
+          accumulator.push(`expires=${val.toUTCString()}`);
+        } else {
+          accumulator.push(`${camelToKebabCase(current)}=${val}`);
+        }
+        return accumulator;
+      }, [`${key}=${value}`]);
+      array.push(settings.join('; '));
+      res.setHeader('Set-Cookie', array);
+    };
+  }
+
+  res.setCookie = myCookie();
   res.getCookie = function (key) {
 
   };
