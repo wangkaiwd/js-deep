@@ -6,6 +6,7 @@
 //  * crypto sha256
 //  * base64 字符串在传输过程中会把 /+= 变成 ' '
 //  * cookie 都用签名
+const querystring = require('querystring');
 const camelToKebabCase = (string) => {
   // $1,$2: a number of special replacement patterns are supported
   return string.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
@@ -35,7 +36,9 @@ const server = http.createServer((req, res) => {
 
   res.setCookie = myCookie();
   res.getCookie = function (key) {
-
+    const cookie = req.headers['cookie'];
+    const obj = querystring.parse(cookie, '; ');
+    return obj[key];
   };
   if (req.url === '/write') {
     res.setCookie('name', 'zs', {
@@ -46,9 +49,9 @@ const server = http.createServer((req, res) => {
     res.setCookie('age', 18, { httpOnly: true, expires: new Date(Date.now() + 10 * 1000) });
     res.end('write ok');
   } else if (req.url === '/read') {
-    res.end(req.headers.cookie || 'empty');
+    res.end(res.getCookie('name') || 'empty');
   } else if (req.url === '/write/read') {
-    res.end(req.headers.cookie);
+    res.end(res.getCookie('age') || 'empty');
   } else {
     res.end('Not Found');
   }

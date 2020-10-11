@@ -1,5 +1,8 @@
 ## cookie session
 
+请求和响应`cookie`格式：
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/20201011223431.png)
+
 ### cookie
 一个`HTTP cookie`(web cookie, browser cookie)是一小片服务器发送到用户网络浏览器的数据。浏览器可以存储它，并且将它与之后的请求发送回同一个服务器。通常地，它被用户告诉是否俩个请求来自于同一个浏览器-比如：保持用户登录。它为无状态的`HTTP`协议记住了状态信息。
 
@@ -12,6 +15,12 @@ cookie的三个用途
 
 * 后端设置
 * 前端设置
+
+`Node.js`封装`cookie`: 
+* setCookie
+  * res.setHeader设置多个相同`name`的请求头
+* getCookie
+  * querystring 支持传入键值对之间(`&`)以及键和值之间(`=`)的分隔符
 
 
 ### JWT
