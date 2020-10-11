@@ -63,7 +63,7 @@ const server = http.createServer((req, res) => {
     return value;
   };
   if (req.url === '/cut') {
-    const keyId = res.getCookie(key);
+    const keyId = res.getCookie(key, { signed: true });
     if (keyId && session[keyId]) {
       const info = session[keyId];
       info.money = info.money - 10;
@@ -72,7 +72,7 @@ const server = http.createServer((req, res) => {
       const keyId = uuidv4();
       const money = 100;
       session[keyId] = { money };
-      res.setCookie(key, keyId);
+      res.setCookie(key, keyId, { signed: true });
       res.end(`Rest money is ${money}, first come is free!`);
     }
   }
