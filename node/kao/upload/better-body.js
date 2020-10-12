@@ -21,7 +21,6 @@ app.use(async (ctx, next) => {
 });
 
 app.use(async (ctx) => {
-  console.log('ctx', ctx.path);
   if (ctx.path === '/upload' && ctx.method === 'POST') {
     ctx.body = ctx.request.file;
   } else {
