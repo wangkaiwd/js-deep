@@ -14,7 +14,7 @@ app.use(async (ctx, next) => {
     // ctx.render不会调用next，只是提供了一个读取文件，并进行字符串替换的方法而已，而读取文件的操作是异步的
     // 如果不写await, 会提前将中间键走完，返回一个状态为resolved值为undefined的promise,然后在.then中的成功回调中处理ctx.body
     // 此时body 为赋值，会返回404 Not Found
-    ctx.render('index');
+    await ctx.render('index');
   } else {
     next();
   }
