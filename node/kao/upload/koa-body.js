@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+const { v4: uuidv4 } = require('uuid');
 // 请求传递的内容如下： multipart/form-data; boundary=something
 // // 内容头和内容尾：之间是2个换行
 
@@ -37,7 +40,8 @@ Buffer.prototype.split = function (separator) {
   arr.push(this.slice(offset));
   return arr;
 };
-const betterBody = () => {
+
+const betterBody = (options) => {
   return async (ctx, next) => {
     await new Promise((resolve, reject) => {
       const arr = [];
@@ -48,16 +52,22 @@ const betterBody = () => {
         const allData = Buffer.concat(arr);
         const boundary = '--' + ctx.get('Content-Type').split('=')[1];
         const lines = allData.split(boundary).slice(1, -1);
-        const obj = {};
+        const body = {};
+        const filePath = path.join(__dirname, options.dest, uuidv4());
         lines.forEach(line => {
           const [head, value] = line.split('\r\n\r\n');
           const headStr = head.toString();
-          const key = headStr.match(/name="(.+)"/)[1];
+          const key = headStr.match(/name="(.+?)"/)[1];
           if (!headStr.includes('filename')) {
-            obj[key] = value.toString().slice(0, -2);
+            body[key] = value.toString().slice(0, -2);
+          } else {
+            console.log('key', key);
+            const content = value.slice(0, -2);
+            fs.writeFileSync(filePath, content);
           }
         });
-        console.log('obj', obj);
+        ctx.request.body = body;
+        ctx.request.file = { filePath };
         resolve();
       });
     });

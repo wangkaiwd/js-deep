@@ -3,7 +3,7 @@ const views = require('koa-views');
 const path = require('path');
 const app = new Koa();
 const betterBody = require('./koa-body');
-app.use(betterBody());
+app.use(betterBody({ dest: './uploads' }));
 app.use(views(path.resolve(__dirname, 'views'), { map: { html: 'ejs' } }));
 app.use(async (ctx, next) => {
   if (ctx.path === '/favicon.ico') {
@@ -23,7 +23,7 @@ app.use(async (ctx, next) => {
 app.use(async (ctx) => {
   console.log('ctx', ctx.path);
   if (ctx.path === '/upload' && ctx.method === 'POST') {
-    console.log('files', ctx.request.file);
+    ctx.body = ctx.request.file;
   } else {
     ctx.body = 'Not Found!';
   }
