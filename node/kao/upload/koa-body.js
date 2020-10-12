@@ -41,6 +41,12 @@ Buffer.prototype.split = function (separator) {
   return arr;
 };
 
+// 难点：
+//  1. 解析请求传来buffer格式，涉及到buffer的一些方法，最终解析出想要的对象
+//  2. 找出文件内容，将其写入对应的目录内
+// 知识点：
+//  1. 正则匹配(String.prototype.replace,String.prototype.match)
+//  2. Buffer操作
 const betterBody = (options) => {
   return async (ctx, next) => {
     await new Promise((resolve, reject) => {
@@ -61,7 +67,6 @@ const betterBody = (options) => {
           if (!headStr.includes('filename')) {
             body[key] = value.toString().slice(0, -2);
           } else {
-            console.log('key', key);
             const content = value.slice(0, -2);
             fs.writeFileSync(filePath, content);
           }
