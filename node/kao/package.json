@@ -3,6 +3,7 @@
     "@koa/multer": "^3.0.0",
     "@koa/router": "^9.4.0",
     "ejs": "^3.1.5",
+    "jwt-simple": "^0.5.6",
     "koa": "^2.13.0",
     "koa-bodyparser": "^4.3.0",
     "koa-session": "^6.1.0",

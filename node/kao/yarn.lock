@@ -516,6 +516,11 @@ js-beautify@^1.6.12:
     mkdirp "^1.0.4"
     nopt "^5.0.0"
 
+jwt-simple@^0.5.6:
+  version "0.5.6"
+  resolved "https://registry.npm.taobao.org/jwt-simple/download/jwt-simple-0.5.6.tgz#3357adec55b26547114157be66748995b75b333a"
+  integrity sha1-M1et7FWyZUcRQVe+ZnSJlbdbMzo=
+
 keygrip@~1.1.0:
   version "1.1.0"
   resolved "https://registry.npm.taobao.org/keygrip/download/keygrip-1.1.0.tgz#871b1681d5e159c62a445b0c74b615e0917e7226"
