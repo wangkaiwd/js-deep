@@ -1,19 +1,3 @@
-# vue-router-usage02
-
-## Project setup
-```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Vue-Router
+* history: history.pushState 进行地址切换，不会刷新页面
+* hash: hashchange event 切换`hash`进行地址切换，页面不会刷新
