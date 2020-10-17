@@ -1,7 +1,7 @@
 import Vue from 'vue';
-import VueRouter from 'vue-router';
+import VueRouter from '../myRouter/index';
 import Home from '../views/Home.vue';
-import About from '../../../vue-router-usage/src/views/About';
+import About from '../views/About';
 
 Vue.use(VueRouter);
 
@@ -17,7 +17,7 @@ const routes = [
     component: About,
     children: [
       {
-        path: 'a',
+        path: 'a', // 这个路径不能加/
         name: 'A',
         component: {
           render: (h) => <div>this is an about/a</div>
