@@ -5,11 +5,13 @@ class History {
   constructor (router) {
     this.router = router;
     this.current = createRoute(null, { path: '/' });
+    this.cb = undefined;
   }
 
   transitionTo (path, callback) { // 根据path来进行匹配component
     const route = this.router.match(path); // 当前路由信息
-    console.log('route', route);
+    this.current = route;
+    this.cb && this.cb(route);
     if (typeof callback === 'function') {callback();}
   }
 
@@ -17,6 +19,10 @@ class History {
     window.addEventListener('hashchange', () => {
       this.transitionTo(getHash());
     });
+  }
+
+  listen (cb) {
+    this.cb = cb;
   }
 }
 

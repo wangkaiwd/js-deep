@@ -14,12 +14,14 @@ class VueRouter {
       history.setupListeners();
     };
     history.transitionTo(history.getCurrentLocation(), setupListener);
+    history.listen((route) => {
+      app._route = route;
+    });
   }
 
   match (path) {
     return this.matcher.match(path);
   }
-
 }
 
 VueRouter.install = install;
