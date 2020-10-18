@@ -17,6 +17,6 @@ class HashHistory extends History {
 
 export default HashHistory;
 
-function getHash () {
+export function getHash () {
   return location.hash.slice(1);
 }

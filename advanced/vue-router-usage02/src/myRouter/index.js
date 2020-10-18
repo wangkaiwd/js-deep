@@ -9,10 +9,16 @@ class VueRouter {
   }
 
   init (app) {
-    console.log(app);
-
+    const { history } = this;
+    const setupListener = () => {
+      history.setupListeners();
+    };
+    history.transitionTo(history.getCurrentLocation(), setupListener);
   }
 
+  match (path) {
+    return this.matcher.match(path);
+  }
 
 }
 

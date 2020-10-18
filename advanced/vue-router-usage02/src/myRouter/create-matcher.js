@@ -1,9 +1,23 @@
 import createRouteMap from './create-route-map';
 
+export function createRoute (route, location) {
+  let record = route ? { ...route } : null;
+  const matched = [];
+  while (record) {
+    matched.unshift(record);
+    record = record.parent;
+  }
+  return {
+    ...location,
+    matched
+  };
+}
+
 const createMatcher = (routes) => {
   const { pathList, pathMap } = createRouteMap(routes);
   // 根据路径匹配对应的路由记录
-  const match = (path) => {
+  const match = (path) => { // 如果要进行子路由的匹配，还需要收集matched
+    return createRoute(pathMap[path], { path });
   };
   // 用于动态添加路由
   const addRoutes = (routes) => {
