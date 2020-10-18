@@ -2,7 +2,6 @@ import createRouteMap from './create-route-map';
 
 const createMatcher = (routes) => {
   const { pathList, pathMap } = createRouteMap(routes);
-  console.log('info', pathList, pathMap);
   // 根据路径匹配对应的路由记录
   const match = (path) => {
   };
