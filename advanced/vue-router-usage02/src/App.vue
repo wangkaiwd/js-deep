@@ -4,9 +4,9 @@
       <router-link to="/">Home</router-link>
       |
       <router-link to="/about">About</router-link>
-      {{ this._routerRoot._route }}
+      <!--      {{ this._routerRoot._route }}-->
     </div>
-    <router-view/>
+    <router-view></router-view>
   </div>
 </template>
 <script>

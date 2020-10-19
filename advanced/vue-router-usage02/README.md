@@ -7,3 +7,6 @@
 * 扁平化用户传入的路由配置项`routes`
 * 建立`history`相关文件，实现页面切换以及组件切换
 * `crurent`为`VueRouter`的当前路径匹配路由记录，要将其设置为响应式
+* `router-view`实现思路
+  * $vnode
+  * $vnode.data

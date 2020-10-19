@@ -22,6 +22,13 @@ class VueRouter {
   match (path) {
     return this.matcher.match(path);
   }
+
+  push (path) {
+    this.history.transitionTo(path, () => {
+      location.hash = path;
+    });
+    // location.hash = path;
+  }
 }
 
 VueRouter.install = install;

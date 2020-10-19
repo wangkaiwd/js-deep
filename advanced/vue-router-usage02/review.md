@@ -14,3 +14,4 @@ core logic:
 * listen hashchange event, match current route record after hash change
 * route has a important property matched can implement nest route
   * matched property is used to match the deep of router-view component to render different level component
+* add $route and $router for Vue.prototype
