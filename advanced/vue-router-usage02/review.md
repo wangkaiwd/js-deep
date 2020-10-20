@@ -15,3 +15,13 @@ core logic:
 * route has a important property matched can implement nest route
   * matched property is used to match the deep of router-view component to render different level component
 * add $route and $router for Vue.prototype
+
+component:
+* router-view:  
+  * add routerView property for $vnode.data
+  * recursive find routerView property, if find, depth++
+  * get component by route.matched[depth]
+* router-link
+  * render function
+  * click tag of router-link will invoke router.push method
+  * router.push method will update url hash
