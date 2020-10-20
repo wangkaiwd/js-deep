@@ -6,8 +6,8 @@ class VueRouter {
   constructor (options) {
     this.matcher = createMatcher(options.routes);
     this.history = new HashHistory(this);
+    this.beforeEachs = [];
   }
-
   init (app) {
     const { history } = this;
     const setupListener = () => {
@@ -28,6 +28,10 @@ class VueRouter {
       location.hash = path;
     });
     // location.hash = path;
+  }
+
+  beforeEach (cb) {
+    this.beforeEachs.push(cb);
   }
 }
 

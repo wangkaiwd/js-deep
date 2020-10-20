@@ -17,9 +17,24 @@ class History {
     if (path === this.current.path && route.matched.length === this.current.matched.length) {
       return;
     }
+    // 兼容hashchange事件，以及进行路由切换时进行hash值更新
+    if (typeof callback === 'function') {callback();}
+    const queue = this.router.beforeEachs;
+
+    const step = (index, callback) => {
+      if (index === queue.length) {
+        return callback();
+      }
+      const hook = queue[index];
+      hook(route, this.current, () => step(index + 1, callback));
+    };
+
+    step(0, () => this.updateRoute(route));
+  }
+
+  updateRoute (route) {
     this.current = route;
     this.cb && this.cb(route);
-    if (typeof callback === 'function') {callback();}
   }
 
   setupListeners () {
