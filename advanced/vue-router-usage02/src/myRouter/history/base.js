@@ -1,6 +1,18 @@
 import { getHash } from './hash';
 import { createRoute } from '../create-matcher';
 
+function runQueue (queue, iterator, callback) {
+  function step (index) {
+    if (index === queue.length) {
+      return callback();
+    }
+    const hook = queue[index];
+    iterator(hook, () => step(index + 1));
+  }
+
+  step(0);
+}
+
 class History {
   constructor (router) {
     this.router = router;
@@ -20,16 +32,20 @@ class History {
     // 兼容hashchange事件，以及进行路由切换时进行hash值更新
     if (typeof callback === 'function') {callback();}
     const queue = this.router.beforeEachs;
-
-    const step = (index, callback) => {
-      if (index === queue.length) {
-        return callback();
-      }
-      const hook = queue[index];
-      hook(route, this.current, () => step(index + 1, callback));
+    const iterator = (hook, next) => {
+      hook(route, this.current, next);
     };
-
-    step(0, () => this.updateRoute(route));
+    runQueue(queue, iterator, () => {
+      this.updateRoute(route);
+    });
+    // const step = (index, callback) => {
+    //   if (index === queue.length) {
+    //     return callback();
+    //   }
+    //   const hook = queue[index];
+    //   hook(route, this.current, () => step(index + 1, callback));
+    // };
+    // step(0, () => this.updateRoute(route));
   }
 
   updateRoute (route) {

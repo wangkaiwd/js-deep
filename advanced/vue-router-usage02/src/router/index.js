@@ -44,7 +44,7 @@ router.beforeEach((to, from, next) => {
   // 异步
   setTimeout(() => {
     next();
-  }, 4000);
+  }, 1000);
 });
 router.beforeEach((to, from, next) => {
   console.log(2);

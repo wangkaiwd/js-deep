@@ -11,3 +11,4 @@
   * $vnode
   * $vnode.data
 * `router-link`实现
+* beforeEach hook: how to encapsulate runQueue util method to perform async callback queue?
