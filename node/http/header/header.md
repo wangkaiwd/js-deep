@@ -57,3 +57,10 @@ Host:
 
 ### 文件下载
 * Content-Disposition
+
+### cookie
+* response header: Set-Cookie
+* request header: Cookie
+
+### 文件上传
+* Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryMQEWPYgCUwmTAWQa
