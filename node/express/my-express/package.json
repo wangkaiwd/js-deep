@@ -2,7 +2,7 @@
   "name": "my-express",
   "version": "1.0.0",
   "description": "",
-  "main": "./lib/application.js",
+  "main": "./lib/express.js",
   "directories": {
     "lib": "lib"
   },
