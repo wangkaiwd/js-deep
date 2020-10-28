@@ -4,6 +4,11 @@
 * separate application with createApplication
 * separate router with application
 * relation of route and layer
+* handle request callback
+* optimize express
+  * lazy route load
+  * support all methods
+  * match methods
 
 ### 逻辑梳理
 * 创建`Application`类来存放应用，对应使用的实例`app`
@@ -17,4 +22,3 @@
 * `route.dispatch`会将`route.stack`中的`method`和`req.method`相同的`layer`继续通过递归进行执行
 * 如果不满足条件就自动执行下一个(索引加1继续调用`next`)，如果满足条件，就将`next`传给用户，用户调用后再继续执行下一个
 * 当`route.dispatch`执行完内部所有的`layer.handler`后，会执行`done`，此时会继续处理`router.stack`中的下一个`layer`
-  
