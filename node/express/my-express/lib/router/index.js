@@ -14,24 +14,24 @@ Router.prototype.route = function (path) {
   return route;
 };
 Router.prototype.get = function (path, handlers) {
-  // this.stack.push({
-  //   path,
-  //   method: 'get',
-  //   handler
-  // });
-  const route = this.route();
-  route.get(handlers)
+  const route = this.route(path);
+  route.get(handlers);
 };
 
 Router.prototype.handle = function (req, res, done) {
   const { pathname } = url.parse(req.url);
-  const reqMethod = req.method.toLowerCase();
-  for (let i = 0; i < this.stack.length; i++) {
-    const { method, path, handler } = this.stack[i];
-    if (method === reqMethod && path === pathname) {
-      return handler(req, res);
+  let index = 0;
+  const next = () => {
+    if (index === this.stack.length) {
+      return done();
     }
-  }
-  done();
+    const layer = this.stack[index++];
+    if (layer.path === pathname) {
+      layer.handler(req, res, next);
+    } else {
+      next();
+    }
+  };
+  next(0);
 };
 module.exports = Router;
