@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('./my-express');
 const app = express();
 app.get('/', (req, res) => {
   res.end('get /');
@@ -6,6 +6,10 @@ app.get('/', (req, res) => {
 
 app.post('/', (req, res) => {
   res.end('post /');
+});
+
+app.delete('/', (req, res) => {
+  res.end('delete /');
 });
 
 app.listen(3000, () => {

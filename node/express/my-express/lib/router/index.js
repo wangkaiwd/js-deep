@@ -29,8 +29,9 @@ Router.prototype.handle = function (req, res, done) {
       return done();
     }
     const layer = this.stack[index++];
-    if (layer.path === pathname) {
-      layer.handler(req, res, next);
+    // 这里layer用到了route,所以需要在创建layer时，将route和layer进行关联
+    if (layer.match(pathname) && layer.route.hasMethod(req.method)) {
+      layer.handleRequest(req, res, next);
     } else {
       next();
     }

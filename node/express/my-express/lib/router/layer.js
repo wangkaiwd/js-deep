@@ -4,4 +4,10 @@ function Layer (path, handler) {
   this.handler = handler;
 }
 
+Layer.prototype.match = function (path) {
+  return path === this.path;
+};
+Layer.prototype.handleRequest = function (req, res, done) {
+  this.handler(req, res, done);
+};
 module.exports = Layer;
