@@ -1,15 +1,26 @@
 const http = require('http');
 const Router = require('./router');
+const methods = require('methods');
 
 function Application () {
-  this._router = new Router();
+  this._router = null;
 }
 
-Application.prototype.get = function (path, ...handlers) {
-  this._router.get(path, handlers);
+// 用到路由的时候再进行加载
+Application.prototype.lazyRoute = function () {
+  if (!this._router) {
+    this._router = new Router();
+  }
 };
+methods.forEach(method => {
+  Application.prototype[method] = function (path, ...handlers) {
+    this.lazyRoute();
+    this._router[method](path, handlers);
+  };
+});
 
 Application.prototype.listen = function () {
+  this.lazyRoute();
   const server = http.createServer((req, res) => {
     function done () {
       res.end(`Can not ${req.method} ${req.url} my`);

@@ -1,6 +1,7 @@
 const url = require('url');
 const Route = require('./route');
 const Layer = require('./layer');
+const methods = require('methods');
 
 function Router () {
   this.stack = [];
@@ -13,10 +14,12 @@ Router.prototype.route = function (path) {
   this.stack.push(layer);
   return route;
 };
-Router.prototype.get = function (path, handlers) {
-  const route = this.route(path);
-  route.get(handlers);
-};
+methods.forEach(method => {
+  Router.prototype[method] = function (path, handlers) {
+    const route = this.route(path);
+    route[method](handlers);
+  };
+});
 
 Router.prototype.handle = function (req, res, done) {
   const { pathname } = url.parse(req.url);
