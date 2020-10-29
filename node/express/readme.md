@@ -9,6 +9,9 @@
   * lazy route load
   * support all methods
   * rough filter methods in route
+* middleware: have not route property
+  * usage of middleware
+  * app.use(path) vs app.get(path)
 
 ### 逻辑梳理
 * 创建`Application`类来存放应用，对应使用的实例`app`
