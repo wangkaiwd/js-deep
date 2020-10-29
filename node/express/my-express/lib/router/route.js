@@ -28,7 +28,6 @@ Route.prototype.dispatch = function (req, res, done) {
       return done();
     }
     const layer = this.stack[index++];
-    console.log('method', layer.method);
     if (layer.method === req.method.toLowerCase()) {
       layer.handleRequest(req, res, next);
     } else {

@@ -1,6 +1,7 @@
-const express = require('express');
+const express = require('./my-express');
 const app = express();
 app.use(function (req, res, next) {
+  console.log('empty');
   req.a = 1;
   next();
 });
@@ -9,11 +10,13 @@ app.use(function (req, res, next) {
 // A route will match any path that follow its path immediately with '/'
 // 默认为'/'，会匹配所有路径
 app.use('/', (req, res, next) => {
+  console.log('/');
   req.a++;
   next();
 });
 
 app.use('/a', (req, res, next) => {
+  console.log('/a');
   req.a++;
   next();
 });

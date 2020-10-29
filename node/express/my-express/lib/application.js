@@ -12,6 +12,12 @@ Application.prototype.lazyRoute = function () {
     this._router = new Router();
   }
 };
+
+Application.prototype.use = function (path, handler) {
+  this.lazyRoute()
+  this._router.use(path,handler)
+};
+
 methods.forEach(method => {
   Application.prototype[method] = function (path, ...handlers) {
     this.lazyRoute();
@@ -30,4 +36,5 @@ Application.prototype.listen = function () {
   });
   server.listen(...arguments);
 };
+
 module.exports = Application;
