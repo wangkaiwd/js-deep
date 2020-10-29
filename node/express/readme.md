@@ -8,7 +8,7 @@
 * optimize express
   * lazy route load
   * support all methods
-  * match methods
+  * rough filter methods in route
 
 ### 逻辑梳理
 * 创建`Application`类来存放应用，对应使用的实例`app`
