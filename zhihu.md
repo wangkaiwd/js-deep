@@ -19,6 +19,7 @@
 * [Vue组件通信详解](https://zhuanlan.zhihu.com/p/242774231)
 * [Vue实战：图片懒加载组件](https://zhuanlan.zhihu.com/p/265733459)
 * [Vue实战：文件上传组件](https://zhuanlan.zhihu.com/p/267683616)
+* [Vue实战：日期选择器](https://zhuanlan.zhihu.com/p/270328053)
 * [vue仿小米商城 -- 我知道的都在这里了](https://zhuanlan.zhihu.com/p/78088536)
 
 ### `Node.js`
