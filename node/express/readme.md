@@ -12,6 +12,10 @@
 * middleware: have not route property
   * usage of middleware
   * app.use(path) vs app.get(path)
+* err handle middleware
+* two level route
+  * will modify req.url when handle multiple route
+  * restore req.url when back app.use
 
 ### 逻辑梳理
 * 创建`Application`类来存放应用，对应使用的实例`app`
