@@ -16,7 +16,11 @@
 * two level route
   * will modify req.url when handle multiple route
   * restore req.url when back app.use
-
+* params in path: /user/:id/:age -> /user/1/2 -> {id: 1, age: 2}
+  * how to implement
+  * package: pathToRegExp
+* app.param: 
+  * 
 ### 逻辑梳理
 * 创建`Application`类来存放应用，对应使用的实例`app`
 * 在`express`中通过`createApplication`来`new Application`，用户使用时可以直接执行函数

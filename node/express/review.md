@@ -18,3 +18,6 @@
   * dispatch will loop all stack in route and recursive execute layer.handler that is callback of app.get
   * complete loop route stack, continue loop router stack
   * if all stack complete loop, default done will execute and back `can not get 'path'` response text 
+* middleware: 
+  * middleware have not layer.route property
+  * middleware path match rule is different from route 
