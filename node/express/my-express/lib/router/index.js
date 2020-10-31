@@ -46,6 +46,8 @@ Router.prototype.handle = function (req, res, done) {
           // 中间在实例化时，handler就是中间件里传入的回调
           if (layer.handler.length !== 4) {
             layer.handleRequest(req, res, next);
+          } else {
+            next();
           }
         }
       } else { // 路由
