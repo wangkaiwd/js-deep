@@ -13,8 +13,9 @@
   * usage of middleware
   * app.use(path) vs app.get(path)
 * err handle middleware
-* two level route
-  * will modify req.url when handle multiple route
+* multiple level route
+  * express.Router() is a complete middleware and routing system 
+  * will delete certain part of req.url when handle multiple route
   * restore req.url when back app.use
 * params in path: /user/:id/:age -> /user/1/2 -> {id: 1, age: 2}
   * how to implement

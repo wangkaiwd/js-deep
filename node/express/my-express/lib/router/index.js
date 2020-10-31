@@ -3,8 +3,18 @@ const Route = require('./route');
 const Layer = require('./layer');
 const methods = require('methods');
 
+// Router will return function
+// function.__proto__ = Router.prototype
+// equivalently implement functionality of new keyword
 function Router () {
-  this.stack = [];
+  // return value is a middleware
+  const router = function (req, res, next) {
+    router.handle(req, res, next);
+  };
+  // Object.setPrototypeOf(router, Router.prototype);
+  router.__proto__ = Router.prototype;
+  router.stack = [];
+  return router;
 }
 
 Router.prototype.route = function (path) {
@@ -25,6 +35,9 @@ Router.prototype.use = function (path, handler) {
 };
 methods.forEach(method => {
   Router.prototype[method] = function (path, handlers) {
+    if (!Array.isArray(handlers)) {
+      handlers = Array.from(arguments).slice(1);
+    }
     const route = this.route(path);
     route[method](handlers);
   };
@@ -33,7 +46,11 @@ methods.forEach(method => {
 Router.prototype.handle = function (req, res, done) {
   const { pathname } = url.parse(req.url);
   let index = 0;
+  let removed = '';
   const next = (err) => {
+    if (removed) {
+      removed = '';
+    }
     if (index === this.stack.length) {
       return done();
     }
@@ -45,6 +62,11 @@ Router.prototype.handle = function (req, res, done) {
         } else {
           // 中间在实例化时，handler就是中间件里传入的回调
           if (layer.handler.length !== 4) {
+            // 如果是二级路由的话，需要删掉app.use中的路径
+            if (req.url !== '/') {
+              removed = layer.path;
+              req.url = req.url.slice(removed.length);
+            }
             layer.handleRequest(req, res, next);
           } else {
             next();
@@ -53,6 +75,11 @@ Router.prototype.handle = function (req, res, done) {
       } else { // 路由
         if (layer.route.hasMethod(req.method)) {
           // 路由在实例化layer时，handler为route.dispatch
+          // 如果是二级路由的话，需要删掉app.use中的路径
+          if (req.url !== '/') {
+            removed = layer.path;
+            req.url = req.url.slice(removed.length);
+          }
           layer.handleRequest(req, res, next);
         } else {
           next(err);
@@ -62,6 +89,6 @@ Router.prototype.handle = function (req, res, done) {
       next(err);
     }
   };
-  next(0);
+  next();
 };
 module.exports = Router;
