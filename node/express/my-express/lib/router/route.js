@@ -23,7 +23,10 @@ Route.prototype.hasMethod = function (method) {
 };
 Route.prototype.dispatch = function (req, res, done) {
   let index = 0;
-  const next = () => {
+  const next = (err) => {
+    if (err) {
+      return done(err);
+    }
     if (index === this.stack.length) {
       return done();
     }
@@ -31,7 +34,7 @@ Route.prototype.dispatch = function (req, res, done) {
     if (layer.method === req.method.toLowerCase()) {
       layer.handleRequest(req, res, next);
     } else {
-      next();
+      next(err);
     }
   };
   next(0);

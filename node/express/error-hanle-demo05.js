@@ -2,7 +2,7 @@
 
 // 1. 通过错误代码会自动处理
 // 2. 异步错误必须传递给next()函数
-const express = require('express');
+const express = require('./my-express');
 
 const app = express();
 
@@ -24,7 +24,7 @@ app.get('*', (req, res, next) => {
 });
 
 app.use(function (err, req, res, next) {
-  res.send(err);
+  res.end(err);
 });
 
 app.listen(3000, function () {

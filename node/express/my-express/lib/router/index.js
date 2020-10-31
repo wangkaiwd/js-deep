@@ -33,25 +33,31 @@ methods.forEach(method => {
 Router.prototype.handle = function (req, res, done) {
   const { pathname } = url.parse(req.url);
   let index = 0;
-  const next = () => {
+  const next = (err) => {
     if (index === this.stack.length) {
       return done();
     }
     const layer = this.stack[index++];
-    if (layer.match(pathname)) {
+    if (layer.match(pathname)) { // 路径匹配
       if (!layer.route) { // 中间件
-        // 中间在实例化时，handler就是中间件里传入的回调
-        layer.handleRequest(req, res, next);
+        if (err) { // 执行错误处理中间件
+          layer.handleError(err, req, res, next);
+        } else {
+          // 中间在实例化时，handler就是中间件里传入的回调
+          if (layer.handler.length !== 4) {
+            layer.handleRequest(req, res, next);
+          }
+        }
       } else { // 路由
         if (layer.route.hasMethod(req.method)) {
           // 路由在实例化layer时，handler为route.dispatch
           layer.handleRequest(req, res, next);
         } else {
-          next();
+          next(err);
         }
       }
-    } else {
-      next();
+    } else { // 路径不匹配调用下一个中间件或路由处理函数
+      next(err);
     }
   };
   next(0);
