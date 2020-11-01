@@ -80,6 +80,7 @@ Router.prototype.handle = function (req, res, done) {
             removed = layer.path;
             req.url = req.url.slice(removed.length);
           }
+          req.params = layer.params || {};
           layer.handleRequest(req, res, next);
         } else {
           next(err);
