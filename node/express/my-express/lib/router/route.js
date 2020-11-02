@@ -8,6 +8,8 @@ function Route () {
 }
 
 methods.forEach(method => {
+  // 当单独使用路由时，会直接调用Route.prototype.get方法，而不是通过Application.prototype.get来调用，
+  // 而参数处理，我们是在Application.prototype.get中做的
   Route.prototype[method] = function (handlers) {
     for (let i = 0; i < handlers.length; i++) {
       const handler = handlers[i];
@@ -23,7 +25,10 @@ Route.prototype.hasMethod = function (method) {
 };
 Route.prototype.dispatch = function (req, res, done) {
   let index = 0;
-  const next = () => {
+  const next = (err) => {
+    if (err) {
+      return done(err);
+    }
     if (index === this.stack.length) {
       return done();
     }
@@ -31,10 +36,10 @@ Route.prototype.dispatch = function (req, res, done) {
     if (layer.method === req.method.toLowerCase()) {
       layer.handleRequest(req, res, next);
     } else {
-      next();
+      next(err);
     }
   };
-  next(0);
+  next();
 };
 
 module.exports = Route;

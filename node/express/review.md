@@ -1,20 +1,27 @@
-## review
-### basic implement
-* Application: return get and listen method
-* get: push path,handler,method to global array
-* handle request: loop global array, then execute handler when path and method equivalent to req
+## 回顾
+1. express -> 创建应用,帮用户使用`new`创建`Application`实例
+2. Application -> 负责应用层的功能代理，最终都会调用Router中的方法
+3. Router
+  1. Router会代理应用层的功能
+  2. Router独立执行后会生成单独的路由系统 
+4. Route -> 存储所有路由中传入的处理函数，并提供`dispatch`方法来执行所有的路由处理函数 
+5. 错误处理中间件：
+  1. 错误处理中间件拥有4个参数，`fn.length`表示函数具名参数的个数，`arguments.length`表示实际传入参数的个数
+  2. 当`next`函数中传入参数时，说明是错误处理中间件，此时会跳过剩余的所有路由处理函数和中间件，直接执行错误处理中间件
+  3. 内部会判断`next`中是否传入参数，如果传入的话，判断是否为错误处理中间件，如果不是就会直接执行`next`，如果是将`err,req,res,next`作为参数传入
+6. 二级路由：
+  1. 二级路由可以通过`express.Router()`来创建
+  2. `Router`类直接执行会返回`function(req,res,next){}`，可以作为中间件使用
+  3. 也可以通过返回值调用自生属性和原型上的方法
+  4. new 的原理： 1. 创建一个空对象 2. 将this赋值为新创建的对象 3.将this的原型指向构造函数的原型 4. 如果返回值不是复杂数据类型的话，将this返回 
+  5. 自定义返回值为一个中间件函数，并且实现类似于`new`的功能，只不过将`this`换做了`router`函数
+  6. 需要注意`router.verb`方法需要进行处理，因为之前有些逻辑是在`Application`中处理的
 
-### logic separate
-* use express to createApplication
-* use class Application store application code
-* use router handle get and execute all stack array when request coming
-
-### layer and route
-* router will store per app.get information as a layer to stack(layer will own path,handler properties)
-  * What effect of layer.route?
-* route will store all callback of app.get as a layer to stack(layer will own method,handler properties)
-* loop stack in router
-  * layer in stack will called layer.handler that is called route.dispatch method
-  * dispatch will loop all stack in route and recursive execute layer.handler that is callback of app.get
-  * complete loop route stack, continue loop router stack
-  * if all stack complete loop, default done will execute and back `can not get 'path'` response text 
+中间件和路由的区别：
+1. 在源码中，中间件没有`route`属性
+2. 路由处理函数会通过`route.dispatch`来进行执行
+3. 中间处理函数会直接通过`layer`执行
+4. 路由分为俩层： 第一层根据`path`来标识不同的信息，并会在`route`中记录所有当前路由对应的请求method
+5. 在外层会判断`path`以及内部的函数的请求method是否满足要求，然后在执行内部的路由处理函数
+6. 首先需要执行外层，外层满足要求执行内部路由处理函数，内部会通过`next`执行所有的路由处理函数
+7. 当内部所有的路由处理函数执行完毕后，会执行`done`，即外层函数的`next`，继续执行下一个外层函数，逻辑与之前相同
