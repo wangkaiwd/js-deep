@@ -50,8 +50,26 @@ HttpOnly: 是否只能通过服务端进行修改
  
 
 #### 分段上传
+客户端记录当前读取的字节数并进行累加
+* client: Range: bytes=0-3
+* server: Content-Range: bytes 0-3/2443
+可以尝试用curl请求百度试一下
 
-#### 文件上传
+#### 缓存
+1. 强制缓存：服务端设置，当前请求发送完毕后，如果再发送请求，可以设置在某段时间之内不会再向服务端发起请求，而是在浏览器缓存中查找
+   * Expires: 过期时间
+   * cache-control: max-age=10
+2. 协商缓存：缓存期间，文件内容发生了变化
+   利用文件更改时间：
+   * cache-control: no-cache, 每次请求服务器都会询问文件是否发生了变化
+   * 服务端可以判断文件修改时间，可以设置响应头Last-Modify:ctime,值为文件的修改时间，但是只能精确到秒
+   * 客户端会在请求时通过If-Modify-Since将文件修改时间再传递给服务端
+   * 服务端会再次获取最新的文件修改时间，判断其与客户端传递的是否相同，如果不相同说明文件发生了修改
+   * server: cache-control: no-cache Last-Modify:ctime  client: If-Modify-Since
+   
+   利用摘要算法：
+   * 服务端设置etag请求头，值为请求文件的固定长度的`base64`字符串
+   * 之后客户端在请求时会携带请求头`If-None-Match`,将其与当前请求文件的`etag`再进行对比，如果不一样说明文件发生了修改
+   * server: etag: hash  client: If-None-Match:etag    
 
-####  
-
+#### 响应码
