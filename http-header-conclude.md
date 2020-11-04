@@ -65,7 +65,7 @@ HttpOnly: 是否只能通过服务端进行修改
    * 服务端可以判断文件修改时间，可以设置响应头Last-Modify:ctime,值为文件的修改时间，但是只能精确到秒
    * 客户端会在请求时通过If-Modify-Since将文件修改时间再传递给服务端
    * 服务端会再次获取最新的文件修改时间，判断其与客户端传递的是否相同，如果不相同说明文件发生了修改
-   * server: cache-control: no-cache Last-Modify:ctime  client: If-Modify-Since
+   * server: cache-control: no-cache, Last-Modify:ctime  client: If-Modify-Since
    
    利用摘要算法：
    * 服务端设置etag请求头，值为请求文件的固定长度的`base64`字符串
