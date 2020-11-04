@@ -20,5 +20,11 @@ Vue响应式存在的问题：
 2. 通过数组的索引以及长度来修改不会具有响应式，需要调用数组的方法
 
 ### Watch
+* 为每一个用户定义的watch设置用户定义的Watcher, `{user: true}`来标识
+* 如果是自定义`watcher`，会获取`key`对应的`data`中的值，然后赋值给`this.value`，为最初的值，在不传`immediate`时是旧值
+* 在用户取值的时候，对应属性的`get`方法执行，会收集用户自定义的`watcher`
+* 当watch监听的属性更新时，首先会调用用户定义的`watcher`的更新方法，然后调用渲染`watcher`来更新视图更新方法
+* 用户定义的`watcher`会在此获取此时更新后的最新的值，并调用传入的`handler(value,this.vlaue)`
+* 之后调用渲染`watcher`的`update`方法来更新视图
 
 ### Computed
