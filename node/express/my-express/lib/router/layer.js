@@ -5,12 +5,18 @@ function Layer (path, handler) {
   this.path = path;
   this.handler = handler;
   this.keys = [];
-  // 匹配的逻辑：也可以通过正则匹配
-  if (path) { // Route的layer不会存path, Router的layer会处理path
-    this.regexp = pathToRegexp(path, this.keys);
-  }
+  this.regexp = null;
+  this.getKeys();
 }
 
+Layer.prototype.getKeys = function () {
+  // 匹配的逻辑：也可以通过正则匹配
+  if (this.path) { // Route的layer不会存path, Router的layer会处理path
+    const keys = [];
+    this.regexp = pathToRegexp(this.path, keys);
+    this.keys = keys.map(key => key.name);
+  }
+};
 Layer.prototype.match = function (path) {
   if (path === this.path) {
     return true;
@@ -26,7 +32,7 @@ Layer.prototype.match = function (path) {
     if (matches) { // 匹配到了，需要根据keys以及分组组成req.params对象
       const values = matches.slice(1);
       this.params = this.keys.reduce((memo, current, i) => {
-        memo[current.name] = values[i];
+        memo[current] = values[i];
         return memo;
       }, {});
       return true;

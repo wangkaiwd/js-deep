@@ -2,7 +2,7 @@
 //   定义在app上的param回调只会被定义在app路由上的路由参数触发
 
 // 在参数出现的任何路由处理器之前，所有的param回调将会被调用。并且在请求响应周期中，即使参数在多个路由中匹配，它们也只会被调用一次。
-const express = require('express');
+const express = require('./my-express');
 
 const app = express();
 
@@ -15,6 +15,7 @@ app.param('name', (req, res, next, value, name) => {
   next();
 });
 app.param('id', (req, res, next, value, name) => {
+  console.log('id');
   if (value === '1') {
     req.params.id = '10';
   }

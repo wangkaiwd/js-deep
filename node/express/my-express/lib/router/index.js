@@ -14,6 +14,7 @@ function Router () {
   // Object.setPrototypeOf(router, Router.prototype);
   router.__proto__ = Router.prototype;
   router.stack = [];
+  router.paramsCallbacks = {};
   return router;
 }
 
@@ -23,6 +24,44 @@ Router.prototype.route = function (path) {
   layer.route = route;
   this.stack.push(layer);
   return route;
+};
+Router.prototype.param = function (name, handler) {
+  if (this.paramsCallbacks[name]) {
+    this.paramsCallbacks[name].push(handler);
+  } else {
+    this.paramsCallbacks[name] = [handler];
+  }
+};
+// 通过next调用，来执行所有的layer.params中所有属性对应的回调函数
+Router.prototype.handleParams = function (req, res, layer, done) {
+  if (!layer.keys.length) {return done();}
+  let fnIndex = 0;
+  let nameIndex = 0;
+  let name = undefined;
+  let fns = undefined;
+  const handleCallbacks = () => {
+    if (fnIndex === fns.length) {
+      // 执行完一个属性对应的函数后要将索引初始化为0，重新开始执行下一个属性的函数
+      fnIndex = 0;
+      return next();
+    }
+    const fn = fns[fnIndex];
+    fnIndex++;
+    fn(req, res, handleCallbacks, layer.params[name], name);
+  };
+
+  const next = () => {
+    if (nameIndex === layer.keys.length) {return done();}
+    name = layer.keys[nameIndex];
+    nameIndex++;
+    fns = this.paramsCallbacks[name];
+    if (fns && fns.length) {
+      handleCallbacks();
+    } else {
+      next();
+    }
+  };
+  next();
 };
 Router.prototype.use = function (path, handler) {
   if (typeof handler !== 'function') {
@@ -81,7 +120,9 @@ Router.prototype.handle = function (req, res, done) {
             req.url = req.url.slice(removed.length);
           }
           req.params = layer.params || {};
-          layer.handleRequest(req, res, next);
+          this.handleParams(req, res, layer, () => {
+            layer.handleRequest(req, res, next);
+          });
         } else {
           next(err);
         }

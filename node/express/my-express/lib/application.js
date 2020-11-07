@@ -13,6 +13,11 @@ Application.prototype.lazyRoute = function () {
   }
 };
 
+Application.prototype.param = function (name, handler) {
+  this.lazyRoute();
+  this._router.param(name, handler);
+};
+
 Application.prototype.use = function (path, handler) {
   this.lazyRoute();
   this._router.use(path, handler);
