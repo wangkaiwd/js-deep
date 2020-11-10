@@ -1,5 +1,6 @@
 import babel from 'rollup-plugin-babel';
 import serve from 'rollup-plugin-serve';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 export default {
   input: './src/index.js',
@@ -13,6 +14,7 @@ export default {
     babel({ exclude: 'node_modules/**' }),
     serve({
       contentBase: ''
-    })
+    }),
+    nodeResolve()
   ]
 };
