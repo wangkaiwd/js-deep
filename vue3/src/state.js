@@ -25,7 +25,8 @@ function initMethods (vm) {}
 
 function initData (vm) {
   let data = vm.$options.data;
-  data = typeof data === 'function' ? data.call(vm) : data;
+  vm._data = data = typeof data === 'function' ? data.call(vm) : data;
+  // 放在了vm._data上，方便之后直接调用
   observe(data);
 }
 
