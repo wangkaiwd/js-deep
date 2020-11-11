@@ -10,7 +10,7 @@ const methods = ['unshift', 'push', 'shift', 'pop', 'splice', 'reverse', 'sort']
 
 methods.forEach(method => {
   arrayProto[method] = function (...args) {
-    oldArrayProto[methods].apply(this, args);
+    const result = oldArrayProto[method].apply(this, args);
     let inserted = null;
     switch (method) {
       case 'push':
@@ -21,10 +21,12 @@ methods.forEach(method => {
         inserted = args.slice(2);
         break;
     }
+    console.log('set array');
     if (inserted) {
       // 每个被监测过的属性都会添加__ob__属性
       this.__ob__.observeArray(inserted);
     }
     // 新加的内容也要继续进行监测
+    return result;
   };
 });
