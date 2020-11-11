@@ -15,11 +15,13 @@
     el: '#app',
     data () {
       return {
-        a: { a: { a: 1 } }
+        // a: { a: { a: 1 } }
+        arr: [{ a: 1 }]
       };
     }
   });
-  console.log('vm', vm);
+  // 不会对索引进行监听，会对数组的方法进行重写，然后使其具有响应性
+  console.log(vm._data.arr[0].a);
 </script>
 </body>
 </html>

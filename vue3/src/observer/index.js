@@ -1,7 +1,17 @@
+import { arrayProto } from './array';
+
 class Observer {
   constructor (data) {
+    // 被添加__ob__说明该属性被监测过
+    Object.defineProperty(data, '__ob__', {
+      value: this,
+      configurable: false, // 不能修改和删除，默认值就是false
+      enumerable: false, // 不可枚举，防止遍历，默认值就是false
+    });
     if (Array.isArray(data)) { // array need to handle specially
-
+      Object.setPrototypeOf(data, arrayProto);
+      // 对数组中的每一项继续进行检测
+      this.observeArray(data);
     } else { // handle object
       this.walk(data);
     }
@@ -14,10 +24,17 @@ class Observer {
       defineReactive(data, key, value);
     });
   }
+
+  observeArray (data) {
+    data.forEach(item => observe(item));
+  }
 }
 
 export function observe (data) {
   if (typeof data !== 'object' || data == null) {
+    return;
+  }
+  if (data.__ob__) {
     return;
   }
   new Observer(data);
