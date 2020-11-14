@@ -18,6 +18,7 @@ function initMixin (Vue) {
     }
     // 创建vm.$el来替代el
   };
+  // 根据配置项进行判断，最终拿到要处理的template
   Vue.prototype.$mount = function (el) {
     const vm = this;
     let { render, template } = vm.$options;

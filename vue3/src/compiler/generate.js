@@ -6,10 +6,28 @@
 //   return _c('div',{id:'app',style:{color:'red'}}, _v('hello',_s(name)),_c('span',null,_v('hello')))
 // }
 
+function gen (node) {
+  if (node.type === 1) { // 元素
+    return generate(node);
+  } else { // 文本
+    const text = node.text;
+    // 最后会通过new Function来进行执行，这里要通过JSON.stringify来将其转换为带有双引号的文本
+    return `_v(${JSON.stringify(text)})`;
+  }
+}
+
+function genChildren (el) {
+  const children = el.children;
+  if (children) {
+    return children.map(child => gen(child)).join(',');
+  } else {
+    return '';
+  }
+}
+
 function genProps (attrs) {
-  console.log('attrs', attrs);
   let str = '';
-  if (attrs.length === 0) {
+  if (!attrs || (attrs.length === 0)) {
     return 'undefined';
   }
   for (let i = 0; i < attrs.length; i++) {
@@ -30,7 +48,9 @@ function genProps (attrs) {
 }
 
 function generate (el) {
-  const code = `_c(${el.tag},${genProps(el.attrs)})`;
+  console.log('el', el);
+  const children = genChildren(el);
+  const code = `_c("${el.tag}",${genProps(el.attrs)}, ${children})`;
   return code;
 }
 
