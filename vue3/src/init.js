@@ -1,4 +1,5 @@
 import initState from './state';
+import { compileToFunctions } from './compiler';
 
 function initMixin (Vue) {
   Vue.prototype._init = function (options) {
@@ -27,7 +28,9 @@ function initMixin (Vue) {
       }
       // 没有render，查看是否有template,如果有template,将template 转换为render 函数
       // 如果没有template，将el.outerHTML作为template
-      console.log('template', template);
+
+      // 将模板编译为函数，然后将其作为vm.$options.render来方便后续逻辑进行使用
+      vm.$options.render = compileToFunctions(template);
     }
     // 有render，就用render方法
   };
