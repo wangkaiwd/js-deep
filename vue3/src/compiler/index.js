@@ -18,6 +18,14 @@
 //   ]
 // };
 
+const ncname = `[a-zA-Z_][\\-\\.0-9_a-zA-Z]*`; // 标签名 <aa></aa>
+const qnameCapture = `((?:${ncname}\\:)?${ncname})`; // <my:xxx></my:xxx>
+const startTagOpen = new RegExp(`^<${qnameCapture}`);
+const startTagClose = /^\s*(\/?)>/;
+const endTag = new RegExp(`^<\\/${qnameCapture}[^>]*>`);
+const attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/;
+const defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g; // 匹配双花括号之间除了换行之外的任意字符
+
 function parseHTML (html) {
   return undefined;
 }
