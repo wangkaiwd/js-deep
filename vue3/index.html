@@ -8,23 +8,28 @@
   <title>Document</title>
 </head>
 <body>
-<div id="app"></div>
+<div id="app">
+  {{arr}}
+  <ul>
+    <li>{{person.name}}</li>
+    <li>{{person.age}}</li>
+  </ul>
+</div>
 <script src="dist/umd/vue.js"></script>
 <script>
   const vm = new Vue({
     el: '#app',
     data () {
       return {
-        // a: { a: { a: 1 } }
-        arr: [{ a: 1 }]
+        arr: [1, 2, 3],
+        person: {
+          name: 'zs',
+          age: 18
+        }
       };
     }
   });
   // 不会对索引进行监听，会对数组的方法进行重写，然后使其具有响应性
-  console.log(vm);
-  console.log(vm.arr[0].a);
-  vm.arr.push({ b: 1 });
-
   // 渲染组件：
   //  1. 默认先处理render方法
   //  2. 没有传入render会处理template

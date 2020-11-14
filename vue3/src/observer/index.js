@@ -47,12 +47,10 @@ export function defineReactive (data, key, value) {
   // 这里调用set,get方法时，会形成闭包，defineReactive中查找value
   Object.defineProperty(data, key, {
     get () {
-      console.log('get');
       return value;
     },
     set (newValue) {
       if (value === newValue) {return;}
-      console.log('set');
       // 继续为新增的值设置get/set方法
       observe(newValue);
       value = newValue;

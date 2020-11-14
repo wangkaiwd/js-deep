@@ -21,7 +21,6 @@ methods.forEach(method => {
         inserted = args.slice(2);
         break;
     }
-    console.log('set array');
     if (inserted) {
       // 每个被监测过的属性都会添加__ob__属性
       this.__ob__.observeArray(inserted);
