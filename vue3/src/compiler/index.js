@@ -28,17 +28,17 @@ const defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g; // 匹配双花括号之间的�
 
 // 开始标签
 function start (tagName, attrs) {
-
+  console.log('start tag');
 }
 
 // 结束标签
-function end () {
-
+function end (tagName) {
+  console.log('end tag');
 }
 
 // 文本
-function chars () {
-
+function chars (text) {
+  console.log('text');
 }
 
 function parseHTML (html) {
@@ -46,11 +46,25 @@ function parseHTML (html) {
     const textEnd = html.indexOf('<'); // 标签会以'<'开头
     if (textEnd === 0) {
       const startTagMatch = parseStartTag();
-      if (startTagMatch) {
+      if (startTagMatch) { // 开始标签
         start(startTagMatch.tagName, startTagMatch.attrs);
+        continue;
+      }
+      // 结束标签
+      const endTagMatch = html.match(endTag);
+      if (endTagMatch) { // 结束标签
+        end(endTagMatch[1]);
+        advance(endTagMatch[0].length);
       }
     }
-    break;
+    let text;
+    if (textEnd > 0) { // 文本内容
+      text = html.substring(0, textEnd);
+    }
+    if (text) {
+      advance(text.length);
+      chars(text);
+    }
   }
 
   function parseStartTag () {
@@ -59,12 +73,12 @@ function parseHTML (html) {
       const match = { tagName: start[1], attrs: [] };
       advance(start[0].length);
       // 递归匹配属性
-      let end = html.match(endTag);
+      let end = html.match(startTagClose);
       let attr = html.match(attribute);
       while (!end && attr) {
         match.attrs.push({ name: attr[1], value: attr[3] || attr[4] || attr[5] });
         advance(attr[0].length);
-        end = html.match(endTag);
+        end = html.match(startTagClose);
         attr = html.match(attribute);
       }
       if (end) {
