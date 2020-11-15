@@ -8,7 +8,7 @@ export function compileToFunctions (template) {
   const ast = parseHTML(template);
   // 将ast树重新生成代码
   const code = generate(ast);
-  console.log('code', code);
+  return new Function(`with(this) {return ${code}}`);
 }
 
 // 虚拟dom: 用对象来描述节点
