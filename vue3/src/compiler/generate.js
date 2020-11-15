@@ -65,7 +65,7 @@ function genProps (attrs) {
       }, {});
       str += `${attr.name}:${JSON.stringify(value)},`;
     } else {
-      str += `${attr.name}:${attr.value},`;
+      str += `${attr.name}:${JSON.stringify(attr.value)},`;
     }
   }
   return `{${str.slice(0, -1)}}`;
