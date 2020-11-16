@@ -15,6 +15,16 @@
 </div>
 <script src="dist/umd/vue.js"></script>
 <script>
+  Vue.mixin({
+    created: function a () {
+      console.log(1);
+    }
+  });
+  Vue.mixin({
+    created: function b () {
+      console.log(1);
+    }
+  });
   const vm = new Vue({
     el: '#app',
     data () {
@@ -22,6 +32,9 @@
         arr: [1, 2, 3],
         person: { name: 'zs', age: 18 }
       };
+    },
+    created () {
+      console.log(2);
     }
   });
   // 不会对索引进行监听，会对数组的方法进行重写，然后使其具有响应性
