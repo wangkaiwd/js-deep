@@ -16,3 +16,5 @@
   
 * 合并配置项: vm.$options = mergeOptions(Vue.options,options),不同的配置项采用不同的合并策略
   * different push with concat
+* dep 和 watcher 双向记录：为了实现computed
+* object 为什么也要在watcher中为它添加dep? 为了实现Vue.set(obj,'a',100)为对象新增属性
