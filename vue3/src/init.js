@@ -1,14 +1,19 @@
 import initState from './state';
 import { compileToFunctions } from './compiler';
-import { mountComponent } from './lifecycle';
+import { callHook, mountComponent } from './lifecycle';
+import { mergeOptions } from './util';
 
 function initMixin (Vue) {
   Vue.prototype._init = function (options) {
-    this.$options = options;
     const vm = this;
-    let { el, template } = this.$options;
+    // vm.constructor: 根组件的构造函数是Vue，而子组件的构造函数是通过Vue.extend()生成的Vue的子类
+    // 全局组件和局部组件：全局组件在初始化的时候，会将它的选项合并到当前实例的$options上
+    this.$options = mergeOptions(vm.constructor.options, options);
+    let { el } = this.$options;
     // 扩展不同的初始化功能
+    callHook(vm, 'beforeCreate');
     initState(this);
+    callHook(vm, 'created');
     if (el) { // 没有el选项，会调用$mount方法，进行手动挂载
       // 挂载el
       vm.$mount(el);

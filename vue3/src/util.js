@@ -1,6 +1,7 @@
 export const LIFECYCLE_HOOKS = [
   'beforeCreate',
   'created',
+  'beforeMount',
   'mounted',
   'beforeUpdate',
   'updated',
@@ -12,14 +13,14 @@ export const LIFECYCLE_HOOKS = [
 const strategies = {};
 strategies.props = function () {};
 strategies.methods = function () {};
-strategies.data = function () {
-
+// temporary strategy function
+strategies.data = function (parentVal, childVal) {
+  return childVal;
 };
 strategies.computed = function () {};
 strategies.watch = function () {};
 
 function mergeHook (parentVal, childVal) {
-  console.log('childVal', parentVal, childVal);
   if (parentVal) {
     if (childVal) {
       // why childVal is an array ?
@@ -55,7 +56,11 @@ export function mergeOptions (parent, child) {
   }
 
   function mergeField (key) {
-    options[key] = strategies[key](parent[key], child[key]);
+    if (strategies[key]) {
+      options[key] = strategies[key](parent[key], child[key]);
+    } else {
+      options[key] = child[key];
+    }
   }
 
   return options;
