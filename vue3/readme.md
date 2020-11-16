@@ -15,3 +15,4 @@
   * 公共变量会由于变量引用而导致发生变化(小心！)
   
 * 合并配置项: vm.$options = mergeOptions(Vue.options,options),不同的配置项采用不同的合并策略
+  * different push with concat

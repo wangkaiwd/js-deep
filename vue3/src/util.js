@@ -23,9 +23,9 @@ function mergeHook (parentVal, childVal) {
   if (parentVal) {
     if (childVal) {
       // why childVal is an array ?
-      // childVal not an array, concat parameter can simple data type
+      // childVal may an array or function, concat parameter can simple data type
       // and push will return length of new array
-      parentVal.push(childVal);
+      return parentVal.concat(childVal);
     }
     return parentVal;
   }
