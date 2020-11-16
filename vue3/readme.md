@@ -13,3 +13,5 @@
   
 * 使用`Vue.mixins`和直接在公共文件内定义变量并引入有什么不同？
   * 公共变量会由于变量引用而导致发生变化(小心！)
+  
+* 合并配置项: vm.$options = mergeOptions(Vue.options,options),不同的配置项采用不同的合并策略
