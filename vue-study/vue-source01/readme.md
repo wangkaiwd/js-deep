@@ -18,3 +18,17 @@
   * different push with concat
 * dep 和 watcher 双向记录：为了实现computed
 * object 为什么也要在watcher中为它添加dep? 为了实现Vue.set(obj,'a',100)为对象新增属性
+
+
+
+* 面试题：1. 模板中是否用到了a 2. watcher去重 3. 异步更新
+  ```vue
+  export default{
+    mounted() {
+      console.log(this.a = 1)
+      console.log(this.a = 2)
+      console.log(this.a = 3)
+    }
+  }
+  ```
+* $nextTick: 值更新之后，dom是异步更新的，所以并不能直接获取到最新的dom,需要利用$nextTick
