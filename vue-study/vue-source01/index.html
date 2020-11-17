@@ -9,10 +9,8 @@
 </head>
 <body>
 <div id="app">
-  {{arr}}
   <ul>
-    <li style="color:blue;">{{person.name}}</li>
-    <li style="color:red;">{{person.age}}</li>
+    <li style="color:red;">{{arr}}</li>
   </ul>
 </div>
 <script src="dist/umd/vue.js"></script>
@@ -31,7 +29,7 @@
     el: '#app',
     data () {
       return {
-        arr: [1, 2, 3],
+        arr: [[1, 2, 3]],
         person: { name: 'zs', age: 18 }
       };
     },
@@ -46,8 +44,8 @@
   //  3. 没有render和render会找当前el指定的元素中的内容来进行渲染
   // template -> render: ast 语法解析树
   setTimeout(() => {
-    vm.person.name = 'ls';
-    vm.person.name = 'zz';
+    // vm.person.age = 12;
+    vm.arr[0].push(10);
   }, 2000);
   // setTimeout(() => {
   // vm._render() 执行 render方法，将模板转换为虚拟dom

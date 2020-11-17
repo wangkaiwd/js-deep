@@ -10,6 +10,8 @@ const methods = ['unshift', 'push', 'shift', 'pop', 'splice', 'reverse', 'sort']
 
 methods.forEach(method => {
   arrayProto[method] = function (...args) {
+    // 每个被监测过的属性都会添加__ob__属性
+    const ob = this.__ob__;
     const result = oldArrayProto[method].apply(this, args);
     let inserted = null;
     switch (method) {
@@ -22,10 +24,20 @@ methods.forEach(method => {
         break;
     }
     if (inserted) {
-      // 每个被监测过的属性都会添加__ob__属性
-      this.__ob__.observeArray(inserted);
+      ob.observeArray(inserted);
     }
+    ob.dep.notify();
     // 新加的内容也要继续进行监测
     return result;
   };
 });
+
+export function dependArray (value) {
+  if (Array.isArray(value)) {
+    for (let i = 0; i < value.length; i++) {
+      const item = value[i];
+      item?.__ob__?.dep.depend();
+      dependArray(item);
+    }
+  }
+}
