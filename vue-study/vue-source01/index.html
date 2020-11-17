@@ -17,16 +17,16 @@
 </div>
 <script src="dist/umd/vue.js"></script>
 <script>
-  Vue.mixin({
-    created: function a () {
-      console.log(1);
-    }
-  });
-  Vue.mixin({
-    created: function b () {
-      console.log(1);
-    }
-  });
+  // Vue.mixin({
+  //   created: function a () {
+  //     console.log(1);
+  //   }
+  // });
+  // Vue.mixin({
+  //   created: function b () {
+  //     console.log(1);
+  //   }
+  // });
   const vm = new Vue({
     el: '#app',
     data () {
@@ -35,9 +35,9 @@
         person: { name: 'zs', age: 18 }
       };
     },
-    created () {
-      console.log(2);
-    }
+    // created () {
+    //   console.log(2);
+    // }
   });
   // 不会对索引进行监听，会对数组的方法进行重写，然后使其具有响应性
   // 渲染组件：
@@ -45,6 +45,15 @@
   //  2. 没有传入render会处理template
   //  3. 没有render和render会找当前el指定的元素中的内容来进行渲染
   // template -> render: ast 语法解析树
+  setTimeout(() => {
+    vm.person.name = 'ls';
+    vm.person.name = 'zz';
+  }, 2000);
+  // setTimeout(() => {
+  // vm._render() 执行 render方法，将模板转换为虚拟dom
+  // vm._update() 将虚拟dom转换为真实dom，并且替换之前的dom
+  // vm._update(vm._render());
+  // });
 </script>
 </body>
 </html>
