@@ -65,3 +65,39 @@ export function mergeOptions (parent, child) {
 
   return options;
 }
+
+let timerFunc = undefined;
+let callbacks = [];
+let pending = false;
+if (Promise) {
+  timerFunc = function () {Promise.resolve().then(flushCallbacks);};
+} else if (MutationObserver) {
+  const observer = new MutationObserver(flushCallbacks);
+  const textNode = document.createTextNode('1');
+  observer.observe(textNode, { characterData: true });
+  timerFunc = function () {
+    textNode.textContent = '2';
+  };
+} else if (setImmediate) {
+  timerFunc = function () {
+    setImmediate(flushCallbacks);
+  };
+} else {
+  timerFunc = function () {
+    setTimeout(flushCallbacks);
+  };
+}
+
+function flushCallbacks () {
+  callbacks.forEach(cb => cb());
+  callbacks = [];
+  pending = false;
+}
+
+export function nextTick (cb) {
+  callbacks.push(cb);
+  if (!pending) {
+    pending = true;
+    timerFunc();
+  }
+}

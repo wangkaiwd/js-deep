@@ -1,4 +1,5 @@
 import { observe } from './observer';
+import { nextTick } from './util';
 
 function initState (vm) {
   const { props, methods, data, computed, watch } = vm.$options;
@@ -51,4 +52,10 @@ function proxy (target, source, key) {
       source[key] = newValue; // 会调用data中属性的设置值操作
     }
   });
+}
+
+export function stateMixin (Vue) {
+  Vue.prototype.$nextTick = function (cb) {
+    nextTick(cb);
+  };
 }

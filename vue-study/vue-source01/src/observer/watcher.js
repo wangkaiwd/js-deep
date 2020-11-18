@@ -1,4 +1,5 @@
 import { popTarget, pushTarget } from './dep';
+import { nextTick } from '../util';
 
 let id = 0;
 
@@ -35,9 +36,39 @@ class Watcher {
   }
 
   update () {
-    console.log('watcher', this);
+    queueWatcher(this);
+  }
+
+  run () {
     this.get();
   }
 }
 
 export default Watcher;
+
+// 不添加重复值的实现方法：
+//  1. set: 将id存到set中，在添加之前通过set.has来判断是否有值
+//  2. object: 每次添加之后，将id作为对象的key，并将value设置为true。再次添加时判断obj[key]是否为true
+//  3. 在为数组添加元素之前，先遍历元素，看能否找到要添加的项，找到说明重复
+let queue = [];
+let has = {};
+let pending = false;
+
+function flushSchedulerQueue () {
+  queue.forEach(item => item.run());
+  queue = [];
+  has = {};
+  pending = false;
+}
+
+function queueWatcher (watcher) {
+  const { id } = watcher;
+  if (!has[id]) {
+    has[id] = true;
+    queue.push(watcher);
+    if (!pending) {
+      pending = true;
+      nextTick(flushSchedulerQueue);
+    }
+  }
+}

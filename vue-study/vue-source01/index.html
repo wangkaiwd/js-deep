@@ -43,15 +43,23 @@
   //  2. 没有传入render会处理template
   //  3. 没有render和render会找当前el指定的元素中的内容来进行渲染
   // template -> render: ast 语法解析树
-  setTimeout(() => {
-    // vm.person.age = 12;
-    vm.arr[0].push(10);
-  }, 2000);
   // setTimeout(() => {
-  // vm._render() 执行 render方法，将模板转换为虚拟dom
-  // vm._update() 将虚拟dom转换为真实dom，并且替换之前的dom
-  // vm._update(vm._render());
-  // });
+  // vm.person.age = 12;
+  // vm.arr[0].push(10);
+  // }, 2000);
+
+  // vue会异步更新dom，在更新数据后不能立即从页面中拿到最新的dom
+  setTimeout(() => {
+    vm.arr.push(123);
+    vm.arr.push(123);
+    vm.arr.push(123);
+    vm.arr.push(123);
+    console.log('1', vm.$el.outerHTML);
+    vm.$nextTick(() => {
+      console.log('2', vm.$el.outerHTML);
+    });
+  });
+
 </script>
 </body>
 </html>
