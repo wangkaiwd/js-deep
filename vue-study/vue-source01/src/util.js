@@ -71,26 +71,30 @@ let callbacks = [];
 let pending = false;
 if (Promise) {
   timerFunc = function () {Promise.resolve().then(flushCallbacks);};
+} else if (MutationObserver) {
+  const observer = new MutationObserver(flushCallbacks);
+  const textNode = document.createTextNode('1');
+  observer.observe(textNode, { characterData: true });
+  timerFunc = function () {
+    textNode.textContent = '2';
+  };
+} else if (setImmediate) {
+  timerFunc = function () {
+    setImmediate(flushCallbacks);
+  };
+} else {
+  timerFunc = function () {
+    setTimeout(flushCallbacks);
+  };
 }
-// else if (MutationObserver) {
-//   const observer = new MutationObserver(flushCallbacks);
-//   const textNode = document.createTextNode('1');
-//   observer.observe(textNode, { characterData: true });
-//   timerFunc = function () {
-//     textNode.textContent = '2';
-//   };
-// } else if (setImmediate) {
-//   timerFunc = function () {
-//     setImmediate(flushCallbacks);
-//   };
-// } else {
-//   timerFunc = function () {
-//     setTimeout(flushCallbacks);
-//   };
-// }
 
 function flushCallbacks () {
-  callbacks.forEach(cb => cb());
+  // change exist arr when forEach loop which not affect loop count
+  // 这里使用forEach时，在新添加内容后将不会遍历数组中新增的内容
+  for (let i = 0; i < callbacks.length; i++) {
+    const cb = callbacks[i];
+    cb();
+  }
   callbacks = [];
   pending = false;
 }
