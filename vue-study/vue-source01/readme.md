@@ -23,12 +23,39 @@
 
 * 面试题：1. 模板中是否用到了a 2. watcher去重 3. 异步更新
   ```vue
-  export default{
-    mounted() {
-      console.log(this.a = 1)
-      console.log(this.a = 2)
-      console.log(this.a = 3)
+  <script>
+    export default{
+      mounted() {
+        console.log(this.a = 1)
+        console.log(this.a = 2)
+        console.log(this.a = 3)
+      }
     }
-  }
+  </script>
   ```
 * $nextTick: 值更新之后，dom是异步更新的，所以并不能直接获取到最新的dom,需要利用$nextTick
+* 异步更新和`watcher`面试题：
+  ```vue
+  <script>
+    export default {
+      data() {
+        return {
+          a: 1
+        } 
+      },
+      watch: {
+        a(newValue,oldValue) {
+          console.log(newValue,oldValue)
+        }
+      },
+      mounted() {
+        this.a = 2
+        console.log(1)
+        this.$nextTick(() => {
+          this.a = 3
+          console.log(4)
+        })
+      }
+    }
+  </script>
+  ```
