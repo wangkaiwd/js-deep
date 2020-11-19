@@ -14,8 +14,18 @@ class Watcher {
     this.options = options;
     if (typeof this.exprOrFn === 'function') {
       this.getter = exprOrFn;
+    } else {
+      if (this.options?.user) {
+        this.getter = function () { // 初始化状态中包括初始化watcher,所以初始化watcher会在页面首次渲染之前
+          const expressions = exprOrFn.split('.');
+          return expressions.reduce((memo, current) => {
+            return memo[current];
+          }, vm);
+        };
+      }
     }
-    this.get();
+    // 注意：Vue的首次渲染是同步的，在首次渲染之后的渲染会执行update方法，存到队列中在微任务中执行
+    this.value = this.get();
   }
 
   addDep (dep) {
@@ -31,16 +41,22 @@ class Watcher {
 
   get () {
     pushTarget(this);
-    this.getter();
+    const value = this.getter.call(this.vm);
     popTarget();
+    return value;
   }
 
   update () {
+    // 此时watch中的值进行更新，
     queueWatcher(this);
   }
 
   run () {
-    this.get();
+    const newValue = this.get();
+    if (this.options?.user) { // 用户定义的watch会异步执行
+      this.cb.call(this.vm, newValue, this.value);
+      this.value = newValue;
+    }
   }
 }
 

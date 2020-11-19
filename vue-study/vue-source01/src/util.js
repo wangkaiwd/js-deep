@@ -11,14 +11,14 @@ export const LIFECYCLE_HOOKS = [
 
 // 不同的配置项有不同的合并策略
 const strategies = {};
-strategies.props = function () {};
-strategies.methods = function () {};
+// strategies.props = function () {};
+// strategies.methods = function () {};
 // temporary strategy function
 strategies.data = function (parentVal, childVal) {
   return childVal;
 };
-strategies.computed = function () {};
-strategies.watch = function () {};
+// strategies.computed = function () {};
+// strategies.watch = function () {};
 
 function mergeHook (parentVal, childVal) {
   if (parentVal) {
@@ -71,22 +71,23 @@ let callbacks = [];
 let pending = false;
 if (Promise) {
   timerFunc = function () {Promise.resolve().then(flushCallbacks);};
-} else if (MutationObserver) {
-  const observer = new MutationObserver(flushCallbacks);
-  const textNode = document.createTextNode('1');
-  observer.observe(textNode, { characterData: true });
-  timerFunc = function () {
-    textNode.textContent = '2';
-  };
-} else if (setImmediate) {
-  timerFunc = function () {
-    setImmediate(flushCallbacks);
-  };
-} else {
-  timerFunc = function () {
-    setTimeout(flushCallbacks);
-  };
 }
+// else if (MutationObserver) {
+//   const observer = new MutationObserver(flushCallbacks);
+//   const textNode = document.createTextNode('1');
+//   observer.observe(textNode, { characterData: true });
+//   timerFunc = function () {
+//     textNode.textContent = '2';
+//   };
+// } else if (setImmediate) {
+//   timerFunc = function () {
+//     setImmediate(flushCallbacks);
+//   };
+// } else {
+//   timerFunc = function () {
+//     setTimeout(flushCallbacks);
+//   };
+// }
 
 function flushCallbacks () {
   callbacks.forEach(cb => cb());
