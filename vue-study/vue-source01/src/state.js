@@ -1,4 +1,6 @@
 import { observe } from './observer';
+import { nextTick } from './util';
+import Watcher from './observer/watcher';
 
 function initState (vm) {
   const { props, methods, data, computed, watch } = vm.$options;
@@ -38,7 +40,19 @@ function initData (vm) {
 
 function initComputed (vm) {}
 
-function initWatch (vm) {}
+function createWatcher (vm, key, handler) {
+  vm.$watch(key, handler);
+}
+
+function initWatch (vm) {
+  const { watch } = vm.$options;
+  for (const key in watch) {
+    if (watch.hasOwnProperty(key)) {
+      const handler = watch[key];
+      createWatcher(vm, key, handler);
+    }
+  }
+}
 
 export default initState;
 
@@ -51,4 +65,14 @@ function proxy (target, source, key) {
       source[key] = newValue; // 会调用data中属性的设置值操作
     }
   });
+}
+
+export function stateMixin (Vue) {
+  Vue.prototype.$nextTick = function (cb) {
+    nextTick(cb);
+  };
+
+  Vue.prototype.$watch = function (key, handler, options) {
+    new Watcher(this, key, handler, { ...options, user: true });
+  };
 }

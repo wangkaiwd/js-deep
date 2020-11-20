@@ -9,34 +9,38 @@
 </head>
 <body>
 <div id="app">
-  {{arr}}
   <ul>
-    <li style="color:blue;">{{person.name}}</li>
-    <li style="color:red;">{{person.age}}</li>
+    <li style="color:red;"></li>
   </ul>
 </div>
 <script src="dist/umd/vue.js"></script>
 <script>
-  Vue.mixin({
-    created: function a () {
-      console.log(1);
-    }
-  });
-  Vue.mixin({
-    created: function b () {
-      console.log(1);
-    }
-  });
+  // Vue.mixin({
+  //   created: function a () {
+  //     console.log(1);
+  //   }
+  // });
+  // Vue.mixin({
+  //   created: function b () {
+  //     console.log(1);
+  //   }
+  // });
   const vm = new Vue({
     el: '#app',
     data () {
       return {
-        arr: [1, 2, 3],
-        person: { name: 'zs', age: 18 }
+        a: 1,
+        // arr: [[1, 2, 3]],
+        // person: { name: 'zs', age: 18 }
       };
     },
-    created () {
-      console.log(2);
+    // created () {
+    //   console.log(2);
+    // }
+    watch: {
+      a (newVal, oldVal) {
+        console.log('new,old', newVal, oldVal);
+      }
     }
   });
   // 不会对索引进行监听，会对数组的方法进行重写，然后使其具有响应性
@@ -45,6 +49,30 @@
   //  2. 没有传入render会处理template
   //  3. 没有render和render会找当前el指定的元素中的内容来进行渲染
   // template -> render: ast 语法解析树
+  // setTimeout(() => {
+  // vm.person.age = 12;
+  // vm.arr[0].push(10);
+  // }, 2000);
+
+  // vue会异步更新dom，在更新数据后不能立即从页面中拿到最新的dom
+  // setTimeout(() => {
+  //   vm.arr.push(123);
+  //   vm.arr.push(123);
+  //   vm.arr.push(123);
+  //   vm.arr.push(123);
+  //   console.log('1', vm.$el.outerHTML);
+  //   vm.$nextTick(() => {
+  //     console.log('2', vm.$el.outerHTML);
+  //   });
+  // });
+  // 用户watcher会在初始化watch时直接执行通过key获取值的方法，由于取值会调用属性的get方法，所以在这里完成了用户watcher依赖收集的过程
+  // 值在更新后，会调用属性的set方法来通知计算属性watcher执行，此时会再次进行取值
+  vm.a = 2; // 用户watcher进入队列，然后会将刷新队列方法放到nextTick方法中
+  console.log(1);
+  vm.$nextTick(() => { // 将回调函数放到nextTick方法中，之后会异步执行用户watcher，然后再执行nextTick中的方法
+    vm.a = 3; // 值进行了更新，会再次异步调用watch
+  });
+  // 最终打印结果： 1, 'new,old' 1,2, 'new,old' 2,3
 </script>
 </body>
 </html>

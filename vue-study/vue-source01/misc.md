@@ -30,3 +30,12 @@
       * 通过new Function + with生成render函数
       * 通过Vue.prototype._render执行vm.$options.render，并实现在render中定义的函数，最终通过render函数返回虚拟dom
       * 通过Vue.prototype._update将虚拟节点通过patch方法，转换为真实dom，渲染到页面中
+      
+### 异步更新
+* watcher调用`update`方法时会创建一个队列，将`watcher`通过`id`去重后放到队列中，之后执行完成后清空队列
+* 然后通过`$nextTick`异步调用队列中所有`watcher`的`run`方法
+* `$nextTick`会在调用时将传入回调继续放到一个队列中，因为有可能用户会调用`vm.$nextTick`方法，然后通过在`Promise.resolve`等异步方法中进行执行
+* 执行完成后，调用`updated`生命周期方法
+* forEach vs for...i , duration forEach append to array element is not visited
+  * theory：const length = arr.length, 将length进行了缓存，之后追加的值将不会再遍历
+  * 而for...i循环时，取的是arr.length, arr为引用类型，它的length会由于添加内容而发生更改，再次执行时会得到最新值 

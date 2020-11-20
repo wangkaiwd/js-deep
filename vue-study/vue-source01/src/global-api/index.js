@@ -7,7 +7,6 @@ function initGlobalApi (Vue) {
   Vue.options = {};
   Vue.mixin = function (mixins) {
     this.options = mergeOptions(this.options, mixins);
-    console.log('options', this.options);
   };
 }
 
