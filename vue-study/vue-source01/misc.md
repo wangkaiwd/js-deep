@@ -38,4 +38,10 @@
 * 执行完成后，调用`updated`生命周期方法
 * forEach vs for...i , duration forEach append to array element is not visited
   * theory：const length = arr.length, 将length进行了缓存，之后追加的值将不会再遍历
-  * 而for...i循环时，取的是arr.length, arr为引用类型，它的length会由于添加内容而发生更改，再次执行时会得到最新值 
+  * 而for...i循环时，取的是arr.length, arr为引用类型，它的length会由于添加内容而发生更改，再次执行时会得到最新值
+  
+### 死循环调试
+* 页面会卡死无法运行，导致排查问题比较难
+* 如果完全不知道哪里会出错的话，要采用**二分法**，分别通过debug进行查看
+* 要特别留意可能会产生死循环的代码，打断点进行排查
+* 代码处理的是相同的逻辑，如果循环的内容过多，要提取重复子逻辑，与出错内容进行比对，看看到底哪里出了问题

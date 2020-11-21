@@ -78,8 +78,9 @@ function patch (oldVNode, vNode) {
     }
     if (!oldVNode.tag) { // tag undefined: 文本节点
       if (oldVNode.el.textContent !== vNode.text) {
-        return oldVNode.el.textContent = vNode.text;
+        oldVNode.el.textContent = vNode.text;
       }
+      return;
     }
     // 更新属性
     const el = vNode.el = oldVNode.el;
@@ -89,11 +90,52 @@ function patch (oldVNode, vNode) {
     //  1. 老节点有孩子，新节点没有孩子，将老节点孩子设置为空
     //  2. 老节点没有孩子，新节点有孩子，将新节点设置为老节点的孩子
     //  3. 老节点和新节点都有孩子，通过双指针进行对比优化：结尾插入、开头插入、倒序、倒叙
+    const oldChildren = oldVNode.children;
+    const newChildren = vNode.children;
+    if (oldChildren.length > 0 && newChildren.length > 0) {
+      updateChildren(oldChildren, newChildren, el);
+    } else if (oldChildren.length > 0) {
+      el.innerHTML = '';
+    } else if (newChildren.length > 0) {
+      for (let i = 0; i < newChildren.length; i++) {
+        const child = newChildren[i];
+        el.appendChild(createElement(child));
+      }
+    }
   }
 }
 
-function updateChildren () {
+function isSameVNode (oldVNode, newVNode) {
+  return (oldVNode.tag === newVNode.tag) && (oldVNode.key === newVNode.key);
+}
 
+// Vue中的diff算法做了很多优化(双指针)
+function updateChildren (oldChildren, newChildren, parent) {
+  let oldStartIndex = 0;
+  let oldEndIndex = oldChildren.length - 1;
+  let oldStartVNode = oldChildren[oldStartIndex];
+  let oldEndVNode = oldChildren[oldEndIndex];
+  let newStartIndex = 0;
+  let newEndIndex = newChildren.length - 1;
+  let newStartVNode = newChildren[newStartIndex];
+  let newEndVNode = newChildren[newEndIndex];
+  while (newStartIndex <= newEndIndex && oldStartIndex <= oldEndIndex) {
+    // https://excalidraw.com/#json=6323180297781248,5P1UibC53d7pFiPyG1gadw
+    if (isSameVNode(oldStartVNode, newStartVNode)) {
+      // 继续执行patch,先比对并更新属性，然后再比对孩子
+      patch(oldStartVNode, newStartVNode);
+      newStartVNode = newChildren[++newStartIndex];
+      oldStartVNode = oldChildren[++oldStartIndex];
+    } else if (isSameVNode(oldEndVNode, newEndVNode)) { // https://excalidraw.com/#json=6282157085425664,ShN7flboAy7R-H7f1Bpw3A
+      path(oldEndVNode, newEndVNode);
+      newEndVNode = newChildren[--newEndIndex];
+      oldEndVNode = oldChildren[--oldEndIndex];
+    }
+  }
+  for (let i = newStartIndex; i <= newEndIndex; i++) {
+    const child = newChildren[i];
+    parent.appendChild(createElement(child));
+  }
 }
 
 export default patch;

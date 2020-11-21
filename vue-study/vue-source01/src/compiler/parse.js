@@ -80,7 +80,7 @@ export function parseHTML (html) {
     });
   }
 
-  while (html) { // 一点点删除html
+  while (html.trim()) { // 一点点删除html
     const textEnd = html.indexOf('<'); // 标签会以'<'开头
     if (textEnd === 0) {
       const startTagMatch = parseStartTag();
