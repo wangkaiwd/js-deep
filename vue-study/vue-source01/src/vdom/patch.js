@@ -127,14 +127,15 @@ function updateChildren (oldChildren, newChildren, parent) {
       newStartVNode = newChildren[++newStartIndex];
       oldStartVNode = oldChildren[++oldStartIndex];
     } else if (isSameVNode(oldEndVNode, newEndVNode)) { // https://excalidraw.com/#json=6282157085425664,ShN7flboAy7R-H7f1Bpw3A
-      path(oldEndVNode, newEndVNode);
+      patch(oldEndVNode, newEndVNode);
       newEndVNode = newChildren[--newEndIndex];
       oldEndVNode = oldChildren[--oldEndIndex];
     }
   }
   for (let i = newStartIndex; i <= newEndIndex; i++) {
     const child = newChildren[i];
-    parent.appendChild(createElement(child));
+    const referVNode = oldChildren[newEndIndex] ?? null;
+    parent.insertBefore(createElement(child), referVNode.el);
   }
 }
 

@@ -33,15 +33,6 @@ const vNode1 = render1.call(vm1); // 内部的所有方法和属性都是在Vue�
 patch(document.getElementById('app'), vNode1);
 
 const vm2 = new Vue({ data: { name: 'ls' } });
-const render2 = compileToFunctions(`<div id="app">
-    <ul>
-      <li style="background:pink;" key="A">A</li>
-      <li style="background:green;" key="B">B</li>
-      <li style="background:green;" key="C">C</li>
-      <li style="background:yellow;" key="D">D</li>
-      <li style="background:purple;" key="E">E</li>
-    </ul>
-  </div>`);
 // const render2 = compileToFunctions(`<div id="app">
 //     <ul>
 //       <li style="background:pink;" key="A">A</li>
@@ -51,6 +42,15 @@ const render2 = compileToFunctions(`<div id="app">
 //       <li style="background:purple;" key="E">E</li>
 //     </ul>
 //   </div>`);
+const render2 = compileToFunctions(`<div id="app">
+    <ul>
+      <li style="background:purple;" key="E">E</li>
+      <li style="background:pink;" key="A">A</li>
+      <li style="background:green;" key="B">B</li>
+      <li style="background:green;" key="C">C</li>
+      <li style="background:yellow;" key="D">D</li>
+    </ul>
+  </div>`);
 const vNode2 = render2.call(vm2);
 setTimeout(() => {
   patch(vNode1, vNode2);
