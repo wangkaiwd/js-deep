@@ -42,6 +42,7 @@ const vm2 = new Vue({ data: { name: 'ls' } });
 //       <li style="background:purple;" key="E">E</li>
 //     </ul>
 //   </div>`);
+// 加key和不加key?
 const render2 = compileToFunctions(`<div id="app">
     <ul>
       <li style="background:purple;" key="E">E</li>
