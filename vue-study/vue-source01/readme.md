@@ -26,9 +26,9 @@
   <script>
     export default{
       mounted() {
-        console.log(this.a = 1)
-        console.log(this.a = 2)
-        console.log(this.a = 3)
+        this.a = 1
+        this.a = 2
+        this.a = 3
       }
     }
   </script>

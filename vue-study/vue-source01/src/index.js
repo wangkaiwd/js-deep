@@ -3,6 +3,8 @@ import { lifecycleMixin } from './lifecycle';
 import { renderMixin } from './vdom';
 import initGlobalApi from './global-api';
 import { stateMixin } from './state';
+import { compileToFunctions } from './compiler';
+import patch from './vdom/patch';
 
 function Vue (options) {
   this._init(options);
@@ -15,3 +17,17 @@ renderMixin(Vue);
 stateMixin(Vue);
 initGlobalApi(Vue);
 export default Vue;
+
+// 思考渲染过程，思考需要加入diff的代码位置
+
+const vm1 = new Vue({ data: { name: 'zs' } });
+const render1 = compileToFunctions('<div id="app" style="color:red">{{name}}</div>');
+const vNode1 = render1.call(vm1); // 内部的所有方法和属性都是在Vue实例上的
+patch(document.getElementById('app'), vNode1);
+
+const vm2 = new Vue({ data: { name: 'ls' } });
+const render2 = compileToFunctions('<div id="aa" style="background:blue">{{name}}</div>');
+const vNode2 = render2.call(vm2);
+setTimeout(() => {
+  patch(vNode1, vNode2);
+}, 2000);
