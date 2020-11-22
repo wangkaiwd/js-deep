@@ -133,7 +133,7 @@ function updateChildren (oldChildren, newChildren, parent) {
       patch(oldEndVNode, newEndVNode);
       newEndVNode = newChildren[--newEndIndex];
       oldEndVNode = oldChildren[--oldEndIndex];
-    } else if (isSameVNode(oldStartVNode, newEndVNode)) {
+    } else if (isSameVNode(oldStartVNode, newEndVNode)) { // 头和尾比，如果每次都是倒序的话会一直将元素移动到最后一个老节点后面
       patch(oldStartVNode, newEndVNode);
       parent.insertBefore(oldStartVNode.el, oldEndVNode.el.nextSibling);
       oldStartVNode = oldChildren[++oldStartIndex];
