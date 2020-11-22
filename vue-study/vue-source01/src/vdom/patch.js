@@ -110,6 +110,8 @@ function isSameVNode (oldVNode, newVNode) {
 }
 
 // Vue中的diff算法做了很多优化(双指针)： 原则：要尽可能的复用
+// 头和头相同：https://excalidraw.com/#json=6323180297781248,5P1UibC53d7pFiPyG1gadw
+// 尾和尾相同：https://excalidraw.com/#json=6282157085425664,ShN7flboAy7R-H7f1Bpw3A
 // reverse反转：https://excalidraw.com/#json=5717246110334976,tryA_tqRh4TgnV8KfiQS2w
 // 新节点将老节点尾部移动到头部：https://excalidraw.com/#json=5742657385005056,quCfr-Eipq7hHqyvcWdXeQ
 // 新节点将老节点头部移动到尾部: https://excalidraw.com/#json=5749951145443328,eP4pUJHAJu2ggUcY6McHEA
@@ -166,7 +168,7 @@ function updateChildren (oldChildren, newChildren, parent) {
       parent.insertBefore(oldEndVNode.el, oldStartVNode.el);
       oldEndVNode = oldChildren[--oldEndIndex];
       newStartVNode = newChildren[++newStartIndex];
-    } else { // 暴力对比: https://excalidraw.com/#json=5731896445108224,XuoBzJ78FleShnQ_r1pCUg
+    } else { // 暴力对比: https://excalidraw.com/#json=5687341897220096,OgwSzbMWw3d6NmqZusfW_A
       const moveIndex = map[newStartVNode.key];
       if (moveIndex) {
         const moveVNode = oldChildren[moveIndex];
