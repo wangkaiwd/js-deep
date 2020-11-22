@@ -122,8 +122,31 @@ function updateChildren (oldChildren, newChildren, parent) {
   let newEndIndex = newChildren.length - 1;
   let newStartVNode = newChildren[newStartIndex];
   let newEndVNode = newChildren[newEndIndex];
+  // 思路：如果优化条件不满足，需要在老节点中查找是否有相同元素
+  //      1. 有相同元素，将相同元素移动到老开始节点之前，并且将该相同元素在虚拟节点中置为null，之后遍历时跳过即可
+  //      2. 如果没有相同元素，将元素直接插入到老开始节点之前
+  //      3. 完成后新的开始节点向后移动
+  //      4. 遍历结束后，删除老节点的剩余元素
+  function makeKeyMap () {
+    const map = {};
+    for (let i = 0; i < oldChildren.length; i++) {
+      const child = oldChildren[i];
+      // 乱序查找时，会在移动之后会将child置为空
+      if (child) {
+        map[child.key] = i;
+      }
+    }
+    return map;
+  }
+
+  const map = makeKeyMap();
   while (newStartIndex <= newEndIndex && oldStartIndex <= oldEndIndex) {
     // https://excalidraw.com/#json=6323180297781248,5P1UibC53d7pFiPyG1gadw
+    if (oldStartVNode == null) {
+      continue;
+    } else if (oldEndVNode == null) {
+      continue;
+    }
     if (isSameVNode(oldStartVNode, newStartVNode)) {
       // 继续执行patch,先比对并更新属性，然后再比对孩子
       patch(oldStartVNode, newStartVNode);
@@ -143,8 +166,15 @@ function updateChildren (oldChildren, newChildren, parent) {
       parent.insertBefore(oldEndVNode.el, oldStartVNode.el);
       oldEndVNode = oldChildren[--oldEndIndex];
       newStartVNode = newChildren[++newStartIndex];
-    } else { // 暴力对比
-
+    } else { // 暴力对比: https://excalidraw.com/#json=5731896445108224,XuoBzJ78FleShnQ_r1pCUg
+      const moveIndex = map[newStartVNode.key];
+      if (moveIndex) {
+        const moveVNode = oldChildren[moveIndex];
+        parent.insertBefore(moveVNode.el, oldStartVNode.el);
+      } else {
+        parent.insertBefore(createElement(newStartVNode), oldStartVNode.el);
+      }
+      newStartVNode = newChildren[++newStartIndex];
     }
   }
   for (let i = newStartIndex; i <= newEndIndex; i++) {
@@ -152,6 +182,12 @@ function updateChildren (oldChildren, newChildren, parent) {
     const referVNode = oldChildren[newEndIndex] ?? null;
     // TODO: referVNode may some  problem ?
     parent.insertBefore(createElement(child), referVNode.el);
+  }
+  for (let i = oldStartIndex; i <= oldEndIndex; i++) {
+    const child = oldChildren[i];
+    if (child) {
+      parent.removeChild(oldChildren[i].el);
+    }
   }
 }
 
