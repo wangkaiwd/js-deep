@@ -140,7 +140,7 @@ function updateChildren (oldChildren, newChildren, parent) {
       newEndVNode = newChildren[--newEndIndex];
     } else if (isSameVNode(oldEndVNode, newStartVNode)) {
       patch(oldEndVNode, newStartVNode);
-      parent.insertBefore(oldEndVNode, oldStartVNode.el);
+      parent.insertBefore(oldEndVNode.el, oldStartVNode.el);
       oldEndVNode = oldChildren[--oldEndIndex];
       newStartVNode = newChildren[++newStartIndex];
     } else { // 暴力对比
@@ -150,6 +150,7 @@ function updateChildren (oldChildren, newChildren, parent) {
   for (let i = newStartIndex; i <= newEndIndex; i++) {
     const child = newChildren[i];
     const referVNode = oldChildren[newEndIndex] ?? null;
+    // TODO: referVNode may some  problem ?
     parent.insertBefore(createElement(child), referVNode.el);
   }
 }

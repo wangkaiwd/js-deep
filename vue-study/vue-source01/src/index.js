@@ -25,7 +25,7 @@ const render1 = compileToFunctions(`<div id="app">
   <ul>
     <li style="background:pink;" key="A">A</li>
     <li style="background:green;" key="B">B</li>
-    <li style="background:green;" key="C">C</li>
+    <li style="background:blue;" key="C">C</li>
     <li style="background:yellow;" key="D">D</li>
   </ul>
 </div>`);
@@ -52,12 +52,20 @@ const vm2 = new Vue({ data: { name: 'ls' } });
 //       <li style="background:yellow;" key="D">D</li>
 //     </ul>
 //   </div>`);
+// const render2 = compileToFunctions(`<div id="app">
+//     <ul>
+//       <li style="background:green;" key="B">B</li>
+//       <li style="background:blue;" key="C">C</li>
+//       <li style="background:yellow;" key="D">D</li>
+//       <li style="background:pink;" key="A">A</li>
+//     </ul>
+//   </div>`);
 const render2 = compileToFunctions(`<div id="app">
     <ul>
-      <li style="background:green;" key="B">B</li>
-      <li style="background:blue;" key="C">C</li>
       <li style="background:yellow;" key="D">D</li>
       <li style="background:pink;" key="A">A</li>
+      <li style="background:green;" key="B">B</li>
+      <li style="background:blue;" key="C">C</li>
     </ul>
   </div>`);
 const vNode2 = render2.call(vm2);
