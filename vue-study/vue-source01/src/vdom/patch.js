@@ -109,7 +109,10 @@ function isSameVNode (oldVNode, newVNode) {
   return (oldVNode.tag === newVNode.tag) && (oldVNode.key === newVNode.key);
 }
 
-// Vue中的diff算法做了很多优化(双指针)
+// Vue中的diff算法做了很多优化(双指针)： 原则：要尽可能的复用
+// reverse反转：https://excalidraw.com/#json=5717246110334976,tryA_tqRh4TgnV8KfiQS2w
+// 新节点将老节点尾部移动到头部：https://excalidraw.com/#json=5742657385005056,quCfr-Eipq7hHqyvcWdXeQ
+// 新节点将老节点头部移动到尾部: https://excalidraw.com/#json=5749951145443328,eP4pUJHAJu2ggUcY6McHEA
 function updateChildren (oldChildren, newChildren, parent) {
   let oldStartIndex = 0;
   let oldEndIndex = oldChildren.length - 1;
@@ -130,6 +133,18 @@ function updateChildren (oldChildren, newChildren, parent) {
       patch(oldEndVNode, newEndVNode);
       newEndVNode = newChildren[--newEndIndex];
       oldEndVNode = oldChildren[--oldEndIndex];
+    } else if (isSameVNode(oldStartVNode, newEndVNode)) {
+      patch(oldStartVNode, newEndVNode);
+      parent.insertBefore(oldStartVNode.el, oldEndVNode.el.nextSibling);
+      oldStartVNode = oldChildren[++oldStartIndex];
+      newEndVNode = newChildren[--newEndIndex];
+    } else if (isSameVNode(oldEndVNode, newStartVNode)) {
+      patch(oldEndVNode, newStartVNode);
+      parent.insertBefore(oldEndVNode, oldStartVNode.el);
+      oldEndVNode = oldChildren[--oldEndIndex];
+      newStartVNode = newChildren[++newStartIndex];
+    } else { // 暴力对比
+
     }
   }
   for (let i = newStartIndex; i <= newEndIndex; i++) {
