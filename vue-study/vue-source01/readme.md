@@ -68,3 +68,6 @@
 * [新节点将老节点头部移动到尾部](https://excalidraw.com/#json=5749951145443328,eP4pUJHAJu2ggUcY6McHEA)
 
 面试题：为什么不能用`index`作为`v-for`列表的`key`?
+
+### computed
+* 面试题：`watch`和`computed`的区别？

@@ -9,7 +9,8 @@
 </head>
 <body>
 <div id="app">
-  <h2>{{c}}</h2>
+  <span>哈哈哈</span>
+  <h2>{{a}}</h2>
 </div>
 <script src="dist/umd/vue.js"></script>
 <script>
@@ -77,6 +78,10 @@
   //   vm.a = 3; // 值进行了更新，会再次异步调用watch
   // });
   // 最终打印结果： 1, 'new,old' 1,2, 'new,old' 2,3
+
+  setTimeout(() => {
+    vm.a = 4;
+  }, 3000);
 </script>
 </body>
 </html>
