@@ -20,7 +20,7 @@ export default Vue;
 
 // 思考渲染过程，思考需要加入diff的代码位置
 
-const vm1 = new Vue({ data: { name: 'zs' } });
+// const vm1 = new Vue({ data: { name: 'zs' } });
 // const render1 = compileToFunctions(`<div id="app">
 //   <ul>
 //     <li style="background:pink;" key="A">A</li>
@@ -29,18 +29,18 @@ const vm1 = new Vue({ data: { name: 'zs' } });
 //     <li style="background:yellow;" key="D">D</li>
 //   </ul>
 // </div>`);
-const render1 = compileToFunctions(`<div id="app">
-  <ul>
-    <li style="background:yellow;" key="D">D</li>
-    <li style="background:green;" key="B">B</li>
-    <li style="background:pink;" key="Z">Z</li>
-    <li style="background:purple;" key="F">F</li>
-  </ul>
-</div>`);
-const vNode1 = render1.call(vm1); // 内部的所有方法和属性都是在Vue实例上的
-patch(document.getElementById('app'), vNode1);
-
-const vm2 = new Vue({ data: { name: 'ls' } });
+// const render1 = compileToFunctions(`<div id="app">
+//   <ul>
+//     <li style="background:yellow;" key="D">D</li>
+//     <li style="background:green;" key="B">B</li>
+//     <li style="background:pink;" key="Z">Z</li>
+//     <li style="background:purple;" key="F">F</li>
+//   </ul>
+// </div>`);
+// const vNode1 = render1.call(vm1); // 内部的所有方法和属性都是在Vue实例上的
+// patch(document.getElementById('app'), vNode1);
+//
+// const vm2 = new Vue({ data: { name: 'ls' } });
 // const render2 = compileToFunctions(`<div id="app">
 //     <ul>
 //       <li style="background:pink;" key="A">A</li>
@@ -85,16 +85,16 @@ const vm2 = new Vue({ data: { name: 'ls' } });
 //     </ul>
 //   </div>`);
 
-const render2 = compileToFunctions(`<div id="app">
-    <ul>
-      <li style="background:purple;" key="F">F</li>
-      <li style="background:yellow;" key="D">D</li>
-      <li style="background:blue;" key="Q">Q</li>
-      <li style="background:green;" key="B">B</li>
-      <li style="background:pink;" key="M">M</li>
-    </ul>
-  </div>`);
-const vNode2 = render2.call(vm2);
-setTimeout(() => {
-  patch(vNode1, vNode2);
-}, 2000);
+// const render2 = compileToFunctions(`<div id="app">
+//     <ul>
+//       <li style="background:purple;" key="F">F</li>
+//       <li style="background:yellow;" key="D">D</li>
+//       <li style="background:blue;" key="Q">Q</li>
+//       <li style="background:green;" key="B">B</li>
+//       <li style="background:pink;" key="M">M</li>
+//     </ul>
+//   </div>`);
+// const vNode2 = render2.call(vm2);
+// setTimeout(() => {
+//   patch(vNode1, vNode2);
+// }, 2000);

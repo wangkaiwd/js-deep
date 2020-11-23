@@ -9,8 +9,7 @@
 </head>
 <body>
 <div id="app">
-  <ul>
-  </ul>
+  <h2>{{c}}</h2>
 </div>
 <script src="dist/umd/vue.js"></script>
 <script>
@@ -24,24 +23,30 @@
   //     console.log(1);
   //   }
   // });
-  // const vm = new Vue({
-  //   el: '#app',
-  //   data () {
-  //     return {
-  //       a: 1,
-  //       // arr: [[1, 2, 3]],
-  //       // person: { name: 'zs', age: 18 }
-  //     };
-  //   },
-  //   // created () {
-  //   //   console.log(2);
-  //   // }
-  //   watch: {
-  //     a (newVal, oldVal) {
-  //       console.log('new,old', newVal, oldVal);
-  //     }
-  //   }
-  // });
+  const vm = new Vue({
+    el: '#app',
+    data () {
+      return {
+        a: 1,
+        b: 2,
+        // arr: [[1, 2, 3]],
+        // person: { name: 'zs', age: 18 }
+      };
+    },
+    // created () {
+    //   console.log(2);
+    // }
+    // watch: {
+    //   a (newVal, oldVal) {
+    //     console.log('new,old', newVal, oldVal);
+    //   }
+    // }
+    computed: {
+      c () {
+        return a + b;
+      }
+    }
+  });
   // 不会对索引进行监听，会对数组的方法进行重写，然后使其具有响应性
   // 渲染组件：
   //  1. 默认先处理render方法
@@ -75,3 +80,18 @@
 </script>
 </body>
 </html>
+
+<!--
+  1. 遍历computed的配置项：拿到每一项的key,value
+  2. 可以在实例上手动添加key的get方法， Object.defineProperty(vm,key,{
+    get() {
+      if(dirty) {
+         watcher.evaluate()
+      }
+    }
+  })
+  3. 要通过对应选项创建计算属性watcher(vm,key,handler,{lazy:true})
+  4. 此时key为表达式，所以this.getter将会是从vm中获取key的值的函数，此函数不会立即执行
+  5. this.getter() 获取到最新值，函数中还会执行依赖属性的get方法，会收集其对应的计算属性watcher
+  6. 当依赖属性更新时，会执行对应的update方法
+-->
