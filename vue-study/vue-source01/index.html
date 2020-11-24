@@ -10,7 +10,7 @@
 <body>
 <div id="app">
   <span>哈哈哈</span>
-  <h2>{{a}}</h2>
+  <h2>{{c}}</h2>
 </div>
 <script src="dist/umd/vue.js"></script>
 <script>
@@ -44,7 +44,7 @@
     // }
     computed: {
       c () {
-        return a + b;
+        return this.a + this.b;
       }
     }
   });
@@ -79,9 +79,10 @@
   // });
   // 最终打印结果： 1, 'new,old' 1,2, 'new,old' 2,3
 
-  setTimeout(() => {
-    vm.a = 4;
-  }, 3000);
+  // setTimeout(() => {
+  //   vm.a = 4;
+  // }, 3000);
+  console.log(vm.c);
 </script>
 </body>
 </html>

@@ -12,10 +12,13 @@ class Watcher {
     this.exprOrFn = exprOrFn;
     this.cb = cb;
     this.options = options;
+    this.user = options?.user;
+    this.lazy = options?.lazy;
+    this.dirty = this.lazy;
     if (typeof this.exprOrFn === 'function') {
       this.getter = exprOrFn;
     } else {
-      if (this.options?.user) {
+      if (this.user) {
         this.getter = function () { // 初始化状态中包括初始化watcher,所以初始化watcher会在页面首次渲染之前
           const expressions = exprOrFn.split('.');
           return expressions.reduce((memo, current) => {
@@ -25,7 +28,8 @@ class Watcher {
       }
     }
     // 注意：Vue的首次渲染是同步的，在首次渲染之后的渲染会执行update方法，存到队列中在微任务中执行
-    this.value = this.get();
+    // 计算属性首次初始化时不会执行
+    this.value = this.lazy ? undefined : this.get();
   }
 
   addDep (dep) {
@@ -37,6 +41,13 @@ class Watcher {
       this.deps.push(dep);
       dep.addSub(this);
     }
+  }
+
+  evaluate () {
+    // this.getter此时为计算属性所对应的函数，即通过依赖属性返回计算属性所对应的值
+    this.value = this.get();
+    // 执行过后变为false
+    this.dirty = false;
   }
 
   get () {

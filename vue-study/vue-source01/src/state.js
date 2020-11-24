@@ -38,7 +38,44 @@ function initData (vm) {
   }
 }
 
-function initComputed (vm) {}
+function initComputed (vm) {
+  const { computed } = vm.$options;
+  const watchers = vm._computedWatchers = {};
+  for (const key in computed) {
+    if (computed.hasOwnProperty(key)) {
+      const userDef = computed[key];
+      // function() {}  {get() {},set() {}}
+      const getter = typeof userDef === 'function' ? userDef : userDef.get;
+      watchers[key] = new Watcher(vm, getter, () => {}, { lazy: true });
+      defineGetter(vm, key, userDef);
+    }
+  }
+}
+
+function computedGetter (key) {
+  return function () { // 获取计算属性的值
+    const watcher = this._computedWatchers[key];
+    if (watcher) {
+      if (watcher.dirty) {
+        watcher.evaluate();
+      }
+      return watcher.value;
+    }
+  };
+}
+
+function defineGetter (target, key, userDef) {
+  // const config = {};
+  // if (typeof userDef === 'function') {
+  //   config.get = userDef;
+  // } else if (typeof userDef === 'object') {
+  //   config.get = userDef.get;
+  //   config.set = userDef.set;
+  // }
+  Object.defineProperty(target, key, {
+    get: computedGetter(key)
+  });
+}
 
 function createWatcher (vm, key, handler) {
   vm.$watch(key, handler);
