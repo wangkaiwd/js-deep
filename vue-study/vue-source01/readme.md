@@ -71,3 +71,13 @@
 
 ### computed
 * 面试题：`watch`和`computed`的区别？
+
+### 组件
+* 复习继承：思考实现继承的几种方法
+* 为什么要拆分小组件？
+  1. 实现复用
+  2. 方便维护
+  3. vue更新问题，每一个组件一个`watcher`，这样在更新时可以减少比对内容
+* Vue.component
+* Vue.component
+* Vue.options.components 的合并策略： 利用原型链

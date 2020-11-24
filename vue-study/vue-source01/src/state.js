@@ -71,7 +71,12 @@ function createComputedGetter (key) {
 }
 
 function defineComputed (target, key, userDef) {
-  const sharedPropertyDefinition = {};
+  const sharedPropertyDefinition = {
+    configurable: true,
+    enumerable: true,
+    get () {},
+    set () {}
+  };
   if (typeof userDef === 'function') {
     sharedPropertyDefinition.get = createComputedGetter(key);
   } else if (typeof userDef === 'object') {
