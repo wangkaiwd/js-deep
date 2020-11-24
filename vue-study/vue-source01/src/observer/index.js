@@ -69,8 +69,6 @@ export function defineReactive (data, key, value) {
       // 继续为新增的值设置get/set方法
       observe(newValue);
       value = newValue;
-      console.log('set');
-      console.log('dep', dep);
       dep.notify();
     }
   });

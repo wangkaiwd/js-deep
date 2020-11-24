@@ -43,6 +43,11 @@ class Watcher {
     }
   }
 
+  depend () {
+    // 为watcher中的所有dep收集当前的watcher
+    this.deps.forEach(dep => dep.depend());
+  }
+
   evaluate () {
     // this.getter此时为计算属性所对应的函数，即通过依赖属性返回计算属性所对应的值
     this.value = this.get();
@@ -58,8 +63,12 @@ class Watcher {
   }
 
   update () {
-    // 此时watch中的值进行更新，
-    queueWatcher(this);
+    if (this.lazy) {
+      this.dirty = true;
+    } else {
+      // 此时watch中的值进行更新，
+      queueWatcher(this);
+    }
   }
 
   run () {

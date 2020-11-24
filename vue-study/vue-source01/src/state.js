@@ -1,6 +1,7 @@
 import { observe } from './observer';
 import { nextTick } from './util';
 import Watcher from './observer/watcher';
+import Dep from './observer/dep';
 
 function initState (vm) {
   const { props, methods, data, computed, watch } = vm.$options;
@@ -57,7 +58,12 @@ function computedGetter (key) {
     const watcher = this._computedWatchers[key];
     if (watcher) {
       if (watcher.dirty) {
+        // 会执行计算属性key对应的函数，从而调用依赖属性的get方法，收集当前的Dep.target: computed watcher
         watcher.evaluate();
+        // 执行完成后，计算属性watcher出栈，剩余渲染watcher,此时需要为依赖熟悉收集渲染watcher，实现在依赖更新后，更新页面，进而获取到最新的计算属性值
+        if (Dep.target) {
+          watcher.depend()
+        }
       }
       return watcher.value;
     }
