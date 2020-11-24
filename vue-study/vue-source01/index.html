@@ -9,9 +9,8 @@
 </head>
 <body>
 <div id="app">
-  <ul>
-    <li style="color:red;"></li>
-  </ul>
+  <span>哈哈哈</span>
+  <h2>{{a}}</h2>
 </div>
 <script src="dist/umd/vue.js"></script>
 <script>
@@ -30,6 +29,7 @@
     data () {
       return {
         a: 1,
+        b: 2,
         // arr: [[1, 2, 3]],
         // person: { name: 'zs', age: 18 }
       };
@@ -37,9 +37,14 @@
     // created () {
     //   console.log(2);
     // }
-    watch: {
-      a (newVal, oldVal) {
-        console.log('new,old', newVal, oldVal);
+    // watch: {
+    //   a (newVal, oldVal) {
+    //     console.log('new,old', newVal, oldVal);
+    //   }
+    // }
+    computed: {
+      c () {
+        return a + b;
       }
     }
   });
@@ -67,12 +72,31 @@
   // });
   // 用户watcher会在初始化watch时直接执行通过key获取值的方法，由于取值会调用属性的get方法，所以在这里完成了用户watcher依赖收集的过程
   // 值在更新后，会调用属性的set方法来通知计算属性watcher执行，此时会再次进行取值
-  vm.a = 2; // 用户watcher进入队列，然后会将刷新队列方法放到nextTick方法中
-  console.log(1);
-  vm.$nextTick(() => { // 将回调函数放到nextTick方法中，之后会异步执行用户watcher，然后再执行nextTick中的方法
-    vm.a = 3; // 值进行了更新，会再次异步调用watch
-  });
+  // vm.a = 2; // 用户watcher进入队列，然后会将刷新队列方法放到nextTick方法中
+  // console.log(1);
+  // vm.$nextTick(() => { // 将回调函数放到nextTick方法中，之后会异步执行用户watcher，然后再执行nextTick中的方法
+  //   vm.a = 3; // 值进行了更新，会再次异步调用watch
+  // });
   // 最终打印结果： 1, 'new,old' 1,2, 'new,old' 2,3
+
+  setTimeout(() => {
+    vm.a = 4;
+  }, 3000);
 </script>
 </body>
 </html>
+
+<!--
+  1. 遍历computed的配置项：拿到每一项的key,value
+  2. 可以在实例上手动添加key的get方法， Object.defineProperty(vm,key,{
+    get() {
+      if(dirty) {
+         watcher.evaluate()
+      }
+    }
+  })
+  3. 要通过对应选项创建计算属性watcher(vm,key,handler,{lazy:true})
+  4. 此时key为表达式，所以this.getter将会是从vm中获取key的值的函数，此函数不会立即执行
+  5. this.getter() 获取到最新值，函数中还会执行依赖属性的get方法，会收集其对应的计算属性watcher
+  6. 当依赖属性更新时，会执行对应的update方法
+-->

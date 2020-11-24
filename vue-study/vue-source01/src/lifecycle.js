@@ -4,7 +4,13 @@ import Watcher from './observer/watcher';
 export function lifecycleMixin (Vue) {
   Vue.prototype._update = function (vNode) {
     const vm = this;
-    vm.$el = patch(vm.$el, vNode);
+    const prevVNode = vm._vNode;
+    if (prevVNode) {
+      vm.$el = patch(prevVNode, vNode);
+    } else {
+      vm.$el = patch(vm.$el, vNode);
+    }
+    vm._vNode = vNode;
   };
 }
 

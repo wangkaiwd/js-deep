@@ -29,58 +29,58 @@ export const defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g; // 匹配双花括号之
 
 // 树 + 栈
 
-// 开始标签
-let root = undefined;
-let currentParent = undefined;
-const stack = []; // 用来存储当前在操作的所有元素
-function start (tagName, attrs) {
-  const element = createASTElement(tagName, attrs);
-  if (!root) {
-    root = element;
+export function parseHTML (html) {
+  // 开始标签
+  let root = undefined;
+  let currentParent = undefined;
+  const stack = []; // 用来存储当前在操作的所有元素
+  function createASTElement (tagName, attrs) {
+    return {
+      tag: tagName,
+      type: 1,
+      attrs,
+      children: [],
+      parent: null
+    };
   }
-  currentParent = element;
-  stack.push(element);
-}
 
-// <div id="app"> hello <div>hello {{name}}</div>
-//   <span>world</span>
-// </div>
-// 结束标签 [div,]
-function end (tagName) { // 结尾标签处可以得到父子关系
-  const element = stack.pop(); // remove the last element from an array and returns that element
-  const currentParent = stack[stack.length - 1];
-  element.parent = currentParent;
-  if (currentParent) { // 当结束最外层标签时，stack为[]，此时不会有currentParent
-    currentParent.children.push(element);
+  function start (tagName, attrs) {
+    const element = createASTElement(tagName, attrs);
+    if (!root) {
+      root = element;
+    }
+    currentParent = element;
+    stack.push(element);
   }
-}
 
-function isEmpty (value) {
-  return (value === '') || (value == null);
-}
+  // <div id="app"> hello <div>hello {{name}}</div>
+  //   <span>world</span>
+  // </div>
+  // 结束标签 [div,]
+  function end (tagName) { // 结尾标签处可以得到父子关系
+    const element = stack.pop(); // remove the last element from an array and returns that element
+    const currentParent = stack[stack.length - 1];
+    element.parent = currentParent;
+    if (currentParent) { // 当结束最外层标签时，stack为[]，此时不会有currentParent
+      currentParent.children.push(element);
+    }
+  }
+
+  function isEmpty (value) {
+    return (value === '') || (value == null);
+  }
 
 // 文本
-function chars (text) {
-  text = text.replace(/\s/g, '');
-  if (isEmpty(text)) {return; }
-  currentParent.children.push({
-    type: 3,
-    text
-  });
-}
+  function chars (text) {
+    text = text.replace(/\s/g, '');
+    if (isEmpty(text)) {return; }
+    currentParent.children.push({
+      type: 3,
+      text
+    });
+  }
 
-function createASTElement (tagName, attrs) {
-  return {
-    tag: tagName,
-    type: 1,
-    attrs,
-    children: [],
-    parent: null
-  };
-}
-
-export function parseHTML (html) {
-  while (html) { // 一点点删除html
+  while (html.trim()) { // 一点点删除html
     const textEnd = html.indexOf('<'); // 标签会以'<'开头
     if (textEnd === 0) {
       const startTagMatch = parseStartTag();

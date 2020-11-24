@@ -26,9 +26,9 @@
   <script>
     export default{
       mounted() {
-        console.log(this.a = 1)
-        console.log(this.a = 2)
-        console.log(this.a = 3)
+        this.a = 1
+        this.a = 2
+        this.a = 3
       }
     }
   </script>
@@ -59,3 +59,15 @@
     }
   </script>
   ```
+
+### `diff`算法图解
+* [头和头相同](https://excalidraw.com/#json=6323180297781248,5P1UibC53d7pFiPyG1gadw)
+* [尾和尾相同](https://excalidraw.com/#json=6282157085425664,ShN7flboAy7R-H7f1Bpw3A)
+* [reverse反转](https://excalidraw.com/#json=5717246110334976,tryA_tqRh4TgnV8KfiQS2w)
+* [新节点将老节点尾部移动到头部](https://excalidraw.com/#json=5742657385005056,quCfr-Eipq7hHqyvcWdXeQ)
+* [新节点将老节点头部移动到尾部](https://excalidraw.com/#json=5749951145443328,eP4pUJHAJu2ggUcY6McHEA)
+
+面试题：为什么不能用`index`作为`v-for`列表的`key`?
+
+### computed
+* 面试题：`watch`和`computed`的区别？
