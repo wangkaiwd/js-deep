@@ -48,12 +48,12 @@ function initComputed (vm) {
       // function() {}  {get() {},set() {}}
       const getter = typeof userDef === 'function' ? userDef : userDef.get;
       watchers[key] = new Watcher(vm, getter, () => {}, { lazy: true });
-      defineGetter(vm, key, userDef);
+      defineComputed(vm, key, userDef);
     }
   }
 }
 
-function computedGetter (key) {
+function createComputedGetter (key) {
   return function () { // 获取计算属性的值
     const watcher = this._computedWatchers[key];
     if (watcher) {
@@ -62,7 +62,7 @@ function computedGetter (key) {
         watcher.evaluate();
         // 执行完成后，计算属性watcher出栈，剩余渲染watcher,此时需要为依赖熟悉收集渲染watcher，实现在依赖更新后，更新页面，进而获取到最新的计算属性值
         if (Dep.target) {
-          watcher.depend()
+          watcher.depend();
         }
       }
       return watcher.value;
@@ -70,16 +70,16 @@ function computedGetter (key) {
   };
 }
 
-function defineGetter (target, key, userDef) {
-  // const config = {};
-  // if (typeof userDef === 'function') {
-  //   config.get = userDef;
-  // } else if (typeof userDef === 'object') {
-  //   config.get = userDef.get;
-  //   config.set = userDef.set;
-  // }
+function defineComputed (target, key, userDef) {
+  const sharedPropertyDefinition = {};
+  if (typeof userDef === 'function') {
+    sharedPropertyDefinition.get = createComputedGetter(key);
+  } else if (typeof userDef === 'object') {
+    sharedPropertyDefinition.get = createComputedGetter(key);
+    sharedPropertyDefinition.set = userDef.set;
+  }
   Object.defineProperty(target, key, {
-    get: computedGetter(key)
+    get: createComputedGetter(key)
   });
 }
 
