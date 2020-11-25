@@ -81,3 +81,29 @@
 * Vue.component
 * Vue.component
 * Vue.options.components 的合并策略： 利用原型链
+* 渲染组件虚拟节点：
+  * 要根据标签进行判断是否为虚拟节点
+  * 创建组件的虚拟节点
+
+### 源码阅读
+* 查找入口文件
+* `rollup`打包配置文件
+* web/entry-runtime-with-compiler:
+  * 重写$mount方法 
+  * entry-runtime-with-compiler` vs `entry-runtime`
+* web/runtime/index.js 
+  * `$mount` 
+  * directive(v-show/model/if) 
+  * components(transition)
+  * __patch
+* core/index
+  * initGlobalApi: 
+     * set/delete
+     * keep-alive
+     * mergeOptions
+     * mergeData
+     * 组件内：extends vs mixins
+     * initExtend
+     * initUse
+* instance/index
+  * Vue
