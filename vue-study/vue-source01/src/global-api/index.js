@@ -15,7 +15,8 @@ function initGlobalApi (Vue) {
     // 组件名没有的话会默认取id为组件名
     definition.name = definition.name || id;
     definition = this.options._base.extend(definition);
-    console.log('definition', definition);
+    // Vue.components['my-button'] = {...}
+    this.options._base.components[id] = definition;
   };
   initExtend(Vue);
 }

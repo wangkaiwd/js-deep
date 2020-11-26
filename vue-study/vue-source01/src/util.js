@@ -14,9 +14,8 @@ const strategies = {};
 // strategies.props = function () {};
 // strategies.methods = function () {};
 // temporary strategy function
-strategies.data = function (parentVal, childVal) {
-  return childVal;
-};
+// strategies.data = function (parentVal, childVal) {
+// };
 // strategies.computed = function () {};
 // strategies.watch = function () {};
 
@@ -59,7 +58,11 @@ export function mergeOptions (parent, child) {
     if (strategies[key]) {
       options[key] = strategies[key](parent[key], child[key]);
     } else {
-      options[key] = child[key];
+      if (child[key]) {
+        options[key] = child[key];
+      } else {
+        options[key] = parent[key];
+      }
     }
   }
 
