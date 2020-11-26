@@ -53,7 +53,18 @@
       },
       run () {
         const template = this.getSource('template');
-        console.log('template', template);
+        const style = this.getSource('style');
+        const script = this.getSource('script').replace(/export default/, 'return');
+        const options = new Function(script)();
+        const Ctor = Vue.extend({
+          template,
+          ...options
+        });
+        const component = new Ctor();
+        const styleElement = document.createElement('style');
+        styleElement.innerHTML = style;
+        document.body.append(styleElement);
+        component.$mount('#run-result');
       }
     }
   });
