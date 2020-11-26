@@ -32,6 +32,14 @@
   });
   const vm = new Vue({
     el: '#app',
+    components: {
+      aa: {
+        template: `<div>hello</div>`
+      },
+      bb: {
+        template: `<div>bb</div>`
+      }
+    },
     data () {
       return {
         a: 1,
@@ -87,6 +95,7 @@
   // setTimeout(() => {
   //   vm.a = 4;
   // }, 3000);
+  console.log('vm', vm);
 </script>
 </body>
 </html>

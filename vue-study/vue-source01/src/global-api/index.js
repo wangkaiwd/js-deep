@@ -11,12 +11,13 @@ function initGlobalApi (Vue) {
   };
 
   Vue.options._base = Vue;
+  Vue.options.components = Object.create(null);
   Vue.component = function (id, definition) {
     // 组件名没有的话会默认取id为组件名
     definition.name = definition.name || id;
     definition = this.options._base.extend(definition);
     // Vue.components['my-button'] = {...}
-    this.options._base.components[id] = definition;
+    this.options.components[id] = definition;
   };
   initExtend(Vue);
 }

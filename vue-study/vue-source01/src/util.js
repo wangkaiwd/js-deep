@@ -18,6 +18,17 @@ const strategies = {};
 // };
 // strategies.computed = function () {};
 // strategies.watch = function () {};
+strategies.components = function (parentVal, childVal) {
+  const result = Object.create(parentVal);
+  if (childVal) {
+    for (const key in childVal) {
+      if (childVal.hasOwnProperty(key)) {
+        result[key] = childVal[key];
+      }
+    }
+  }
+  return result;
+};
 
 function mergeHook (parentVal, childVal) {
   if (parentVal) {
