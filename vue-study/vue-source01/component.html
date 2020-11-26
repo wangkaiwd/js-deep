@@ -6,8 +6,57 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
+  <script src="node_modules/vue/dist/vue.js"></script>
+  <style>
+    textarea {
+      resize: none;
+      width: 100%;
+      min-height: 400px;
+    }
+    .container {
+      margin: 0 auto;
+      width: 600px;
+    }
+  </style>
 </head>
 <body>
+<!-- 需求：解析代码字符串，将其作为一个可运行的组件 -->
+<div id="app">
+  <div class="container">
+    <div class="editor">
+    <textarea v-model="content">
 
+    </textarea>
+    </div>
+    <button @click="run">运行组件</button>
+  </div>
+</div>
+<div id="run-result"></div>
+<script>
+  const vm = new Vue({
+    el: '#app',
+    data () {
+      return {
+        content: ''
+      };
+    },
+    methods: {
+      getSource (type) {
+        const reg = new RegExp(`<${type}[^>]*>`);
+        const match = this.content.match(reg);
+        if (match) {
+          const startTag = match[0];
+          const start = this.content.indexOf(startTag) + startTag.length;
+          const end = this.content.lastIndexOf(`</${type}>`);
+          return this.content.slice(start, end);
+        }
+      },
+      run () {
+        const template = this.getSource('template');
+        console.log('template', template);
+      }
+    }
+  });
+</script>
 </body>
 </html>

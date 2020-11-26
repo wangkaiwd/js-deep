@@ -107,3 +107,13 @@
      * initUse
 * instance/index
   * Vue
+  * initState
+    * initProps
+    * initMethods
+* vdom
+  * patch
+* compile
+  * v-if
+  * v-for
+* 源码调试
+  * vue inspect > config.js: 开发环境，生成webpack配置项
