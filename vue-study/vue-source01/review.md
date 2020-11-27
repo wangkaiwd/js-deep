@@ -42,10 +42,31 @@
 * 在数组调用其修改方法时，会通知收集的`watcher`进行更新。此时实现了：数据更新，页面同步更新
 
 ### nextTick异步更新
+`Vue`也会提供静态`nextTick`方法和原型`$nextTick`方法
+
+* 调用`watcher`的`update`时候(目前之后`watch watcher`和渲染`watcher`会在`update`方法中调用`nextTick`方法)，并不会直接渲染页面，而是在所有的主线程的逻辑执行完成之后再渲染页面
+  * 首次进行页面渲染时，会直接进行渲染。只有在之后更新时才会进行异步渲染
+* 通过`watcherQueue`将需要执行`update`方法的`watcher`进行去重，然后放到队列中。过程中会设置一个表标识，在执行`nextTick`方法后就设置为`true`，防止多次为`nextTick`中添加内容
+* 在`nextTick`中会将用户传入的执行所有队列中`watcher`的函数继续放到一个新的队列中，在`Promise,MutationObserver,setImmediate,setTimeout`中进行执行，此时依旧要有一个标识防止多次执行
+* 之后用户可能会手动调用`$nextTick`方法，会继续向`nextTick`中的队列添加函数，等到主线程代码执行完毕后，微任务中的代码会开始执行，将队列中的函数依次执行，即首先会执行`watcher`的更新，然后是用户传入的`$nextTick`中的函数 
 
 ### watch实现原理
+`watch`本质上是从`watch`中监听的`key`中获取值，并且在后续更新的时候，在下一次事件循环中将新值和旧值传递给回调函数
+
+* `initState` -> `initWatcher`
+* 通过`vm.$options`获取到用户传入的`watcher`
+* 遍历所有的`watcher`属性，并创建用户定义的`watcher(vm,key,handler,{user: true})`
+* 在`watcher`中, 由于`key`为表达式，会将`getter`方法会通过`key`从`vm`中进行取值，然后返回。之后会直接执行`this.get`，将返回值赋值给`this.value`,该值即为旧值
+* 由于进行取值操作，会为该属性收集用户定义的`watcher`
+* 在`vm.key`修改后，会触发用户定义的`watcher`的`update`方法，该方法会将`watcher`放到微任务队列中，异步执行。
+* 执行时`run`方法最终会执行`this.get`方法会返回最新的`value`，此时调用`key`对应的回调，传入新值和旧值，然后用新值更新旧值
+* 在`vm.key`更新后继续重复上述步骤
 
 ### virtual dom handle
+虚拟`dom`的`diff`算法。虚拟`dom`本质上就是用`js`的对象来描述`dom`节点
+
+首次渲染时，会用虚拟节点生成的真实`dom`替换掉`el`中传入的`dom`。在之后的渲染中，会将老的虚拟节和新生成的虚拟节点传入，内部会通过`patch`方法对比老的虚拟节点和新的虚拟节点。具体的比对过程如下：
+* 标签名是否相同
 
 ### computed实现原理
 
