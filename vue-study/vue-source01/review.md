@@ -98,4 +98,13 @@
       * 遍历结束后，将老节点头指针之后内容删除
 
 ### computed实现原理
+计算属性需要手动通过`Object.defineProperty`为`key`添加`get`方法，并且在取值时会有一个标识，如果标识为`true`才会去重新执行`handler`来获取计算属性的值。当计算完成后，将标识置为`false`。在依赖的属性更新后，会触发计算属性`watcher`,会将标识再次置为`true`，这样会再次求值。
 
+* 遍历用户传入的所有配置项，找对对应的`key`和`handler`
+* 创建计算属性`watcher`： new Watcher(vm,handler,() => {},{lazy: true})
+* 在`watcher`中，`this.getter=handler`,如果`lazy`为`true`的话，不会立即执行`this.get()`(这里`this.get`会执行`hanlder`)
+* 为计算属性的`key`通过`Object.defineProperty`定义为`vm`的属性，并且创建其`get`方法，在`get`方法中，要获取到该属性对应的计算属性`watcher`
+* 如果`dirty`是`true`，调用`watcher.evaluate`方法来执行`this.get`进行求值，此时会为其依赖属性收集计算属性`watcher`,并将`dirty`设置为`false`
+* 此时如果`Dep.target`有值的话，会调用`watcher.depend`方法，来为`watcher`中的`deps`即依赖属性的`dep`收集`Dep.target`渲染`watcher`，其内部会调用所有`dep`的`depend`方法
+* 之后在依赖属性更新后，会调用计算属性的`update`方法，将`dirty`置为`false`，如果页面中用到了计算属性，还会再调用渲染`watcher`的`update`方法，用于更新视图
+* 在视图更新的时候，会再次触发计算属性`key`的`get`方法，通过`watcher.evaluate`进行求值，从通过`watcher.value`获取到最新值
