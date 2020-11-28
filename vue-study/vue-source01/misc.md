@@ -45,3 +45,16 @@
 * 如果完全不知道哪里会出错的话，要采用**二分法**，分别通过debug进行查看
 * 要特别留意可能会产生死循环的代码，打断点进行排查
 * 代码处理的是相同的逻辑，如果循环的内容过多，要提取重复子逻辑，与出错内容进行比对，看看到底哪里出了问题
+
+### 组件渲染逻辑
+* 首先学习了`Vue.extend`的用法
+* 组件的注册：
+  * 在组件中可以使用`Vue.component`创建的全局组件
+  * 组件中也可以使用在配置项`components`中传入的子组件
+* `initGlobal`中初始化内容：
+  * Vue.options._base = Vue
+  * Vue.options.components = {}
+  * 在`Vue.component`中会传入`id,definition`
+  * 通过`Vue.extend(definition)`来生成组件实例
+  * `Vue.extend`的核心思路即继承`Vue`实例原型上的方法，并且对配置项进行合并，在创建实例的时候执行`_init`方法
+  * `Vue.options.components`的合并策略：将全局组件放到对象的原型链上，将子组件放到对象的自身属性上，实现就近原则获取组件
