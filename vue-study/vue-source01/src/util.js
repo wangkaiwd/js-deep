@@ -120,3 +120,19 @@ export function nextTick (cb) {
     timerFunc();
   }
 }
+
+function makeMap (str) {
+  const list = str.split(',');
+  const map = list.reduce((obj, cur) => {
+    obj[cur] = true;
+    return obj;
+  }, {});
+  return function (key) {
+    return map[key];
+  };
+}
+
+//
+export const isReservedTag = makeMap(
+  `div,a,h2,span,img,p,button,input,ul,li` // 这里并不全，详细标签可以到Vue源码中查看，或者尝试自己查找
+);

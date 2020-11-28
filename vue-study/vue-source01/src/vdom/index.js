@@ -1,7 +1,25 @@
+import { isReservedTag } from '../util';
+
+function createVComponent (baseCtor, Ctor, tag, props, key, children, text) {
+  if (typeof Ctor === 'object') {
+    Ctor = baseCtor.extend(Ctor);
+  }
+  return vNode(`vue-component-${Ctor.cid}-tag`, props, key, undefined, undefined, { Ctor, children });
+}
+
 function createVElement (tag, props = {}, ...children) {
   const { key } = props;
+  const vm = this;
   delete props.key;
-  return vNode(tag, props, key, children, undefined);
+  // 这里的标签可能是组件标签
+  if (isReservedTag(tag)) {
+    return vNode(tag, props, key, children, undefined);
+  } else { // 创建组件虚拟节点
+    const baseCtor = vm.$options._base;
+    const Ctor = baseCtor[tag];
+    // 组件虚拟节点的children是插槽
+    return createVComponent(baseCtor, Ctor, tag, props, key, children, undefined);
+  }
 }
 
 function createTextVNode (text) {
@@ -10,7 +28,7 @@ function createTextVNode (text) {
 
 export function renderMixin (Vue) {
   Vue.prototype._c = function () {
-    return createVElement(...arguments);
+    return createVElement.call(this, ...arguments);
   };
   Vue.prototype._s = function (val) {
     if (val == null) {
@@ -31,12 +49,13 @@ export function renderMixin (Vue) {
   };
 }
 
-function vNode (tag, props, key, children, text) {
+function vNode (tag, props, key, children, text, componentOptions) {
   return {
     tag,
     props,
     key,
     children,
-    text
+    text,
+    componentOptions // 组件的虚拟节点标签为vue-component-cid-tag形式，并且添加了componentOptions来保存构造函数和插槽
   };
 }
