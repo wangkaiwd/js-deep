@@ -4,6 +4,10 @@ function createVComponent (baseCtor, Ctor, tag, props, key, children, text) {
   if (typeof Ctor === 'object') {
     Ctor = baseCtor.extend(Ctor);
   }
+  console.log('Ctor', Ctor);
+  props.hook = {
+    init () {}
+  };
   return vNode(`vue-component-${Ctor.cid}-tag`, props, key, undefined, undefined, { Ctor, children });
 }
 
@@ -16,7 +20,7 @@ function createVElement (tag, props = {}, ...children) {
     return vNode(tag, props, key, children, undefined);
   } else { // 创建组件虚拟节点
     const baseCtor = vm.$options._base;
-    const Ctor = baseCtor[tag];
+    const Ctor = baseCtor.options.components[tag];
     // 组件虚拟节点的children是插槽
     return createVComponent(baseCtor, Ctor, tag, props, key, children, undefined);
   }
