@@ -12,7 +12,6 @@
   <span>哈哈哈</span>
   <h2>{{ c }}</h2>
   <my-button></my-button>
-  <my-button></my-button>
 </div>
 <script src="dist/umd/vue.js"></script>
 <script>
@@ -28,7 +27,19 @@
   // });
   Vue.component('my-button', {
     name: 'MyButton',
-    template: `<button>12</button>`
+    template: `<button>12</button>`,
+    beforeCreate () {
+      console.log('child before create');
+    },
+    created () {
+      console.log('child created');
+    },
+    beforeMount () {
+      console.log('child before mount');
+    },
+    mounted () {
+      console.log('child mounted');
+    }
   });
   const vm = new Vue({
     el: '#app',
@@ -48,14 +59,18 @@
         // person: { name: 'zs', age: 18 }
       };
     },
-    // created () {
-    //   console.log(2);
-    // }
-    // watch: {
-    //   a (newVal, oldVal) {
-    //     console.log('new,old', newVal, oldVal);
-    //   }
-    // }
+    beforeCreate () {
+      console.log('parent before create');
+    },
+    created () {
+      console.log('parent created');
+    },
+    beforeMount () {
+      console.log('parent before mount');
+    },
+    mounted () {
+      console.log('parent mounted');
+    },
     computed: {
       c () {
         return this.a + this.b;
@@ -95,7 +110,6 @@
   // setTimeout(() => {
   //   vm.a = 4;
   // }, 3000);
-  console.log('vm', vm);
 </script>
 </body>
 </html>

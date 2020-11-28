@@ -77,6 +77,9 @@ class Watcher {
       this.cb.call(this.vm, newValue, this.value);
       this.value = newValue;
     }
+    if (this.options?.render) { // 渲染watcher触发updated钩子函数
+      this.cb.call();
+    }
   }
 }
 

@@ -6,6 +6,7 @@ export function lifecycleMixin (Vue) {
     const vm = this;
     const prevVNode = vm._vNode;
     if (prevVNode) {
+      callHook(vm, 'beforeUpdate');
       vm.$el = patch(prevVNode, vNode);
     } else {
       vm.$el = patch(vm.$el, vNode);
