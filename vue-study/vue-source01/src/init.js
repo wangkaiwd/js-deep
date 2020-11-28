@@ -4,7 +4,7 @@ import { callHook, mountComponent } from './lifecycle';
 import { mergeOptions } from './util';
 
 function initMixin (Vue) {
-  Vue.prototype._init = function (options) {
+  Vue.prototype._init = function (options = {}) {
     const vm = this;
     // vm.constructor: 根组件的构造函数是Vue，而子组件的构造函数是通过Vue.extend()生成的Vue的子类
     // 全局组件和局部组件：全局组件在初始化的时候，会将它的选项合并到当前实例的$options上

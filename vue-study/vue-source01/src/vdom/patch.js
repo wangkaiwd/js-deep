@@ -1,5 +1,19 @@
+function createComponent (vNode) {
+  let i = vNode.props;
+  if ((i = i.hook) && (i = i.init)) {
+    i(vNode);
+  }
+  if (vNode.componentInstance) {
+    return true;
+  }
+}
+
 function createElement (vNode) {
   if (vNode.tag) {
+    if (createComponent(vNode)) {
+      // $el为组件的根dom元素
+      return vNode.componentInstance.$el;
+    }
     vNode.el = document.createElement(vNode.tag);
     updateProperties(vNode);
     vNode.children.forEach((child) => {
@@ -53,6 +67,10 @@ function updateProperties (vNode, oldProps = {}) {
 }
 
 function patch (oldVNode, vNode) {
+  // 在挂载自组件的时候，oldVNode可能没传, $mount()没有传参数
+  if (!oldVNode) { // why?
+    return createElement(vNode);
+  }
   // https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
   // element node: 1
   // text node: 3

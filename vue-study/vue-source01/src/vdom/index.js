@@ -4,9 +4,12 @@ function createVComponent (baseCtor, Ctor, tag, props, key, children, text) {
   if (typeof Ctor === 'object') {
     Ctor = baseCtor.extend(Ctor);
   }
-  console.log('Ctor', Ctor);
   props.hook = {
-    init () {}
+    init (vNode) {
+      // 在Vue.extend创建组件时已经将对应的配置项传递完成了
+      const child = vNode.componentInstance = new Ctor();
+      child.$mount();
+    }
   };
   return vNode(`vue-component-${Ctor.cid}-tag`, props, key, undefined, undefined, { Ctor, children });
 }
