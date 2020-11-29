@@ -29,7 +29,13 @@
       <a-layout-content
         :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }"
       >
-        Content
+        <h2>{{ count }}</h2>
+        <h2>{{ person.name }}</h2>
+        <h3>{{ a }}</h3>
+        <h4>{{ b }}</h4>
+        <h2>{{ decimal }}</h2>
+        <a-button @click="onPlus">add 1</a-button>
+        <a-button @click="onPlus1">add 2</a-button>
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -42,6 +48,7 @@ import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
 } from '@ant-design/icons-vue';
+import { reactive, toRefs, ref, computed } from 'vue';
 
 export default {
   components: {
@@ -50,6 +57,29 @@ export default {
     UploadOutlined,
     MenuUnfoldOutlined,
     MenuFoldOutlined,
+  },
+  setup () {
+    const person = ref({ name: 1 });
+    const state = reactive({ count: 1, a: [1, 2, 3], b: 10 });
+    const onPlus = function () {
+      state.count++;
+      state.a[0]++;
+      state.b++;
+    };
+    const onPlus1 = function () {
+      person.value.name++;
+    };
+    const decimal = computed(() => {
+      return state.b + 10;
+    });
+    console.log('decimal', decimal.value);
+    return {
+      onPlus,
+      onPlus1,
+      ...toRefs(state),
+      person,
+      decimal
+    };
   },
   data () {
     return {
