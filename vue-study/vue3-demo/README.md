@@ -9,12 +9,19 @@
 > * 简单理解`vue3`的响应式原理
 > * [`reactive-fundamentals`](https://v3.vuejs.org/guide/reactivity-fundamentals.html)
 
+complete: 
 * setup
 * reactive
 * toRefs
 * computed
-* watch
 * ref
+* [v-model](https://v3.vuejs.org/guide/migration/v-model.html#_3-x-syntax)
+
+uncomplete:
+* watch
+* lifecycle
 * useStore
 * useRoute
-* [v-model](https://v3.vuejs.org/guide/migration/v-model.html#_3-x-syntax)
+
+think a requirement:
+* pending...
