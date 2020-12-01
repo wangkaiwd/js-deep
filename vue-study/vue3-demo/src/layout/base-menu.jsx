@@ -1,6 +1,7 @@
 import { ref } from 'vue';
 import routes from '@/router/routes';
 import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
 // v-model的 jsx用法？
 
@@ -10,13 +11,13 @@ import { useRoute, useRouter } from 'vue-router';
 // 3. 单独使用`reactive`中的值的时候，需要使用`toRefs`对其先进行包装
 export default {
   setup () {
-    const route1 = useRoute();
     const router = useRouter();
+    const store = useStore();
+    console.log('store', store);
     let selectedKeys = ref([window.location.pathname]);
     const onClickItem = (route) => {
       router.push(route.path);
       selectedKeys.value = [route.path];
-      console.log('route1', route1.path);
     };
     const renderChildren = function (routes) {
       return routes.map(route => {

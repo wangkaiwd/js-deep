@@ -35,3 +35,4 @@ think a requirement:
 ### question
 
 * route = useRoute, why route.path always old address value 
+* vuex: how to handle filename under modules directory
