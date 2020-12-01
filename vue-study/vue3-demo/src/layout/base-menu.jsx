@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import routes from '@/router/routes';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -12,8 +12,7 @@ import { useStore } from 'vuex';
 export default {
   setup () {
     const router = useRouter();
-    const store = useStore();
-    console.log('store', store);
+
     let selectedKeys = ref([window.location.pathname]);
     const onClickItem = (route) => {
       router.push(route.path);

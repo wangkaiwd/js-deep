@@ -1,23 +1,23 @@
 <template>
-  <a-layout-sider class="base-sider" :trigger="null">
+  <a-layout-sider v-model:collapsed="collapsed" collapsible class="base-sider" :trigger="null">
     <div class="logo"/>
     <base-menu></base-menu>
   </a-layout-sider>
 </template>
 
 <script>
-import { reactive, toRefs } from 'vue';
+import { computed, reactive, toRefs } from 'vue';
 import BaseMenu from './base-menu';
+import { useStore } from 'vuex';
 
 export default {
   name: 'BaseSider',
   components: { BaseMenu },
   setup () {
-    const state = reactive({
-      selectedKeys: ['1']
-    });
+    const store = useStore();
+    const collapsed = computed(() => store.state.collapsed);
     return {
-      ...toRefs(state)
+      collapsed
     };
   }
 };
