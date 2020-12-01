@@ -1,5 +1,6 @@
-import { reactive } from 'vue';
+import { ref } from 'vue';
 import routes from '@/router/routes';
+import { useRoute, useRouter } from 'vue-router';
 
 // v-model的 jsx用法？
 
@@ -9,7 +10,14 @@ import routes from '@/router/routes';
 // 3. 单独使用`reactive`中的值的时候，需要使用`toRefs`对其先进行包装
 export default {
   setup () {
-    const selectedKeys = reactive([]);
+    const route1 = useRoute();
+    const router = useRouter();
+    let selectedKeys = ref([window.location.pathname]);
+    const onClickItem = (route) => {
+      router.push(route.path);
+      selectedKeys.value = [route.path];
+      console.log('route1', route1.path);
+    };
     const renderChildren = function (routes) {
       return routes.map(route => {
         const slots = {
@@ -20,21 +28,20 @@ export default {
             {renderChildren(route.children)}
           </a-sub-menu>
           :
-          <a-menu-item key={route.path}>{route.name}</a-menu-item>;
+          <a-menu-item key={route.path}>
+            <div onClick={() => onClickItem(route)}>{route.name}</div>
+          </a-menu-item>;
       });
     };
     const children = renderChildren(routes);
-    console.log('children', children);
-    return () => {
-      return (
-        <a-menu
-          theme="dark"
-          mode="inline"
-          v-model={selectedKeys}
-        >
-          {children}
-        </a-menu>
-      );
-    };
+    return () => (
+      <a-menu
+        theme="dark"
+        mode="inline"
+        v-model={[selectedKeys.value, 'selectedKeys']}
+      >
+        {children}
+      </a-menu>
+    );
   }
 };
