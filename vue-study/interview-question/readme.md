@@ -1,4 +1,5 @@
 ## `Vue`面试题
+
 > write core theory code
 
 1. 响应式数据的理解？
@@ -10,7 +11,7 @@
     * vue.$set
 2. `Vue`模板编译原理
   * vue-loader
-    * vue-template-compiler
+  * vue-template-compiler
 3. 生命周期是如何实现的？
   * mergeOptions
 4. `Vue.mixin`的使用场景和原理？
@@ -48,3 +49,9 @@
   * keep-alive: 缓存
   * 跨组件通信时通过`name`寻找对应的组件
 16. `Vue`的事件修饰符有哪些？其实现原理是什么？
+17. `Vue.directive`的原理？
+18. 如何理解自定义指令？
+19. `keep-alive`: `LRU`算法
+20. `Vue3`和`Vue2`的区别？
+  * 对`TypeScript`支持不友好(所有属性都放在了`this`对象上，难以推导组件的数据类型)
+  * `TreeShaking`
