@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { useStore } from 'vuex';
 import { isEmptyObject } from '@/shared/util';
+import store from '@/store/index';
 
 /**
  * Axios请求，实现功能如下：
@@ -20,13 +20,13 @@ class Http {
   }
 
   _setInterceptor (url) {
-    const store = useStore();
+    const { reqs } = store.state;
     this.instance.interceptors.request.use(
       (config) => {
-        if (isEmptyObject(this.reqs)) {
+        if (isEmptyObject(store.state.reqs)) {
           store.commit('setLoading', true);
         }
-        this.reqs[url] = true;
+        store.commit('setReqs', { ...reqs, [url]: this.cancelToken });
         return config;
       },
       (err) => {
@@ -35,8 +35,8 @@ class Http {
     );
     this.instance.interceptors.response.use(
       (response) => {
-        delete this.reqs[url];
-        if (isEmptyObject(this.reqs)) {
+        store.commit('deleteReqs', url);
+        if (isEmptyObject(store.state.reqs)) {
           store.commit('setLoading', false);
         }
         return response.data;
@@ -49,6 +49,7 @@ class Http {
 
   request (config) { // 每个请求都是一个axios实例，并且为该实例添加拦截器。这样能做到为每个请求都添加拦截器的功能
     this.instance = axios.create(this.config);
+    this.cancelToken = this.instance.cancelToken;
     this._setInterceptor(config.url);
     return this.instance.request(config);
   }
