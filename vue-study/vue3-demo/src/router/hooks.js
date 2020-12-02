@@ -6,8 +6,7 @@ export default {
     if (!store) {return next();}
     const { reqs } = store.state;
     if (!isEmptyObject(reqs)) {
-      console.log('reqs', reqs);
-      Object.keys(reqs).forEach(cancel => cancel());
+      Object.keys(reqs).forEach(key => reqs[key].cancel('cancel request!'));
       store.commit('setReqs', {});
     }
     next();
