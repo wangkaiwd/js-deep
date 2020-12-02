@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { useStore } from 'vuex';
+import { isEmptyObject } from '@/shared/util';
 
 /**
  * Axios请求，实现功能如下：
@@ -11,14 +13,20 @@ class Http {
   constructor (config = {}) {
     this.config = {
       timeout: 30000,
-      baseURL: 'https://easy-mock.com/mock/5b2e15c2d901cc25e7df4e0c/travel',
+      baseURL: 'https://5fc755fcf3c77600165d8245.mockapi.io/',
       ...config
     };
+    this.reqs = {};
   }
 
-  _setInterceptor () {
+  _setInterceptor (url) {
+    const store = useStore();
     this.instance.interceptors.request.use(
       (config) => {
+        if (isEmptyObject(this.reqs)) {
+          store.commit('setLoading', true);
+        }
+        this.reqs[url] = true;
         return config;
       },
       (err) => {
@@ -27,6 +35,10 @@ class Http {
     );
     this.instance.interceptors.response.use(
       (response) => {
+        delete this.reqs[url];
+        if (isEmptyObject(this.reqs)) {
+          store.commit('setLoading', false);
+        }
         return response.data;
       },
       (err) => {
@@ -37,7 +49,7 @@ class Http {
 
   request (config) { // 每个请求都是一个axios实例，并且为该实例添加拦截器。这样能做到为每个请求都添加拦截器的功能
     this.instance = axios.create(this.config);
-    this._setInterceptor();
+    this._setInterceptor(config.url);
     return this.instance.request(config);
   }
 

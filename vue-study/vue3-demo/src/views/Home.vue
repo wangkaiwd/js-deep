@@ -1,9 +1,9 @@
 <template>
   <div class="home">
-    <a-list :loading="loading" bordered :data-source="data">
+    <a-list bordered :data-source="data">
       <template #renderItem="{item}">
         <a-list-item>
-          {{ item.desc }}
+          {{ item.name }}
         </a-list-item>
       </template>
     </a-list>
@@ -16,13 +16,12 @@ import { onMounted, reactive, toRefs } from 'vue';
 export default {
   name: 'Home',
   setup () {
-    const state = reactive({ data: [], loading: false });
+    const state = reactive({ data: [] });
     const getX = () => {
-      state.loading = true;
-      http.post('/home')
+      http.get('/articles')
         .then(res => {
-          state.data = res.data.iconList;
-        }).finally(() => state.loading = false);
+          state.data = res;
+        });
     };
     onMounted(() => {
       getX();
