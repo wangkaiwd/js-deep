@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const inquirer = require('inquirer');
+const Creator = require('./creator');
 const { promisify } = require('util');
 const rmdir = promisify(fs.rmdir);
 const create = async (projectName, options) => {
@@ -13,17 +14,20 @@ const create = async (projectName, options) => {
       await rmdir(dir, { recursive: true });
     } else {
       // 提示用户是否覆盖
-      const answer = await inquirer.prompt([{
+      const { overwrite } = await inquirer.prompt([{
         type: 'confirm',
         name: 'overwrite',
         message: 'Target directory has exist, are you overwrite it',
       }]);
-      if (answer) {
-        await rmdir(dir, { recursive: true });
-      }
+      if (!overwrite) {return;}
+      console.log('\r\Removing...');
+      await rmdir(dir, { recursive: true });
+      console.log('\r\Remove successful');
     }
   } else {
-    console.log('create');
+    // 创建模板
+    const creator = new Creator();
+    creator.create();
   }
 };
 
