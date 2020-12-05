@@ -2,6 +2,7 @@
 const commander = require('commander');
 const program = new commander.Command();
 const pkg = require('../package.json');
+const chalk = require('chalk');
 /**
  * 将命令后传入的选项处理为对象
  * @param cmd
@@ -19,7 +20,13 @@ const getOptions = (cmd) => {
 program
   .name('my-cli')
   .usage('<command> [options]')
-  .version(pkg.version);
+  .version(pkg.version)
+  .on('--help', () => {
+    // https://github.com/tj/commander.js#custom-help
+    console.log('');
+    console.log(`Run ${chalk.cyan('mycli <command> --help')} show more detail`);
+    console.log('');
+  });
 
 program
   .command('create <app-name>')
