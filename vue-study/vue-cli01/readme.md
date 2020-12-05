@@ -18,3 +18,8 @@
 2. 命令行交互 inquirer
 3. 远程下载模板
 4. 根据用户选项动态生成内容
+
+### 阅读库文档
+
+* [commander](https://github.com/tj/commander.js)
+  * 查看[`Example`](https://github.com/tj/commander.js#examples) ，然后对其中用到的`api`查阅文档中对应的章节，然后尝试修改`Example`

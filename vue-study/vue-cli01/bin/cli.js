@@ -28,4 +28,14 @@ program
   .action((name, cmd) => {
     const options = getOptions(cmd);
   });
+program
+  .command('config [value]')
+  .description('inspect and modify the config')
+  .option('-g,--get <path>', 'get value from option')
+  .option('-s,--set <key-val-pair...>', 'set value to option')
+  .option('-d,--delete <path>', 'delete option from config')
+  .action((value, cmd) => {
+    console.log('value', value, getOptions(cmd));
+  });
+
 program.parse(process.argv);
