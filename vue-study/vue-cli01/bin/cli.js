@@ -34,6 +34,8 @@ program
   .option('-f,--force', 'overwrite target directory if it exists')
   .action((name, cmd) => {
     const options = getOptions(cmd);
+    const create = require('../lib/create');
+    create(name, options);
   });
 program
   .command('config [value]')
