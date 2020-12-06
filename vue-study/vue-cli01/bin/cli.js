@@ -34,17 +34,18 @@ program
   .option('-f,--force', 'overwrite target directory if it exists')
   .action((name, cmd) => {
     const options = getOptions(cmd);
-    const create = require('../lib/create');
-    create(name, options);
+    require('../lib/create')(name, options);
   });
-program
-  .command('config [value]')
-  .description('inspect and modify the config')
-  .option('-g,--get <path>', 'get value from option')
-  .option('-s,--set <key-val-pair...>', 'set value to option')
-  .option('-d,--delete <path>', 'delete option from config')
-  .action((value, cmd) => {
-    console.log('value', value, getOptions(cmd));
-  });
+
+// 没有用到，只是为了尝试api而写的代码
+// program
+//   .command('config [value]')
+//   .description('inspect and modify the config')
+//   .option('-g,--get <path>', 'get value from option')
+//   .option('-s,--set <key-val-pair...>', 'set value to option')
+//   .option('-d,--delete <path>', 'delete option from config')
+//   .action((value, cmd) => {
+//     console.log('value', value, getOptions(cmd));
+//   });
 
 program.parse(process.argv);

@@ -13,8 +13,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.0",
     "chalk": "^4.1.0",
     "commander": "^6.2.0",
-    "inquirer": "^7.3.3"
+    "download-git-repo": "^3.0.2",
+    "inquirer": "^7.3.3",
+    "ora": "^5.1.0"
   }
 }

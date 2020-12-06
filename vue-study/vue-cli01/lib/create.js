@@ -26,8 +26,8 @@ const create = async (projectName, options) => {
     }
   } else {
     // 创建模板
-    const creator = new Creator();
-    creator.create();
+    const creator = new Creator(projectName);
+    await creator.create();
   }
 };
 
