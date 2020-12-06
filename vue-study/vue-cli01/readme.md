@@ -14,7 +14,7 @@
 
 ### 需求
 
-1. `mycli create dir-name`
+1. `mycli create dir-name`,如果添加`-f/--froce`选项将会直接覆盖同名目录
 2. 提示用户输入`GitHub`用户名
 3. 根据用户名展示仓库列表让用户选择
 4. 根据用户选择的仓库找出分支列表让用户选择

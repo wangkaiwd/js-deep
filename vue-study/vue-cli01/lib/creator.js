@@ -18,25 +18,37 @@ class Creator {
     return result;
   }
 
-  async fetchRepos () {
-    const res = await request.get('/users/wangkaiwd/repos');
+  async fetchRepos (user) {
+    const res = await request.get(`/users/${user}/repos`);
     return res.map((item) => item.name);
   }
 
-  async fetchBranches (repo) {
-    const res = await request.get(`/repos/wangkaiwd/${repo}/branches`);
+  async fetchBranches (user, repo) {
+    const res = await request.get(`/repos/{user}/${repo}/branches`);
     return res.map((item) => item.name);
   }
 
   // 从github进行远程下载：调用github api
   async create () {
-    const repo = await this.selectRepo();
+    const user = await this.inputUser();
+    const repo = await this.selectRepo(user);
     const branch = await this.selectBranch(repo);
-    await this.wrapLoading(() => this.download(repo, branch), 'Download...');
+    await this.wrapLoading(() => this.download(user, repo, branch), 'Download...');
   }
 
-  async selectRepo () {
-    const repos = await this.wrapLoading(this.fetchRepos, 'Fetching repositories...');
+  async inputUser () {
+    const { user } = await prompt([
+      {
+        type: 'input',
+        name: 'user',
+        message: 'Please input github username',
+      }
+    ]);
+    return user;
+  }
+
+  async selectRepo (user) {
+    const repos = await this.wrapLoading(() => this.fetchRepos(user), 'Fetching repositories...');
     const { repo } = await prompt([
       {
         type: 'list',
@@ -49,7 +61,7 @@ class Creator {
   }
 
   async selectBranch (repo) {
-    const branches = await this.wrapLoading(() => this.fetchBranches(repo), 'Fetching branches...');
+    const branches = await this.wrapLoading(() => this.fetchBranches(user, repo), 'Fetching branches...');
     const { branch } = await prompt([
       {
         type: 'list',
@@ -61,9 +73,9 @@ class Creator {
     return branch;
   }
 
-  async download (repo, branch) {
+  async download (user, repo, branch) {
     try {
-      await download(`wangkaiwd/${repo}#${branch}`, path.join(process.cwd(), this.dest));
+      await download(`{user}/${repo}#${branch}`, path.join(process.cwd(), this.dest));
       console.log('');
       console.log(`Download ${chalk.green('successful')}, please cd ./${this.dist} to install npm dependency`);
     } catch (e) {
