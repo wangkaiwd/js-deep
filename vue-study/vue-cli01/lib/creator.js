@@ -4,17 +4,25 @@ const download = require('./util/download');
 const { prompt } = require('inquirer');
 const path = require('path');
 const chalk = require('chalk');
+const { sleep } = require('./util/tools');
 
 class Creator {
   constructor (dest) {
     this.dest = dest;
   }
 
+  // 请求失败自动重新请求
   async wrapLoading (fn, tip) {
     const spinner = ora();
     spinner.start(tip);
-    const result = await fn();
-    spinner.stop();
+    try {
+      const result = await fn();
+      spinner.stop();
+    } catch (e) {
+      spinner.fail('Fetch fail,refetching...');
+      await sleep(1000);
+      await this.wrapLoading(fn, tip);
+    }
     return result;
   }
 
