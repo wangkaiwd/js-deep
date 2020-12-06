@@ -14,10 +14,25 @@
 
 ### 需求
 
-1. 配置可执行命令 commander
-2. 命令行交互 inquirer
-3. 远程下载模板
-4. 根据用户选项动态生成内容
+1. `mycli create dir-name`
+2. 提示用户输入`GitHub`用户名
+3. 根据用户名展示仓库列表让用户选择
+4. 根据用户选择的仓库找出分支列表让用户选择
+5. 根据用户选择的仓库名、分支名以及`dir-name`为用户在`dir-name`下下载对应的仓库分支代码
+
+项目依赖：
+
+* [commander](https://github.com/tj/commander.js): `Node.js`命令行界面的完整解决方案
+* [inquirer](https://github.com/SBoudrias/Inquirer.js/): 常见的命令行界面交互集合
+* [chalk](https://github.com/chalk/chalk): 终端字符串样式
+* [ora](https://github.com/sindresorhus/ora): 优雅的终端旋转器
+* [download-git-repo](https://www.npmjs.com/package/download-git-repo): 从`node`中下载并提取一个`Git`仓库(`GitHub,GitLab,Bitbuket`)
+* [axios](https://github.com/axios/axios): 用于浏览器和`node.js`的基于`http`客户端的`Promise`
+
+项目中需要用到`GitHub API`：
+
+* [List repositories for a user](https://docs.github.com/en/free-pro-team@latest/rest/reference/repos#list-repositories-for-a-user)
+* [List branches](https://docs.github.com/en/free-pro-team@latest/rest/reference/repos#list-branches)
 
 ### 阅读库文档
 
