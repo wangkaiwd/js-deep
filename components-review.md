@@ -21,6 +21,15 @@
 
 ### upload
 
+* 手动通过`input.click()`来触发`input`的`change`事件，然后可以拿到对应上传的文件对象
+* 在弹出窗口中点击确定，会将对应的文件首先格式化成想要的格式，然后保存到`this.files`中
+* 在处理文件之前，可以执行`beforeUpload`钩子函数，来控制是否继续执行上传操作
+* 遍历`this.files`进行文件上传
+* 封装文件上传方法: XMLHttpRequest,
+  * 处理上传进度 xhr.upload.onprogress，要监听xhr.upload的progress事件
+  * 最后要将`xhr`进行返回，这样方便之后如调用`xhr.abort()`来取消正在上传的文件
+* 拖拽上传：监听对应的拖拽事件，然后在`drop`事件触发时，可以通过`e.data.transfer`拿到文件对象。此时调用之前封装好的上传文件方法即可，与正常文件上传完全相同
+
 ### date picker
 
 ### infinite scroll
