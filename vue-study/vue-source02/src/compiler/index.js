@@ -1,6 +1,8 @@
 import { parseHtml } from './parse-html';
+import { generate } from './generate';
+
 
 export function compileToFunctions (html) {
   const ast = parseHtml(html.trim());
-  console.log('ast', ast);
+  const code = generate(ast);
 }
