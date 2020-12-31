@@ -1,14 +1,9 @@
-### 操作步骤
-配置`rollup`，完成`es6`文件的打包，最终可以在`html`文件中引用
+## 手写简易版Vue
 
-实现以下`vue`功能：
-* 初步的目录结构
-* 初始化状态：
-  * 数据初始化
-* 挂载组件
-  * html -> ast -> code -> render
-* 组件生命周期
-  * 合并策略
-* 依赖收集
-  * 对象
-  * 数组
+实现功能如下：
+
+- [x] 创建rollup开发环境
+- [x] 数据劫持
+- [x] 模板编译： template -> ast -> code -> virtual dom -> real dom
+- [x] 生命周期合并: global api -> Vue.mixin -> merge options
+- [x] 依赖收集
