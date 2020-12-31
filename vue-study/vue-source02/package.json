@@ -1,0 +1,16 @@
+{
+  "name": "vue-source02",
+  "version": "1.0.0",
+  "description": "implement Vue core function",
+  "main": "index.js",
+  "scripts": {
+    "dev": "rollup -c -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^11.0.1",
+    "rollup": "^2.35.1"
+  }
+}
