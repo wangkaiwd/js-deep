@@ -10,17 +10,23 @@
 <script src="../dist/umd/vue.js"></script>
 <body>
 <div id="app">
-  {{name}}
+  {{arr}}
 </div>
 <script>
   const vm = new Vue({
     el: '#app',
     data () {
       return {
-        name: 'hh'
+        name: 'hh',
+        person: {
+          age: 18
+        },
+        // arr: [1, 2, 3]
       };
     }
   });
+  // vm.arr.push(4);
+  vm.person.age = 19;
 </script>
 </body>
 </html>
