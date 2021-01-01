@@ -18,6 +18,11 @@
   </div>
 </div>
 <script>
+  Vue.mixin({
+    created () {
+      console.log('global created');
+    }
+  });
   const vm = new Vue({
     el: '#app',
     data () {
@@ -28,8 +33,15 @@
         },
         arr: [1, 2, 3]
       };
+    },
+    beforeCreate () {
+      console.log('beforeCreate');
+    },
+    created () {
+      console.log('component created');
     }
   });
+  console.log('vm', vm);
   // vm.arr.push(4);
   vm.person.age = 19;
 </script>

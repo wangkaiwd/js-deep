@@ -1,6 +1,7 @@
 import initState from './state';
 import { compileToFunctions } from './compiler';
-import { mountComponent } from './lifecycle';
+import { callHook, mountComponent } from './lifecycle';
+import { mergeOptions } from './shared/merge-options';
 
 function query (el) {
   if (typeof el === 'string') {
@@ -12,8 +13,10 @@ function query (el) {
 function initMixin (Vue) {
   Vue.prototype._init = function (options) {
     const vm = this;
-    vm.$options = options;
+    vm.$options = mergeOptions(vm.constructor.options, options);
+    callHook(vm, 'beforeCreate');
     initState(vm);
+    callHook(vm, 'created');
     const { el } = vm.$options;
     if (el) { // pass el option will execute $mount method to mount dom
       vm.$mount(el);
