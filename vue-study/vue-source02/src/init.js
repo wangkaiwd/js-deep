@@ -1,5 +1,6 @@
 import initState from './state';
 import { compileToFunctions } from './compiler';
+import { mountComponent } from './lifecycle';
 
 function query (el) {
   if (typeof el === 'string') {
@@ -36,6 +37,7 @@ function initMixin (Vue) {
       }
       vm.$options.render = compileToFunctions(template);
     }
+    mountComponent(vm);
   };
 }
 
