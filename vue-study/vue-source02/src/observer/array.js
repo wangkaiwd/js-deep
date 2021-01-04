@@ -3,6 +3,17 @@ export const arrayMethods = Object.create(arrayProto);
 
 const methodsToPatch = ['shift', 'unshift', 'push', 'pop', 'splice', 'sort', 'revert'];
 
+export function dependArray (value) {
+  for (let i = 0; i < value.length; i++) {
+    const item = value[i];
+    // 对有__ob__属性的值进行依赖收集
+    item?.__ob__?.dep.depend();
+    if (Array.isArray(item)) {
+      dependArray(item);
+    }
+  }
+}
+
 methodsToPatch.forEach(method => {
   // 会在自身属性上定义修改数组的方法，数组的其它方法会通过原型去查找
   arrayMethods[method] = function (...args) {

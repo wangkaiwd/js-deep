@@ -23,7 +23,7 @@ class Watcher {
   addDep (dep) { // 通过watcher来收集dep,并让dep也同时收集watcher
     // 会过滤重复的dep，所以同一个dep也只能收集当前watcher一次。保证一个watcher，以及一个dep不会同时收集重复的dep和watcher
     const { id } = dep;
-    if (!this.deps.has(id)) {
+    if (!this.depsId.has(id)) {
       this.deps.push(dep);
       this.depsId.add(id);
       dep.addSub(this);

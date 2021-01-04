@@ -59,7 +59,7 @@ function genText (text) {
       // 当lastIndex > index时，匹配到的内容时 "xxx {{xxx}}"
       tokens.push(`"${text.slice(lastIndex, index)}"`);
     }
-    tokens.push(match[1]);
+    tokens.push(`_s(${match[1]})`);
     lastIndex = defaultTagRE.lastIndex;
   }
   return `_v(${tokens.join('+')})`;
