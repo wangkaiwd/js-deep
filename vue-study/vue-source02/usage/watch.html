@@ -16,6 +16,11 @@
   </span>
 </div>
 <script>
+  // watch的用法：https://vuejs.org/v2/api/
+  // 对应的属性值可能是： Function,String,Object,Array,
+  // Function: 对应的回调函数
+  // String: 表示methods中的某个函数名
+  // Object: 可以额外配置immediate以及deep属性
   const vm = new Vue({
     el: '#app',
     data () {
@@ -32,6 +37,7 @@
     }
   });
   vm.msg = 'jj';
+
 </script>
 </body>
 </html>
