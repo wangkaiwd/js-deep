@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<script src="../dist/umd/vue.js"></script>
+<!--<script src="../node_modules/vue/dist/vue.js"></script>-->
+<body>
+<div id="app">
+  <span>
+    {{ msg }}
+  </span>
+</div>
+<script>
+  const vm = new Vue({
+    el: '#app',
+    data () {
+      return {
+        msg: 'hh',
+      };
+    },
+    watch: {
+      // 初始化watch时，会执行取值操作，此时为msg对应的dep收集了watch watcher
+      // 之后页面初始化之后，又为msg对应的dep收集了render watcher
+      msg (newVal, oldVal) {
+        console.log('watch', newVal, oldVal);
+      }
+    }
+  });
+  vm.msg = 'jj';
+</script>
+</body>
+</html>
