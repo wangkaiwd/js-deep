@@ -1,5 +1,12 @@
 import { proxy } from './shared/utils';
 import { observe } from './observer';
+import nextTick from './shared/next-tick';
+
+export function stateMixin (Vue) {
+  Vue.prototype.$nextTick = function (cb) {
+    nextTick(cb);
+  };
+}
 
 function initProps (vm) {
 

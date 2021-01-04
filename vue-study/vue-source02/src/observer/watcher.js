@@ -1,4 +1,5 @@
 import { popTarget, pushTarget } from './dep';
+import nextTick from '../shared/next-tick';
 
 let id = 0;
 
@@ -17,6 +18,7 @@ class Watcher {
     if (typeof exprOrFn === 'function') {
       this.getter = exprOrFn;
     }
+    // 首次渲染是同步的，而之后的更新都会走update方法，放到异步队列中
     this.get();
   }
 
@@ -36,9 +38,40 @@ class Watcher {
     popTarget();
   }
 
-  update () {
+  run () {
     this.get();
+  }
+
+  // 更新的时候并不会直接更新：
+  //  1. 要将需要更新的watcher进行去重，然后放到队列中
+  //  2. 等到主线程所有的更新操作执行完毕后再统一进行更新
+  update () {
+    queueWatcher(this);
   }
 }
 
 export default Watcher;
+
+let queue = [];
+let has = {};
+let pending = false;
+
+function flushSchedulerQueue () {
+  queue.forEach(w => w.run());
+  queue = [];
+  has = {};
+  pending = false;
+}
+
+// queue: v. 使...排队
+function queueWatcher (watcher) {
+  const { id } = watcher;
+  if (!has[id]) {
+    queue.push(watcher);
+    has[id] = true;
+    if (!pending) {
+      pending = true;
+      nextTick(flushSchedulerQueue);
+    }
+  }
+}

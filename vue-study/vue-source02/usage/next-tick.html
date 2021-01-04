@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<script src="../dist/umd/vue.js"></script>
+<!--<script src="../node_modules/vue/dist/vue.js"></script>-->
+<body>
+<div id="app">
+  <span>
+    {{ name }}
+  </span>
+</div>
+<script>
+  const vm = new Vue({
+    el: '#app',
+    data () {
+      return {
+        msg: 'hh',
+        name: 'zs'
+      };
+    },
+    // watch: {
+    //   // 初始化watch时，会执行取值操作，此时为msg对应的dep收集了watch watcher
+    //   // 之后页面初始化之后，又为msg对应的dep收集了render watcher
+    //   msg (newVal, oldVal) {
+    //     console.log('watch', newVal, oldVal);
+    //   }
+    // }
+  });
+  // vm.person.age = 19;
+  // 目前页面更新：
+  //  需要重新执行vm._update(_vm.render())。 _vm.render()：用户新的vm实例数据生成虚拟节点； _vm.update(): 通过patch方法，将虚拟节点生成真实节点，并替换原有的DOM元素
+
+  // 要通过发布订阅模式，在数据更新的时候，自动通知页面更新
+  // vm.msg = 'zz'; // 执行update方法，将watcher放入队列中
+  // console.log('after', vm.$el.outerHTML);
+  // vm.$nextTick(() => { // 执行nextTick，将函数放到callbacks中
+  //   console.log('next tick after', vm.$el.outerHTML);
+  //   vm.msg = 'xx'; // callbacks 中 放入flushSchedulerQueue
+  //   console.log('after after', vm.$el.outerHTML);
+  //   // 将函数继续放入callbacks中
+  //   vm.$nextTick(() => {
+  //     console.log('after next tick after', vm.$el.outerHTML);
+  //   });
+  //   // callbacks中执行完该函数后，又在数组中新加了俩个回调函数，继续执行新增的内容，还是能保证正确的调用顺序。只不过这里并没有利用异步，而是使用了回调函数，以及在遍历时动态修改数组的长度
+  // });
+
+  // 所有对于watcher的更新操作，都会放到一个单独的函数中执行，是一个整体
+  // 所以$nextTick只要不是放到最前面执行，永远会在所有的watcher更新之后执行
+  vm.name = 'ls'; // notify 会将watch watcher 和 render watcher放入队列中
+  vm.$nextTick(() => {
+    console.log('next tick', vm.$el.outerHTML);
+    // 这样会先将$nextTick的回调函数放入到callbacks中，然后再将watcher更新放入到callbacks中。
+    // callbacks会依次遍历执行每个函数，所以会先执行$nextTick中传入的函数，然后再执行vm.msg的更新函数
+    // vm.$nextTick(() => {
+    //   console.log('1', vm.$el.outerHTML);
+    // });
+    // vm.msg = 'xx';
+  });
+  // 这个更新操作对应的watcher.update函数不会放到callbacks中，因为watcher是重复的
+  vm.msg = 'zz';
+</script>
+</body>
+</html>
