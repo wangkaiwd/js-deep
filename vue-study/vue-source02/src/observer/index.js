@@ -35,7 +35,7 @@ export function defineReactive (target, key) {
           childOb.dep.depend();
           // 数组中的每一项中如果有对象的话，也需要收集它的依赖
           if (Array.isArray(value)) {
-            dependArray();
+            dependArray(value);
           }
         }
       }

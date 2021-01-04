@@ -10,26 +10,27 @@
 <script src="../dist/umd/vue.js"></script>
 <body>
 <div id="app">
-  {{person}}
+  <span>
+    {{arr}}
+  </span>
 </div>
 <script>
   const vm = new Vue({
     el: '#app',
     data () {
       return {
-        name: 'hh',
-        person: {
-          age: 18
-        },
-        arr: [1, 2, 3]
+        arr: [1, { a: 1 }, [{ b: 2 }]]
       };
     },
   });
-  vm.person.age = 19;
+  // vm.person.age = 19;
   // 目前页面更新：
   //  需要重新执行vm._update(_vm.render())。 _vm.render()：用户新的vm实例数据生成虚拟节点； _vm.update(): 通过patch方法，将虚拟节点生成真实节点，并替换原有的DOM元素
 
   // 要通过发布订阅模式，在数据更新的时候，自动通知页面更新
+  setTimeout(() => {
+    vm.arr[1].a = 3;
+  }, 2000);
 </script>
 </body>
 </html>

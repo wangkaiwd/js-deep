@@ -33,7 +33,12 @@ methodsToPatch.forEach(method => {
     }
     console.log('change array');
     // 为数组新加的每一项进行监控
-    if (ob) {ob.observeArray(inserted);}
+    if (ob) {
+      if (inserted) {
+        ob.observeArray(inserted);
+      }
+      ob.dep.notify();
+    }
     return result;
   };
 });
