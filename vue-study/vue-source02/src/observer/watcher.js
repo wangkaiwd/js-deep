@@ -20,7 +20,7 @@ class Watcher {
       this.getter = exprOrFn;
     } else {
       this.getter = function () { // 从vm上取对应的watch对象中key对应的值
-        const keys = exprOrFn.split('.');
+        const keys = this.exprOrFn.split('.');
         return keys.reduce((memo, key) => memo[key], vm);
       };
     }
@@ -49,7 +49,7 @@ class Watcher {
   run () {
     const newValue = this.get();
     if (this.user) {
-      this.cb.call(newValue, this.value);
+      this.cb.call(this.vm, newValue, this.value);
       this.value = newValue;
     }
   }
