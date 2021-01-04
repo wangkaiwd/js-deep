@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<script src="../dist/umd/vue.js"></script>
+<body>
+<div id="app">
+  {{arr}}
+  <div class="xx">
+    hh
+    <span style="color:red">span</span>
+    zz
+  </div>
+</div>
+<script>
+  const vm = new Vue({
+    el: '#app',
+    data () {
+      return {
+        name: 'hh',
+        person: {
+          age: 18
+        },
+        arr: [1, 2, 3]
+      };
+    },
+  });
+  vm.person.age = 19;
+  // 目前页面更新：
+  //  需要重新执行vm._update(_vm.render())。 _vm.render()：用户新的vm实例数据生成虚拟节点； _vm.update(): 通过patch方法，将虚拟节点生成真实节点，并替换原有的DOM元素
+
+  // 要通过发布订阅模式，在数据更新的时候，自动通知页面更新
+</script>
+</body>
+</html>
