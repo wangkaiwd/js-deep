@@ -1,7 +1,9 @@
 ## 专栏文章索引
+
 在知乎开通专栏写文章也有一些时间了，随着文章的逐渐增多，也导致文章查找变得更加的复杂。为了方便读者阅读，也方便自己回顾复习，笔者对所有的文章进行了分类整理，也相当于是对自己的知识体系以及近年学习知识的整理。
 
 ### 原生`JavaScript`
+
 * [JavaScript数据类型](https://zhuanlan.zhihu.com/p/114479093)
 * [JavaScript中let const var的区别](https://zhuanlan.zhihu.com/p/116127698)
 * [全面解析JavaScript中this指向问题](https://zhuanlan.zhihu.com/p/125637186)
@@ -14,18 +16,28 @@
 * [JS进阶-手写bind](https://zhuanlan.zhihu.com/p/83778815)
 
 ### `Vue`
-* [手写简易版Vue Router](https://zhuanlan.zhihu.com/p/268739434)
-* [Vuex源码解析](https://zhuanlan.zhihu.com/p/165427751)
+
+* [vue仿小米商城 -- 我知道的都在这里了](https://zhuanlan.zhihu.com/p/78088536)
 * [Vue组件通信详解](https://zhuanlan.zhihu.com/p/242774231)
 * [Vue实战：图片懒加载组件](https://zhuanlan.zhihu.com/p/265733459)
 * [Vue实战：文件上传组件](https://zhuanlan.zhihu.com/p/267683616)
 * [Vue实战：日期选择器](https://zhuanlan.zhihu.com/p/270328053)
-* [vue仿小米商城 -- 我知道的都在这里了](https://zhuanlan.zhihu.com/p/78088536)
+* [Vue实战：无限滚动组件](https://zhuanlan.zhihu.com/p/311677753)
+* [手写简易版Vue Router](https://zhuanlan.zhihu.com/p/268739434)
+* [Vuex源码解析](https://zhuanlan.zhihu.com/p/165427751)
+* [手写Vue源码(一)-数据劫持](https://zhuanlan.zhihu.com/p/341606710)
+* [手写Vue源码(二)-文本编译](https://zhuanlan.zhihu.com/p/342064915)
 
 ### `Node.js`
+
 * [从零实现Node.js命令行工具](https://zhuanlan.zhihu.com/p/91338826)
 
+### 算法
+
+* [常见排序算法总结](https://zhuanlan.zhihu.com/p/339514562)
+
 ### 译文
+
 * [[译]如何用React Hooks获取数据](https://zhuanlan.zhihu.com/p/104946710)
 * [[译]JavaScript中的柯理化：回答一个经典问题，Add(2)(3)，给出俩个数字的和](https://zhuanlan.zhihu.com/p/135458587)
 * [[译] JavaScript可视化：事件循环](https://zhuanlan.zhihu.com/p/137276025)
@@ -35,8 +47,10 @@
 * [[译]React+TypeScript开发Switch组件](https://zhuanlan.zhihu.com/p/75985369)
 
 ### 工程化
+
 * [webpack基础概念](https://zhuanlan.zhihu.com/p/74871081)
 * [webpack高级概念](https://zhuanlan.zhihu.com/p/75030798)
 
 ### 效率工具
+
 * [压箱底的WebStorm使用技巧，让你效率翻倍，不再加班！](https://zhuanlan.zhihu.com/p/101534969)
