@@ -1,0 +1,16 @@
+{
+  "name": "vue3-source",
+  "version": "1.0.0",
+  "description": "simple vue3 source demo",
+  "main": "rollup.config.js",
+  "scripts": {
+    "dev": "rollup -c -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^11.0.1",
+    "rollup": "^2.36.1"
+  }
+}

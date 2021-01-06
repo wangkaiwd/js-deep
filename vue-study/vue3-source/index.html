@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<script src="./dist/umd/vue.js"></script>
+<body>
+<div id="app"></div>
+<script>
+  const { render } = Vue;
+  const container = document.getElementById('app');
+  const state = {
+    count: 0
+  };
+  // children 为字符串或数组
+  const vNode = {
+    tag: 'div',
+    props: {
+      style: { color: 'yellow' }
+    },
+    children: [
+      {
+        tag: 'p',
+        props: { color: 'blue' },
+        children: 'Vue3 计数器' + state.count
+      },
+      {
+        tag: 'button',
+        props: {
+          onClick: () => alert(state.count)
+        },
+        children: '点我啊'
+      },
+    ]
+  };
+  // 通过render方法来根据虚拟节点创建出真实节点，最终将真实节点插入container中
+  render(vNode, container);
+
+</script>
+</body>
+</html>
