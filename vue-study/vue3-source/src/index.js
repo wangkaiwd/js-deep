@@ -55,7 +55,7 @@ function patch (n1, n2, container) {
   if (typeof n2.tag === 'string') {
     mountElement(n2, container);
   } else if (typeof n2.tag === 'object') { // 组件
-
+    
   }
 }
 

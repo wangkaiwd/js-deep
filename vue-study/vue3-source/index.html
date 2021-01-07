@@ -16,6 +16,18 @@
   const state = {
     count: 0
   };
+  const MyComponent = {
+    setup () {
+      // 这里会返回一个render方法
+      return () => {
+        return {
+          tag: 'div',
+          props: { style: { color: 'pink' } },
+          children: 'I am a custom component' + state.count
+        };
+      };
+    }
+  };
   // children 为字符串或数组
   const vNode = {
     tag: 'div',
@@ -35,6 +47,11 @@
         },
         children: '点我啊'
       },
+      {
+        tag: MyComponent,
+        // props: {},
+        // children: []
+      }
     ]
   };
   // 通过render方法来根据虚拟节点创建出真实节点，最终将真实节点插入container中
