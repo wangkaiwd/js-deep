@@ -4,6 +4,3 @@
 * 大量的`API`挂载到`Vue`原型上，难以实现`TreeShaking`
 * Composition API
 * 对虚拟`DOM`进行了重写、对模板的编译进行了优化操作
-
-
-

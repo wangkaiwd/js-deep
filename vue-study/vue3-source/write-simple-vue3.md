@@ -5,8 +5,8 @@
 * 根据虚拟节点生成真实节点
   * 以另一种方式生成虚拟节点
 * 封装了`dom`操作: `runtime-dom.js`
-* 组件挂载：`setup(){ return () => {tag:'div'}`
-* effect
+* setup:[Usage with Render Functions](https://v3.vuejs.org/guide/composition-api-setup.html#usage-with-render-functions)
+* [effect](https://composition-api.vuejs.org/api.html#watcheffect)
 * Proxy/Reflect
 
 ### 问题
