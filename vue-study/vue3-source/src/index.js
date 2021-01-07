@@ -6,10 +6,31 @@ export function render (vNode, container) {
   patch(null, vNode, container);
 }
 
-function updateProperties (vNode) {
-
+function updateStyles (el, style) {
+  for (const key in style) {
+    if (style.hasOwnProperty(key)) {
+      el.style[key] = style[key];
+    }
+  }
 }
 
+function updateProperties (vNode) {
+  const { props = {}, el } = vNode;
+  for (const key in props) {
+    if (props.hasOwnProperty(key)) {
+      if (key === 'style') {
+        updateStyles(el, props[key]);
+      } else if (/^on[^a-z][a-z]+/.test(key)) { // 处理事件
+        const eventName = key.slice(2).toLowerCase();
+        el.addEventListener(eventName, props[key]);
+      } else {
+        el.setAttribute(key, props[key]);
+      }
+    }
+  }
+}
+
+// 每次都将对应的父节点传入，而之前是将子节点返回
 function mountChildren (children, container) {
   for (let i = 0; i < children.length; i++) {
     const child = children[i];
@@ -18,8 +39,9 @@ function mountChildren (children, container) {
 }
 
 function mountElement (vNode, container) {
-  const { tag, props, children } = vNode;
+  const { tag, children } = vNode;
   const el = vNode.el = nodeOps.createElement(tag);
+  updateProperties(vNode);
   if (Array.isArray(children)) {
     mountChildren(children, el);
   } else {
