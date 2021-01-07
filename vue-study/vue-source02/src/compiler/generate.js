@@ -30,8 +30,10 @@ function genAttrs (attrs) {
     // {name:'style',value: 'color: red;border:1px solid pink;'}
     if (name === 'style') {
       value = value.split(';').reduce((obj, current) => {
-        const [key, val] = current.split(':');
-        obj[key] = val.trim();
+        if (current !== '') {
+          const [key, val] = current.split(':');
+          obj[key] = val.trim();
+        }
         return obj;
       }, {});
     }

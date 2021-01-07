@@ -2,7 +2,7 @@ import Vue from '../index';
 import { compileToFunctions } from '../compiler';
 import { patch } from '../vdom/patch';
 
-export function domPush () {
+export function domShift () {
   const template = `
     <div id="app">
       <ul>
@@ -16,11 +16,11 @@ export function domPush () {
   const template2 = `
     <div id="app">
       <ul>
+        <li key="e" style="background: #247AFD">e</li>
         <li key="a" style="background: #9DBCD4">a</li>
         <li key="b" style="background: #FFFD01">b</li>
         <li key="c" style="background: #6D5ACF">c</li>
         <li key="d" style="background: #FFAB0F">d</li>
-        <li key="e" style="background: #247AFD">e</li>
       </ul>
     </div>
   `;
