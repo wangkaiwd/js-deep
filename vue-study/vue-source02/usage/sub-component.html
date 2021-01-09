@@ -11,6 +11,7 @@
 <body>
 <div id="#app">
   hello
+  <my-button></my-button>
 </div>
 <script>
   // 1. Vue.component
@@ -18,7 +19,12 @@
   // 3. components merge strategy
   // 4. render component virtual dom
   // 5. render real component dom
-  const vm = new Vue({});
+  Vue.component('my-button', {
+    template: `<button>my button</button>`
+  });
+  const vm = new Vue({
+    el: '#app',
+  });
 </script>
 </body>
 </html>
