@@ -2,6 +2,7 @@ import { noop, proxy } from './shared/utils';
 import { observe } from './observer';
 import nextTick from './shared/next-tick';
 import Watcher from './observer/watcher';
+import Dep from './observer/dep';
 
 export function stateMixin (Vue) {
   Vue.prototype.$nextTick = function (cb) {
@@ -70,8 +71,14 @@ const sharedPropertyDefinition = {
 
 function createComputedGetter (key) {
   return function () {
-    const watcher = this[key];
-    // if (watcher.dirty) {}
+    const watcher = this._computedWatchers[key];
+    if (watcher.dirty) {
+      watcher.evaluate();
+      if (Dep.target) { // 栈中前一个为渲染watcher
+        watcher.depend();
+      }
+    }
+    return watcher.value;
   };
 }
 
