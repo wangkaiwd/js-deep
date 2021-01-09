@@ -21,3 +21,5 @@ export function defineProperty (target, key, value) {
     value
   });
 }
+
+export function noop () {}

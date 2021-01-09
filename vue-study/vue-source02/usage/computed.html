@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<script src="../dist/umd/vue.js"></script>
+<body>
+<div id="app"></div>
+<script>
+  const vm = new Vue({
+    el: 'app', // 没有el的话，需要手动执行$mount()，如果$mount()没有传入参数的话，会生成一个脱离文档的节点，通过原生api将vm.$el手动的挂载到页面中
+    data () {
+      return {
+        firstName: 'a',
+        lastName: 'b'
+      };
+    },
+    computed: {
+      fullName () {
+        return this.firstName + this.lastName;
+      }
+    }
+  });
+</script>
+</body>
+</html>

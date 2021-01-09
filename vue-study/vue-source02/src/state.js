@@ -1,4 +1,4 @@
-import { proxy } from './shared/utils';
+import { noop, proxy } from './shared/utils';
 import { observe } from './observer';
 import nextTick from './shared/next-tick';
 import Watcher from './observer/watcher';
@@ -61,8 +61,47 @@ function initWatch (vm) {
   }
 }
 
-function initComputed (vm) {
+const sharedPropertyDefinition = {
+  get: noop,
+  set: noop,
+  enumerable: true,
+  configurable: true
+};
 
+function createComputedGetter (key) {
+  return function () {
+    const watcher = this[key];
+    // if (watcher.dirty) {}
+  };
+}
+
+function defineComputed (target, key, userDef) {
+  if (typeof userDef === 'object') {
+    sharedPropertyDefinition.get = createComputedGetter(key);
+    sharedPropertyDefinition.set = userDef.set;
+  } else {
+    sharedPropertyDefinition.get = createComputedGetter(key);
+  }
+  Object.defineProperty(target, key, sharedPropertyDefinition);
+}
+
+/**
+ * computed 其实是也是创建了一个watcher
+ * @param vm
+ */
+function initComputed (vm) {
+  const { computed } = vm.$options;
+  const watchers = vm._computedWatchers = {};
+  for (const key in computed) {
+    if (computed.hasOwnProperty(key)) {
+      const userDef = computed[key];
+      // 可能会传入一个配置项，配置项中传入get/set方法
+      const getter = typeof userDef === 'function' ? userDef : userDef.get;
+      // 每个计算属性都映射一个watcher
+      watchers[key] = new Watcher(vm, getter, () => {}, { lazy: true });
+      defineComputed(vm, key, userDef);
+    }
+  }
 }
 
 function initState (vm) {
@@ -76,11 +115,11 @@ function initState (vm) {
   if (options.data) {
     initData(vm);
   }
-  if (options.watch) {
-    initWatch(vm);
-  }
   if (options.computed) {
     initComputed(vm);
+  }
+  if (options.watch) { // 在watch里不能使用computed
+    initWatch(vm);
   }
 }
 
