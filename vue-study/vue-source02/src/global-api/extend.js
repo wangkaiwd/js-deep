@@ -1,12 +1,14 @@
 import { mergeOptions } from '../shared/merge-options';
 
 export function initExtend (Vue) {
+  let cid = 0;
   Vue.extend = function (extendOptions) {
     const Super = this;
     const Sub = function VueComponent (options) {
       // 通过原型链调用Super.prototype上的方法
       this._init(options);
     };
+    Sub.cid = cid++;
     // 原型链继承
     Sub.prototype = Object.create(Super.prototype);
     Sub.prototype.constructor = Sub;
