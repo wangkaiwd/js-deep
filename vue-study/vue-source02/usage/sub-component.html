@@ -37,6 +37,17 @@
     },
     el: '#app',
   });
+  // 父子组件的生成周期执行顺序
+  // 1. new Vue()
+  // 2. beforeCreate
+  // 3. initState
+  // 4. created
+  // 5. vm.$mount() -> beforeMounted
+  // 6. encounter unreserved tag, render sub component
+  // 7. start handle sub component init logic and mount sub component
+  // 8. sub component will return vm.$el then append to parent node
+  // 9. mount parent node to document
+  // 9. parent component mounted
 </script>
 </body>
 </html>
