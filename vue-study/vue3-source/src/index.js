@@ -50,12 +50,26 @@ function mountElement (vNode, container) {
   container.appendChild(el);
 }
 
+function mountComponent (vNode, container) {
+  // setup 中返回 render函数
+  const component = vNode.tag; // {setup(){ return () => {tag:'div',props:{},'xxx'} }}
+  const instance = {
+    vNode,
+    render: undefined, // setup的返回值
+    subTree: undefined, // setup返回的render函数的返回值
+  };
+  instance.render = component.setup(vNode.props, instance);
+  instance.subTree = instance?.render?.();
+  // subTree是setup中render函数执行后的返回值，即当前组件中的模板
+  patch(null, instance.subTree, container);
+}
+
 function patch (n1, n2, container) {
   // 组件的虚拟节点,tag是一个对象
   if (typeof n2.tag === 'string') {
     mountElement(n2, container);
   } else if (typeof n2.tag === 'object') { // 组件
-    
+    mountComponent(n2, container);
   }
 }
 
