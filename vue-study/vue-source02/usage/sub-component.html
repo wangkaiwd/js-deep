@@ -9,7 +9,7 @@
 </head>
 <script src="../dist/umd/vue.js"></script>
 <body>
-<div id="#app">
+<div id="app">
   hello
   <my-button></my-button>
 </div>
@@ -22,7 +22,18 @@
   Vue.component('my-button', {
     template: `<button>my button</button>`
   });
+  Vue.component('aa', {
+    template: `<button>global aa</button>`
+  });
   const vm = new Vue({
+    components: {
+      bb: {
+        template: `<button>bb</button>`
+      },
+      aa: {
+        template: `<button>scoped aa</button>`
+      }
+    },
     el: '#app',
   });
 </script>

@@ -11,9 +11,12 @@ function query (el) {
 }
 
 function initMixin (Vue) {
-  Vue.prototype._init = function (options) {
+  Vue.prototype._init = function (options = {}) {
     const vm = this;
+    console.log('Vue options or Sub Vue options', vm.constructor.options);
+    console.log('options', options);
     vm.$options = mergeOptions(vm.constructor.options, options);
+    console.log('merged options', vm.$options);
     callHook(vm, 'beforeCreate');
     initState(vm);
     callHook(vm, 'created');
