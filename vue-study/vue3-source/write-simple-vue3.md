@@ -8,6 +8,8 @@
 * setup:[Usage with Render Functions](https://v3.vuejs.org/guide/composition-api-setup.html#usage-with-render-functions)
 * [effect](https://composition-api.vuejs.org/api.html#watcheffect)
 * Proxy/Reflect
+* WeakMap, Map, Set
+* 依赖收集: track,trigger,effect(起到`vue2 watcher`的作用)
 
 ### 问题
 
