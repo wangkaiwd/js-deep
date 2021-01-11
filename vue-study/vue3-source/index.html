@@ -23,7 +23,20 @@
         return {
           tag: 'div',
           props: { style: { color: 'pink' } },
-          children: 'I am a custom component' + state.count
+          children: [
+            {
+              tag: 'p',
+              props: {},
+              children: 'I am a custom component' + state.count
+            },
+            {
+              tag: 'button',
+              props: {
+                onClick: () => state.count++
+              },
+              children: 'Click Me!'
+            }
+          ]
         };
       };
     }
@@ -51,7 +64,17 @@
         tag: MyComponent,
         // props: {},
         // children: []
-      }
+      },
+      {
+        tag: MyComponent,
+        // props: {},
+        // children: []
+      },
+      {
+        tag: MyComponent,
+        // props: {},
+        // children: []
+      },
     ]
   };
   // 通过render方法来根据虚拟节点创建出真实节点，最终将真实节点插入container中
