@@ -1,6 +1,9 @@
 // 通过虚拟节点生成真实节点
 
 import { nodeOps } from './runtime-dom';
+// re-export:https://javascript.info/import-export#re-export
+// 导出文件中的所有具名导出，默认导出需要单独导出
+export * from './reactivity';
 
 export function render (vNode, container) {
   patch(null, vNode, container);
