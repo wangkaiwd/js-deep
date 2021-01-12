@@ -16,7 +16,6 @@
   const state = reactive({
     count: 0
   });
-  console.log('state', state);
   const MyComponent = {
     setup () {
       // 这里会返回一个render方法
@@ -43,44 +42,47 @@
     }
   };
   // children 为字符串或数组
-  const vNode = {
-    tag: 'div',
-    props: {
-      style: { color: 'yellow' }
-    },
-    children: [
-      {
-        tag: 'p',
-        props: { style: { color: 'blue' } },
-        children: 'Vue3 计数器' + state.count
+  const createVNode = () => {
+    const vNode = {
+      tag: 'div',
+      props: {
+        style: { color: 'yellow' }
       },
-      {
-        tag: 'button',
-        props: {
-          onClick: () => alert(state.count)
+      children: [
+        {
+          tag: 'p',
+          props: { style: { color: 'blue' } },
+          children: 'Vue3 计数器' + state.count
         },
-        children: '点我啊'
-      },
-      {
-        tag: MyComponent,
-        // props: {},
-        // children: []
-      },
-      {
-        tag: MyComponent,
-        // props: {},
-        // children: []
-      },
-      {
-        tag: MyComponent,
-        // props: {},
-        // children: []
-      },
-    ]
+        {
+          tag: 'button',
+          props: {
+            onClick: () => alert(state.count)
+          },
+          children: '点我啊'
+        },
+        {
+          tag: MyComponent,
+          // props: {},
+          // children: []
+        },
+        {
+          tag: MyComponent,
+          // props: {},
+          // children: []
+        },
+        {
+          tag: MyComponent,
+          // props: {},
+          // children: []
+        },
+      ]
+    };
+    return vNode;
   };
   // 通过render方法来根据虚拟节点创建出真实节点，最终将真实节点插入container中
-  // render(vNode, app);
-  effect(() => render(vNode, app));
+  render(createVNode(), app);
+  effect(() => render(createVNode(), app));
 
 </script>
 </body>

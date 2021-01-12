@@ -1,7 +1,7 @@
 let activeEffect;
 
 export function effect (fn) {
-
+  activeEffect = fn;
 }
 
 // Proxy get: https://javascript.info/proxy#default-value-with-get-trap
@@ -13,6 +13,8 @@ export function reactive (target) {
       // 设置值时，可以执行页面更新的操作
       // return result;
       target[key] = value;
+      // 设置值时更新视图
+      activeEffect?.();
     },
     // get () {
     //
