@@ -81,7 +81,6 @@
     return vNode;
   };
   // 通过render方法来根据虚拟节点创建出真实节点，最终将真实节点插入container中
-  render(createVNode(), app);
   effect(() => render(createVNode(), app));
 
 </script>
