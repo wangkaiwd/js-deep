@@ -30,4 +30,12 @@
 * lerna
 
 Vite:
-* 
+
+* script type=module , 直接引入`JavaScript`文件
+* import 语法发起请求
+* es module 不支持直接引入`node_modules`中的第三方模块
+* `Vite`会修改模块地址的路径，如果是第三方模块，会以`/@modules`开头，到`node_modules`中查找文件
+* 后端将`.vue`文件进行处理，返回给前端
+  * template,js,style 分别进行处理
+  * 分别发送请求
+* 热更新：websocket
