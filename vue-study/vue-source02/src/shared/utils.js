@@ -21,3 +21,18 @@ export function defineProperty (target, key, value) {
     value
   });
 }
+
+export function noop () {}
+
+function makeMap (str) {
+  const array = str.split(',');
+  const map = array.reduce((memo, current) => {
+    memo[current] = true;
+    return memo;
+  }, {});
+  return function (key) {
+    return map[key];
+  };
+}
+
+export const isReservedTag = makeMap('div,a,p,button,span,img');

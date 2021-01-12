@@ -11,6 +11,8 @@ class Watcher {
     this.cb = cb;
     this.render = options.render;
     this.user = options.user;
+    this.lazy = options.lazy;
+    this.dirty = this.lazy;
     this.deps = [];
     this.depsId = new Set();
     // 渲染视图时，exprOrFn为函数：vm._update(vm._render()), 会通过最新的数据来重新生成虚拟节点
@@ -26,7 +28,7 @@ class Watcher {
     }
     // 首次渲染是同步的，而之后的更新都会走update方法，放到异步队列中
     // 获取到key对应的最初的值
-    this.value = this.get();
+    this.value = this.lazy ? undefined : this.get(); // 计算属性初始化时不会执行求值操作
   }
 
   addDep (dep) { // 通过watcher来收集dep,并让dep也同时收集watcher
@@ -39,9 +41,20 @@ class Watcher {
     }
   }
 
+  evaluate () {
+    this.value = this.get();
+    // 依赖没有发生变化，下次就不会再进行求值
+    this.dirty = false;
+  }
+
+  depend () {
+    // 将每个dep的watcher再进行去重收集
+    this.deps.forEach(dep => dep.depend());
+  }
+
   get () {
     pushTarget(this);
-    const result = this.getter();
+    const result = this.getter.call(this.vm);
     popTarget();
     return result;
   }
@@ -58,7 +71,11 @@ class Watcher {
   //  1. 要将需要更新的watcher进行去重，然后放到队列中
   //  2. 等到主线程所有的更新操作执行完毕后再统一进行更新
   update () {
-    queueWatcher(this);
+    if (this.lazy) {
+      this.dirty = true;
+    } else {
+      queueWatcher(this);
+    }
   }
 }
 

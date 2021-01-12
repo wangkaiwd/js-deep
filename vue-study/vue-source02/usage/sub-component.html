@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<script src="../dist/umd/vue.js"></script>
+<body>
+<div id="app">
+  hello
+  <my-button></my-button>
+  <aa></aa>
+</div>
+<script>
+  // 1. Vue.component
+  // 2. Vue.extend
+  // 3. components merge strategy
+  // 4. render component virtual dom
+  // 5. render real component dom
+  Vue.component('my-button', {
+    template: `<button>my button</button>`
+  });
+  Vue.component('aa', {
+    template: `<button>global aa</button>`
+  });
+  const vm = new Vue({
+    components: {
+      bb: {
+        template: `<button>bb</button>`
+      },
+      aa: {
+        template: `<button>scoped aa</button>`
+      }
+    },
+    el: '#app',
+  });
+  // 父子组件的生成周期执行顺序
+  // 1. new Vue()
+  // 2. beforeCreate
+  // 3. initState
+  // 4. created
+  // 5. vm.$mount() -> beforeMounted
+  // 6. encounter unreserved tag, render sub component
+  // 7. start handle sub component init logic and mount sub component
+  // 8. sub component will return vm.$el then append to parent node
+  // 9. mount parent node to document
+  // 9. parent component mounted
+</script>
+</body>
+</html>

@@ -25,6 +25,17 @@ function mergeHook (parentVal, childVal) {
   }
 }
 
+function mergeComponents (parentVal, childVal) {
+  const result = Object.create(parentVal);
+  for (const key in childVal) {
+    if (childVal.hasOwnProperty(key)) {
+      result[key] = childVal[key];
+    }
+  }
+  return result;
+}
+
+strategies.components = mergeComponents;
 LIFECYCLE_HOOK.forEach(hook => {
   strategies[hook] = mergeHook;
 });

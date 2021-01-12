@@ -20,8 +20,19 @@ function updateProperties (vNode) {
   }
 }
 
+function createComponent (vNode) {
+  const init = vNode.props?.hook?.init;
+  init?.(vNode); // optional chaining
+  if (vNode.componentInstance) {
+    return true;
+  }
+}
+
 function createElement (vNode) {
   if (typeof vNode.tag === 'string') { // here may be custom component tag
+    if (createComponent(vNode)) {
+      return vNode.componentInstance.$el;
+    }
     vNode.el = document.createElement(vNode.tag);
     updateProperties(vNode);
     vNode.children.forEach(child => vNode.el.appendChild(createElement(child)));
@@ -112,6 +123,9 @@ function updateChildren (oldChildren, newChildren, parent) {
 }
 
 export function patch (oldVNode, vNode) {
+  if (!oldVNode) { // new Vue()时没有传入el选项
+    return createElement(vNode); // 最后返回值会赋值给vm.$el选项，创建一个脱离文档的DOM节点
+  }
   if (oldVNode.nodeType) { // 首次渲染，会传入要替换的真实dom
     const el = createElement(vNode);
     const parentNode = oldVNode.parentNode;
