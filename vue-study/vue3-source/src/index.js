@@ -62,9 +62,16 @@ function mountComponent (vNode, container) {
     subTree: undefined, // setup返回的render函数的返回值
   };
   instance.render = component.setup(vNode.props, instance);
-  instance.subTree = instance?.render?.();
-  // subTree是setup中render函数执行后的返回值，即当前组件中的模板
-  patch(null, instance.subTree, container);
+  // name只在子组件里用到了，count在父子组件中都用到了
+  effect(() => {
+    // subTree是setup中render函数执行后的返回值，即当前组件中的模板对应的虚拟节点
+    // render执行后，会从state中进行取值,取值的时候会收集对应的effect
+    // 此时只会在子组件进行取值操作，会在取值时将target name effect进行收集，此时effect中传入的fn变为了更新子组件的函数
+    // 所以收集到的effect只会更新子组件
+    instance.subTree = instance?.render?.();
+    // {target:{name: [effect]}}
+    patch(null, instance.subTree, container);
+  });
 }
 
 function patch (n1, n2, container) {

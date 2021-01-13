@@ -14,8 +14,10 @@
   const { render, effect, reactive } = Vue;
   const app = document.getElementById('app');
   const state = reactive({
-    count: 0
+    count: 0,
+    name: 'zs'
   });
+  // 会获取state中对应属性的最新值，生成虚拟DOM，并不需要再从实例上获取
   const MyComponent = {
     setup () {
       // 这里会返回一个render方法
@@ -27,12 +29,12 @@
             {
               tag: 'p',
               props: {},
-              children: 'I am a custom component' + state.count
+              children: 'I am a custom component' + state.name
             },
             {
               tag: 'button',
               props: {
-                onClick: () => state.count++
+                onClick: () => state.name = state.name + 1
               },
               children: 'Click Me!'
             }
@@ -43,7 +45,7 @@
   };
   // children 为字符串或数组
   const createVNode = () => {
-    const vNode = {
+    return {
       tag: 'div',
       props: {
         style: { color: 'yellow' }
@@ -57,7 +59,7 @@
         {
           tag: 'button',
           props: {
-            onClick: () => alert(state.count)
+            onClick: () => state.count++
           },
           children: '点我啊'
         },
@@ -78,9 +80,9 @@
         },
       ]
     };
-    return vNode;
   };
   // 通过render方法来根据虚拟节点创建出真实节点，最终将真实节点插入container中
+  // 当更新父组件中的值时
   effect(() => render(createVNode(), app));
 
 </script>
