@@ -18,20 +18,49 @@
     name: 'zs'
   });
   // diff的思想
+  // const oldVNode = {
+  //   tag: 'div',
+  //   props: { style: { color: 'red' } },
+  //   children: 'child',
+  // };
+
   const oldVNode = {
-    tag: 'div',
+    tag: 'ul',
     props: { style: { color: 'red' } },
-    children: 'child',
+    children: [
+      { tag: 'li', props: { style: { color: 'red' }, key: 'A' }, children: 'A' },
+      // { tag: 'li', props: { style: { color: 'yellow' }, key: 'B' }, children: 'B' },
+      // { tag: 'li', props: { style: { color: 'blue' }, key: 'C' }, children: 'C' },
+      // { tag: 'li', props: { style: { color: 'green' }, key: 'D' }, children: 'D' },
+    ],
   };
   render(oldVNode, app);
   setTimeout(() => {
+    // const newVNode = {
+    //   tag: 'div',
+    //   props: { style: { color: 'blue' } },
+    //   children: 'child1',
+    // };
+
+    // const newVNode = {
+    //   tag: 'div',
+    //   props: { style: { color: 'blue' } },
+    //   children: [
+    //     { tag: 'span', props: {}, children: 'span' }
+    //   ],
+    // };
     const newVNode = {
-      tag: 'div',
-      props: { style: { color: 'blue' } },
-      children: 'child',
+      tag: 'ul',
+      props: { style: { color: 'red' } },
+      children: [
+        { tag: 'li', props: { style: { color: 'red' }, key: 'A' }, children: 'A' },
+        { tag: 'li', props: { style: { color: 'yellow' }, key: 'B' }, children: 'B' },
+        { tag: 'li', props: { style: { color: 'blue' }, key: 'C' }, children: 'C' },
+        { tag: 'li', props: { style: { color: 'green' }, key: 'D' }, children: 'D' },
+      ],
     };
     render(newVNode, app);
-  }, 1000);
+  }, 3000);
 </script>
 </body>
 </html>

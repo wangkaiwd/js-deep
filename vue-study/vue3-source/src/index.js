@@ -103,9 +103,30 @@ function patchProps (oldProps, props = {}, el) {
   });
 }
 
+// 处理老孩子和新孩子都有的情况
+function patchKeyedChildren (oldChildren, newChildren, el) {
+
+}
+
+function patchChildren (oldChildren, newChildren, el) {
+  if (typeof newChildren === 'string') { // 新的孩子为字符串
+    el.textContent = newChildren;
+  } else { //
+    if (typeof oldChildren === 'string') {
+      el.textContent = '';
+      mountChildren(newChildren, el);
+    } else { // 俩个孩子都拥有子节点
+      patchKeyedChildren(oldChildren, newChildren, el);
+    }
+  }
+}
+
 function patchElement (n1, n2, container) {
+  const el = n1.el;
   // 比对n1和n2是否相同，这里假设相同
-  patchProps(n1.props, n2.props, n1.el);
+  patchProps(n1.props, n2.props, el);
+  // 比对子节点，只考虑都有孩子的情况
+  patchChildren(n1.children, n2.children, el);
 }
 
 function processElement (n1, n2, container) {
