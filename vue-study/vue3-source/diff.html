@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<script src="./dist/umd/vue.js"></script>
+<body>
+<div id="app"></div>
+<script>
+  const { render, effect, reactive } = Vue;
+  const app = document.getElementById('app');
+  const state = reactive({
+    count: 0,
+    name: 'zs'
+  });
+  // diff的思想
+  const oldVNode = {
+    tag: 'div',
+    props: { style: { color: 'red' } },
+    children: 'child',
+  };
+  render(oldVNode, app);
+  setTimeout(() => {
+    const newVNode = {
+      tag: 'div',
+      props: { style: { color: 'blue' } },
+      children: 'child',
+    };
+    render(newVNode, app);
+  }, 1000);
+</script>
+</body>
+</html>

@@ -5,10 +5,6 @@ import { nodeOps } from './runtime-dom';
 // 导出文件中的所有具名导出，默认导出需要单独导出
 export * from './reactivity';
 
-export function render (vNode, container) {
-  patch(null, vNode, container);
-}
-
 function updateStyles (el, style) {
   for (const key in style) {
     if (style.hasOwnProperty(key)) {
@@ -37,6 +33,7 @@ function updateProperties (vNode) {
 function mountChildren (children, container) {
   for (let i = 0; i < children.length; i++) {
     const child = children[i];
+    // 将子节点插入父节点中
     patch(null, child, container);
   }
 }
@@ -74,13 +71,63 @@ function mountComponent (vNode, container) {
   });
 }
 
-function patch (n1, n2, container) {
-  // 组件的虚拟节点,tag是一个对象
-  if (typeof n2.tag === 'string') {
+function forEach (obj, cb) {
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      cb(obj[key], key);
+    }
+  }
+}
+
+function patchProps (oldProps, props = {}, el) {
+  const newStyle = props.style || {};
+  const oldStyle = oldProps.style || {};
+  forEach(props, (val, key) => {
+    if (key !== 'style') {
+      el.setAttribute(key, val);
+    }
+  });
+  forEach(oldProps, (val, key) => {
+    if (!(key in props)) {
+      el.removeAttribute(key);
+    }
+  });
+  forEach(newStyle, (val, key) => {
+    el.style[key] = val;
+  });
+  forEach(oldStyle, (val, key) => {
+    if (!(key in newStyle)) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/ElementCSSInlineStyle/style#setting_styles
+      el.style[key] = '';
+    }
+  });
+}
+
+function patchElement (n1, n2, container) {
+  // 比对n1和n2是否相同，这里假设相同
+  patchProps(n1.props, n2.props, n1.el);
+}
+
+function processElement (n1, n2, container) {
+  if (n1 == null) { // 初次渲染老节点为undefined
     mountElement(n2, container);
+  } else { // 之后会进行比对更新，n1为老的虚拟节点，n2为新的虚拟节点
+    patchElement(n1, n2, container);
+  }
+}
+
+function patch (n1, n2, container) {
+  // 组件的虚拟节点,tag是一个对象(包含组件的选项，如setup,props,components等)
+  if (typeof n2.tag === 'string') {
+    processElement(n1, n2, container);
   } else if (typeof n2.tag === 'object') { // 组件
+    // 组件的diff先不做处理
     mountComponent(n2, container);
   }
 }
 
-
+export function render (vNode, container) {
+  patch(container._vNode, vNode, container);
+  // 渲染完成后，将老的节点挂载到container上
+  container._vNode = vNode;
+}
