@@ -26,12 +26,12 @@
 
   const oldVNode = {
     tag: 'ul',
-    props: { style: { color: 'red' } },
+    props: {},
     children: [
       { tag: 'li', props: { style: { color: 'red' }, key: 'A' }, children: 'A' },
-      // { tag: 'li', props: { style: { color: 'yellow' }, key: 'B' }, children: 'B' },
-      // { tag: 'li', props: { style: { color: 'blue' }, key: 'C' }, children: 'C' },
-      // { tag: 'li', props: { style: { color: 'green' }, key: 'D' }, children: 'D' },
+      { tag: 'li', props: { style: { color: 'yellow' }, key: 'B' }, children: 'B' },
+      { tag: 'li', props: { style: { color: 'blue' }, key: 'C' }, children: 'C' },
+      { tag: 'li', props: { style: { color: 'green' }, key: 'D' }, children: 'D' },
     ],
   };
   render(oldVNode, app);
@@ -51,12 +51,12 @@
     // };
     const newVNode = {
       tag: 'ul',
-      props: { style: { color: 'red' } },
+      props: {},
       children: [
-        { tag: 'li', props: { style: { color: 'red' }, key: 'A' }, children: 'A' },
-        { tag: 'li', props: { style: { color: 'yellow' }, key: 'B' }, children: 'B' },
-        { tag: 'li', props: { style: { color: 'blue' }, key: 'C' }, children: 'C' },
         { tag: 'li', props: { style: { color: 'green' }, key: 'D' }, children: 'D' },
+        { tag: 'li', props: { style: { color: 'blue' }, key: 'C' }, children: 'C' },
+        { tag: 'li', props: { style: { color: 'yellow' }, key: 'B' }, children: 'B' },
+        { tag: 'li', props: { style: { color: 'red' }, key: 'A' }, children: 'A' },
       ],
     };
     render(newVNode, app);

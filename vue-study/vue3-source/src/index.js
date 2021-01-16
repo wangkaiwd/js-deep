@@ -104,8 +104,42 @@ function patchProps (oldProps, props = {}, el) {
 }
 
 // 处理老孩子和新孩子都有的情况
-function patchKeyedChildren (oldChildren, newChildren, el) {
+function patchKeyedChildren (oldChildren, newChildren, el) { // key的比较
+  const oldEndIndex = oldChildren.length - 1, newEndIndex = newChildren.length - 1;
 
+  function makeKeyedToNewIndex () {
+    const map = new Map();
+    for (let i = 0; i <= newEndIndex; i++) {
+      const vNode = newChildren[i];
+      if (vNode.props.key) {
+        map.set(vNode.props.key, i);
+      }
+    }
+    return map;
+  }
+
+  const keyedToNewIndex = makeKeyedToNewIndex();
+  for (let i = 0; i <= oldEndIndex; i++) {
+    const vNode = oldChildren[i];
+    const { key } = vNode.props;
+    const newIndex = keyedToNewIndex.get(key);
+    if (newIndex === undefined) {
+      // 老节点通过key在新节点中查找，没有找到，将老节点对应的真实节点删除
+      el.removeChild(vNode.el);
+    } else {// 找到复用
+      // 继续比对复用元素
+      // 在比对孩子之前，会将老节点el赋值给新节点
+      patch(vNode, newChildren[newIndex], vNode.el);
+    }
+  }
+
+  // 移动元素，从后往前插入。此时已经执行了patch方法
+  for (let i = newEndIndex; i >= 0; i--) {
+    const curEle = newChildren[i].el;
+    const next = newChildren[i + 1];
+    const refEle = next ? next.el : null;
+    el.insertBefore(curEle, refEle);
+  }
 }
 
 function patchChildren (oldChildren, newChildren, el) {
@@ -122,7 +156,8 @@ function patchChildren (oldChildren, newChildren, el) {
 }
 
 function patchElement (n1, n2, container) {
-  const el = n1.el;
+  // 当老节点的标签和key相同时，说明是同一个元素，将新节点的el设置为老节点的el
+  const el = n2.el = n1.el;
   // 比对n1和n2是否相同，这里假设相同
   patchProps(n1.props, n2.props, el);
   // 比对子节点，只考虑都有孩子的情况
