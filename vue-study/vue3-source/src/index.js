@@ -133,11 +133,11 @@ function patchKeyedChildren (oldChildren, newChildren, el) { // key的比较
     }
   }
 
+  // todo: 如何判断是否在新节点中有老节点中没有的新增元素？
   // 移动元素，从后往前插入。此时已经执行了patch方法
   for (let i = newEndIndex; i >= 0; i--) {
     const curEle = newChildren[i].el;
-    const next = newChildren[i + 1];
-    const refEle = next ? next.el : null;
+    const refEle = i + 1 <= newEndIndex ? newChildren[i + 1].el : null;
     el.insertBefore(curEle, refEle);
   }
 }
