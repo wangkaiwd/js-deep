@@ -38,7 +38,7 @@ function mountChildren (children, container) {
   }
 }
 
-function mountElement (vNode, container) {
+function mountElement (vNode, container, anchor) {
   const { tag, children } = vNode;
   const el = vNode.el = nodeOps.createElement(tag);
   updateProperties(vNode);
@@ -47,10 +47,10 @@ function mountElement (vNode, container) {
   } else {
     nodeOps.setTextContent(el, children);
   }
-  container.appendChild(el);
+  container.insertBefore(el, anchor);
 }
 
-function mountComponent (vNode, container) {
+function mountComponent (vNode, container, anchor) {
   // setup 中返回 render函数
   const component = vNode.tag; // {setup(){ return () => {tag:'div',props:{},'xxx'} }}
   const instance = {
@@ -67,7 +67,7 @@ function mountComponent (vNode, container) {
     // 所以收集到的effect只会更新子组件
     instance.subTree = instance?.render?.();
     // {target:{name: [effect]}}
-    patch(null, instance.subTree, container);
+    patch(null, instance.subTree, container, anchor);
   });
 }
 
@@ -119,6 +119,11 @@ function patchKeyedChildren (oldChildren, newChildren, el) { // key的比较
   }
 
   const keyedToNewIndex = makeKeyedToNewIndex();
+  // 创建一个存放新孩子节点索引的数组，默认值为-1，没有被复用，如果对某个元素进行了复用，对应的索引设置为老节点中复用元素的索引
+  const newIndexToOldIndex = [];
+  for (let i = 0; i <= newEndIndex; i++) {
+    newIndexToOldIndex[i] = -1;
+  }
   for (let i = 0; i <= oldEndIndex; i++) {
     const vNode = oldChildren[i];
     const { key } = vNode.props;
@@ -127,18 +132,22 @@ function patchKeyedChildren (oldChildren, newChildren, el) { // key的比较
       // 老节点通过key在新节点中查找，没有找到，将老节点对应的真实节点删除
       el.removeChild(vNode.el);
     } else {// 找到复用
+      newIndexToOldIndex[newIndex] = i;
       // 继续比对复用元素
       // 在比对孩子之前，会将老节点el赋值给新节点
       patch(vNode, newChildren[newIndex], vNode.el);
     }
   }
-
-  // todo: 如何判断是否在新节点中有老节点中没有的新增元素？
+  console.log('newIndex', newIndexToOldIndex);
   // 移动元素，从后往前插入。此时已经执行了patch方法
   for (let i = newEndIndex; i >= 0; i--) {
-    const curEle = newChildren[i].el;
+    const curNode = newChildren[i];
     const refEle = i + 1 <= newEndIndex ? newChildren[i + 1].el : null;
-    el.insertBefore(curEle, refEle);
+    if (newIndexToOldIndex[i] === -1) { // 没有复用
+      patch(null, curNode, el, refEle);
+    } else { // 复用
+      el.insertBefore(curNode.el, refEle);
+    }
   }
 }
 
@@ -164,21 +173,21 @@ function patchElement (n1, n2, container) {
   patchChildren(n1.children, n2.children, el);
 }
 
-function processElement (n1, n2, container) {
+function processElement (n1, n2, container, anchor) {
   if (n1 == null) { // 初次渲染老节点为undefined
-    mountElement(n2, container);
+    mountElement(n2, container, anchor);
   } else { // 之后会进行比对更新，n1为老的虚拟节点，n2为新的虚拟节点
-    patchElement(n1, n2, container);
+    patchElement(n1, n2, container, anchor);
   }
 }
 
-function patch (n1, n2, container) {
+function patch (n1, n2, container, anchor = null) {
   // 组件的虚拟节点,tag是一个对象(包含组件的选项，如setup,props,components等)
   if (typeof n2.tag === 'string') {
-    processElement(n1, n2, container);
+    processElement(n1, n2, container, anchor);
   } else if (typeof n2.tag === 'object') { // 组件
     // 组件的diff先不做处理
-    mountComponent(n2, container);
+    mountComponent(n2, container, anchor);
   }
 }
 

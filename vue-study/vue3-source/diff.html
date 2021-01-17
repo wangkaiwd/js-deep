@@ -53,12 +53,23 @@
       tag: 'ul',
       props: {},
       children: [
-        { tag: 'li', props: { style: { color: 'green' }, key: 'D' }, children: 'D' },
-        { tag: 'li', props: { style: { color: 'blue' }, key: 'C' }, children: 'C' },
-        { tag: 'li', props: { style: { color: 'yellow' }, key: 'B' }, children: 'B' },
         { tag: 'li', props: { style: { color: 'red' }, key: 'A' }, children: 'A' },
+        { tag: 'li', props: { style: { color: 'yellow' }, key: 'B' }, children: 'B' },
+        { tag: 'li', props: { style: { color: 'pink' }, key: 'F' }, children: 'F' },
+        { tag: 'li', props: { style: { color: 'blue' }, key: 'C' }, children: 'C' },
+        { tag: 'li', props: { style: { color: 'green' }, key: 'D' }, children: 'D' },
       ],
     };
+    // const newVNode = {
+    //   tag: 'ul',
+    //   props: {},
+    //   children: [
+    //     { tag: 'li', props: { style: { color: 'green' }, key: 'D' }, children: 'D' },
+    //     { tag: 'li', props: { style: { color: 'blue' }, key: 'C' }, children: 'C' },
+    //     { tag: 'li', props: { style: { color: 'yellow' }, key: 'B' }, children: 'B' },
+    //     { tag: 'li', props: { style: { color: 'red' }, key: 'A' }, children: 'A' },
+    //   ],
+    // };
     render(newVNode, app);
   }, 3000);
 </script>
