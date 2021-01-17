@@ -5,6 +5,50 @@ import { nodeOps } from './runtime-dom';
 // 导出文件中的所有具名导出，默认导出需要单独导出
 export * from './reactivity';
 
+// 获得最长递增子序列
+// https://en.wikipedia.org/wiki/Longest_increasing_subsequence
+function getSequence (arr) {
+  const p = arr.slice();
+  const result = [0];
+  let i, j, u, v, c;
+  const len = arr.length;
+  for (i = 0; i < len; i++) {
+    const arrI = arr[i];
+    // 只处理序列中大于0的元素
+    if (arrI !== 0) {
+      j = result[result.length - 1];
+      if (arr[j] < arrI) {
+        p[i] = j;
+        result.push(i);
+        continue;
+      }
+      u = 0;
+      v = result.length - 1;
+      while (u < v) {
+        c = ((u + v) / 2) | 0;
+        if (arr[result[c]] < arrI) {
+          u = c + 1;
+        } else {
+          v = c;
+        }
+      }
+      if (arrI < arr[result[u]]) {
+        if (u > 0) {
+          p[i] = result[u - 1];
+        }
+        result[u] = i;
+      }
+    }
+  }
+  u = result.length;
+  v = result[u - 1];
+  while (u-- > 0) {
+    result[u] = v;
+    v = p[v];
+  }
+  return result;
+}
+
 function updateStyles (el, style) {
   for (const key in style) {
     if (style.hasOwnProperty(key)) {
@@ -103,6 +147,7 @@ function patchProps (oldProps, props = {}, el) {
   });
 }
 
+// todo: arrange diff logic , and think actual practice
 // 处理老孩子和新孩子都有的情况
 function patchKeyedChildren (oldChildren, newChildren, el) { // key的比较
   const oldEndIndex = oldChildren.length - 1, newEndIndex = newChildren.length - 1;
@@ -120,9 +165,9 @@ function patchKeyedChildren (oldChildren, newChildren, el) { // key的比较
 
   const keyedToNewIndex = makeKeyedToNewIndex();
   // 创建一个存放新孩子节点索引的数组，默认值为-1，没有被复用，如果对某个元素进行了复用，对应的索引设置为老节点中复用元素的索引
-  const newIndexToOldIndex = [];
+  const newIndexToOldIndexMap = [];
   for (let i = 0; i <= newEndIndex; i++) {
-    newIndexToOldIndex[i] = -1;
+    newIndexToOldIndexMap[i] = -1;
   }
   for (let i = 0; i <= oldEndIndex; i++) {
     const vNode = oldChildren[i];
@@ -132,21 +177,32 @@ function patchKeyedChildren (oldChildren, newChildren, el) { // key的比较
       // 老节点通过key在新节点中查找，没有找到，将老节点对应的真实节点删除
       el.removeChild(vNode.el);
     } else {// 找到复用
-      newIndexToOldIndex[newIndex] = i;
+      newIndexToOldIndexMap[newIndex] = i + 1;
       // 继续比对复用元素
       // 在比对孩子之前，会将老节点el赋值给新节点
       patch(vNode, newChildren[newIndex], vNode.el);
     }
   }
-  console.log('newIndex', newIndexToOldIndex);
+  // 得到了最长子序列中每个值在原数组中的索引组成的数组
+  // 而它的索引也就是新孩子的索引，说明索引对应的元素的位置不用移动
+  const sequence = getSequence(newIndexToOldIndexMap);
   // 移动元素，从后往前插入。此时已经执行了patch方法
+  let j = sequence.length - 1;
   for (let i = newEndIndex; i >= 0; i--) {
     const curNode = newChildren[i];
     const refEle = i + 1 <= newEndIndex ? newChildren[i + 1].el : null;
-    if (newIndexToOldIndex[i] === -1) { // 没有复用
+    const oldIndex = newIndexToOldIndexMap[i];
+    if (oldIndex === -1) { // 没有复用
+      // 将el插入到refEle之前，注意这里会倒着插入，所以参考节点会先被创建出来
       patch(null, curNode, el, refEle);
     } else { // 复用
-      el.insertBefore(curNode.el, refEle);
+      // 复用时连续递增的内容不用进行处理
+      if (i === sequence[j]) {
+        j--;
+      } else {
+        // 将不连续的内容移动到正确的位置
+        el.insertBefore(curNode.el, refEle);
+      }
     }
   }
 }
