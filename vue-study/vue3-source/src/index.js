@@ -7,6 +7,8 @@ export * from './reactivity';
 
 // 获得最长递增子序列
 // https://en.wikipedia.org/wiki/Longest_increasing_subsequence
+// article: https://labuladong.gitbook.io/algo/di-ling-zhang-bi-du-xi-lie/er-fen-cha-zhao-xiang-jie
+// leetcode: https://leetcode-cn.com/problems/longest-increasing-subsequence/
 function getSequence (arr) {
   const p = arr.slice();
   const result = [0];
@@ -147,7 +149,6 @@ function patchProps (oldProps, props = {}, el) {
   });
 }
 
-// todo: arrange diff logic , and think actual practice
 // 处理老孩子和新孩子都有的情况
 function patchKeyedChildren (oldChildren, newChildren, el) { // key的比较
   const oldEndIndex = oldChildren.length - 1, newEndIndex = newChildren.length - 1;
