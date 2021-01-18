@@ -5,7 +5,9 @@ import './extend-prorotype';
 import loading from '@/assets/loading-1.gif';
 import './assets/styles/reset.scss';
 import InfiniteScroll from './components/directives/infinite-scroll';
+import MyTree from '@/components/my-tree';
 
+Vue.use(MyTree);
 Vue.config.productionTip = false;
 Vue.directive('infinite-scroll', InfiniteScroll);
 Vue.use(LazyLoad, {
