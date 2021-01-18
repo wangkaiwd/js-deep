@@ -8,3 +8,8 @@
 * 异步加载逻辑
 * 拖拽节点
   * 拖拽`CSS`
+
+### 知识点
+
+* [visibility](https://developer.mozilla.org/en-US/docs/Web/CSS/visibility): hidden; 使元素隐藏，但是还会占据位置。
+
