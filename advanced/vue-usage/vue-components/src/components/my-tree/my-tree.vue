@@ -6,7 +6,8 @@
     <tree-node
       :child="child"
       :key="child.key"
-      v-for="child in data"
+      v-for="child in copyData"
+      @expand="onExpand"
     >
     </tree-node>
   </div>
@@ -18,7 +19,9 @@
 
 // 树组件只需要渲染子节点即可，每个子节点都相同
 import TreeNode from '@/components/my-tree/tree-node';
+import { flatTree } from '@/components/my-tree/flatTree';
 
+const simpleDeepClone = (data) => JSON.parse(JSON.stringify(data));
 export default {
   name: 'MyTree',
   components: { TreeNode },
@@ -28,11 +31,29 @@ export default {
       default: () => []
     }
   },
+  watch: {
+    data (val) {
+      this.copyData = simpleDeepClone(val);
+      this.treeMap = flatTree(this.copyData);
+
+    }
+  },
   data () {
-    return {};
+    return {
+      copyData: simpleDeepClone(this.data),
+      treeMap: {}
+    };
   },
   mounted () {
-    console.log(this.data);
+    // flatTree的几种实现方式
+    this.treeMap = flatTree(this.copyData);
+  },
+  methods: {
+    onExpand (item) {
+      const { key, expanded } = item;
+      const cloneItem = this.treeMap[key];
+      this.$set(cloneItem, 'expanded', !expanded);
+    }
   }
 };
 </script>

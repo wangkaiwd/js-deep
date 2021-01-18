@@ -1,13 +1,13 @@
 <template>
   <div class="tree-node">
     <div class="node-content">
-      <div :class="['arrow',{show:child.children}]"> ></div>
+      <div :class="['arrow',{show:child.children}]" @click="onExpand(child)"> ></div>
       <input type="checkbox"/>
       <div class="title">{{ child.title }}</div>
     </div>
     <div
       class="children"
-      v-if="child.children"
+      v-if="child.children && child.expanded"
       style="border:1px solid red;"
     >
       <tree-node
@@ -32,6 +32,11 @@ export default {
   data () {
     return {};
   },
+  methods: {
+    onExpand (item) {
+      this.$emit('expand', item);
+    }
+  }
 };
 </script>
 
