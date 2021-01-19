@@ -36,7 +36,7 @@
 * [手写Vue源码(四)-生命周期](https://zhuanlan.zhihu.com/p/343298126)
 * [手写Vue源码(五)-依赖收集](https://zhuanlan.zhihu.com/p/343502936)
 * [手写Vue源码(六)-异步更新](https://zhuanlan.zhihu.com/p/344022733)
-* [手写Vue源码(七)-实现Watch属性](https://zhuanlan.zhihu.com/p/344313916)
+* [手写Vue源码(七)-实现watch属性](https://zhuanlan.zhihu.com/p/344313916)
 * [手写Vue源码(八)-DOM Diff](https://zhuanlan.zhihu.com/p/344794251)
 * [手写Vue源码(九)-计算属性](https://zhuanlan.zhihu.com/p/345208305)
 * [手写Vue源码(十)-组件渲染](https://zhuanlan.zhihu.com/p/345481386)
