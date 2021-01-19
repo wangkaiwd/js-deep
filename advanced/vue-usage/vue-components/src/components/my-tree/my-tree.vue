@@ -8,6 +8,7 @@
       :key="child.key"
       v-for="child in copyData"
       @expand="onExpand"
+      @check="onCheck"
     >
     </tree-node>
   </div>
@@ -35,7 +36,6 @@ export default {
     data (val) {
       this.copyData = simpleDeepClone(val);
       this.treeMap = flatTree(this.copyData);
-
     }
   },
   data () {
@@ -53,6 +53,35 @@ export default {
       const { key, expanded } = item;
       const cloneItem = this.treeMap[key];
       this.$set(cloneItem, 'expanded', !expanded);
+    },
+    onCheck (item) {
+      const { key, checked } = item;
+      const cloneItem = this.treeMap[key];
+      this.$set(cloneItem, 'checked', !checked);
+      this.updateTreeDown(item, !checked);
+      this.updateTreeUp(item);
+    },
+    // 更新所有的子节点
+    updateTreeDown (item, checked) {
+      const children = item.children || [];
+      children.forEach(child => {
+        this.$set(child, 'checked', checked);
+        if (child.children) {
+          this.updateTreeDown(child, checked);
+        }
+      });
+    },
+    // 更新所有的父节点
+    updateTreeUp (item) {
+      const { key } = item;
+      const parent = this.treeMap[key].parent;
+      if (parent) {
+        // 父节点的所有子节点的孩子节点都选中时才会选中
+        const _checked = parent.children.every(child => child.checked);
+        this.$set(parent, 'checked', _checked);
+        // 继续更新父级
+        this.updateTreeUp(parent, _checked);
+      }
     }
   }
 };
