@@ -19,3 +19,23 @@
 
 * 不同于`Vue2`每次将子节点对应虚拟节点创建的真实节点返回，然后将其`append`到父节点中
 * `Vue3`每次会将父节点传入，然后在子节点中通过`appendChild`方法将其插入到父节点中
+
+最长递增子序列：
+
+* 要知道索引对应的原值
+
+源码概述：
+
+* yarn workspace
+* lerna
+
+Vite:
+
+* script type=module , 直接引入`JavaScript`文件
+* import 语法发起请求
+* es module 不支持直接引入`node_modules`中的第三方模块
+* `Vite`会修改模块地址的路径，如果是第三方模块，会以`/@modules`开头，到`node_modules`中查找文件
+* 后端将`.vue`文件进行处理，返回给前端
+  * template,js,style 分别进行处理
+  * 分别发送请求
+* 热更新：websocket

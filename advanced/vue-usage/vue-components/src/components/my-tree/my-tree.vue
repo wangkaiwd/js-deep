@@ -1,19 +1,64 @@
 <template>
   <div class="my-tree">
-    tree component
+    <!--  这里使用render函数来进行递归会简单很多
+         限制条件：由于Vue中template只能有一个根组件，所以递归的时候要让tree-node组件接收一个对象，而不是数组
+      -->
+    <tree-node
+      :child="child"
+      :key="child.key"
+      v-for="child in copyData"
+      @expand="onExpand"
+    >
+    </tree-node>
   </div>
 </template>
 
 <script>
+// 类比Menu组件：SubMenu不能选中，只是具有展开和闭合功能
+// 为什么要设计SubMenu组件？SubMenu组件会有一些自己单独的事件和操作
+
+// 树组件只需要渲染子节点即可，每个子节点都相同
+import TreeNode from '@/components/my-tree/tree-node';
+import { flatTree } from '@/components/my-tree/flatTree';
+
+const simpleDeepClone = (data) => JSON.parse(JSON.stringify(data));
 export default {
   name: 'MyTree',
-  data () {
-    return {};
+  components: { TreeNode },
+  props: {
+    data: {
+      type: Array,
+      default: () => []
+    }
   },
+  watch: {
+    data (val) {
+      this.copyData = simpleDeepClone(val);
+      this.treeMap = flatTree(this.copyData);
+
+    }
+  },
+  data () {
+    return {
+      copyData: simpleDeepClone(this.data),
+      treeMap: {}
+    };
+  },
+  mounted () {
+    // flatTree的几种实现方式
+    this.treeMap = flatTree(this.copyData);
+  },
+  methods: {
+    onExpand (item) {
+      const { key, expanded } = item;
+      const cloneItem = this.treeMap[key];
+      this.$set(cloneItem, 'expanded', !expanded);
+    }
+  }
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .my-tree {
 
 }

@@ -4,5 +4,8 @@ export const nodeOps = {
   },
   setTextContent (el, text) {
     el.textContent = text;
+  },
+  remove () {
+
   }
 };

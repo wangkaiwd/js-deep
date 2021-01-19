@@ -14,9 +14,10 @@
   const { render, effect, reactive } = Vue;
   const app = document.getElementById('app');
   const state = reactive({
-    count: 0
+    count: 0,
+    name: 'zs'
   });
-  console.log('state', state);
+  // 会获取state中对应属性的最新值，生成虚拟DOM，并不需要再从实例上获取
   const MyComponent = {
     setup () {
       // 这里会返回一个render方法
@@ -28,12 +29,12 @@
             {
               tag: 'p',
               props: {},
-              children: 'I am a custom component' + state.count
+              children: 'I am a custom component' + state.name
             },
             {
               tag: 'button',
               props: {
-                onClick: () => state.count++
+                onClick: () => state.name = state.name + 1
               },
               children: 'Click Me!'
             }
@@ -43,44 +44,46 @@
     }
   };
   // children 为字符串或数组
-  const vNode = {
-    tag: 'div',
-    props: {
-      style: { color: 'yellow' }
-    },
-    children: [
-      {
-        tag: 'p',
-        props: { style: { color: 'blue' } },
-        children: 'Vue3 计数器' + state.count
+  const createVNode = () => {
+    return {
+      tag: 'div',
+      props: {
+        style: { color: 'yellow' }
       },
-      {
-        tag: 'button',
-        props: {
-          onClick: () => alert(state.count)
+      children: [
+        {
+          tag: 'p',
+          props: { style: { color: 'blue' } },
+          children: 'Vue3 计数器' + state.count
         },
-        children: '点我啊'
-      },
-      {
-        tag: MyComponent,
-        // props: {},
-        // children: []
-      },
-      {
-        tag: MyComponent,
-        // props: {},
-        // children: []
-      },
-      {
-        tag: MyComponent,
-        // props: {},
-        // children: []
-      },
-    ]
+        {
+          tag: 'button',
+          props: {
+            onClick: () => state.count++
+          },
+          children: '点我啊'
+        },
+        {
+          tag: MyComponent,
+          // props: {},
+          // children: []
+        },
+        {
+          tag: MyComponent,
+          // props: {},
+          // children: []
+        },
+        {
+          tag: MyComponent,
+          // props: {},
+          // children: []
+        },
+      ]
+    };
   };
   // 通过render方法来根据虚拟节点创建出真实节点，最终将真实节点插入container中
-  // render(vNode, app);
-  effect(() => render(vNode, app));
+  // 当更新父组件中的值时
+  effect(() => render(createVNode(), app));
 
 </script>
 </body>
