@@ -1,11 +1,15 @@
 <template>
   <div id="app">
-    <my-tree :data="data"></my-tree>
+    <my-tree :data="data" :load="onLoad"></my-tree>
   </div>
 </template>
 
 <script>
-
+const children = [
+  { title: '0-1-0-0', key: '0-1-0-0' },
+  { title: '0-1-0-1', key: '0-1-0-1' },
+  { title: '0-1-0-2', key: '0-1-0-2' },
+];
 export default {
   name: 'App',
   data () {
@@ -42,19 +46,33 @@ export default {
         {
           title: '0-1',
           key: '0-1',
-          children: [
-            { title: '0-1-0-0', key: '0-1-0-0' },
-            { title: '0-1-0-1', key: '0-1-0-1' },
-            { title: '0-1-0-2', key: '0-1-0-2' },
-          ],
+          children: []
         },
         {
           title: '0-2',
           key: '0-2',
         },
-      ],
+      ]
     };
   },
+  methods: {
+    onLoad (data, cb) { // data要加载children的数据，也就是当前点击的内容
+      // 获取点击节点的数据
+      // 根据点击节点数组中的id发起ajax请求，获取到它的children
+      // 将children赋值给data
+      // 加载完数据后，执行回调cb()
+      // todo: 这里不应该直接更改data中的数据
+      if (data.children?.length === 0) {
+        setTimeout(() => {
+          // 这里不能直接修改
+          data.children = children;
+          cb();
+        }, 1000);
+      } else { // 不用异步加载
+        cb();
+      }
+    }
+  }
 };
 </script>
 

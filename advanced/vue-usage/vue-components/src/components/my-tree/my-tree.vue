@@ -30,6 +30,9 @@ export default {
     data: {
       type: Array,
       default: () => []
+    },
+    load: {
+      type: Function
     }
   },
   watch: {
@@ -41,7 +44,7 @@ export default {
   data () {
     return {
       copyData: simpleDeepClone(this.data),
-      treeMap: {}
+      treeMap: {},
     };
   },
   mounted () {
@@ -53,6 +56,12 @@ export default {
       const { key, expanded } = item;
       const cloneItem = this.treeMap[key];
       this.$set(cloneItem, 'expanded', !expanded);
+      if (this.load) { // 异步加载
+        this.$set(cloneItem, 'pending', true);
+        this.load(item, () => { // 数据加载完毕后展开
+          this.$set(cloneItem, 'pending', false);
+        });
+      }
     },
     onCheck (item) {
       const { key, checked } = item;

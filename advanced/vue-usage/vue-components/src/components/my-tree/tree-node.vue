@@ -1,7 +1,9 @@
 <template>
   <div class="tree-node">
     <div class="node-content">
-      <div :class="['arrow',{show:child.children}]" @click="onExpand(child)"> ></div>
+      <div :class="['arrow',{show:child.children}]" @click="onExpand(child)">
+        {{ child.pending ? 'loading...' : '>' }}
+      </div>
       <input type="checkbox" :checked="child.checked" @click.stop="onCheck(child)"/>
       <div class="title">{{ child.title }}</div>
     </div>
