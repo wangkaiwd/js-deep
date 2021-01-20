@@ -1,8 +1,10 @@
 <template>
   <div class="tree-node">
     <div class="node-content">
-      <div :class="['arrow',{show:child.children}]" @click="onExpand(child)"> ></div>
-      <input type="checkbox"/>
+      <div :class="['arrow',{show:child.children}]" @click="onExpand(child)">
+        {{ child.pending ? 'loading...' : '>' }}
+      </div>
+      <input type="checkbox" :checked="child.checked" @click.stop="onCheck(child)"/>
       <div class="title">{{ child.title }}</div>
     </div>
     <div
@@ -13,6 +15,8 @@
       <tree-node
         :key="subChild.key"
         :child="subChild"
+        @expand="onExpand"
+        @check="onCheck"
         v-for="subChild in child.children"
       >
       </tree-node>
@@ -35,6 +39,9 @@ export default {
   methods: {
     onExpand (item) {
       this.$emit('expand', item);
+    },
+    onCheck (item) {
+      this.$emit('check', item);
     }
   }
 };
