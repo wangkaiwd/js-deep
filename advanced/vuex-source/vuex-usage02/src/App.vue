@@ -19,7 +19,7 @@ export default {
   },
   mounted () {
     // 将Vue的实例放到了$store属性上
-    console.log(this.$store);
+    console.log('$store', this.$store);
   },
   computed: {
     a () {

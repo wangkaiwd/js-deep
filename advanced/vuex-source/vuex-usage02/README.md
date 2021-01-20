@@ -5,6 +5,7 @@ write vuex step by step
 ### Problem
 
 * why actions only store async logic
+* how to implement actions by Promise
 
 ### What is vuex
 
