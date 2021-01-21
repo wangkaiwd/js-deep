@@ -36,7 +36,8 @@ export default {
       this.$store.commit('addA');
     },
     addC () {
-      this.$store.commit('addC');
+      // this.$store.commit('addC');
+      this.$store.commit('b/addC');
     },
     changeAge () {
       this.$store.commit('changeAge', 10);

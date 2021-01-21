@@ -45,10 +45,11 @@ class Store {
   }
 
   installModules (options, path = []) {
-    const { state, mutations, actions, getters, modules } = options;
+    const { state, mutations, actions, getters, modules, namespaced } = options;
     this.registerState(state, path);
-    this.registerMutations(mutations, state);
-    this.registerActions(actions);
+    const namespace = namespaced ? this.getNamespace(path) : '';
+    this.registerMutations(mutations, state, namespace);
+    this.registerActions(actions, namespace);
     if (!modules) {return;}
     forEach(modules, (key, module) => {
       this.installModules(module, path.concat(key));
@@ -74,6 +75,19 @@ class Store {
     }
   };
 
+  getNamespace (path) { // options 和 path
+    if (path.length === 0) {return '';}
+    let module = this.options;
+    const str = path.reduce((memo, cur) => {
+      module = module.modules[cur];
+      if (module) {
+        memo.push(cur);
+      }
+      return memo;
+    }, []).join('/');
+    return str + '/';
+  }
+
   getParent (path) {
     return path.slice(0, -1).reduce((memo, cur) => {
       return memo[cur];
@@ -93,15 +107,15 @@ class Store {
     const key = path[path.length - 1];
     let parent = this.getParent(path);
     if (key) {
-      // parent[key] = state;
       this.vm.$set(parent, key, state);
     } else {
       this.vm.state = this.state = state;
     }
   }
 
-  registerMutations (mutations, state) {
+  registerMutations (mutations, state, namespace) {
     forEach(mutations, (key, mutation) => {
+      key = namespace + key;
       const entries = this.mutations[key] = this.mutations[key] ?? [];
       entries.push((payload) => { // 这里并不是直接传入了mutation，而是又构建了一个新的函数，这样在当前作用域中便可以找到mutation对应的state，从而传递给真正额mutation
         mutation(state, payload);
@@ -109,8 +123,15 @@ class Store {
     });
   }
 
-  registerActions (actions) {
+  getParentModule (path) {
+    return path.slice(0, -1).reduce((memo, cur) => {
+      return memo.modules[cur];
+    }, this.options);
+  }
+
+  registerActions (actions, namespace) {
     forEach(actions, (key, action) => {
+      key = namespace + key;
       const entries = this.actions[key] = this.actions[key] ?? [];
       entries.push((payload) => { // 这里并不是直接传入了action，而是又构建了一个新的函数
         action(this, payload);
@@ -120,6 +141,9 @@ class Store {
 
   // 动态注册模块
   registerModule (path, module) {
+    const parentModule = this.getParentModule(path);
+    const { length, [length - 1]: last } = path;
+    parentModule.modules[last] = module;
     this.installModules(module, path);
   }
 }

@@ -4,6 +4,7 @@ import router from './router';
 import store from './store';
 
 store.registerModule(['d'], {
+  namespaced: true,
   state: {
     age: 12
   },

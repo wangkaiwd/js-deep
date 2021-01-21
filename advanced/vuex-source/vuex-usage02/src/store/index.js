@@ -1,5 +1,6 @@
 import Vue from 'vue';
-import Vuex from './my-vuex';
+// import Vuex from './my-vuex';
+import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
@@ -15,6 +16,7 @@ export default new Vuex.Store({
   actions: {},
   modules: {
     b: {
+      namespaced: true,
       state: {
         c: 'zs'
       },
