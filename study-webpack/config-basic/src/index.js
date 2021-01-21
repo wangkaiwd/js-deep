@@ -9,4 +9,7 @@ document.querySelector('.text').innerHTML = txt;
 console.log('bucket', bucket);
 const image = new Image();
 image.src = bucket;
+image.style.width = '100px';
+image.style.height = '200px';
+
 document.body.appendChild(image);

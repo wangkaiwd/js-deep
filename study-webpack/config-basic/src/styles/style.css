@@ -1,3 +1,9 @@
 body {
   background-color: pink;
 }
+#img-container {
+  width: 100px;
+  height: 160px;
+  background: url("../images/bucket.png");
+  background-size: 100% 100%;
+}
