@@ -10,7 +10,7 @@ module.exports = {
     // compress: true, // Enable gzip compress for everything served
     // port: 8080,
     // open: true,
-    // writeToDisk: true,
+    writeToDisk: true,
     // publicPath: '/'
   },
   output: {
@@ -35,7 +35,12 @@ module.exports = {
       {
         test: /\.scss$/i,
         use: ['style-loader', 'css-loader', 'sass-loader']
-      }
+      },
+      // webpack 5: Asset Modules
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
+      },
     ]
   },
   plugins: [new HtmlWebpackPlugin({
