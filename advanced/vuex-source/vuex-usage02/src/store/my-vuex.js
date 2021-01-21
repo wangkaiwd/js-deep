@@ -55,23 +55,24 @@ class Store {
     });
   }
 
-  commit (type, payload) {
+  // 从store中解构commit 和 dispatch调用时，this指向会变为window
+  commit = (type, payload) => {
     const entries = this.mutations[type];
     if (entries) {
       entries.forEach(entry => {
         entry(payload);
       });
     }
-  }
+  };
 
-  dispatch (type, payload) { // 需要处理成Promise
+  dispatch = (type, payload) => { // 需要处理成Promise
     const entries = this.actions[type];
     if (entries) {
       entries.forEach(entry => {
         entry(payload);
       });
     }
-  }
+  };
 
   getParent (path) {
     return path.slice(0, -1).reduce((memo, cur) => {
@@ -118,8 +119,8 @@ class Store {
   }
 
   // 动态注册模块
-  registerModule () {
-
+  registerModule (path, module) {
+    this.installModules(module, path);
   }
 }
 

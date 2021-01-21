@@ -31,6 +31,7 @@ const store = new Vuex.store({
 * getters
 * mutations
 * actions
+  * _withCommit: check whether async call or not(enable the strict mode)
 * modules
 * namespace
 * dynamic register module

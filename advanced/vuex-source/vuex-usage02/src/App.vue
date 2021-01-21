@@ -7,8 +7,10 @@
     </div>
     <h3>a:{{ a }}</h3>
     <h3>c:{{ c }}</h3>
+    <h2>age:{{ $store.state.d.age }}</h2>
     <button @click="addA">addA</button>
     <button @click="addC">addC</button>
+    <button @click="changeAge">changeAge</button>
     <router-view/>
   </div>
 </template>
@@ -35,6 +37,9 @@ export default {
     },
     addC () {
       this.$store.commit('addC');
+    },
+    changeAge () {
+      this.$store.commit('changeAge', 10);
     }
   }
 };
