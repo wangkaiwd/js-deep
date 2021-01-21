@@ -41,7 +41,15 @@ class Store {
     this.mutations = {};
     this.actions = {};
     this.getters = {};
+    this.subs = [];
+    const { plugins } = this.options;
+    // plugin是一个函数，接收store作为参数
+    plugins.forEach(plugin => plugin(this));
     this.installModules(this.options);
+  }
+
+  subscribe (fn) {
+    this.subs.push(fn);
   }
 
   installModules (options, path = []) {
@@ -119,6 +127,7 @@ class Store {
       const entries = this.mutations[key] = this.mutations[key] ?? [];
       entries.push((payload) => { // 这里并不是直接传入了mutation，而是又构建了一个新的函数，这样在当前作用域中便可以找到mutation对应的state，从而传递给真正额mutation
         mutation(state, payload);
+        this.subs.forEach(sub => sub({ type: key, payload }, this.state));
       });
     });
   }
@@ -146,6 +155,14 @@ class Store {
     parentModule.modules[last] = module;
     this.installModules(module, path);
   }
+}
+
+export function mapState (expr) {
+  return {
+    [expr] () {
+      return this.$store.expr;
+    }
+  };
 }
 
 export default {
