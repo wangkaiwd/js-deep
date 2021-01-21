@@ -19,6 +19,7 @@ const install = (Vue) => {
 };
 
 function forEach (obj, cb) {
+  if (!obj) {return;}
   Object.keys(obj).forEach(key => {
     cb(key, obj[key]);
   });
@@ -32,7 +33,7 @@ class Store {
     this.vm = new Vue({
       data () {
         return {
-          $state: this.state
+          state: {}
         };
       }
     });
@@ -42,10 +43,11 @@ class Store {
     this.installModules(this.options);
   }
 
-  installModules (store, path = []) {
-    const { state, mutations, actions, getters, modules } = store;
+  installModules (options, path = []) {
+    const { state, mutations, actions, getters, modules } = options;
     this.registerState(state, path);
     this.registerMutations(mutations, state);
+    this.registerActions(actions);
     if (!modules) {return;}
     forEach(modules, (key, module) => {
       this.installModules(module, path.concat(key));
@@ -92,7 +94,7 @@ class Store {
       // parent[key] = state;
       this.vm.$set(parent, key, state);
     } else {
-      this.state = state;
+      this.vm.state = this.state = state;
     }
   }
 
@@ -108,7 +110,7 @@ class Store {
   registerActions (actions) {
     forEach(actions, (key, action) => {
       const entries = this.actions[key] = this.actions[key] ?? [];
-      entries.push((payload) => { // 这里并不是直接传入了mutation，而是又构建了一个新的函数，这样在当前作用域中便可以找到mutation对应的state，从而传递给真正额mutation
+      entries.push((payload) => { // 这里并不是直接传入了action，而是又构建了一个新的函数
         action(this, payload);
       });
     });
