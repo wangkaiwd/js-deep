@@ -10,7 +10,6 @@
     <div
       class="children"
       v-if="child.children && child.expanded"
-      style="border:1px solid red;"
     >
       <tree-node
         :key="subChild.key"

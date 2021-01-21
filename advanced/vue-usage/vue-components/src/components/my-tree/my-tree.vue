@@ -7,6 +7,7 @@
       :child="child"
       :key="child.key"
       v-for="child in copyData"
+      :load="load"
       @expand="onExpand"
       @check="onCheck"
     >
@@ -36,10 +37,13 @@ export default {
     }
   },
   watch: {
-    data (val) {
-      this.copyData = simpleDeepClone(val);
-      this.treeMap = flatTree(this.copyData);
-    }
+    // data: {
+    //   handler (val) {
+    //     this.copyData = simpleDeepClone(val);
+    //     this.treeMap = flatTree(this.copyData);
+    //   },
+    //   deep: true
+    // }
   },
   data () {
     return {
@@ -54,19 +58,17 @@ export default {
   methods: {
     onExpand (item) {
       const { key, expanded } = item;
-      const cloneItem = this.treeMap[key];
-      this.$set(cloneItem, 'expanded', !expanded);
+      this.$set(item, 'expanded', !expanded);
       if (this.load) { // 异步加载
-        this.$set(cloneItem, 'pending', true);
-        this.load(item, () => { // 数据加载完毕后展开
-          this.$set(cloneItem, 'pending', false);
+        this.$set(item, 'pending', true);
+        this.load(item, (children) => { // 数据加载完毕后展开
+          this.$set(item, 'pending', false);
         });
       }
     },
     onCheck (item) {
       const { key, checked } = item;
-      const cloneItem = this.treeMap[key];
-      this.$set(cloneItem, 'checked', !checked);
+      this.$set(item, 'checked', !checked);
       this.updateTreeDown(item, !checked);
       this.updateTreeUp(item);
     },
