@@ -30,6 +30,7 @@ class Store {
     this.options = options;
     // 此时state并不具有响应式
     this.state = {};
+    // properties that start with _ or $ will not be proxied on the Vue instance because of they may conflict with Vue's internal properties and API methods
     this.vm = new Vue({
       data () {
         return {
