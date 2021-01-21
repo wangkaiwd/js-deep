@@ -71,7 +71,6 @@ export default {
       if (data.children?.length === 0) {
         setTimeout(() => {
           // 需要自己手动更新父节点
-          this.treeMap[data.key].children = children;
           resolve(children);
         }, 1000);
       } else { // 不用异步加载

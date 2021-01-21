@@ -7,11 +7,11 @@
       :child="child"
       :key="child.key"
       v-for="child in copyData"
-      :load="load"
       @expand="onExpand"
       @check="onCheck"
     >
     </tree-node>
+    <div class="line"></div>
   </div>
 </template>
 
@@ -34,6 +34,10 @@ export default {
     },
     load: {
       type: Function
+    },
+    draggable: {
+      type: Boolean,
+      default: false
     }
   },
   watch: {
@@ -62,6 +66,9 @@ export default {
       if (this.load) { // 异步加载
         this.$set(item, 'pending', true);
         this.load(item, (children) => { // 数据加载完毕后展开
+          if (children) {
+            item.children = children;
+          }
           this.$set(item, 'pending', false);
         });
       }
@@ -100,6 +107,14 @@ export default {
 
 <style lang="scss" scoped>
 .my-tree {
-
+  position: relative;
+  .line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: pink;
+  }
 }
 </style>

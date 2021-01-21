@@ -1,5 +1,11 @@
 <template>
-  <div class="tree-node">
+  <div
+    class="tree-node"
+    @dragstart="onDragstart"
+    @dragover="onDragover"
+    @dragend="onDragend"
+    ref="node"
+  >
     <div class="node-content">
       <div :class="['arrow',{show:child.children}]" @click="onExpand(child)">
         {{ child.pending ? 'loading...' : '>' }}
@@ -30,10 +36,12 @@ export default {
     child: {
       type: Object,
       default: () => ({})
-    }
+    },
   },
   data () {
-    return {};
+    return {
+      node: null
+    };
   },
   methods: {
     onExpand (item) {
@@ -41,6 +49,21 @@ export default {
     },
     onCheck (item) {
       this.$emit('check', item);
+    },
+    onDragstart (e) {
+      e.stopPropagation();
+      this.node = this.$refs.node;
+    },
+    onDragover (e) {
+      if (this.node) {
+        if (this.node.contains(e.target)) {return;}
+      }
+      e.stopPropagation();
+      console.log('over');
+    },
+    onDragend (e) {
+      e.stopPropagation();
+      this.node = null;
     }
   }
 };
@@ -48,6 +71,8 @@ export default {
 
 <style lang="scss" scoped>
 .tree-node {
+  -webkit-user-drag: element;
+  user-select: none;
   padding: 4px 2px;
   .node-content {
     display: flex;
