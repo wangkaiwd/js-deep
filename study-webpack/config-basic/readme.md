@@ -10,6 +10,16 @@
   * 在`html`中直接通过`img src`引入(`html-loader`)
   * 放在静态文件根目录里，直接通过`img src`使用(`webpack-dev-server`)
 * babel-loader
+  * polyfill: polyfill-service, polyfill.io通过分析请求头中的`UserAgent`实现自动加载浏览器所需的`pollyfills`
+* eslint
+* sourcemap
+  * 如何调试线上代码？
+* import third part library
+  * ProvidePlugin
+  * expose-loader
+  * externals
+  * html-webpack-externals-plugin
+* Authoring Library:
 
 ### English
 

@@ -25,6 +25,16 @@ module.exports = {
         use: 'raw-loader'
       },
       {
+        test: /\.js$/i,
+        exclude: /node_modules/,
+        ues: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }
+      },
+      {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader']
       },
