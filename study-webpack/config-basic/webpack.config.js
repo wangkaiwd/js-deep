@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 module.exports = {
   mode: 'development',
   entry: './src/index.js',
@@ -13,6 +14,7 @@ module.exports = {
     writeToDisk: true,
     // publicPath: '/'
   },
+  devtool: 'eval-cheap-module-source-map',
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
@@ -23,6 +25,16 @@ module.exports = {
       {
         test: /\.txt$/i,
         use: 'raw-loader'
+      },
+      {
+        test: require.resolve('lodash'),
+        loader: 'expose-loader',
+        options: {
+          exposes: {
+            globalName: '_',
+            override: true
+          },
+        },
       },
       {
         test: /\.js$/i,
@@ -69,8 +81,14 @@ module.exports = {
       }
     ]
   },
-  plugins: [new HtmlWebpackPlugin({
-    title: 'Custom template',
-    template: path.resolve(__dirname, 'src', 'index.html')
-  })]
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: 'Custom template',
+      template: path.resolve(__dirname, 'src', 'index.html')
+    }),
+    // 只能对webpack编译的文件起作用
+    // new webpack.ProvidePlugin({
+    //   _: 'lodash'
+    // })
+  ]
 };
