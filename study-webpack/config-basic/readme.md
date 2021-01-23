@@ -33,7 +33,7 @@
   * inline: 将.map作为DataURI嵌入，不单独生成.map文件
 * import third part library
   * ProvidePlugin
-  * expose-loader
+  * expose-loader: expose a module to global object(window,global)
   * externals
   * html-webpack-externals-plugin
 * Authoring Library:
