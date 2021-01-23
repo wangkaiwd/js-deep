@@ -27,10 +27,20 @@ module.exports = {
       {
         test: /\.js$/i,
         exclude: /node_modules/,
-        ues: {
+        use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env']
+            presets: [
+              [
+                '@babel/preset-env',
+                {
+                  useBuiltIns: 'usage',
+                  corejs: { version: '2.0', proposals: true },
+                  targets: 'defaults'
+                }
+              ]
+
+            ]
           }
         }
       },

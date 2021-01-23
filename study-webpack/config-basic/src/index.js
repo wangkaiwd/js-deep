@@ -13,3 +13,7 @@ image.style.width = '100px';
 image.style.height = '200px';
 
 document.body.appendChild(image);
+
+const fn = () => {
+  console.log(1);
+};

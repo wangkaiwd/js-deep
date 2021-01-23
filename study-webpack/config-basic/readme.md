@@ -11,6 +11,7 @@
   * 放在静态文件根目录里，直接通过`img src`使用(`webpack-dev-server`)
 * babel-loader
   * polyfill: polyfill-service, polyfill.io通过分析请求头中的`UserAgent`实现自动加载浏览器所需的`pollyfills`
+  * preset-env [useBuiltIns](https://babeljs.io/docs/en/babel-preset-env#usebuiltins-usage): 只加载用到新语法的polyfill
 * eslint
 * sourcemap
   * 如何调试线上代码？
