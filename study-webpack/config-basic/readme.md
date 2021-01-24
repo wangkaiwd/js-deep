@@ -42,12 +42,22 @@
   * --mode
   * --env
   * DefinePlugin
+  * .env file: [dotenv](https://github.com/motdotla/dotenv)
 * babel vs polyfill
   * babel-polyfill, babel-runtime
 * watch
   * copy-webpack-plugin
   * clean-webpack-plugin
   * proxy
+* extract-css
+  * put image and css in directory
+* hash
+  * hash
+  * chunkhash
+  * contenthash
+* css compatibility
+* multiple page application
+  * html webpack plugin + entry (can use for loop to generate)
 
 ### English
 
