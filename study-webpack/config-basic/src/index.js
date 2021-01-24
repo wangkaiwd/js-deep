@@ -3,7 +3,7 @@ import './styles/style.css';
 import './styles/less.less';
 import './styles/scss.scss';
 import bucket from './images/bucket.png';
-import 'lodash';
+import _ from 'lodash';
 // A loader for webpack that allows importing files as a String.
 console.log('txt', txt);
 document.querySelector('.text').innerHTML = txt;

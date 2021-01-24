@@ -20,22 +20,25 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     // publicPath: '/'
   },
+  externals: {
+    'lodash': '_', // 这俩个怎么配置都可以使用？
+  },
   module: {
     rules: [
       {
         test: /\.txt$/i,
         use: 'raw-loader'
       },
-      {
-        test: require.resolve('lodash'),
-        loader: 'expose-loader',
-        options: {
-          exposes: {
-            globalName: '_',
-            override: true
-          },
-        },
-      },
+      // {
+      //   test: require.resolve('lodash'),
+      //   loader: 'expose-loader',
+      //   options: {
+      //     exposes: {
+      //       globalName: '_',
+      //       override: true
+      //     },
+      //   },
+      // },
       {
         test: /\.js$/i,
         exclude: /node_modules/,
@@ -51,7 +54,6 @@ module.exports = {
                   targets: 'defaults'
                 }
               ]
-
             ]
           }
         }
