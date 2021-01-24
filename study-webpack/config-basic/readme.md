@@ -34,8 +34,8 @@
 * import third part library
   * ProvidePlugin
   * expose-loader: expose a module to global object(window,global)
-  * externals
-  * html-webpack-externals-plugin
+  * [externals](https://stackoverflow.com/a/22619421/11720536)
+  * [html-webpack-tags-plugin](https://github.com/jharris4/html-webpack-tags-plugin#options)
 * Authoring Library:
 
 ### English

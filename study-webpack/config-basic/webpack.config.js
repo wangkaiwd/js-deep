@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 module.exports = {
   mode: 'development',
   entry: './src/index.js',
@@ -92,5 +93,9 @@ module.exports = {
     // new webpack.ProvidePlugin({
     //   _: 'lodash'
     // })
+    new HtmlWebpackTagsPlugin({
+      tags: ['https://cdn.bootcdn.net/ajax/libs/lodash.js/4.17.20/lodash.min.js'],
+      append: false
+    })
   ]
 };
