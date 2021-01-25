@@ -76,3 +76,4 @@ vue router provide built-in components for customer
 ### beforeEach hook
 
 * call next hook by customer
+* make use of next function implement continuous invoke
