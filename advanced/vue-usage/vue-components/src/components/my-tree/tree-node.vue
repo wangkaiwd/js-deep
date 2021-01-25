@@ -9,17 +9,19 @@
       <div :class="['arrow',{show:child.children}]" @click="onExpand(child)">
         {{ child.pending ? 'loading...' : '>' }}
       </div>
-      <input type="checkbox" :checked="child.checked" @click.stop="onCheck(child)"/>
+      <input type="checkbox" :checked="selected" @click.stop="onCheck(child)"/>
       <div class="title">{{ child.title }}</div>
     </div>
     <div
       class="children"
-      v-if="child.children && child.expanded"
+      v-if="child.children && expanded"
     >
       <tree-node
         :key="subChild.key"
         v-for="subChild in child.children"
         :child="subChild"
+        :expand-keys="expandKeys"
+        :selected-keys="selectedKeys"
         @expand="onExpand"
         @check="onCheck"
         @dragstart="onChildDragstart"
@@ -39,16 +41,41 @@ export default {
       type: Object,
       default: () => ({})
     },
+    expandKeys: {
+      type: Array,
+      default: () => []
+    },
+    selectedKeys: {
+      type: Array,
+      default: () => []
+    },
   },
   data () {
     return {};
+  },
+  computed: {
+    expanded () {
+      return this.expandKeys.includes(this.child.key);
+    },
+    selected () {
+      return this.selectedKeys.includes(this.child.key);
+    }
   },
   methods: {
     onExpand (item) {
       this.$emit('expand', item);
     },
     onCheck (item) {
-      this.$emit('check', item);
+      // 判断所有的孩子是否都选中了
+      const checkAll = item.children.every(child => this.selectedKeys.includes(child.key));
+      const copySelectedKeys = [...this.selectedKeys];
+      if (copySelectedKeys.includes(item.key)) {
+        const index = copySelectedKeys.indexOf(item.key);
+        copySelectedKeys.splice(index, 1);
+      } else {
+        copySelectedKeys.push(item.key);
+      }
+      this.$emit('check', copySelectedKeys);
     },
     onDragstart (e) {
       // 为什么要在父组件中处理事件？
@@ -65,6 +92,7 @@ export default {
       e.stopPropagation();
       this.$emit('dragend', e, this, this.child);
     },
+    // 需要将子节点的数据再传到父组件
     onChildDragstart (e, nodeVm, data) {
       this.$emit('dragstart', e, nodeVm, data);
     },

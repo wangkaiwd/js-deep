@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <my-tree :data="data" :load="onLoad"></my-tree>
+    {{ selectedKeys }}
+    <my-tree :selected-keys="selectedKeys" @check="onCheck" :data="data"></my-tree>
   </div>
 </template>
 
@@ -16,6 +17,7 @@ export default {
   name: 'App',
   data () {
     return {
+      selectedKeys: [],
       data: [
         {
           title: '0-0',
@@ -45,11 +47,11 @@ export default {
             },
           ],
         },
-        {
-          title: '0-1',
-          key: '0-1',
-          children: []
-        },
+        // {
+        //   title: '0-1',
+        //   key: '0-1',
+        //   children: []
+        // },
         {
           title: '0-2',
           key: '0-2',
@@ -76,8 +78,11 @@ export default {
       } else { // 不用异步加载
         resolve();
       }
+    },
+    onCheck (selectedKeys) {
+      this.selectedKeys = selectedKeys;
     }
-  }
+  },
 };
 </script>
 
