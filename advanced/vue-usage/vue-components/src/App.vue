@@ -59,7 +59,7 @@ export default {
     };
   },
   mounted () {
-    this.treeMap = flatTree(this.data);
+    // this.treeMap = flatTree(this.data);
   },
   methods: {
     onLoad (data, resolve) { // data要加载children的数据，也就是当前点击的内容

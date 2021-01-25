@@ -4,3 +4,4 @@
   * raw-loader
 * support css less sass
 * image
+* js

@@ -9,9 +9,12 @@
       v-for="child in copyData"
       @expand="onExpand"
       @check="onCheck"
+      @dragstart="onDragstart"
+      @dragover="onDragover"
+      @dragend="onDragend"
     >
     </tree-node>
-    <div class="line"></div>
+    <div class="indicator" ref="indicator" v-show="indicatorVisible"></div>
   </div>
 </template>
 
@@ -53,6 +56,10 @@ export default {
     return {
       copyData: simpleDeepClone(this.data),
       treeMap: {},
+      dragNode: null,
+      dragData: {},
+      dragState: '',
+      indicatorVisible: false
     };
   },
   mounted () {
@@ -100,6 +107,47 @@ export default {
         // 继续更新父级
         this.updateTreeUp(parent, _checked);
       }
+    },
+    onDragstart (e, nodeVm, data) { // 确定拖拽元素的信息
+      this.dragNode = nodeVm;
+      this.dragData = data;
+    },
+    onDragover (e, nodeVm, data) { // 当前经过元素的信息
+      const dragElm = this.dragNode.$el;
+      const overElm = nodeVm.$el;
+      if (dragElm.contains(overElm)) {
+        return;
+      }
+      const overRect = overElm.getBoundingClientRect();
+      const indicatorElm = this.$refs.indicator;
+      const clientY = e.clientY;
+      const treeRect = this.$el.getBoundingClientRect();
+      const distance = clientY - overRect.top;
+      if (distance < overRect.height * 0.2) {
+        this.dragState = 'top';
+      } else if (distance > overRect.height * 0.8) {
+        this.dragState = 'bottom';
+      } else {
+        this.dragState = 'inner';
+      }
+      let indicatorTop = -9999;
+      if (this.dragState === 'top') {
+        this.indicatorVisible = true;
+        indicatorTop = overRect.top - treeRect.top;
+      } else if (this.dragState === 'bottom') {
+        this.indicatorVisible = true;
+        indicatorTop = overRect.bottom - treeRect.top;
+      } else {
+        this.indicatorVisible = false;
+      }
+      indicatorElm.style.top = indicatorTop + 'px';
+      indicatorElm.style.left = overRect.left - treeRect.left + 'px';
+    },
+    onDragend (e, nodeVm, data) {
+      this.dragNode = null;
+      this.dragData = {};
+      this.dragState = '';
+      this.indicatorVisible = false;
     }
   }
 };
@@ -108,13 +156,13 @@ export default {
 <style lang="scss" scoped>
 .my-tree {
   position: relative;
-  .line {
+  .indicator {
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: pink;
+    right: 0;
+    height: 4px;
+    background-color: red;
   }
 }
 </style>

@@ -4,7 +4,6 @@
     @dragstart="onDragstart"
     @dragover="onDragover"
     @dragend="onDragend"
-    ref="node"
   >
     <div class="node-content">
       <div :class="['arrow',{show:child.children}]" @click="onExpand(child)">
@@ -19,10 +18,13 @@
     >
       <tree-node
         :key="subChild.key"
+        v-for="subChild in child.children"
         :child="subChild"
         @expand="onExpand"
         @check="onCheck"
-        v-for="subChild in child.children"
+        @dragstart="onChildDragstart"
+        @dragover="onChildDragover"
+        @dragend="onChildDragend"
       >
       </tree-node>
     </div>
@@ -39,9 +41,7 @@ export default {
     },
   },
   data () {
-    return {
-      node: null
-    };
+    return {};
   },
   methods: {
     onExpand (item) {
@@ -51,20 +51,29 @@ export default {
       this.$emit('check', item);
     },
     onDragstart (e) {
+      // 为什么要在父组件中处理事件？
+      // 在拖动之后，start中定义的内容就拿不到了，我们就会到了另外的treeNode中，它的this会发生变化
+      // 除非能将start时的内容保存到一个地方
       e.stopPropagation();
-      this.node = this.$refs.node;
+      this.$emit('dragstart', e, this, this.child);
     },
-    onDragover (e) {
-      if (this.node) {
-        if (this.node.contains(e.target)) {return;}
-      }
+    onDragover (e) { // 鼠标拖动的位置
       e.stopPropagation();
-      console.log('over');
+      this.$emit('dragover', e, this, this.child);
     },
     onDragend (e) {
       e.stopPropagation();
-      this.node = null;
-    }
+      this.$emit('dragend', e, this, this.child);
+    },
+    onChildDragstart (e, nodeVm, data) {
+      this.$emit('dragstart', e, nodeVm, data);
+    },
+    onChildDragover (e, nodeVm, data) { // 鼠标拖动的位置
+      this.$emit('dragover', e, nodeVm, data);
+    },
+    onChildDragend (e, nodeVm, data) {
+      this.$emit('dragend', e, nodeVm, data);
+    },
   }
 };
 </script>
