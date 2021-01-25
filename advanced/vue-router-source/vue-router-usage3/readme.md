@@ -38,6 +38,14 @@ new Vue({
 * 根据传入的`routes`生成路径映射数据
 * 监听`hashchange`事件
 
+### History mode
+
+* [popstate event](https://developer.mozilla.org/en-US/docs/Web/API/Window/popstate_event#the_history_stack)
+
+Note that just calling history.pushState() or history.replaceState() won't trigger a popstate event.The popstate event
+will be triggered by doing a browser action such as a click on the back or forward button(or calling history.back() or
+history.forward() in JavaScript)
+
 #### Reactivity
 
 * $route: current, Vue.util.defineReactive(this,'_route',this._router.history.current)
