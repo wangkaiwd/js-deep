@@ -5,8 +5,10 @@
       -->
     <tree-node
       :child="child"
+      :expand-keys="expandKeys"
+      :selected-keys="selectedKeys"
       :key="child.key"
-      v-for="child in copyData"
+      v-for="child in data"
       @expand="onExpand"
       @check="onCheck"
       @dragstart="onDragstart"
@@ -24,7 +26,6 @@
 
 // 树组件只需要渲染子节点即可，每个子节点都相同
 import TreeNode from '@/components/my-tree/tree-node';
-import { flatTree } from '@/components/my-tree/flatTree';
 
 const simpleDeepClone = (data) => JSON.parse(JSON.stringify(data));
 export default {
@@ -32,6 +33,10 @@ export default {
   components: { TreeNode },
   props: {
     data: {
+      type: Array,
+      default: () => []
+    },
+    selectedKeys: {
       type: Array,
       default: () => []
     },
@@ -54,8 +59,9 @@ export default {
   },
   data () {
     return {
-      copyData: simpleDeepClone(this.data),
+      // copyData: simpleDeepClone(this.data),
       treeMap: {},
+      expandKeys: [],
       dragNode: null,
       dragData: {},
       dragState: '',
@@ -64,35 +70,47 @@ export default {
   },
   mounted () {
     // flatTree的几种实现方式
-    this.treeMap = flatTree(this.copyData);
+    // this.treeMap = flatTree(this.copyData);
   },
   methods: {
     onExpand (item) {
-      const { key, expanded } = item;
-      this.$set(item, 'expanded', !expanded);
-      if (this.load) { // 异步加载
-        this.$set(item, 'pending', true);
-        this.load(item, (children) => { // 数据加载完毕后展开
-          if (children) {
-            item.children = children;
-          }
-          this.$set(item, 'pending', false);
-        });
+      const { key } = item;
+      if (this.expandKeys.includes(key)) {
+        const index = this.expandKeys.indexOf(key);
+        this.expandKeys.splice(index, 1);
+      } else {
+        this.expandKeys.push(key);
       }
     },
     onCheck (item) {
-      const { key, checked } = item;
-      this.$set(item, 'checked', !checked);
-      this.updateTreeDown(item, !checked);
-      this.updateTreeUp(item);
+      const { key } = item;
+      const copySelectedKeys = [...this.selectedKeys];
+      const checked = copySelectedKeys.includes(key);
+      if (checked) {
+        const index = copySelectedKeys.indexOf(key);
+        copySelectedKeys.splice(index, 1);
+      } else {
+        copySelectedKeys.push(key);
+      }
+      this.updateTreeDown(item.children, checked, copySelectedKeys);
+      this.$emit('check', copySelectedKeys);
     },
     // 更新所有的子节点
-    updateTreeDown (item, checked) {
-      const children = item.children || [];
+    updateTreeDown (children, checked, copySelectedKeys) {
       children.forEach(child => {
-        this.$set(child, 'checked', checked);
+        const { key } = child;
+        if (checked) {
+          if (copySelectedKeys.includes(key)) {
+            const index = copySelectedKeys.indexOf(key);
+            copySelectedKeys.splice(index, 1);
+          }
+        } else {
+          if (!copySelectedKeys.includes(key)) {
+            copySelectedKeys.push(key);
+          }
+        }
         if (child.children) {
-          this.updateTreeDown(child, checked);
+          this.updateTreeDown(child.children, checked, copySelectedKeys);
         }
       });
     },
