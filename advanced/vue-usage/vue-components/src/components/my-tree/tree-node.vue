@@ -66,7 +66,16 @@ export default {
       this.$emit('expand', item);
     },
     onCheck (item) {
-      this.$emit('check', item);
+      // 判断所有的孩子是否都选中了
+      const checkAll = item.children.every(child => this.selectedKeys.includes(child.key));
+      const copySelectedKeys = [...this.selectedKeys];
+      if (copySelectedKeys.includes(item.key)) {
+        const index = copySelectedKeys.indexOf(item.key);
+        copySelectedKeys.splice(index, 1);
+      } else {
+        copySelectedKeys.push(item.key);
+      }
+      this.$emit('check', copySelectedKeys);
     },
     onDragstart (e) {
       // 为什么要在父组件中处理事件？
