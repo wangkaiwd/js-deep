@@ -26,7 +26,7 @@
 
 // 树组件只需要渲染子节点即可，每个子节点都相同
 import TreeNode from '@/components/my-tree/tree-node';
-import { toggle } from '@/components/my-tree/utils';
+import { check, flatTree, toggle, uncheck } from '@/components/my-tree/utils';
 
 const simpleDeepClone = (data) => JSON.parse(JSON.stringify(data));
 export default {
@@ -49,18 +49,8 @@ export default {
       default: false
     }
   },
-  watch: {
-    // data: {
-    //   handler (val) {
-    //     this.copyData = simpleDeepClone(val);
-    //     this.treeMap = flatTree(this.copyData);
-    //   },
-    //   deep: true
-    // }
-  },
   data () {
     return {
-      // copyData: simpleDeepClone(this.data),
       treeMap: {},
       expandKeys: [],
       dragNode: null,
@@ -70,8 +60,7 @@ export default {
     };
   },
   mounted () {
-    // flatTree的几种实现方式
-    // this.treeMap = flatTree(this.copyData);
+    this.treeMap = flatTree(this.data);
   },
   methods: {
     onExpand (item) {
@@ -83,9 +72,44 @@ export default {
         this.expandKeys.push(key);
       }
     },
-    onCheck (copySelectedKeys, item) {
-      console.log('copy', copySelectedKeys);
+    onCheck (item) {
+      const copySelectedKeys = [...this.selectedKeys];
+      // current status
+      const checked = copySelectedKeys.includes(item.key);
+      toggle(copySelectedKeys, item.key, checked);
+      this.updateTreeDown(item.children, checked, copySelectedKeys);
+      this.updateTreeUp(item, checked, copySelectedKeys);
       this.$emit('check', copySelectedKeys, item);
+    },
+    updateTreeDown (children, checked, copySelectedKeys) {
+      if (!Array.isArray(children)) {return;}
+      children.forEach(child => {
+        const { key } = child;
+        if (checked) {
+          uncheck(copySelectedKeys, key);
+        } else {
+          check(copySelectedKeys, key);
+        }
+        if (child.children) {
+          this.updateTreeDown(child.children, checked, copySelectedKeys);
+        }
+      });
+    },
+    updateTreeUp (item, checked, copySelectedKeys) {
+      const parent = this.treeMap[item.key].parent;
+      if (parent) {
+        if (checked) {
+          uncheck(copySelectedKeys, parent.key);
+        } else {
+          const checkAll = parent.children?.every(child => copySelectedKeys.includes(child.key));
+          if (checkAll) {
+            check(copySelectedKeys, parent.key);
+          } else {
+            uncheck(copySelectedKeys, parent.key);
+          }
+        }
+        this.updateTreeUp(parent, checked, copySelectedKeys);
+      }
     },
     onDragstart (e, nodeVm, data) { // 确定拖拽元素的信息
       this.dragNode = nodeVm;

@@ -15,29 +15,23 @@ export function flatTree (data, parent) {
   }, {});
 }
 
-export function toggle (keys, key) {
-  if (keys.includes(key)) {
-    const index = keys.indexOf(key);
-    keys.splice(index, 1);
+export function toggle (keys, key, checked) {
+  if (checked) {
+    uncheck(keys, key);
   } else {
+    check(keys, key);
+  }
+}
+
+export function check (keys, key) {
+  if (!keys.includes(key)) {
     keys.push(key);
   }
 }
 
-export function isCheck (copySelectedKeys, data) {
-  const { children, key } = data;
-  if (children) {
-    // 判断所有的孩子是否都选中了
-    const checkAll = children.every(child => this.selectedKeys.includes(child.key));
-    if (checkAll) {
-      if (!copySelectedKeys.includes(key)) {
-        copySelectedKeys.push(key);
-      }
-    } else {
-      if (copySelectedKeys.includes(key)) {
-        const index = copySelectedKeys.indexOf(key);
-        copySelectedKeys.splice(index, 1);
-      }
-    }
+export function uncheck (keys, key) {
+  if (keys.includes(key)) {
+    const index = keys.indexOf(key);
+    keys.splice(index, 1);
   }
 }

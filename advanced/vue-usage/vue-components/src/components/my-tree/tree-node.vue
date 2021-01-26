@@ -23,7 +23,7 @@
         :expand-keys="expandKeys"
         :selected-keys="selectedKeys"
         @expand="onExpand"
-        @check="updateParent"
+        @check="onCheck"
         @dragstart="onChildDragstart"
         @dragover="onChildDragover"
         @dragend="onChildDragend"
@@ -69,52 +69,9 @@ export default {
       this.$emit('expand', item);
     },
     onCheck (item) {
-      const copySelectedKeys = [...this.selectedKeys];
-      const checked = copySelectedKeys.includes(item.key);
-      // select children
-      this.updateTreeDown(item.children, checked, copySelectedKeys);
-      // select current
-      toggle(copySelectedKeys, item.key);
-      // notify parent
-      this.$emit('check', copySelectedKeys, item);
+      this.$emit('check',item);
     },
-    updateParent (copySelectedKeys, item) {
-      const { children, key } = this.child;
-      if (children) {
-        // 判断所有的孩子是否都选中了
-        const checkAll = children.every(child => copySelectedKeys.includes(child.key));
-        if (checkAll) {
-          if (!copySelectedKeys.includes(key)) {
-            copySelectedKeys.push(key);
-          }
-        } else {
-          if (copySelectedKeys.includes(key)) {
-            const index = copySelectedKeys.indexOf(key);
-            copySelectedKeys.splice(index, 1);
-          }
-        }
-      }
-      this.$emit('check', copySelectedKeys, item);
-    },
-    updateTreeDown (children, checked, copySelectedKeys) {
-      if (!Array.isArray(children)) {return;}
-      children.forEach(child => {
-        const { key } = child;
-        if (checked) {
-          if (copySelectedKeys.includes(key)) {
-            const index = copySelectedKeys.indexOf(key);
-            copySelectedKeys.splice(index, 1);
-          }
-        } else {
-          if (!copySelectedKeys.includes(key)) {
-            copySelectedKeys.push(key);
-          }
-        }
-        if (child.children) {
-          this.updateTreeDown(child.children, checked, copySelectedKeys);
-        }
-      });
-    },
+
     onDragstart (e) {
       // 为什么要在父组件中处理事件？
       // 在拖动之后，start中定义的内容就拿不到了，我们就会到了另外的treeNode中，它的this会发生变化
