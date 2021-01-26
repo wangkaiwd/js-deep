@@ -12,25 +12,37 @@
       <input type="checkbox" :checked="selected" @click.stop="onCheck(child)"/>
       <div class="title">{{ child.title }}</div>
     </div>
-    <div
-      class="children"
-      v-if="child.children && expanded"
+    <!--  animation: https://stackoverflow.com/a/55137929/12819402  -->
+    <transition
+      enter-active-class="enter-active"
+      leave-active-class="leave-active"
+      @before-enter="beforeEnter"
+      @enter="enter"
+      @after-enter="afterEnter"
+      @before-leave="beforeLeave"
+      @leave="leave"
+      @after-leave="afterLeave"
     >
-      <tree-node
-        :key="subChild.key"
-        v-for="subChild in child.children"
-        :child="subChild"
-        :expand-keys="expandKeys"
-        :selected-keys="selectedKeys"
-        :requests="requests"
-        @expand="onExpand"
-        @check="onCheck"
-        @dragstart="onChildDragstart"
-        @dragover="onChildDragover"
-        @dragend="onChildDragend"
+      <div
+        class="children"
+        v-if="child.children && expanded"
       >
-      </tree-node>
-    </div>
+        <tree-node
+          :key="subChild.key"
+          v-for="subChild in child.children"
+          :child="subChild"
+          :expand-keys="expandKeys"
+          :selected-keys="selectedKeys"
+          :requests="requests"
+          @expand="onExpand"
+          @check="onCheck"
+          @dragstart="onChildDragstart"
+          @dragover="onChildDragover"
+          @dragend="onChildDragend"
+        >
+        </tree-node>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -71,13 +83,50 @@ export default {
     }
   },
   methods: {
+    beforeEnter (element) {
+      requestAnimationFrame(() => {
+        if (!element.style.height) {
+          element.style.height = '0px';
+        }
+
+        element.style.display = '';
+      });
+
+    },
+    enter (element) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          element.style.height = `${element.scrollHeight}px`;
+        });
+      });
+
+    },
+    afterEnter (element) {
+      element.style.height = '';
+    },
+    beforeLeave (element) {
+      requestAnimationFrame(() => {
+        if (!element.style.height) {
+          element.style.height = `${element.offsetHeight}px`;
+        }
+      });
+    },
+    leave (element) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          element.style.height = '0px';
+        });
+      });
+    },
+    afterLeave (element) {
+      element.style.height = '';
+    },
     onExpand (item) {
       this.$emit('expand', item);
     },
     onCheck (item) {
       this.$emit('check', item);
     },
-
     onDragstart (e) {
       // 为什么要在父组件中处理事件？
       // 在拖动之后，start中定义的内容就拿不到了，我们就会到了另外的treeNode中，它的this会发生变化
@@ -130,6 +179,11 @@ export default {
   }
   .children {
     padding-left: 12px;
+    overflow: hidden;
+  }
+  .enter-active, .leave-active {
+    overflow: hidden;
+    transition: height 0.2s linear;
   }
 }
 

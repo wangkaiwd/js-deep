@@ -74,6 +74,12 @@ export default {
           if (!newData) {return;}
           const treeData = this.addChildren(this.data, item.key, newData);
           this.$emit('change', treeData);
+          const checked = this.selectedKeys.includes(item.key);
+          if (checked) {
+            const copySelectedKeys = [...this.selectedKeys];
+            this.updateTreeDown(newData, !checked, copySelectedKeys);
+            this.$emit('check', copySelectedKeys, item);
+          }
         });
       }
       if (this.expandKeys.includes(key)) {
@@ -91,7 +97,7 @@ export default {
           // 处理data后生成的的一个新data
           return { ...child, children: this.addChildren(child.children, key, newChildren) };
         } else {
-          return { ...child };
+          return child;
         }
       });
     },
