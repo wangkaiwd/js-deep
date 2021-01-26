@@ -7,7 +7,7 @@
   >
     <div class="node-content">
       <div :class="['arrow',{show:child.children}]" @click="onExpand(child)">
-        {{ child.pending ? 'loading...' : '>' }}
+        {{ this.pending ? 'loading...' : '>' }}
       </div>
       <input type="checkbox" :checked="selected" @click.stop="onCheck(child)"/>
       <div class="title">{{ child.title }}</div>
@@ -22,6 +22,7 @@
         :child="subChild"
         :expand-keys="expandKeys"
         :selected-keys="selectedKeys"
+        :requests="requests"
         @expand="onExpand"
         @check="onCheck"
         @dragstart="onChildDragstart"
@@ -39,6 +40,10 @@ export default {
   name: 'TreeNode',
   props: {
     child: {
+      type: Object,
+      default: () => ({})
+    },
+    requests: {
       type: Object,
       default: () => ({})
     },
@@ -60,6 +65,9 @@ export default {
     },
     selected () {
       return this.selectedKeys.includes(this.child.key);
+    },
+    pending () {
+      return this.requests[this.child.key];
     }
   },
   methods: {
@@ -67,7 +75,7 @@ export default {
       this.$emit('expand', item);
     },
     onCheck (item) {
-      this.$emit('check',item);
+      this.$emit('check', item);
     },
 
     onDragstart (e) {

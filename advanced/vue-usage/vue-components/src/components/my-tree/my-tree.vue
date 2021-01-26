@@ -8,6 +8,7 @@
       :expand-keys="expandKeys"
       :selected-keys="selectedKeys"
       :key="child.key"
+      :requests="reqs"
       v-for="child in data"
       @expand="onExpand"
       @check="onCheck"
@@ -66,10 +67,13 @@ export default {
   methods: {
     onExpand (item) {
       const { key } = item;
-      if (this.load) {
-        this.reqs[key] = true;
-        this.load(item, () => {
-
+      if (this.load && !(key in this.reqs)) {
+        this.$set(this.reqs, key, true);
+        this.load(item, (newData) => {
+          this.reqs[key] = false;
+          if (!newData) {return;}
+          const treeData = this.addChildren(this.data, item.key, newData);
+          this.$emit('change', treeData);
         });
       }
       if (this.expandKeys.includes(key)) {
@@ -78,6 +82,18 @@ export default {
       } else {
         this.expandKeys.push(key);
       }
+    },
+    addChildren (data, key, newChildren) {
+      return data.map(child => {
+        if (child.key === key) {
+          return { ...child, children: newChildren };
+        } else if (child.children) {
+          // 处理data后生成的的一个新data
+          return { ...child, children: this.addChildren(child.children, key, newChildren) };
+        } else {
+          return { ...child };
+        }
+      });
     },
     onCheck (item) {
       const copySelectedKeys = [...this.selectedKeys];
