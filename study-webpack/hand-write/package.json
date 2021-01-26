@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "description": "* toStringTag",
   "main": "webpack.config.js",
-  "dependencies": {},
+  "dependencies": {
+    "escodegen": "^2.0.0",
+    "esprima": "^4.0.1",
+    "estraverse": "^5.2.0"
+  },
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",
     "html-webpack-plugin": "^5.0.0-beta.6",
