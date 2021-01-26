@@ -24,6 +24,28 @@
 * 目前`Tree`与`Menu`组件的区别：`Tree`组件是通过传入数据遍历出来的，而`Menu`组件是遍历组件标签，并没有将数组传入
 * `element ui`和`ant design`分别的设计方式
 
+### select all parent and select all children logic
+
+> Caveat: tree node component both parent and children
+
+idea1 :
+
+1. click checkbox, select current
+2. select all children
+3. trigger $emit('check')
+4. parent listen check event
+5. check whether select parent
+6. parent trigger $emit('check')
+7. parent's parent listen check event
+8. recursive...
+
+idea2:
+
+1. flatten tree data(note object reference)
+2. click tree node checkbox
+3. update all children and update all parent
+4. trigger check event
+
 ### 功能
 
 * 渲染树节点

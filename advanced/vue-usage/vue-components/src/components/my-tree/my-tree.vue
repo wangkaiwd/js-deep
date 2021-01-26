@@ -26,6 +26,7 @@
 
 // 树组件只需要渲染子节点即可，每个子节点都相同
 import TreeNode from '@/components/my-tree/tree-node';
+import { toggle } from '@/components/my-tree/utils';
 
 const simpleDeepClone = (data) => JSON.parse(JSON.stringify(data));
 export default {
@@ -82,49 +83,9 @@ export default {
         this.expandKeys.push(key);
       }
     },
-    onCheck (item) {
-      const { key } = item;
-      const copySelectedKeys = [...this.selectedKeys];
-      const checked = copySelectedKeys.includes(key);
-      if (checked) {
-        const index = copySelectedKeys.indexOf(key);
-        copySelectedKeys.splice(index, 1);
-      } else {
-        copySelectedKeys.push(key);
-      }
-      this.updateTreeDown(item.children, checked, copySelectedKeys);
-      this.$emit('check', copySelectedKeys);
-    },
-    // 更新所有的子节点
-    updateTreeDown (children, checked, copySelectedKeys) {
-      children.forEach(child => {
-        const { key } = child;
-        if (checked) {
-          if (copySelectedKeys.includes(key)) {
-            const index = copySelectedKeys.indexOf(key);
-            copySelectedKeys.splice(index, 1);
-          }
-        } else {
-          if (!copySelectedKeys.includes(key)) {
-            copySelectedKeys.push(key);
-          }
-        }
-        if (child.children) {
-          this.updateTreeDown(child.children, checked, copySelectedKeys);
-        }
-      });
-    },
-    // 更新所有的父节点
-    updateTreeUp (item) {
-      const { key } = item;
-      const parent = this.treeMap[key].parent;
-      if (parent) {
-        // 父节点的所有子节点的孩子节点都选中时才会选中
-        const _checked = parent.children.every(child => child.checked);
-        this.$set(parent, 'checked', _checked);
-        // 继续更新父级
-        this.updateTreeUp(parent, _checked);
-      }
+    onCheck (copySelectedKeys, item) {
+      console.log('copy', copySelectedKeys);
+      this.$emit('check', copySelectedKeys, item);
     },
     onDragstart (e, nodeVm, data) { // 确定拖拽元素的信息
       this.dragNode = nodeVm;

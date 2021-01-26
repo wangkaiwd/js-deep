@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { flatTree } from '@/components/my-tree/flatTree';
+import { flatTree } from '@/components/my-tree/utils';
 
 const children = [
   { title: '0-1-0-0', key: '0-1-0-0' },
@@ -79,7 +79,7 @@ export default {
         resolve();
       }
     },
-    onCheck (selectedKeys) {
+    onCheck (selectedKeys, item) {
       this.selectedKeys = selectedKeys;
     }
   },

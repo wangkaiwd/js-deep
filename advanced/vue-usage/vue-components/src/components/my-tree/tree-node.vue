@@ -23,7 +23,7 @@
         :expand-keys="expandKeys"
         :selected-keys="selectedKeys"
         @expand="onExpand"
-        @check="onCheck"
+        @check="updateParent"
         @dragstart="onChildDragstart"
         @dragover="onChildDragover"
         @dragend="onChildDragend"
@@ -34,6 +34,9 @@
 </template>
 
 <script>
+
+import { isCheck, toggle } from '@/components/my-tree/utils';
+
 export default {
   name: 'TreeNode',
   props: {
@@ -66,16 +69,51 @@ export default {
       this.$emit('expand', item);
     },
     onCheck (item) {
-      // 判断所有的孩子是否都选中了
-      const checkAll = item.children.every(child => this.selectedKeys.includes(child.key));
       const copySelectedKeys = [...this.selectedKeys];
-      if (copySelectedKeys.includes(item.key)) {
-        const index = copySelectedKeys.indexOf(item.key);
-        copySelectedKeys.splice(index, 1);
-      } else {
-        copySelectedKeys.push(item.key);
+      const checked = copySelectedKeys.includes(item.key);
+      // select children
+      this.updateTreeDown(item.children, checked, copySelectedKeys);
+      // select current
+      toggle(copySelectedKeys, item.key);
+      // notify parent
+      this.$emit('check', copySelectedKeys, item);
+    },
+    updateParent (copySelectedKeys, item) {
+      const { children, key } = this.child;
+      if (children) {
+        // 判断所有的孩子是否都选中了
+        const checkAll = children.every(child => copySelectedKeys.includes(child.key));
+        if (checkAll) {
+          if (!copySelectedKeys.includes(key)) {
+            copySelectedKeys.push(key);
+          }
+        } else {
+          if (copySelectedKeys.includes(key)) {
+            const index = copySelectedKeys.indexOf(key);
+            copySelectedKeys.splice(index, 1);
+          }
+        }
       }
-      this.$emit('check', copySelectedKeys);
+      this.$emit('check', copySelectedKeys, item);
+    },
+    updateTreeDown (children, checked, copySelectedKeys) {
+      if (!Array.isArray(children)) {return;}
+      children.forEach(child => {
+        const { key } = child;
+        if (checked) {
+          if (copySelectedKeys.includes(key)) {
+            const index = copySelectedKeys.indexOf(key);
+            copySelectedKeys.splice(index, 1);
+          }
+        } else {
+          if (!copySelectedKeys.includes(key)) {
+            copySelectedKeys.push(key);
+          }
+        }
+        if (child.children) {
+          this.updateTreeDown(child.children, checked, copySelectedKeys);
+        }
+      });
     },
     onDragstart (e) {
       // 为什么要在父组件中处理事件？
