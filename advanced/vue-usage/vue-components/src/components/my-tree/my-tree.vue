@@ -56,7 +56,8 @@ export default {
       dragNode: null,
       dragData: {},
       dragState: '',
-      indicatorVisible: false
+      indicatorVisible: false,
+      reqs: {}
     };
   },
   mounted () {
@@ -65,6 +66,12 @@ export default {
   methods: {
     onExpand (item) {
       const { key } = item;
+      if (this.load) {
+        this.reqs[key] = true;
+        this.load(item, () => {
+
+        });
+      }
       if (this.expandKeys.includes(key)) {
         const index = this.expandKeys.indexOf(key);
         this.expandKeys.splice(index, 1);

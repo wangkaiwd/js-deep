@@ -35,8 +35,6 @@
 
 <script>
 
-import { isCheck, toggle } from '@/components/my-tree/utils';
-
 export default {
   name: 'TreeNode',
   props: {
