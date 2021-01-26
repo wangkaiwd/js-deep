@@ -1,12 +1,12 @@
 <template>
   <div id="app">
     {{ selectedKeys }}
-    <my-tree :selected-keys="selectedKeys" @check="onCheck" :data="data"></my-tree>
+    <my-tree :selected-keys="selectedKeys" @change="onChange" @check="onCheck" :load="onLoad" :data="data"></my-tree>
   </div>
 </template>
 
 <script>
-import { flatTree } from '@/components/my-tree/flatTree';
+import { flatTree } from '@/components/my-tree/utils';
 
 const children = [
   { title: '0-1-0-0', key: '0-1-0-0' },
@@ -47,11 +47,11 @@ export default {
             },
           ],
         },
-        // {
-        //   title: '0-1',
-        //   key: '0-1',
-        //   children: []
-        // },
+        {
+          title: '0-1',
+          key: '0-1',
+          children: []
+        },
         {
           title: '0-2',
           key: '0-2',
@@ -64,6 +64,9 @@ export default {
     // this.treeMap = flatTree(this.data);
   },
   methods: {
+    onChange (treeData) {
+      this.data = treeData;
+    },
     onLoad (data, resolve) { // data要加载children的数据，也就是当前点击的内容
       // 获取点击节点的数据
       // 根据点击节点数组中的id发起ajax请求，获取到它的children

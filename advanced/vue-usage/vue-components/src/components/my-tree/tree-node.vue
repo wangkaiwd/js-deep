@@ -7,37 +7,55 @@
   >
     <div class="node-content">
       <div :class="['arrow',{show:child.children}]" @click="onExpand(child)">
-        {{ child.pending ? 'loading...' : '>' }}
+        {{ this.pending ? 'loading...' : '>' }}
       </div>
       <input type="checkbox" :checked="selected" @click.stop="onCheck(child)"/>
       <div class="title">{{ child.title }}</div>
     </div>
-    <div
-      class="children"
-      v-if="child.children && expanded"
+    <!--  animation: https://stackoverflow.com/a/55137929/12819402  -->
+    <transition
+      enter-active-class="enter-active"
+      leave-active-class="leave-active"
+      @before-enter="beforeEnter"
+      @enter="enter"
+      @after-enter="afterEnter"
+      @before-leave="beforeLeave"
+      @leave="leave"
+      @after-leave="afterLeave"
     >
-      <tree-node
-        :key="subChild.key"
-        v-for="subChild in child.children"
-        :child="subChild"
-        :expand-keys="expandKeys"
-        :selected-keys="selectedKeys"
-        @expand="onExpand"
-        @check="onCheck"
-        @dragstart="onChildDragstart"
-        @dragover="onChildDragover"
-        @dragend="onChildDragend"
+      <div
+        class="children"
+        v-if="child.children && expanded"
       >
-      </tree-node>
-    </div>
+        <tree-node
+          :key="subChild.key"
+          v-for="subChild in child.children"
+          :child="subChild"
+          :expand-keys="expandKeys"
+          :selected-keys="selectedKeys"
+          :requests="requests"
+          @expand="onExpand"
+          @check="onCheck"
+          @dragstart="onChildDragstart"
+          @dragover="onChildDragover"
+          @dragend="onChildDragend"
+        >
+        </tree-node>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
+
 export default {
   name: 'TreeNode',
   props: {
     child: {
+      type: Object,
+      default: () => ({})
+    },
+    requests: {
       type: Object,
       default: () => ({})
     },
@@ -59,23 +77,55 @@ export default {
     },
     selected () {
       return this.selectedKeys.includes(this.child.key);
+    },
+    pending () {
+      return this.requests[this.child.key];
     }
   },
   methods: {
+    beforeEnter (element) {
+      requestAnimationFrame(() => {
+        if (!element.style.height) {
+          element.style.height = '0px';
+        }
+
+        element.style.display = '';
+      });
+
+    },
+    enter (element) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          element.style.height = `${element.scrollHeight}px`;
+        });
+      });
+
+    },
+    afterEnter (element) {
+      element.style.height = '';
+    },
+    beforeLeave (element) {
+      requestAnimationFrame(() => {
+        if (!element.style.height) {
+          element.style.height = `${element.offsetHeight}px`;
+        }
+      });
+    },
+    leave (element) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          element.style.height = '0px';
+        });
+      });
+    },
+    afterLeave (element) {
+      element.style.height = '';
+    },
     onExpand (item) {
       this.$emit('expand', item);
     },
     onCheck (item) {
-      // 判断所有的孩子是否都选中了
-      const checkAll = item.children.every(child => this.selectedKeys.includes(child.key));
-      const copySelectedKeys = [...this.selectedKeys];
-      if (copySelectedKeys.includes(item.key)) {
-        const index = copySelectedKeys.indexOf(item.key);
-        copySelectedKeys.splice(index, 1);
-      } else {
-        copySelectedKeys.push(item.key);
-      }
-      this.$emit('check', copySelectedKeys);
+      this.$emit('check', item);
     },
     onDragstart (e) {
       // 为什么要在父组件中处理事件？
@@ -129,6 +179,11 @@ export default {
   }
   .children {
     padding-left: 12px;
+    overflow: hidden;
+  }
+  .enter-active, .leave-active {
+    overflow: hidden;
+    transition: height 0.2s linear;
   }
 }
 
