@@ -3,7 +3,7 @@ const { traverse } = require('estraverse');
 const codegen = require('escodegen');
 
 const code = `
-  function fn() {
+  const fn = function() {
     console.log(1)
   }
 `;
