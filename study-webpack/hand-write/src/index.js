@@ -1,4 +1,6 @@
 const title = require('./title02');
+// import title from './title02';
+
 console.log('title', title);
 
 // require es module
