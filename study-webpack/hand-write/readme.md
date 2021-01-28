@@ -15,6 +15,7 @@
 * babel-types
 
 * 转换箭头函数
+  * 处理`this`
 * 类转化
 * 自动包裹try catch插件
 * 自己实现babel插件，删除代码中的所有`console.log()`
