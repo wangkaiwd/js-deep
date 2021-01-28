@@ -13,6 +13,7 @@
       <div class="title">{{ child.title }}</div>
     </div>
     <!--  animation: https://stackoverflow.com/a/55137929/12819402  -->
+    <!-- 动画：JavaScript combine with CSS    -->
     <transition
       enter-active-class="enter-active"
       leave-active-class="leave-active"
@@ -83,40 +84,26 @@ export default {
     }
   },
   methods: {
-    beforeEnter (element) {
-      requestAnimationFrame(() => {
-        if (!element.style.height) {
-          element.style.height = '0px';
-        }
-
-        element.style.display = '';
-      });
-
+    beforeEnter (element) { // 进入先将高度设置为0
+      element.style.height = '0px';
     },
-    enter (element) {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          element.style.height = `${element.scrollHeight}px`;
-        });
-      });
-
+    enter (element) { // 结合css过渡不用使用done属性
+      element.style.height = `${element.scrollHeight}px`;
     },
     afterEnter (element) {
+      // 动画完成之后，还要将height恢复为auto，这要在之后高度变化后还会自动撑开
+      // 设置为空相当与从style上移除该属性
+      // Setting styles: https://developer.mozilla.org/en-US/docs/Web/API/ElementCSSInlineStyle/style#setting_styles
       element.style.height = '';
     },
     beforeLeave (element) {
-      requestAnimationFrame(() => {
-        if (!element.style.height) {
-          element.style.height = `${element.offsetHeight}px`;
-        }
-      });
+      element.style.height = `${element.offsetHeight}px`;
     },
     leave (element) {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          element.style.height = '0px';
-        });
-      });
+      // force repaint
+      element.offsetHeight;
+      // otherwise transition not work
+      element.style.height = '0px';
     },
     afterLeave (element) {
       element.style.height = '';
@@ -182,7 +169,6 @@ export default {
     overflow: hidden;
   }
   .enter-active, .leave-active {
-    overflow: hidden;
     transition: height 0.2s linear;
   }
 }

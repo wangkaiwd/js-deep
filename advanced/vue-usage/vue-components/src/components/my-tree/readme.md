@@ -46,6 +46,20 @@ idea2:
 3. update all children and update all parent
 4. trigger check event
 
+### animation
+
+> reference: element ui [collapse-transition](https://github.com/ElemeFE/element/blob/493e18877add7be49ce2c02683a3a4ec7e7d2c3b/src/transitions/collapse-transition.js) component
+
+只有固定高度才能做动画
+
+* scrollHeight: calculate all children height, height not include border
+
+get element dimension:
+
+* offset/client/scroll serials
+* getBoundingClientRect
+* getComputedStyle
+
 ### 功能
 
 * 渲染树节点
