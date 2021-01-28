@@ -1,6 +1,5 @@
 const core = require('@babel/core');
 const types = require('@babel/types');
-// todo: 有this该怎么实现？
 const code = `
   const fn = (a,b) => {
     console.log(this)
