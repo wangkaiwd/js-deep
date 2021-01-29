@@ -1,12 +1,19 @@
 // require  es module
 (() => { // build source code
   const modules = {
+    './src/index.js': (module, exports, _require) => {
+      // Symbol.stringTag控制Object.prototype.toString后打印的字符内容
+      _require.r(exports);
+      const title = _require('./src/title02.js');
+      console.log('title', title);
+    },
     './src/title02.js': (module, exports, _require) => {
       // 源代码
       // exports : 导出的内容
       const __WEBPACK_DEFAULT_EXPORT__ = 'title name';
       const age = 'title_age';
       _require.r(exports);
+      // 为exports 传入所有的 getter
       _require.d(exports, { // 给module.exports 导出的对象添加了default,age方法
         default: () => __WEBPACK_DEFAULT_EXPORT__,
         age: () => age
@@ -50,7 +57,6 @@
   };
   // index.js: self execute function avoid pollute global variables
   (() => {
-    const title = _require('./src/title02.js');
-    console.log('title', title);
+    _require('./src/index.js');
   })();
 })();

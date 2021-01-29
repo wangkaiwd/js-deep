@@ -9,7 +9,7 @@
 
   function _require (moduleId) {
     const module = cache[moduleId] = { exports: {} };
-    modules[moduleId].call(module, exports, _require);
+    modules[moduleId].call(module, module, exports, _require);
     return module.exports; // 'title'
   }
 
