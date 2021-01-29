@@ -3,8 +3,8 @@ const { traverse } = require('estraverse');
 const codegen = require('escodegen');
 
 const code = `
-  const fn = function() {
-    console.log(1)
+  const fn = function(a,b) {
+    return a+b
   }
 `;
 const ast = esprima.parse(code);
