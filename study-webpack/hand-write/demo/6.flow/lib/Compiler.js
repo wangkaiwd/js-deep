@@ -11,6 +11,7 @@ class Compiler { // 进行编译
 
   run () {
     this.hooks.run.call('RunPlugin');
+    // 编译
     this.hooks.done.call('DonePlugin');
   }
 }
