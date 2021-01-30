@@ -6,7 +6,8 @@
   "dependencies": {
     "escodegen": "^2.0.0",
     "esprima": "^4.0.1",
-    "estraverse": "^5.2.0"
+    "estraverse": "^5.2.0",
+    "tapable": "^2.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
