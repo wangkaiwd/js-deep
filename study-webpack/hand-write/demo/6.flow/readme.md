@@ -19,6 +19,13 @@
   * babel parser
   * babel traverse
   * 利用解析器生成的抽象语法树
+  * path.isAbsolute
+
+问题：
+
+* moduleId, chunkId
+  * moduleId: 模块的绝对路径相对于项目根目录的相对路径: `./src/title.js`
+  * chunkId: `src_title_js`
 
 ### 运行流程
 
