@@ -20,8 +20,8 @@ module.exports = {
       {
         test: /\.js$/,
         use: [
-          absPath('loaders/logger1-loader.js'),
-          absPath('loaders/logger2-loader.js')
+          // absPath('loaders/logger1-loader.js'),
+          // absPath('loaders/logger2-loader.js')
         ]
       }
     ]

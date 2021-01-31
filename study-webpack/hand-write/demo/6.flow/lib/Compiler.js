@@ -9,6 +9,33 @@ const generator = require('@babel/generator').default;
 const { SyncHook } = require('tapable');
 const rootDir = process.cwd();
 
+function getSource (chunk) {
+  // 用每个chunk的module来生成模块
+  const modulesStr = chunk.modules.map(module => {
+    return `'${module.id}':(module,exports,require) => {
+        ${module.source}
+      }`;
+  }).join(',');
+  return `
+    (() => {
+      const modules = {
+        ${modulesStr}
+      };
+      const cache = {};
+    
+      function require (moduleId) {
+        const module = cache[moduleId] = { exports: {} };
+        modules[moduleId].call(module, module, module.exports, require);
+        return module.exports;
+      }
+      
+      (() => {
+        ${chunk.entryModule.source}
+      })();
+    })()
+  `;
+}
+
 class Compiler { // 进行编译
   constructor (options) {
     this.options = options;
@@ -31,7 +58,7 @@ class Compiler { // 进行编译
     const chunk = { name: 'main', entryModule, modules: this.modules };
     this.chunks.push(chunk);
     this.chunks.forEach(chunk => {
-      this.assets[chunk.name + '.js'] = chunk.name; // source
+      this.assets[chunk.name + '.js'] = getSource(chunk); // source
     });
     this.files = Object.keys(this.assets);
     const outputPath = path.join(output.path, output.filename);
@@ -54,8 +81,8 @@ class Compiler { // 进行编译
     originSource = this.handleRules(originSource, modulePath);
     // 通过源代码转换ast语法树
     const ast = this.transformAST(module, originSource, dirname);
-    // 构建module对象
     module.source = generator(ast).code;
+    // 构建module对象
     this.modules.push(module);
     // 继续处理依赖的模块
     this.buildDepModules(module);
