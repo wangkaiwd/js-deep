@@ -62,6 +62,9 @@ class Compiler { // 进行编译
     });
     this.files = Object.keys(this.assets);
     const outputPath = path.join(output.path, output.filename);
+    // todo:
+    //  1. multiple entry build
+    //  2. recursive dependence
     for (const file in this.assets) {
       if (this.assets.hasOwnProperty(file)) {
         fs.writeFileSync(outputPath, this.assets[file]);
