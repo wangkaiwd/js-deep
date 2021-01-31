@@ -17,15 +17,30 @@ class Compiler { // 进行编译
       done: new SyncHook()
     };
     this.modules = [];
+    this.chunks = [];
+    this.assets = {}; // key: 文件名，值是打包后的内容
+    this.files = []; // 文件名数组
   }
 
   run () {
     this.hooks.run.call('RunPlugin');
     // 编译
-    const { entry, context } = this.options;
+    const { entry, context, output } = this.options;
     const absEntry = path.join(context, entry);
-    this.buildModule(absEntry);
-    console.log('modules', this.modules);
+    const entryModule = this.buildModule(absEntry);
+    const chunk = { name: 'main', entryModule, modules: this.modules };
+    this.chunks.push(chunk);
+    this.chunks.forEach(chunk => {
+      this.assets[chunk.name + '.js'] = chunk.name; // source
+    });
+    this.files = Object.keys(this.assets);
+    const outputPath = path.join(output.path, output.filename);
+    for (const file in this.assets) {
+      if (this.assets.hasOwnProperty(file)) {
+        fs.writeFileSync(outputPath, this.assets[file]);
+      }
+    }
+    // 将资源输出到对应的目录
     this.hooks.done.call('DonePlugin');
   }
 
@@ -44,6 +59,7 @@ class Compiler { // 进行编译
     this.modules.push(module);
     // 继续处理依赖的模块
     this.buildDepModules(module);
+    return module;
   }
 
   handleRules (source, modulePath) {
