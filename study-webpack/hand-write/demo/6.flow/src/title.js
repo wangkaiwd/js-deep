@@ -1,3 +1,2 @@
-module.exports = {
-  age: 12
-};
+const name = require('./name.js');
+module.exports = 'hello' + name;
