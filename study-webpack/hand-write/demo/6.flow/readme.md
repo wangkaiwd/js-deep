@@ -20,6 +20,8 @@
   * babel traverse
   * 利用解析器生成的抽象语法树
   * path.isAbsolute
+* 多入口：
+  * 根据name来区分不同的module
 
 问题：
 

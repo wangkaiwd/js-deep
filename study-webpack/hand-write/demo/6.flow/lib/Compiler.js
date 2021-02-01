@@ -49,26 +49,36 @@ class Compiler { // 进行编译
     this.chunks = [];
     this.assets = {}; // key: 文件名，值是打包后的内容
     this.files = []; // 文件名数组
+    this.entries = [];
   }
 
   run () {
     this.hooks.run.call('RunPlugin');
     // 编译
     const { entry, context, output } = this.options;
-    const absEntry = path.join(context, entry);
-    const entryModule = this.buildModule(absEntry);
-    const chunk = { name: 'main', entryModule, modules: this.modules };
-    this.chunks.push(chunk);
+    let entries = {};
+    if (typeof entry === 'string') { // 单入口文件
+      entries.main = entry;
+    } else {
+      entries = entry; // {page1:xxx,page:xxx}
+    }
+    for (const entryName in entries) { // 分别打包每一个入口
+      const absEntry = path.join(context, entries[entryName]);
+      const entryModule = this.buildModule(entryName, absEntry);
+      const modules = this.modules.filter(module => module.name === entryName);
+      const chunk = { name: entryName, entryModule, modules };
+      this.entries.push(chunk);
+      this.chunks.push(chunk);
+    }
     this.chunks.forEach(chunk => {
-      this.assets[chunk.name + '.js'] = getSource(chunk); // source
+      this.assets[chunk.name] = getSource(chunk); // source
     });
     this.files = Object.keys(this.assets);
-    const outputPath = path.join(output.path, output.filename);
     // todo:
-    //  1. multiple entry build
-    //  2. recursive dependence
+    //  1. recursive dependence: later resolve
     for (const file in this.assets) {
       if (this.assets.hasOwnProperty(file)) {
+        const outputPath = path.join(output.path, output.filename.replace('[name]', file));
         fs.writeFileSync(outputPath, this.assets[file]);
       }
     }
@@ -77,11 +87,11 @@ class Compiler { // 进行编译
   }
 
   // 依赖进行分析，通过ast对依赖进行处理
-  buildModule (modulePath) {
+  buildModule (name, modulePath) {
     let originSource = fs.readFileSync(modulePath, 'utf-8');
     const dirname = path.dirname(modulePath);
     const moduleId = path.relative(rootDir, modulePath);
-    const module = { id: moduleId, dependencies: [] };
+    const module = { id: moduleId, name, dependencies: [] };
     // 将源代码用loader进行处理
     originSource = this.handleRules(originSource, modulePath);
     // 通过源代码转换ast语法树
@@ -130,10 +140,10 @@ class Compiler { // 进行编译
   }
 
   buildDepModules (module) {
-    const { dependencies } = module;
+    const { dependencies, name } = module;
     if (dependencies && Array.isArray(dependencies)) {
       dependencies.forEach(dep => {
-        this.buildModule(dep);
+        this.buildModule(name, dep);
       });
     }
   }

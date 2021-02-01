@@ -4,12 +4,16 @@ const DonePlugin = require('./plugins/done-plugin');
 const absPath = (dir) => path.join(__dirname, dir);
 module.exports = {
   mode: 'development',
-  entry: './src/index.js',
+  // entry: './src/index.js',
+  entry: {
+    page1: './src/page1.js',
+    page2: './src/page2.js'
+  },
   context: process.cwd(),
   // devtool: 'source-map',
   devtool: false,
   output: {
-    filename: 'main.js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
   },
   resolve: {
