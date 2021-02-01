@@ -13,3 +13,8 @@ babel-loader：
 * 支持`sourcemap`
 * api:
   * this.callback
+
+file-loader:
+
+* loader-utils
+* this.emitFile
