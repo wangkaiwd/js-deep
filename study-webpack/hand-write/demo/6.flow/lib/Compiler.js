@@ -24,6 +24,8 @@ function getSource (chunk) {
       const cache = {};
     
       function require (moduleId) {
+        const cacheModule = cache[moduleId]
+        if(cacheModule) { return cacheModule }
         const module = cache[moduleId] = { exports: {} };
         modules[moduleId].call(module, module, module.exports, require);
         return module.exports;
