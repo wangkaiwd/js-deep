@@ -12,12 +12,16 @@ babel-loader：
 * [loader parameters](https://webpack.js.org/api/loaders/#examples)
   * [ast as fourth arguments](https://webpack.js.org/api/loaders/#thiscallback)
 * [develop and test a loader locally](https://webpack.js.org/contribute/writing-a-loader/#setup)
-* 支持`sourcemap`
+* failed: not support sourcemap
+* [pitch loader](https://webpack.js.org/api/loaders/#pitching-loader)
 
 file-loader:
 
 * loader-utils
+  * getOptions
+  * interpolateName
 * this.emitFile
+* esModule
 
 url-loader:
 

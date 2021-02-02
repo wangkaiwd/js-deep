@@ -1,9 +1,13 @@
 const babel = require('@babel/core');
+const path = require('path');
 
 // loader take three parameters: https://webpack.js.org/api/loaders/#thiscallback
-function loader (content, map, meta) {
+function loader (content, inputSourceMap) {
   const options = {
-    preset: ['@babel/preset-env'],
+    presets: ['@babel/preset-env'],
+    inputSourceMap,
+    sourceMaps: true,
+    filename: path.basename(this.resourcePath)
   };
   const { code, map, ast } = babel.transformSync(content, options);
   // this.callback: 一个函数为了返回多个参数被同步或异步的调用

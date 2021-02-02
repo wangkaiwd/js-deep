@@ -9,7 +9,30 @@ module.exports = {
     path: path.resolve(__dirname, 'dist')
   },
   module: {
-    rules: []
+    rules: [
+      {
+        test: /\.js$/,
+        use: [
+          {
+            loader: path.resolve(__dirname, 'loaders/babel-loader'),
+            options: {
+              include: path.resolve(__dirname, 'src')
+            }
+          }
+        ],
+      },
+      {
+        test: /.(jpg|jpeg|png|gif)/,
+        use: [
+          {
+            loader: path.resolve(__dirname, 'loaders/file-loader'),
+            options: {
+              name: '[hash:8].[ext]'
+            }
+          }
+        ]
+      }
+    ]
   },
   plugins: [
     new HtmlWebpackPlugin(),
