@@ -18,3 +18,13 @@ file-loader:
 
 * loader-utils
 * this.emitFile
+
+url-loader:
+
+* loader.raw
+
+style-loader:
+
+less-loader:
+
+* this.async
