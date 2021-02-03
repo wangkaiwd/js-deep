@@ -24,6 +24,7 @@ file-loader:
 * [pitch loader](https://webpack.js.org/api/loaders/#pitching-loader)
 * this.emitFile
 * esModule
+* [puzzle code snippet](https://github.com/wangkaiwd/js-deep/blob/46cf3d76f1c1cd1fe40b3222562a5e6c11575e34/study-webpack/hand-write/demo/7.loader/loaders/file-loader.js#L13)
 
 url-loader:
 
