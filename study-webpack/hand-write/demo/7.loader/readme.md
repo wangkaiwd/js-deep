@@ -20,6 +20,8 @@ file-loader:
 * loader-utils
   * getOptions
   * interpolateName
+* [raw loader](https://webpack.js.org/api/loaders/#raw-loader)
+* [pitch loader](https://webpack.js.org/api/loaders/#pitching-loader)
 * this.emitFile
 * esModule
 

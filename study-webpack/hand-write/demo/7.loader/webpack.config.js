@@ -8,13 +8,17 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist')
   },
+  devServer: {
+    writeToDisk: true
+  },
   module: {
     rules: [
       {
         test: /\.js$/,
         use: [
           {
-            loader: path.resolve(__dirname, 'loaders/babel-loader'),
+            loader: 'babel-loader',
+            // loader: path.resolve(__dirname, 'loaders/babel-loader'),
             options: {
               include: path.resolve(__dirname, 'src')
             }
@@ -26,8 +30,10 @@ module.exports = {
         use: [
           {
             loader: path.resolve(__dirname, 'loaders/file-loader'),
+            // loader: 'file-loader',
             options: {
-              name: '[hash:8].[ext]'
+              name: '[hash:8].[ext]',
+              esModule: false
             }
           }
         ]
