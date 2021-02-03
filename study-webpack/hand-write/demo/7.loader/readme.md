@@ -28,7 +28,10 @@ file-loader:
 
 url-loader:
 
-* loader.raw
+* [Node.js get image from web and encode with base64](https://stackoverflow.com/a/17133012)
+* mime-type how to get type?
+* use myself file loader
+* what is loader function `content` parameter?
 
 style-loader:
 
