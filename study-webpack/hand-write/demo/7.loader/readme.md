@@ -35,6 +35,10 @@ url-loader:
 
 style-loader:
 
+* insert style tag
+
 less-loader:
 
+* [less.render](http://lesscss.org/usage/#programmatic-usage)
 * this.async
+
