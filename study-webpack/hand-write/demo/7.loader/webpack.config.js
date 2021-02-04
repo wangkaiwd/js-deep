@@ -39,16 +39,24 @@ module.exports = {
       //   ]
       // },
       {
-        test: /.(jpg|jpeg|png|gif)/,
+        test: /.(jpg|jpeg|png|gif)$/,
         use: [
           {
             loader: path.resolve(__dirname, 'loaders/url-loader'),
             // loader: 'url-loader',
             options: {
               name: '[hash:8].[ext]',
-              limit: 8 * 1024
+              limit: 18 * 1024,
+              fallback: path.resolve(__dirname, 'loaders/file-loader')
             }
           }
+        ]
+      },
+      {
+        test: /.less$/i,
+        use: [
+          path.resolve(__dirname, 'loaders/style-loader'),
+          path.resolve(__dirname, 'loaders/less-loader')
         ]
       }
     ]
