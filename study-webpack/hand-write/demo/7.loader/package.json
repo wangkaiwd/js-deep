@@ -22,6 +22,7 @@
     "@babel/preset-env": "^7.12.11",
     "babel-loader": "^8.2.2",
     "file-loader": "^6.2.0",
+    "mime-types": "^2.1.28",
     "less": "^4.1.1",
     "loader-utils": "^2.0.0"
   }

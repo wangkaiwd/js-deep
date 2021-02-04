@@ -25,15 +25,28 @@ module.exports = {
           }
         ],
       },
+      // {
+      //   test: /.(jpg|jpeg|png|gif)/,
+      //   use: [
+      //     {
+      //       loader: path.resolve(__dirname, 'loaders/file-loader'),
+      //       // loader: 'file-loader',
+      //       options: {
+      //         name: '[hash:8].[ext]',
+      //         esModule: false
+      //       }
+      //     }
+      //   ]
+      // },
       {
         test: /.(jpg|jpeg|png|gif)$/,
         use: [
           {
-            loader: path.resolve(__dirname, 'loaders/file-loader'),
-            // loader: 'file-loader',
+            loader: path.resolve(__dirname, 'loaders/url-loader'),
+            // loader: 'url-loader',
             options: {
               name: '[hash:8].[ext]',
-              esModule: false
+              limit: 8 * 1024
             }
           }
         ]
