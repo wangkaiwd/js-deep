@@ -46,7 +46,8 @@ module.exports = {
             // loader: 'url-loader',
             options: {
               name: '[hash:8].[ext]',
-              limit: 8 * 1024
+              limit: 18 * 1024,
+              fallback: path.resolve(__dirname, 'loaders/file-loader')
             }
           }
         ]

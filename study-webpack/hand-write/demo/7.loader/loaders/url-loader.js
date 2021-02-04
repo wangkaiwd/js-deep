@@ -6,7 +6,7 @@ const mimeType = require('mime-types');
 function loader (content, map, meta) {
   const { limit = 6 * 1024, fallback = 'file-loader' } = getOptions(this);
   const fileType = mimeType.lookup(this.resourcePath);
-  console.log('url-loader', content, fileType);
+  console.log('length', content.length < limit);
   if (content.length < limit) { // 小文件使用base64
     // 这里content是Buffer
     // Node.js get image from web and encode with base64: https://stackoverflow.com/a/17133012
