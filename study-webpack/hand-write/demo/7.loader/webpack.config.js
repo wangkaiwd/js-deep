@@ -26,7 +26,7 @@ module.exports = {
         ],
       },
       {
-        test: /.(jpg|jpeg|png|gif)/,
+        test: /.(jpg|jpeg|png|gif)$/,
         use: [
           {
             loader: path.resolve(__dirname, 'loaders/file-loader'),
@@ -36,6 +36,13 @@ module.exports = {
               esModule: false
             }
           }
+        ]
+      },
+      {
+        test: /.less$/i,
+        use: [
+          path.resolve(__dirname, 'loaders/style-loader'),
+          path.resolve(__dirname, 'loaders/less-loader')
         ]
       }
     ]
