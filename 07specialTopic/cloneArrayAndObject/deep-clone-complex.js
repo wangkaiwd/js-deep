@@ -11,42 +11,40 @@ function getType (value) {
   return Object.prototype.toString.call(value).slice(8, -1);
 }
 
-function isPlainObject (value) {
-  return getType(value) === 'Object';
-}
-
-function isReg (value) {
-  return getType(value) === 'Regexp';
-}
-
+const strategies = {};
+strategies.object = function (value) {
+  const result = {};
+  // Object.keys只会按照对象被遍历的顺序来遍历对象自身的可枚举属性
+  const keys = Object.keys(value);
+  keys.forEach(key => {
+    result[key] = deepClone(value[key]);
+  });
+  return result;
+};
+strategies.regexp = function (value) {
+  return new RegExp(value.source, value.flags);
+};
+strategies.array = function (value) {
+  const result = [];
+  value.forEach(item => {
+    result.push(deepClone(item));
+  });
+  return result;
+};
+strategies.function = function (value) {
+  return function () { // 这里通过bind进行拷贝，this需要在调用前指定，不太好
+    // 函数的拷贝：返回一个新的函数，该函数会执行被拷贝的函数，并且通过apply将新函数和被拷贝函数的this指向同一个值
+    return value.apply(this, arguments);
+  };
+};
+// 所有的策略都不满足，执行默认策略
+strategies.default = function (value) {
+  return value;
+};
 const deepClone = (value) => { // clone之后返回深拷贝后的内容
-  if (Array.isArray(value)) { // 数组
-    const result = [];
-    value.forEach(item => {
-      result.push(deepClone(item));
-    });
-    return result;
-  } else if (typeof value === 'object' && value !== null) {
-    const result = {};
-    if (isPlainObject(value)) { // 普通对象
-      // Object.keys只会按照对象被遍历的顺序来遍历对象自身的可枚举属性
-      const keys = Object.keys(value);
-      keys.forEach(key => {
-        result[key] = deepClone(value[key]);
-      });
-    } else if (isReg(value)) { // 分别对不同类型进行处理
-
-    }
-    return result;
-  } else if (typeof value === 'function') {
-    // https://stackoverflow.com/a/1833851
-    return function () { // 这里通过bind进行拷贝，this需要在调用前指定，不太好
-      // 函数的拷贝：返回一个新的函数，该函数会执行被拷贝的函数，并且通过apply将新函数和被拷贝函数的this指向同一个值
-      return value.apply(this, arguments);
-    };
-  } else {
-    return value;
-  }
+  const type = getType(value).toLowerCase();
+  const strategy = strategies[type] || strategies.default;
+  return strategy(value);
 };
 
 class Person {
@@ -56,6 +54,7 @@ class Person {
 }
 
 const p = new Person();
-
-const cloneP = deepClone(p);
-console.log(cloneP, p.say);
+const reg = /a/g;
+const cloneReg = deepClone(reg);
+cloneReg.lastIndex = 2;
+console.log(cloneReg.lastIndex, reg.lastIndex);
