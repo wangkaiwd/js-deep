@@ -2,11 +2,15 @@
 // A value can be a string in double quotes, or a number, or true or false or null, or an object or an array.
 // 1. 对象或数组的原型要拷贝吗？(目前不拷贝)
 // 2. Date, Math如何处理？
-// 3. regexp 要如何处理
-// 4. function 如何处理
-// 5. 环形对象该如何处理？
-// 6. 爆栈问题如何解决？
-
+// 3. regexp 要如何处理: ok
+// 4. function 如何处理: ok
+// 5. undefined 如何处理？(JSON.stringify)
+// 6. 环形对象该如何处理？
+//    1.通过数组来存放处理过的数组和对象，每次遍历时先在数组中查找，找到说明是循环引用，停止遍历
+//    2.通过Set来存放处理过的数组和对象，每次遍历时现在Set中查找，找到说明循环引用，停止遍历
+// 7. 爆栈问题如何解决？
+//    使用循环来实现deepClone
+// https://www.json.org/json-en.html
 function getType (value) {
   return Object.prototype.toString.call(value).slice(8, -1);
 }
