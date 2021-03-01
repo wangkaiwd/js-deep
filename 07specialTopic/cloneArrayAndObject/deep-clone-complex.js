@@ -1,4 +1,5 @@
 // 可能的类型：
+// JSON.parse(JSON.stringify())
 // A value can be a string in double quotes, or a number, or true or false or null, or an object or an array.
 // 1. 对象或数组的原型要拷贝吗？(目前不拷贝)
 // 2. Date, Math如何处理？
@@ -11,6 +12,13 @@
 // 7. 爆栈问题如何解决？
 //    使用循环来实现deepClone
 // https://www.json.org/json-en.html
+
+// 思路：
+// why: 解决什么问题？
+// how: 怎么解决？
+// pros: 优点?
+// cons: 缺点？
+// more: 解决缺点的方案？
 function getType (value) {
   return Object.prototype.toString.call(value).slice(8, -1);
 }
