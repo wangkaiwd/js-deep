@@ -26,7 +26,7 @@ function getType (value) {
 const strategies = {};
 // 数组：
 // [{raw: obj, copy: _obj}]
-// 问题：查找是否处理过该对象比较麻烦，时间复杂度较高
+// 问题：查找是否处理过该对象比较麻烦，每次都要遍历数组，时间复杂度较高
 //      最好单独创建一个函数来完成这件事，之后直接调用该函数即可
 strategies.object = function (value, cache) {
   // 如果value已经遍历过的话，返回其对应的deepClone的值
