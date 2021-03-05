@@ -24,6 +24,10 @@ function getType (value) {
 }
 
 const strategies = {};
+// 数组：
+// [{raw: obj, copy: _obj}]
+// 问题：查找是否处理过该对象比较麻烦，每次都要遍历数组，时间复杂度较高
+//      最好单独创建一个函数来完成这件事，之后直接调用该函数即可
 strategies.object = function (value, cache) {
   // 如果value已经遍历过的话，返回其对应的deepClone的值
   if (cache.has(value)) {
@@ -35,6 +39,8 @@ strategies.object = function (value, cache) {
   } else {
     const result = {};
     // 要先将result添加到cache中，之后会由于引用关系，在修改result时也会同时修改cache中的result
+    // 之后通过value从缓存中找到result,然后将其赋值给了result.self属性，完成了一个环的拷贝 // result.self = result
+    // 要在再次调用deepClone之前来将其添加到缓存中，否则先调用deepClone，会无法在缓存中找到对应的引用
     cache.set(value, result);
     // Object.keys只会按照对象被遍历的顺序来遍历对象自身的可枚举属性
     const keys = Object.keys(value);
