@@ -8,7 +8,7 @@
 // 5. undefined 如何处理？(JSON.stringify)
 // 6. 环形对象该如何处理？
 //    1.通过数组来存放处理过的数组和对象，每次遍历时先在数组中查找，找到说明是循环引用，停止遍历: 注意数组中要具体如何存放
-//    2.通过Set来存放处理过的数组和对象，每次遍历时现在Set中查找，找到说明循环引用，停止遍历: Set的key和value是哪些值
+//    2.通过WeakMap来存放处理过的数组和对象，每次遍历时现在WeakMap中查找，找到说明循环引用，停止遍历: WeakMap的key和value是哪些值
 // 7. 爆栈问题如何解决？
 //    使用循环来实现deepClone
 // https://www.json.org/json-en.html
@@ -76,6 +76,10 @@ strategies.default = function (value) {
   return value;
 };
 // 如果key为对象的话，并且不需要所有key的列表，最好使用WeakMap
+// 问题？
+// 1. 可以用Set吗？
+// 2. WeakMap vs Map
+// 3. es5： 数组
 const deepClone = (value, cache = new WeakMap()) => { // clone之后返回深拷贝后的内容
   const type = getType(value).toLowerCase();
   const strategy = strategies[type] || strategies.default;
