@@ -1,7 +1,3 @@
-// 原理：递归遍历数据或对象中的每一项，将其赋值给一个新的对象，最后返回遍历后生成的新数组
-// 可以通过JSON.stringify来进行深拷贝
-
-// 实现最简易版本的deepClone
 const deepClone = (value) => { // clone之后返回深拷贝后的内容
   if (Array.isArray(value)) { // 数组
     const result = [];
@@ -22,5 +18,17 @@ const deepClone = (value) => { // clone之后返回深拷贝后的内容
     return value;
   }
 };
-// const obj = { a: 1, b: { c: 1 } };
-// const cloneObj = deepClone(obj);
+
+// 当对象元素嵌套很深时，会超出最大的调用栈
+
+function exceedMaxCallStack () {
+  const obj = { child: {} };
+  let child = obj.child;
+  for (let i = 0; i < 3000; i++) {
+    child.child = {};
+    child = child.child;
+  }
+  child.a = 1;
+  const cloneObj = deepClone(obj);
+  console.log(cloneObj);
+}

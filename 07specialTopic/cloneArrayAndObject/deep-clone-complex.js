@@ -31,8 +31,6 @@ strategies.object = function (value, cache) {
     // obj.self = obj
     // {a:1,self:{a:1,self: {a:1,self: {a:1, ...}}}}
     // 当处理到self时,会发现之前已经将{a:1,self:{...}}存到了cache中，此时将
-    console.log(cache);
-    console.log(cache.get(value));
     return cache.get(value);
   } else {
     const result = {};
@@ -71,7 +69,8 @@ strategies.function = function (value) {
 strategies.default = function (value) {
   return value;
 };
-const deepClone = (value, cache = new Map()) => { // clone之后返回深拷贝后的内容
+// 如果key为对象的话，并且不需要所有key的列表，最好使用WeakMap
+const deepClone = (value, cache = new WeakMap()) => { // clone之后返回深拷贝后的内容
   const type = getType(value).toLowerCase();
   const strategy = strategies[type] || strategies.default;
   return strategy(value, cache);
@@ -95,6 +94,8 @@ function cloneCircular () {
   const obj = { a: 1 };
   obj.self = obj;
   const cloneObj = deepClone(obj);
+  obj.self = 'xx';
+  console.log(cloneObj, obj);
 }
 
 cloneCircular();
